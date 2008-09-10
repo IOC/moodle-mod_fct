@@ -16,8 +16,6 @@ class fct_form_dades_centre extends fct_form_base {
         $this->afegir_text('email', fct_string('email'), 32);
 
         if (!$this->pagina->accio) {
-            $this->afegir_static('tutor', fct_string('tutor_centre'),
-                $this->pagina->nom_usuari($this->pagina->quadern->tutor_centre, true));
             $this->congelar();
         } else if ($this->pagina->accio == 'veure') {
             $this->afegir_boto('editar', fct_string('edita'));
