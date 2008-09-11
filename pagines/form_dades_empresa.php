@@ -15,8 +15,6 @@ class fct_form_dades_empresa extends fct_form_base {
         $this->afegir_text('fax', fct_string('fax'), 32);
         $this->afegir_text('email', fct_string('email'), 32);
         $this->afegir_text('nif', fct_string('nif'), 16);
-        $this->afegir_static('tutor_empresa', fct_string('tutor_empresa'),
-            $this->pagina->nom_usuari($this->pagina->quadern->tutor_empresa, true));
 
         if ($this->pagina->accio == 'veure') {
             if ($this->pagina->permis_admin or ($this->pagina->permis_alumne and $this->pagina->quadern->estat)) {
