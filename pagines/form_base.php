@@ -44,15 +44,23 @@ class fct_form_base extends moodleform {
     function afegir_boto($name, $label) {
         $this->botons[] = (object) array(
             'type' => 'submit',
-        	'name' => $name,
-        	'label' => $label,
+            'name' => $name,
+            'label' => $label,
         );
     }
 
     function afegir_boto_cancellar($name='cancellar') {
         $this->botons[] = (object) array(
             'type' => 'cancel',
-        	'name' => $name,
+            'name' => $name,
+        );
+    }
+
+    function afegir_boto_enllac($name, $label) {
+        $this->botons[] = (object) array(
+            'type' => 'enllac',
+            'name' => $name,
+            'label' => $label,
         );
     }
 
@@ -62,7 +70,7 @@ class fct_form_base extends moodleform {
         }
         $this->botons[] = (object) array(
             'type' => 'reset',
-        	'name' => $name,
+            'name' => $name,
             'label' => $label,
         );
     }
@@ -83,7 +91,7 @@ class fct_form_base extends moodleform {
 
     function afegir_checkbox($name, $label) {
         $this->elements[] = (object) array(
-        	'type' => 'checkbox',
+            'type' => 'checkbox',
             'name' => $name,
             'label' => $label,
         );
@@ -98,17 +106,17 @@ class fct_form_base extends moodleform {
 
     function afegir_date($name, $label, $sep=':') {
         $this->elements[] = (object) array(
-        	'type' => 'date',
-        	'name' => $name,
-        	'label'=> $label.$sep,
+            'type' => 'date',
+            'name' => $name,
+            'label'=> $label.$sep,
         );
     }
 
     function afegir_header($name, $label) {
         $this->elements[] = (object) array(
-        	'type' => 'header',
-        	'name' => $name,
-        	'label'=> $label,
+            'type' => 'header',
+            'name' => $name,
+            'label'=> $label,
         );
     }
 
@@ -146,7 +154,7 @@ class fct_form_base extends moodleform {
             }
         }
         $this->elements[] = (object) array(
-        	'type' => 'select',
+            'type' => 'select',
             'name' => $name,
             'label' => $label.$sep,
             'options' => $options,
@@ -155,16 +163,16 @@ class fct_form_base extends moodleform {
 
    function afegir_static($name, $label, $text, $sep=':') {
         $this->elements[] = (object) array(
-        	'type' => 'static',
+            'type' => 'static',
             'name' => $name,
             'label' => $label.$sep,
-        	'text' => $text,
+            'text' => $text,
         );
     }
 
     function afegir_text($name, $label, $size, $required=false, $numeric=false, $sep=':') {
         $this->elements[] = (object) array(
-        	'type' => 'text',
+            'type' => 'text',
             'name' => $name,
             'label' => $label.$sep,
             'size' => $size,
@@ -175,7 +183,7 @@ class fct_form_base extends moodleform {
 
     function afegir_textarea($name, $label, $rows, $cols, $required=false, $sep=':') {
         $this->elements[] = (object) array(
-        	'type' => 'textarea',
+            'type' => 'textarea',
             'name' => $name,
             'label' => $label.$sep,
             'rows' => $rows,
@@ -226,6 +234,10 @@ class fct_form_base extends moodleform {
                 $buttonarray[] = &$form->createElement('cancel', $boto->name);
              } else if ($boto->type == 'reset') {
                 $buttonarray[] = &$form->createElement('reset', $boto->name, $boto->label);
+            } else if ($boto->type == 'enllac') {
+                $html = '<a class="botoenllac" href="' . $this->pagina->url
+                    . '&' . $boto->name . '=1">' . $boto->label . '</a>';
+                $buttonarray[] = &$form->createElement('static', $boto->name, '', $html);
             }
         }
         $form->addGroup($buttonarray, 'buttonar', '', array(' '), false);
@@ -348,14 +360,14 @@ class fct_form_base extends moodleform {
             $this->$function($element);
             if (!empty($element->required)) {
                 $form->addRule($element->name, get_string('required'),
-                	'required', null, 'client');
+                    'required', null, 'client');
             }
         }
     }
 
     function definition_header($element) {
         $this->_form->addElement('header', $element->name,
-        	'<h2 class="main">' . $element->label . '</h2>');
+            '<h2 class="main">' . $element->label . '</h2>');
     }
 
     function definition_hierselect($element) {

@@ -54,9 +54,9 @@ class fct_form_quinzena extends fct_form_base {
 
         if ($this->pagina->accio == 'veure') {
             if ($this->pagina->quadern->estat or $this->pagina->permis_admin) {
-                $this->afegir_boto('editar', fct_string('edita'));
+                $this->afegir_boto_enllac('editar', fct_string('edita'));
                 if ($this->pagina->permis_alumne or $this->pagina->permis_admin) {
-                    $this->afegir_boto('suprimir', fct_string('suprimeix'));
+                    $this->afegir_boto_enllac('suprimir', fct_string('suprimeix'));
                 }
             }
         } else if ($this->pagina->accio == 'afegir') {

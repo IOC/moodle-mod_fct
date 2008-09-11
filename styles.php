@@ -110,3 +110,7 @@
 	text-align: center;
 	width: 2em;
 }
+
+.botoenllac { 
+	margin: 10px;
+}
