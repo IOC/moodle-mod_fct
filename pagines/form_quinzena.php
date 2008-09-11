@@ -48,7 +48,9 @@ class fct_form_quinzena extends fct_form_base {
             $this->afegir_textarea('observacions_empresa', fct_string('tutor_empresa'), 4, 50);
         }
 
-        $this->afegir_comprovacio('comprovar_quinzena');
+        if ($this->pagina->accio == 'desar') {
+            $this->afegir_comprovacio('comprovar_quinzena');
+        }
 
         if ($this->pagina->accio == 'veure') {
             if ($this->pagina->quadern->estat or $this->pagina->permis_admin) {
