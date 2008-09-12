@@ -19,7 +19,7 @@ class fct_form_dades_alumne extends fct_form_base {
 
         if ($this->pagina->accio == 'veure') {
             if ($this->pagina->permis_admin or $this->pagina->permis_alumne) {
-                $this->afegir_boto('editar', fct_string('edita'));
+                $this->afegir_boto_enllac('editar', fct_string('edita'));
             }
             $this->congelar();
         } else {

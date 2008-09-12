@@ -35,8 +35,8 @@ class fct_form_quadern extends fct_form_base {
             $this->afegir_boto_cancellar();
         } else if ($this->pagina->accio == 'veure') {
             if ($this->pagina->permis_admin) {
-                $this->afegir_boto('editar', fct_string('edita'));
-                $this->afegir_boto('suprimir', fct_string('suprimeix'));
+                $this->afegir_boto_enllac('editar', fct_string('edita'));
+                $this->afegir_boto_enllac('suprimir', fct_string('suprimeix'));
             }
             $this->congelar();
         } else {

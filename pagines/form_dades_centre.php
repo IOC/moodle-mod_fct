@@ -18,7 +18,7 @@ class fct_form_dades_centre extends fct_form_base {
         if (!$this->pagina->accio) {
             $this->congelar();
         } else if ($this->pagina->accio == 'veure') {
-            $this->afegir_boto('editar', fct_string('edita'));
+            $this->afegir_boto_enllac('editar', fct_string('edita'));
             $this->congelar();
         } else {
             $this->afegir_boto('desar', fct_string('desa'));

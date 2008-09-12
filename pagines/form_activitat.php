@@ -13,13 +13,13 @@ class fct_form_activitat extends fct_form_base {
 
         $this->afegir_comprovacio('comprovar_descripcio');
 
-		if ($this->pagina->accio == 'afegir') {
-		    $this->afegir_boto('afegir', fct_string('afegeix'));
-		} else {
-		    $this->afegir_boto('editar', fct_string('desa'));
-		}
+        if ($this->pagina->accio == 'afegir') {
+            $this->afegir_boto('afegir', fct_string('afegeix'));
+        } else {
+            $this->afegir_boto('editar', fct_string('desa'));
+        }
 
-		$this->afegir_boto_cancellar();
+        $this->afegir_boto_cancellar();
     }
 
 }

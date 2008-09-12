@@ -20,8 +20,6 @@ class fct_form_plantilla extends fct_form_base {
             $this->afegir_boto('afegir', fct_string('afegeix'));
         } else if ($this->pagina->accio == 'editar'){
             $this->afegir_boto('desar', fct_string('desa'));
-        } else {
-            $this->afegir_boto('editar', fct_string('edita'));
         }
 
         $this->afegir_boto_cancellar();
