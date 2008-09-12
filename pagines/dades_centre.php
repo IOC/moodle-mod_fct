@@ -11,7 +11,7 @@ class fct_pagina_dades_centre extends fct_pagina_base {
 
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
-        require_capability('mod/fct:admin', $this->context);
+        $this->comprovar_permis($this->permis_admin);
 
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 

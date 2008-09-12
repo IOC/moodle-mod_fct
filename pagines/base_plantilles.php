@@ -6,7 +6,7 @@ class fct_pagina_base_plantilles extends fct_pagina_base {
 
     function configurar($fct_id) {
         parent::configurar($fct_id);
-        require_capability('mod/fct:admin', $this->context);
+        $this->comprovar_permis($this->permis_admin);
         $this->pestanya = 'plantilles';
     }
 

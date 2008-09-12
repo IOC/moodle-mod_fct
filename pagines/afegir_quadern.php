@@ -18,7 +18,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        require_capability('mod/fct:admin', $this->context);
+        $this->comprovar_permis($this->permis_admin);
         $this->url = fct_url::afegir_quadern($this->fct->id);
         $this->pestanya = 'afegir_quadern';
         $this->afegir_navegacio(fct_string('afegeix_quadern'), $this->url);

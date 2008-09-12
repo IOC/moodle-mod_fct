@@ -23,12 +23,10 @@ class fct_pagina_base_quadern extends fct_pagina_base {
 
         parent::configurar($this->quadern->fct);
 
-        if (!$this->permis_admin
-            and (!$this->permis_alumne or $this->quadern->alumne != $USER->id)
-            and (!$this->permis_tutor_centre or $this->quadern->tutor_centre != $USER->id)
-            and (!$this->permis_tutor_empresa or $this->quadern->tutor_empresa != $USER->id)) {
-            $this->error('permis_pagina');
-        }
+        $this->comprovar_permis($this->permis_admin
+            or ($this->permis_alumne and $this->quadern->alumne == $USER->id)
+            or ($this->permis_tutor_centre and $this->quadern->tutor_centre == $USER->id)
+            or ($this->permis_tutor_empresa and $this->quadern->tutor_empresa == $USER->id));
 
         $this->titol = $this->nom_usuari($this->quadern->alumne)
             .' ('.$this->quadern->nom_empresa.')';

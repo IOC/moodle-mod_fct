@@ -31,6 +31,12 @@ class fct_pagina_base {
         $this->navegacio[] = $link;
     }
 
+    function comprovar_permis($permis) {
+        if (!$permis) {
+            $this->error('permis_pagina');
+        }
+    }
+
     function comprovar_sessio() {
         if (!confirm_sesskey()) {
             $this->error('sessio');
