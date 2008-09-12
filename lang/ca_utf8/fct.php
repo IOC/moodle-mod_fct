@@ -89,7 +89,6 @@ $string['error_desar_quadern'] = "S'ha produit un error en desar el quadern.";
 $string['error_desar_qualificacio_global'] = "S'ha produït un error en desar la qualificació global.";
 $string['error_desar_qualificacio_quadern'] = "S'ha produït un error en desar la qualificació del quadern.";
 $string['error_desar_quinzena'] = "S'ha produït un error en desar la quinzena.";
-$string['error_quadern_tancat'] = "El quadern està tancat i per tant no es poden realitzar canvis.";
 $string['error_permis_activitat'] = "No teniu permís per accedir a aquesta activitat.";
 $string['error_permis_pagina'] = "No teniu permís per accedir a aquesta pàgina.";
 $string['error_pla_activitats_no_indicat'] = "No s'ha indicat cap quadern o pla d'activitats.";

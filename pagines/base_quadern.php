@@ -7,12 +7,6 @@ class fct_pagina_base_quadern extends fct_pagina_base {
     var $quadern;
     var $titol;
 
-    function comprovar_estat_obert() {
-        if (!$this->permis_admin and !$this->quadern->estat) {
-            $this->error('quadern_tancat', null, fct_url::quadern($this->quadern->id));
-        }
-    }
-
     function configurar($quadern_id) {
         global $USER;
 

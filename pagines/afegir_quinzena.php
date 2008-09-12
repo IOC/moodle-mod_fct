@@ -22,7 +22,6 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_quinzena($this->quadern->id);
         $this->activitats = fct_db::activitats_pla($this->pla->id);
-        $this->comprovar_estat_obert();
     }
 
     function processar_afegir() {

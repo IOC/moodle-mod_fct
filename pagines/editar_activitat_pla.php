@@ -25,7 +25,6 @@ class fct_pagina_editar_activitat_pla extends fct_pagina_base_activitat_pla  {
     }
 
     function processar_editar() {
-        $this->comprovar_estat_obert();
         $form = new fct_form_activitat($this);
         $data = $form->get_data();
         if ($data) {
