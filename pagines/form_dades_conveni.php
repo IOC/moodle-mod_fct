@@ -18,7 +18,7 @@ class fct_form_dades_conveni extends fct_form_base {
         $this->afegir_comprovacio('comprovar_dates', $this);
 
         if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_admin or ($this->pagina->permis_alumne and $this->pagina->quadern->estat)) {
+            if ($this->pagina->permis_editar) {
                 $this->afegir_boto_enllac('editar', fct_string('edita'));
             }
             $this->congelar();

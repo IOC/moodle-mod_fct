@@ -17,9 +17,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
-            if (!$this->permis_admin and !$this->permis_alumne) {
-                $this->error('permis_pagina');
-            }
+            $this->comprovar_permis($this->permis_editar);
         }
 
         $this->url = fct_url::dades_alumne($this->quadern->id);

@@ -4,9 +4,13 @@ require_once 'base_quadern.php';
 
 class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
 
+    var $permis_editar;
+
     function configurar($quadern_id) {
         parent::configurar($quadern_id);
         $this->pestanya = 'dades_generals';
+        $this->permis_editar = ($this->permis_admin or $this->quadern->estat
+                                and ($this->permis_tutor_centre or $this->permis_alumne));
     }
 
     function definir_pestanyes() {

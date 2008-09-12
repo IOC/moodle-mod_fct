@@ -17,7 +17,7 @@ class fct_form_dades_empresa extends fct_form_base {
         $this->afegir_text('nif', fct_string('nif'), 16);
 
         if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_admin or ($this->pagina->permis_alumne and $this->pagina->quadern->estat)) {
+            if ($this->pagina->permis_editar) {
                 $this->afegir_boto_enllac('editar', fct_string('edita'));
             }
             $this->congelar();

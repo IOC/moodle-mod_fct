@@ -13,7 +13,7 @@ class fct_form_dades_relatives extends fct_form_base {
         $this->afegir_static('hores_pendents', fct_string('hores_pendents'), '');
 
         if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_admin or $this->pagina->permis_alumne) {
+            if ($this->pagina->permis_editar) {
                 $this->afegir_boto_enllac('editar', 'Edita');
             }
             $this->congelar();
