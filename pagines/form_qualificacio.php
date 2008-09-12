@@ -14,7 +14,7 @@ class fct_form_qualificacio extends fct_form_base {
         $this->afegir_textarea('observacions', fct_string('observacions'), 4, 40);
 
         if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_admin or $this->pagina->permis_tutor_centre) {
+            if ($this->pagina->permis_editar) {
                 $this->afegir_boto_enllac('editar', fct_string('edita'));
             }
             $this->congelar();
