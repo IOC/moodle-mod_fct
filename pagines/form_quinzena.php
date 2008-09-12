@@ -28,8 +28,8 @@ class fct_form_quinzena extends fct_form_base {
             'actualitzar_calendari_dia(this.form)');
 
         $this->afegir_calendari('dia', fct_string('dies'), $this->calendaris,
-            $this->any, $this->periode, $this->dies,
-            !$this->pagina->permis_alumne and !$this->pagina->permis_admin);
+                                $this->any, $this->periode, $this->dies,
+                                !$this->pagina->permis_editar_alumne);
 
         $this->afegir_text('hores', fct_string('hores'), 4, true, true);
 
@@ -42,20 +42,20 @@ class fct_form_quinzena extends fct_form_base {
         $this->afegir_textarea('valoracions', fct_string('valoracions'), 4, 50);
         $this->afegir_textarea('observacions_alumne', fct_string('observacions'), 4, 50);
 
-        if ($this->pagina->accio != 'afegir') {
+        if ($this->pagina->accio != 'afegir' or $this->pagina->permis_editar_centre) {
             $this->afegir_header('retroaccio', fct_string('retroaccio'));
             $this->afegir_textarea('observacions_centre', fct_string('tutor_centre'), 4, 50);
             $this->afegir_textarea('observacions_empresa', fct_string('tutor_empresa'), 4, 50);
         }
 
-        if ($this->pagina->accio == 'desar') {
+        if ($this->pagina->permis_editar_alumne) {
             $this->afegir_comprovacio('comprovar_quinzena');
         }
 
         if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->quadern->estat or $this->pagina->permis_admin) {
+            if ($this->pagina->permis_editar) {
                 $this->afegir_boto_enllac('editar', fct_string('edita'));
-                if ($this->pagina->permis_alumne or $this->pagina->permis_admin) {
+                if ($this->pagina->permis_editar_alumne) {
                     $this->afegir_boto_enllac('suprimir', fct_string('suprimeix'));
                 }
             }
@@ -67,18 +67,15 @@ class fct_form_quinzena extends fct_form_base {
             $this->afegir_boto_cancellar();
         }
 
-        if (!$this->pagina->permis_alumne and !$this->pagina->permis_admin) {
+        if (!$this->pagina->permis_editar_alumne) {
             $this->congelar_element(array('periode', 'hores',
                 'valoracions', 'observacions_alumne'));
             $this->congelar_llista('activitat');
         }
-        if ($this->pagina->accio != 'afegir' and !$this->pagina->permis_admin
-                and !$this->pagina->permis_tutor_centre) {
+        if ($this->pagina->accio != 'afegir' and !$this->pagina->permis_editar_centre) {
             $this->congelar_element(array('observacions_centre'));
         }
-        if ($this->pagina->accio != 'afegir' and !$this->pagina->permis_admin
-                and !$this->pagina->permis_tutor_empresa
-                and !$this->pagina->permis_tutor_centre) {
+        if ($this->pagina->accio != 'afegir' and !$this->pagina->permis_editar_empresa) {
             $this->congelar_element(array('observacions_empresa'));
         }
         if ($this->pagina->accio == 'veure') {

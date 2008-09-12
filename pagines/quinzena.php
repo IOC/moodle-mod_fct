@@ -33,7 +33,10 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         	'confirmar','cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
-            $this->comprovar_estat_obert();
+            $this->comprovar_permis($this->permis_editar);
+        }
+        if ($this->accio == 'suprimir' or $this->accio == 'confirmar') {
+            $this->comprovar_permis($this->permis_editar_alumne);
         }
 
         $this->activitats = fct_db::activitats_pla($this->pla->id);
@@ -42,7 +45,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         }
 
         $this->activitats_quinzena = fct_db::activitats_quinzena($this->quinzena->id);
-        if ($this->accio == 'veure' or (!$this->permis_alumne and !$this->permis_admin)) {
+        if ($this->accio == 'veure' or !$this->permis_editar_alumne) {
             if ($this->activitats_quinzena) {
                 foreach (array_keys($this->activitats) as $id) {
                     if (!isset($this->activitats_quinzena[$id])) {
@@ -99,8 +102,9 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         if ($data) {
             $quinzena = (object) array('id' => $this->quinzena->id);
             $activitats = false;
+            $dies = false;
 
-            if ($this->permis_alumne or $this->permis_admin) {
+            if ($this->permis_editar_alumne) {
                 $quinzena->any_ = $data->periode[0];
                 $quinzena->periode = $data->periode[1];
                 $quinzena->hores = $data->hores;
@@ -111,11 +115,10 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
                     $quinzena->periode));
                 $activitats = $this->form->get_data_llista('activitat');
             }
-            if ($this->permis_tutor_centre or $this->permis_admin) {
+            if ($this->permis_editar_centre) {
                 $quinzena->observacions_centre = $data->observacions_centre;
-                $quinzena->observacions_empresa = $data->observacions_empresa;
             }
-            if ($this->permis_tutor_empresa or $this->permis_admin) {
+            if ($this->permis_editar_empresa) {
                 $quinzena->observacions_empresa = $data->observacions_empresa;
             }
 

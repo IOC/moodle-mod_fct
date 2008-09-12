@@ -18,9 +18,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
 
     function configurar() {
         parent::configurar(false, required_param('seguiment', PARAM_INT));
-        if (!$this->permis_alumne and !$this->permis_admin) {
-            $this->error('permis_pagina');
-        }
+        $this->comprovar_permis($this->permis_editar_alumne);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_quinzena($this->quadern->id);
         $this->activitats = fct_db::activitats_pla($this->pla->id);
@@ -41,11 +39,17 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
                 'valoracions' => $data->valoracions,
                 'observacions_alumne' => $data->observacions_alumne,
             );
-             $dies = $form->get_data_calendari('dia',
-                 $this->calendari_periode($quinzena->any_,
-                 $quinzena->periode));
-            $id = fct_db::afegir_quinzena($quinzena, $dies,
-                $form->get_data_llista('activitat'));
+            $dies = $form->get_data_calendari('dia',
+                $this->calendari_periode($quinzena->any_, $quinzena->periode));
+            $activitats = $form->get_data_llista('activitat');
+            if ($this->permis_editar_centre) {
+                $quinzena->observacions_centre = $data->observacions_centre;
+            }
+            if ($this->permis_editar_empresa) {
+                $quinzena->observacions_empresa = $data->observacions_empresa;
+            }
+
+            $id = fct_db::afegir_quinzena($quinzena, $dies, $activitats);
             if ($id) {
                 $this->registrar('add quinzena', fct_url::quinzena($id),
                     self::nom_periode($data->periode[1]) . ' '

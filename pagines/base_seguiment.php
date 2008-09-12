@@ -7,6 +7,10 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
     var $seguiment;
     var $conveni;
     var $pla;
+    var $permis_editar;
+    var $permis_editar_centre;
+    var $permis_editar_alumne;
+    var $permis_editar_empresa;
 
     function configurar($quadern_id, $seguiment_id=false) {
         if ($seguiment_id) {
@@ -39,6 +43,13 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
             fct_url::seguiment($this->quadern->id));
 
         $this->pestanya = 'seguiment_quinzenal';
+        $this->permis_editar = ($this->permis_admin or $this->quadern->estat);
+        $this->permis_editar_centre = ($this->permis_admin or $this->quadern->estat
+                                       and $this->permis_tutor_centre);
+        $this->permis_editar_alumne = ($this->permis_admin or $this->quadern->estat and
+                                       ($this->permis_tutor_centre or $this->permis_alumne));
+        $this->permis_editar_empresa = ($this->permis_admin or $this->quadern->estat and
+                                        ($this->permis_tutor_centre or $this->permis_tutor_empresa));
     }
 
     function definir_pestanyes() {
@@ -46,7 +57,7 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         $pestanyes = array(
             new tabobject('quinzenes', fct_url::seguiment($this->quadern->id), fct_string('quinzenes')),
         );
-        if (($this->permis_alumne and $this->quadern->estat) or $this->permis_admin) {
+        if ($this->permis_editar_alumne) {
             $pestanyes[] = new tabobject('afegir_quinzena',
                 fct_url::afegir_quinzena($this->seguiment->id), fct_string('afegeix_quinzena'));
         }
