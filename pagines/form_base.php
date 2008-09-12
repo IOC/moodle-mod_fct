@@ -319,7 +319,8 @@ class fct_form_base extends moodleform {
                 $n = 0;
                 $html .= '</tr><tr>';
             }
-            $checked = in_array($dia, $element->dies) ?
+            $checked = (in_array($dia, $element->dies) 
+                        or optional_param($element->name . $dia, 0, PARAM_BOOL)) ?
                 ' checked="checked" ' : '';
             $html .= '<td>' . $dia
                 . ' <input type="checkbox" name="'. $element->name
