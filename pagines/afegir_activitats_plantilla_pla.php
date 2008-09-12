@@ -9,12 +9,9 @@ class fct_pagina_afegir_activitats_plantilla_pla extends fct_pagina_base_pla_act
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        if (!$this->permis_tutor_centre and !$this->permis_admin) {
-            $this->error('permis_pagina');
-        }
+        $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_activitats_plantilla_pla($this->quadern->id);
-        $this->comprovar_estat_obert();
     }
 
     function processar_afegir() {

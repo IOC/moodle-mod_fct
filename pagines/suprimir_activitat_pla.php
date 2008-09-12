@@ -8,7 +8,7 @@ class fct_pagina_suprimir_activitat_pla extends fct_pagina_base_activitat_pla  {
         $this->configurar_accio(array('suprimir', 'confirmar'), 'suprimir');
         parent::configurar( required_param('activitat', PARAM_INT));
         $this->url = fct_url::suprimir_activitat_pla($this->activitat->id);
-        $this->comprovar_estat_obert();
+        $this->comprovar_permis($this->permis_editar);
     }
 
     function processar_confirmar() {

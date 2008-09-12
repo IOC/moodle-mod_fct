@@ -15,12 +15,9 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        if (!$this->permis_tutor_centre and !$this->permis_admin) {
-            $this->error('permis_pagina');
-        }
+        $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_activitat_pla($this->quadern->id);
-        $this->comprovar_estat_obert();
     }
 
     function processar_afegir() {
@@ -30,7 +27,7 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
             $id = fct_db::afegir_activitat_pla($this->pla->id, $data->descripcio);
             if ($id) {
                 $this->registrar('add activitat_pla',
-                    fct_url::pla_activitats($this->quadern), $data->descripcio);
+                    fct_url::pla_activitats($this->quadern->id), $data->descripcio);
             } else {
                 $this->error('afegir_activitat_pla');
             }

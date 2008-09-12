@@ -5,6 +5,7 @@ require_once 'base_quadern.php';
 class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
 
     var $pla;
+    var $permis_editar;
 
     function configurar($quadern_id, $pla_id=false) {
         if ($pla_id) {
@@ -27,12 +28,14 @@ class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
             fct_url::pla_activitats($this->quadern->id));
 
         $this->pestanya = 'pla_activitats';
+        $this->permis_editar = ($this->permis_admin or $this->quadern->estat
+                                and $this->permis_tutor_centre);
     }
 
     function definir_pestanyes() {
         parent::definir_pestanyes();
         $pestanyes = array();
-        if (($this->permis_tutor_centre and $this->quadern->estat) or $this->permis_admin) {
+        if ($this->permis_editar) {
             $pestanyes[] = new tabobject('activitats_pla',
                 fct_url::pla_activitats($this->quadern->id), fct_string('activitats'));
             $pestanyes[] = new tabobject('afegir_activitat_pla',

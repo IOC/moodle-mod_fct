@@ -28,7 +28,7 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
         } else {
             foreach ($activitats as $activitat) {
                 $accions = '';
-                if (($this->permis_tutor_centre and $this->quadern->estat) or $this->permis_admin) {
+                if ($this->permis_editar) {
                     $url_editar = fct_url::editar_activitat_pla($activitat->id);
                     $url_suprimir = fct_url::suprimir_activitat_pla($activitat->id);
                     $icona_editar = $this->icona_editar($url_editar, fct_string('edita_activitat'));
