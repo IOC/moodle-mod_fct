@@ -1,6 +1,7 @@
 <?php
 
-class fct_db {
+class fct_db
+{
 
 // FCT
 
@@ -758,5 +759,47 @@ class fct_db {
         return delete_records('fct_qualificacio_global', 'fct', $fct_id);
     }
 
-}
+// Tutor d'empresa
 
+    function afegir_tutor_empresa($courseid, $dni, $contrasenya, $nom, $cognoms, $email) {
+        global $USER;
+
+        $roleid = get_field('role', 'id', 'shortname', 'tutorempresa');
+        if (!$roleid) {
+            return false;
+        }
+
+        $record = array('username' => strtolower($dni),
+                        'password' => hash_internal_user_password($contrasenya),
+                        'firstname' => $nom,
+                        'lastname' => $cognoms,
+                        'email' => $email,
+                        'auth' => 'manual',
+                        'confirmed' => 1,
+                        'deleted' => 0,
+                        'mnethostid' => 1,
+                        'country'  => 'CT',
+                        'lang' => 'ca_utf8',
+                        'maildigest' => 1,
+                        'autosubscribe' => 0,
+                        'ajax' => 0,
+                        'timemodified' => time());
+        $id = insert_record('user', (object) $record);
+        if (!$id) {
+            return false;
+        }
+
+        $context = get_context_instance(CONTEXT_COURSE, $courseid);
+        $record = array('roleid' => $roleid,
+                        'userid' => $id,
+                        'contextid' => $context->id,
+                        'timestart' => time(),
+                        'timemodified' => time(),
+                        'modifierid' => $USER->id,
+                        'enrol' => 'manual');
+        insert_record('role_assignments', (object) $record);
+
+        return $id;
+    }
+
+}

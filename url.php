@@ -26,6 +26,10 @@ class fct_url {
         return self::url('afegir_quinzena', array('seguiment' => $seguiment_id));
     }
 
+    function afegir_tutor_empresa($fct_id) {
+        return self::url('afegir_tutor_empresa', array('fct' => $fct_id));
+    }
+
     function configurar_quadern($quadern_id) {
         return self::url('configurar_quadern', array('quadern' => $quadern_id));
     }

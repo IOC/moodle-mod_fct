@@ -111,6 +111,7 @@ class fct_pagina_base {
                 new tabobject('plantilles', fct_url::llista_plantilles($this->fct->id), fct_string('plantilles_activitats')),
                 new tabobject('afegir_plantilla', fct_url::afegir_plantilla($this->fct->id), fct_string('afegeix_plantilla')),
                 new tabobject('dades_centre', fct_url::dades_centre($this->fct->id), fct_string('dades_centre')),
+                new tabobject('afegir_tutor_empresa', fct_url::afegir_tutor_empresa($this->fct->id), fct_string('afegeix_tutor_empresa')),
             ));
         }
     }
