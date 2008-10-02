@@ -1,0 +1,13 @@
+1.3 (2008-10-02)
+   * Camp d'hores d'FCT realitzades anteriorments per a casos excepcionals.
+   * Pàgina d'alta d'usuaris de Moodle per a tutors d'empresa.
+
+1.2 (2008-09-12)
+   * Redefinició dels permisos d'edició.
+   * Correcció de diversos errors.
+
+1.1 (2008-07-23)
+    * Migració a Moodle 1.9.
+
+1.0 (2008-05-29)
+    * Primera versió estable.
