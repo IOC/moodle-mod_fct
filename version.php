@@ -8,7 +8,7 @@
  **/
 
 // Versió del mòdul en format AAAAMMDDXX (XX és incremental)
-$module->version = 2008091200;
+$module->version = 2008100200;
 
 // Versió de Moodle requerida
 $module->requires = 2007101520;

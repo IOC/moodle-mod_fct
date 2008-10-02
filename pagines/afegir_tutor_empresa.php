@@ -57,6 +57,7 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         $form = new fct_form_tutor_empresa($this);
         $data = $form->get_data();
         if ($data) {
+            $data->dni = strtolower($data->dni);
             $contrasenya = $this->generar_contrasenya();
             $id = fct_db::afegir_tutor_empresa($this->course->id, $data->dni, $contrasenya,
                                                $data->nom, $data->cognoms, $data->email);

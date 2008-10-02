@@ -132,6 +132,7 @@ $string['fct:tutor_centre'] = "Tutor de centre de l'FCT";
 $string['fct:tutor_empresa'] = "Tutor d'empresa de l'FCT";
 $string['horari_practiques'] = "Horari de pràctiques";
 $string['hores'] = "Hores";
+$string['hores_anteriors'] = "Hores realitzades anteriorment";
 $string['hores_credit'] = "Total hores crèdit FCT";
 $string['hores_pendents'] = "Hores pendents";
 $string['hores_practiques'] = "Hores de pràctiques";

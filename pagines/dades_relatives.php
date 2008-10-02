@@ -28,6 +28,7 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
     function mostrar() {
         $this->dades->hores_realitzades = ceil((float) $this->dades->exempcio / 100
             * $this->dades->hores_credit)
+            + $this->dades->hores_anteriors
             + fct_db::hores_realitzades_fct($this->fct->id, $this->quadern->alumne);
         $this->dades->hores_pendents = $this->dades->hores_credit
             - $this->dades->hores_realitzades;
