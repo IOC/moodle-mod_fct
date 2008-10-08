@@ -34,8 +34,8 @@ function xmldb_fct_upgrade($oldversion=0) {
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('seguiment'), 'fct_seguiment', 'id');
         $result = $result && drop_key($table, $key);
 
-        $key = new XMLDBKey('seguiment_any_dia');
-        $key->setAttributes(XMLDB_KEY_UNIQUE, array('seguiment', 'any_', 'dia'));
+        $key = new XMLDBKey('seguiment_any_periode');
+        $key->setAttributes(XMLDB_KEY_UNIQUE, array('seguiment', 'any_', 'periode'));
         $result = $result && drop_key($table, $key);
 
         $field = new XMLDBField('seguiment');

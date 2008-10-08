@@ -186,7 +186,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="quadern"/>
-        <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" PREVIOUS="id"/>
+        <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="fct_quinzena" COMMENT="-" PREVIOUS="fct_activitat_pla" NEXT="fct_dia_quinzena">
@@ -204,7 +204,7 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="quadern"/>
         <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="quadern_any_periode"/>
-        <KEY NAME="quadern_any_periode" TYPE="unique" FIELDS="quadern, any_, periode" PREVIOUS="quadern"/>
+        <KEY NAME="quadern_any_periode" TYPE="unique" FIELDS="quadern, any_, periode" COMMENT="-" PREVIOUS="quadern"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="fct_dia_quinzena" COMMENT="-" PREVIOUS="fct_quinzena" NEXT="fct_activitat_quinzena">
