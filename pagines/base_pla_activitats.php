@@ -4,25 +4,10 @@ require_once 'base_quadern.php';
 
 class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
 
-    var $pla;
     var $permis_editar;
 
-    function configurar($quadern_id, $pla_id=false) {
-        if ($pla_id) {
-            $this->pla = fct_db::pla_actvitats($pla_id);
-            if (!$this->pla) {
-                $this->error('recuperar_pla_activitats');
-            }
-            parent::configurar($this->pla->quadern);
-        } else if ($quadern_id) {
-            $this->pla = fct_db::pla_actvitats_quadern($quadern_id);
-            if (!$this->pla) {
-                $this->error('recuperar_pla_activitats');
-            }
-            parent::configurar($quadern_id);
-        } else {
-            $this->error('pla_activitats_no_indicat');
-        }
+    function configurar($quadern_id) {
+        parent::configurar($quadern_id);
 
         $this->afegir_navegacio(fct_string('pla_activitats'),
             fct_url::pla_activitats($this->quadern->id));

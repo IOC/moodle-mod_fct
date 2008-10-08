@@ -20,7 +20,7 @@ class fct_pagina_afegir_activitats_plantilla_pla extends fct_pagina_base_pla_act
             $form = new fct_form_plantilla_pla($this);
             $data = $form->get_data();
             if ($data) {
-                $id = fct_db::afegir_activitats_plantilla_pla($this->pla->id, $data->plantilla);
+                $id = fct_db::afegir_activitats_plantilla_pla($this->quadern->id, $data->plantilla);
                 if ($id) {
                     $this->registrar('add activitats_plantilla_pla',
                         fct_url::pla_activitats($this->quadern->id),

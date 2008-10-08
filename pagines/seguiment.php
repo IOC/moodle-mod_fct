@@ -22,7 +22,7 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $quinzenes = fct_db::quinzenes($this->seguiment->id);
+        $quinzenes = fct_db::quinzenes($this->quadern->id);
 
         if (!$quinzenes) {
            echo '<p>' . fct_string('cap_quinzena') . '</p>';

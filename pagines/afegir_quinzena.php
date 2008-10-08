@@ -8,7 +8,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     var $activitats;
 
     function comprovar_quinzena($data) {
-        if (fct_db::quinzena_duplicada($this->seguiment->id,
+        if (fct_db::quinzena_duplicada($this->quadern->id,
                 addslashes($data['periode'][0]),
                 addslashes($data['periode'][1]))) {
             return array('periode' => fct_string('quinzena_duplicada'));
@@ -17,11 +17,11 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     }
 
     function configurar() {
-        parent::configurar(false, required_param('seguiment', PARAM_INT));
+        parent::configurar(required_param('quadern', PARAM_INT));
         $this->comprovar_permis($this->permis_editar_alumne);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_quinzena($this->quadern->id);
-        $this->activitats = fct_db::activitats_pla($this->pla->id);
+        $this->activitats = fct_db::activitats_pla($this->quadern->id);
     }
 
     function processar_afegir() {
@@ -31,7 +31,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
 
         if ($data) {
             $quinzena = (object) array(
-                'seguiment' => $this->seguiment->id,
+                'quadern' => $this->quadern->id,
                 'any_' => $data->periode[0],
                 'periode' => $data->periode[1],
                 'hores' => $data->hores,

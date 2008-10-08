@@ -13,7 +13,7 @@ class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats 
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $ok = fct_db::suprimir_activitats_pla($this->pla->id);
+        $ok = fct_db::suprimir_activitats_pla($this->quadern->id);
         if ($ok) {
             $this->registrar('delete activitats_pla',
                 fct_url::pla_activitats($this->quadern->id));

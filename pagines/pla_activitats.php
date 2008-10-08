@@ -21,7 +21,7 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $activitats = fct_db::activitats_pla($this->pla->id);
+        $activitats = fct_db::activitats_pla($this->quadern->id);
 
         if (!$activitats) {
            echo '<p>' . fct_string('cap_activitat') . '</p>';

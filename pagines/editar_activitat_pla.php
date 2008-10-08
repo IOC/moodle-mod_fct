@@ -6,7 +6,7 @@ require_once 'form_activitat.php';
 class fct_pagina_editar_activitat_pla extends fct_pagina_base_activitat_pla  {
 
     function comprovar_descripcio($data) {
-       if (fct_db::activitat_pla_duplicada($this->pla->id,
+       if (fct_db::activitat_pla_duplicada($this->quadern->id,
                 addslashes($data['descripcio']), $this->activitat->id)) {
             return array('descripcio' => fct_string('activitat_duplicada'));
         }

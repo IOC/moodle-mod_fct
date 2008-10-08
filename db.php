@@ -176,8 +176,9 @@ class fct_db
         $ok = true;
 
         $ok = $ok && ($id = insert_record('fct_quadern', $quadern));
-        $ok = $ok && self::afegir_pla_activitats($id, $plantilla_id);
-        $ok = $ok && self::afegir_seguiment($id);
+        if ($ok && $plantilla_id) {
+            $ok = self::afegir_activitats_plantilla_pla($id, $plantilla_id);
+        }
         $ok = $ok && self::afegir_dades_centre_concertat($id);
         $ok = $ok && self::afegir_dades_empresa($id);
         $ok = $ok && self::afegir_dades_conveni($id);
@@ -246,8 +247,8 @@ class fct_db
         $ok = true;
 
         $ok = delete_records('fct_quadern', 'id', $id) && $ok;
-        $ok = self::suprimir_pla_activitats_quadern($id) && $ok;
-        $ok = self::suprimir_seguiment_quadern($id) && $ok;
+        $ok = self::suprimir_activitats_pla($id) && $ok;
+        $ok = self::suprimir_quinzenes($id) && $ok;
         $ok = self::suprimir_valoracions_actituds($id) && $ok;
         $ok = self::suprimir_dades_centre_concertat($id) && $ok;
         $ok = self::suprimir_dades_empresa($id) && $ok;
@@ -276,12 +277,12 @@ class fct_db
         return get_record('fct_activitat_pla', 'id', $activitat_id);
     }
 
-    function activitats_pla($pla_id) {
-        return get_records('fct_activitat_pla', 'pla', $pla_id, 'descripcio');
+    function activitats_pla($quadern_id) {
+        return get_records('fct_activitat_pla', 'quadern', $quadern_id, 'descripcio');
     }
 
-    function activitat_pla_duplicada($pla_id, $descripcio, $activitat_id=false) {
-        $select = "pla = '$pla_id' AND descripcio = '$descripcio'";
+    function activitat_pla_duplicada($quadern_id, $descripcio, $activitat_id=false) {
+        $select = "quadern = '$quadern_id' AND descripcio = '$descripcio'";
         if ($activitat_id) {
             $select .= " AND id != '$activitat_id'";
         }
@@ -302,17 +303,17 @@ class fct_db
         return $ok;
     }
 
-    function afegir_activitat_pla($pla_id, $descripcio) {
-        $activitat = (object) array('pla' => $pla_id, 'descripcio' => $descripcio);
+    function afegir_activitat_pla($quadern_id, $descripcio) {
+        $activitat = (object) array('quadern' => $quadern_id, 'descripcio' => $descripcio);
         return insert_record('fct_activitat_pla', $activitat);
     }
 
-    function afegir_activitats_plantilla_pla($pla_id, $plantilla_id) {
+    function afegir_activitats_plantilla_pla($quadern_id, $plantilla_id) {
         $activitats = self::activitats_plantilla($plantilla_id);
         if ($activitats) {
             foreach ($activitats as $activitat) {
-                if (!self::activitat_pla_duplicada($pla_id, $activitat->descripcio)) {
-                    if (!self::afegir_activitat_pla($pla_id, $activitat->descripcio)) {
+                if (!self::activitat_pla_duplicada($quadern_id, $activitat->descripcio)) {
+                    if (!self::afegir_activitat_pla($quadern_id, $activitat->descripcio)) {
                         return false;
                     }
                 }
@@ -321,43 +322,15 @@ class fct_db
         return true;
     }
 
-    function afegir_pla_activitats($quadern_id, $plantilla_id=false) {
-        $pla = (object) array('quadern' => $quadern_id);
-        $id = insert_record('fct_pla', $pla);
-        if ($id and $plantilla_id) {
-            return self::afegir_activitats_plantilla_pla($id, $plantilla_id);
-        }
-        return $id;
-    }
-
-    function notes_activitats_pla($pla_id) {
+    function notes_activitats_pla($quadern_id) {
         $notes = array();
-        $activitats = get_records('fct_activitat_pla', 'pla', $pla_id);
+        $activitats = get_records('fct_activitat_pla', 'quadern', $quadern_id);
         if ($activitats) {
             foreach ($activitats as $activitat) {
                 $notes[$activitat->id] = $activitat->nota;
             }
         }
         return $notes;
-    }
-
-    function pla_actvitats($pla_id) {
-        return get_record('fct_pla', 'id', $pla_id);
-    }
-
-    function pla_actvitats_quadern($quadern_id) {
-        return get_record('fct_pla', 'quadern', $quadern_id);
-    }
-
-    function suprimir_activitats_pla($pla_id){
-        $ok = true;
-        $activitats = self::activitats_pla($pla_id);
-        if ($activitats) {
-            foreach ($activitats as $activitat) {
-                $ok = self::suprimir_activitat_pla($activitat->id) && $ok;
-            }
-        }
-        return $ok;
     }
 
     function suprimir_activitat_pla($activitat_id){
@@ -367,15 +340,14 @@ class fct_db
         return $ok;
     }
 
-    function suprimir_pla_activitats_quadern($quadern_id) {
-        $pla = self::pla_actvitats_quadern($quadern_id);
-        if (!$pla) {
-            return false;
-        }
-
+    function suprimir_activitats_pla($quadern_id){
         $ok = true;
-        $ok = delete_records('fct_pla', 'id', $pla->id) && $ok;
-        $ok = delete_records('fct_activitat_pla', 'pla', $pla->id) && $ok;
+        $activitats = self::activitats_pla($quadern_id);
+        if ($activitats) {
+            foreach ($activitats as $activitat) {
+                $ok = self::suprimir_activitat_pla($activitat->id) && $ok;
+            }
+        }
         return $ok;
     }
 
@@ -449,11 +421,6 @@ class fct_db
         return $id;
     }
 
-    function afegir_seguiment($quadern_id) {
-        $seguiment = (object) array('quadern' => $quadern_id);
-        return insert_record('fct_seguiment',  $seguiment);
-    }
-
     function dies_quinzena($quinzena_id) {
         $dies = array();
         $records = get_records('fct_dia_quinzena', 'quinzena', $quinzena_id);
@@ -469,8 +436,7 @@ class fct_db
         global $CFG;
         if ($fct_id) {
             $sql = "SELECT COUNT(*) FROM {$CFG->prefix}fct_quinzena qi"
-                . " JOIN {$CFG->prefix}fct_seguiment s ON s.id = qi.seguiment"
-                . " JOIN {$CFG->prefix}fct_quadern qa ON qa.id = s.quadern"
+                . " JOIN {$CFG->prefix}fct_quadern qa ON qa.id = qi.quadern"
                 . " WHERE qa.fct = $fct_id";
             return count_records_sql($sql);
         } else {
@@ -487,63 +453,35 @@ class fct_db
         return $record;
     }
 
-    function quinzena_duplicada($seguiment_id, $any, $periode, $quinzena_id=false) {
-        $select = "seguiment = '$seguiment_id' AND any_ = '$any' AND periode = '$periode'";
+    function quinzena_duplicada($quadern_id, $any, $periode, $quinzena_id=false) {
+        $select = "quadern = '$quadern_id' AND any_ = '$any' AND periode = '$periode'";
         if ($quinzena_id) {
             $select .= " AND id != '$quinzena_id'";
         }
         return record_exists_select('fct_quinzena', $select);
     }
 
-    function quinzenes($seguiment_id) {
+    function quinzenes($quadern_id) {
         global $CFG;
         $sql = 'SELECT q.*, COUNT(d.id) AS dies '
              . "FROM {$CFG->prefix}fct_quinzena q "
-             . "LEFT JOIN {$CFG->prefix}fct_dia_quinzena d "
+             . "JOIN {$CFG->prefix}fct_dia_quinzena d "
              . '          ON q.id = d.quinzena '
-             . "WHERE q.seguiment = '$seguiment_id' "
+             . "WHERE q.quadern = '$quadern_id' "
              . 'GROUP BY q.id '
              . 'ORDER BY q.any_, q.periode ';
         return get_records_sql($sql);
     }
 
-    function seguiment($seguiment_id) {
-        return get_record('fct_seguiment', 'id', $seguiment_id);
-    }
-
-    function seguiment_quadern($quadern_id) {
-        return get_record('fct_seguiment', 'quadern', $quadern_id);
-    }
-
-    function primera_quinzena($seguiment_id) {
+    function primera_quinzena($quadern_id) {
         global $CFG;
         $sql = "SELECT * FROM {$CFG->prefix}fct_quinzena q1 "
-             . "WHERE q1.seguiment = $seguiment_id AND "
+             . "WHERE q1.quadern = $quadern_id AND "
              . '(q1.any_ * 100 + q1.periode) = '
              . '(SELECT MAX(q2.any_ * 100 + q2.periode) '
              . "FROM {$CFG->prefix}fct_quinzena q2 "
-             . "WHERE q2.seguiment = $seguiment_id) ";
+             . "WHERE q2.quadern = $quadern_id) ";
         return get_record_sql($sql);
-    }
-
-    function suprimir_seguiment_quadern($quadern_id) {
-        $seguiment = self::seguiment_quadern($quadern_id);
-        if (!$seguiment) {
-            return false;
-        }
-
-        $ok = true;
-
-        $quinzenes = self::quinzenes($seguiment->id);
-        if ($quinzenes) {
-            foreach ($quinzenes as $quinzena) {
-                $ok = self::suprimir_quinzena($quinzena->id) && $ok;
-            }
-        }
-
-        $ok = delete_records('fct_seguiment', 'quadern', $quadern_id) && $ok;
-
-        return $ok;
     }
 
     function suprimir_quinzena($quinzena_id) {
@@ -551,6 +489,19 @@ class fct_db
         $ok = delete_records('fct_dia_quinzena', 'quinzena', $quinzena_id) && $ok;
         $ok = delete_records('fct_activitat_quinzena', 'quinzena', $quinzena_id) && $ok;
         $ok = delete_records('fct_quinzena', 'id', $quinzena_id) && $ok;
+        return $ok;
+    }
+
+    function suprimir_quinzenes($quadern_id) {
+        $ok = true;
+
+        $quinzenes = self::quinzenes($quadern_id);
+        if ($quinzenes) {
+            foreach ($quinzenes as $quinzena) {
+                $ok = self::suprimir_quinzena($quinzena->id) && $ok;
+            }
+        }
+
         return $ok;
     }
 
@@ -710,6 +661,7 @@ class fct_db
             	'alumne' => $alumne,
                 'hores_credit' => '0',
                 'exempcio' => '0',
+                'hores_anteriors' => '0',
             );
             if (!insert_record('fct_dades_relatives', $record)) {
                 return false;
@@ -727,22 +679,16 @@ class fct_db
     function hores_realitzades_fct($fct_id, $alumne) {
         global $CFG;
         $sql = 'SELECT SUM(qi.hores) AS hores '
-             . "FROM {$CFG->prefix}fct_quadern qa "
-             . "JOIN {$CFG->prefix}fct_seguiment s ON qa.id = s.quadern "
-        	 . "JOIN {$CFG->prefix}fct_quinzena qi ON s.id = qi.seguiment "
-        	 . "WHERE qa.fct = '$fct_id' AND qa.alumne = '$alumne'";
+            . "FROM {$CFG->prefix}fct_quadern qa "
+            . "JOIN {$CFG->prefix}fct_quinzena qi ON qa.id = qi.quadern "
+            . "WHERE qa.fct = '$fct_id' AND qa.alumne = '$alumne'";
         $record = get_record_sql($sql);
         return ($record and $record->hores) ? $record->hores : 0;
     }
 
     function hores_realitzades_quadern($quadern_id) {
-        global $CFG;
-        $sql = 'SELECT SUM(qi.hores) AS hores '
-             . "FROM {$CFG->prefix}fct_seguiment s "
-        	 . "JOIN {$CFG->prefix}fct_quinzena qi ON s.id = qi.seguiment "
-        	 . "WHERE s.quadern = '$quadern_id'";
-        $record = get_record_sql($sql);
-        return ($record and $record->hores) ? $record->hores : 0;
+        $hores = get_field('fct_quinzena', 'SUM(hores)', 'quadern', $quadern_id);
+        return $hores ? $hores : 0;
     }
 
 

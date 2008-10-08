@@ -13,7 +13,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     var $dies_quinzena;
 
     function comprovar_quinzena($data) {
-        if (fct_db::quinzena_duplicada($this->seguiment->id,
+        if (fct_db::quinzena_duplicada($this->quadern->id,
             addslashes($data['periode'][0]), addslashes($data['periode'][1]),
             $this->quinzena->id)) {
             return array('periode' => fct_string('quinzena_duplicada'));
@@ -27,7 +27,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
             $this->error('recuperar_quinzena');
         }
 
-        parent::configurar(false, $this->quinzena->seguiment);
+        parent::configurar($this->quinzena->quadern);
 
         $this->configurar_accio(array('veure', 'editar', 'desar', 'suprimir',
         	'confirmar','cancellar'), 'veure');
@@ -39,7 +39,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
             $this->comprovar_permis($this->permis_editar_alumne);
         }
 
-        $this->activitats = fct_db::activitats_pla($this->pla->id);
+        $this->activitats = fct_db::activitats_pla($this->quadern->id);
         if (!$this->activitats) {
             $this->activitats = array();
         }
@@ -93,7 +93,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         } else {
             $this->error('suprimir_quinzena');
         }
-        redirect(fct_url::seguiment($this->seguiment->id));
+        redirect(fct_url::seguiment($this->quadern->id));
     }
 
     function processar_desar() {

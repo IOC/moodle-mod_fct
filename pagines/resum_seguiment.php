@@ -12,7 +12,7 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
 
     function calcular_resum() {
         $resum = array();
-        $records = fct_db::quinzenes($this->seguiment->id);
+        $records = fct_db::quinzenes($this->quadern->id);
         if ($records) {
             foreach ($records as $record) {
                 $any = $record->any_;

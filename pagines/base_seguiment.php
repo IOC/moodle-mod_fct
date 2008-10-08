@@ -4,35 +4,14 @@ require_once 'base_quadern.php';
 
 class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
 
-    var $seguiment;
     var $conveni;
-    var $pla;
     var $permis_editar;
     var $permis_editar_centre;
     var $permis_editar_alumne;
     var $permis_editar_empresa;
 
-    function configurar($quadern_id, $seguiment_id=false) {
-        if ($seguiment_id) {
-            $this->seguiment = fct_db::seguiment($seguiment_id);
-            if (!$this->seguiment) {
-                $this->error('recuperar_seguiment');
-            }
-            parent::configurar($this->seguiment->quadern);
-        } else if ($quadern_id) {
-            $this->seguiment = fct_db::seguiment_quadern($quadern_id);
-            if (!$this->seguiment) {
-                $this->error('recuperar_seguiment');
-            }
-            parent::configurar($quadern_id);
-        } else {
-            $this->error('recuperar_seguiment');
-        }
-
-        $this->pla = fct_db::pla_actvitats_quadern($this->quadern->id);
-        if (!$this->pla) {
-            $this->error('recuperar_pla_activitats');
-        }
+    function configurar($quadern_id) {
+        parent::configurar($quadern_id);
 
         $this->conveni = fct_db::dades_conveni($this->quadern->id);
         if (!$this->conveni) {
@@ -59,7 +38,7 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         );
         if ($this->permis_editar_alumne) {
             $pestanyes[] = new tabobject('afegir_quinzena',
-                fct_url::afegir_quinzena($this->seguiment->id), fct_string('afegeix_quinzena'));
+                fct_url::afegir_quinzena($this->quadern->id), fct_string('afegeix_quinzena'));
         }
         $pestanyes[] = new tabobject('resum_seguiment',
             fct_url::resum_seguiment($this->quadern->id), fct_string('resum_seguiment'));

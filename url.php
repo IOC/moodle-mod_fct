@@ -22,8 +22,8 @@ class fct_url {
         return self::url('afegir_quadern', array('fct' => $fct_id));
     }
 
-    function afegir_quinzena($seguiment_id) {
-        return self::url('afegir_quinzena', array('seguiment' => $seguiment_id));
+    function afegir_quinzena($quadern_id) {
+        return self::url('afegir_quinzena', array('quadern' => $quadern_id));
     }
 
     function afegir_tutor_empresa($fct_id) {
@@ -139,7 +139,6 @@ class fct_url {
     function suprimir_plantilla($plantilla_id) {
         return self::url('suprimir_plantilla', array('plantilla' => $plantilla_id));
     }
-
 
     function url($pagina, $params) {
         $url = "view.php?pagina=$pagina";

@@ -11,7 +11,7 @@ class fct_pagina_base_activitat_pla extends fct_pagina_base_pla_activitats {
         if (!$this->activitat) {
             $this->error('recuperar_activitat');
         }
-        parent::configurar(false, $this->activitat->pla);
+        parent::configurar($this->activitat->quadern);
     }
 }
 
