@@ -23,14 +23,16 @@
 
     // Print header
 
+    $navlinks = array(array('name' => $strfcts,
+                            'link' => "indexw.php?id=$id",
+                            'type' => 'activity'));
+
     if ($course->id != SITEID) {
-        print_header("$course->shortname: $strfcts", $course->fullname,
-            "<a href=\"../../course/view.php?id=$course->id\">"
-            . "$course->shortname</a> -> $strfcts", "", "", true,
-            false, navmenu($course));
+        print_header($strfcts, $course->fullname, build_navigation($navlinks),
+                     "", "", true, false, navmenu($course));
     } else {
-        print_header("$course->shortname: $strfcts", $course->fullname,
-            "$strfcts", "", "", true, "", navmenu($course));
+        print_header($strfcts, $course->fullname, build_navigation($navlinks),
+                      "", "", true, "", navmenu($course));
     }
 
     // Print table
