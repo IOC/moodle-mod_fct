@@ -6,10 +6,12 @@ class fct_backup
 {
     var $bf;
     var $level;
+    var $fct;
 
-    function __construct($bf, $level) {
+    function __construct($bf, $level, $fct) {
         $this->bf = $bf;
         $this->level = $level;
+        $this->fct = $fct;
     }
 
     function write($text) {
@@ -34,23 +36,37 @@ class fct_backup
     }
 
     function write_table($table, $records) {
-        if (!is_array($records)) {
+        if (!empty($records) and !is_array($records)) {
             $records = array($records);
         }
         $this->write_start_tag(strtoupper($table));
-        foreach ($records as $record) {
-            $this->write_record($record);
+        if ($records) {
+            foreach ($records as $record) {
+                $this->write_record($record);
+            }
         }
         $this->write_end_tag(strtoupper($table));
     }
 
-    function write_table_field($table, $field, $value) {
-        $records = get_records($table, $field, $value);
+    function write_table_fct($table) {
+        $records = get_records($table, 'fct', $this->fct->id);
         $this->write_table($table, $records);
     }
 
-    function write_table_where($table, $where) {
-        $records = get_records_select($table, $where);
+    function write_table_fct2($table, $field, $table2) {
+        global $CFG;
+        $select = "$field IN (SELECT id FROM {$CFG->prefix}$table2"
+            . " WHERE fct = {$this->fct->id})";
+        $records = get_records_select($table, $select);
+        $this->write_table($table, $records);
+    }
+
+    function write_table_fct3($table, $field, $table2, $field2, $table3) {
+        global $CFG;
+        $select = "$field IN (SELECT id FROM {$CFG->prefix}$table2"
+            . " WHERE $field2 IN (SELECT id FROM {$CFG->prefix}$table3"
+            . " WHERE fct = {$this->fct->id}))";
+        $records = get_records_select($table, $select);
         $this->write_table($table, $records);
     }
 
@@ -119,20 +135,39 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
         $fct = get_record('fct', 'id', $fct);
     }
     $instanceid = $fct->id;
-    $userdata = backup_userdata_selected($preferences,'fct', $fcy->id);
+    $userdata = backup_userdata_selected($preferences,'fct', $fct->id);
     
     $status = true;
 
-    $backup = new fct_backup($bf, 3);
+    $backup = new fct_backup($bf, 3, $fct);
     $backup->write_start_tag('MOD');
-    $backup->write_table('fct', $fct);
-    $backup->write_table_field('fct_dades_centre', 'fct', $fct->id);
-    $backup->write_table_field('fct_plantilla', 'fct', $fct->id);
+    $backup->write_full_tag('ID', $fct->id);
+    $backup->write_full_tag('MODTYPE', 'fct');
+    $backup->write_full_tag('VERSION', get_field('modules', 'version' , 'name', 'fct'));
+    $backup->write_full_tag('NAME', $fct->name);
+    $backup->write_full_tag('INTRO', $fct->intro);
+    $backup->write_full_tag('TIMECREATED', $fct->timecreated);
+    $backup->write_full_tag('TIMEMODIFIED', $fct->timemodified);
+    $backup->write_table_fct('fct_dades_centre');
+    $backup->write_table_fct('fct_plantilla');
+    $backup->write_table_fct2('fct_activitat_plantilla', 'plantilla', 'fct_plantilla');
     if ($userdata) {
-        $backup->write_table_field('fct_dades_alumne', 'fct', $fct->id);
-        $backup->write_table_field('fct_dades_relatives', 'fct', $fct->id);
-        $backup->write_table_field('fct_qualificacio_global', 'fct', $fct->id);
-        $backup->write_table_field('fct_quadern', 'fct', $fct->id);   
+        $backup->write_table_fct('fct_dades_alumne');
+        $backup->write_table_fct('fct_dades_relatives');
+        $backup->write_table_fct('fct_qualificacio_global');
+        $backup->write_table_fct('fct_quadern');   
+        $backup->write_table_fct2('fct_dades_centre_concertat', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_dades_empresa', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_dades_conveni', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_dades_horari', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_activitat_pla', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_valoracio_actituds', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_qualificacio_quadern', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_quinzena', 'quadern', 'fct_quadern');
+        $backup->write_table_fct3('fct_activitat_quinzena', 'quinzena', 'fct_quinzena',
+                                  'quadern', 'fct_quadern');
+        $backup->write_table_fct3('fct_dia_quinzena', 'quinzena', 'fct_quinzena',
+                                  'quadern', 'fct_quadern');
     }
     $backup->write_end_tag('MOD');
 
