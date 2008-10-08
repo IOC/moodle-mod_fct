@@ -12,7 +12,7 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
 
     function processar() {
         $this->mostrar_capcalera();
-        print_heading(fct_string('quinzenes'));
+        print_heading(fct_string('seguiment_quinzenal'));
 
         $taula = new flexible_table('fct_seguiment');
         $taula->set_attribute('id', 'fct_seguiment');

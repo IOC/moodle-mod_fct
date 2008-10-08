@@ -2,13 +2,7 @@
 
 require_once '../../config.php';
 
-function fct_string($identifier, $a=null) {
-    if (is_array($a)) {
-        $a = (object) $a;
-    }
-    return get_string($identifier, 'fct', $a);
-}
-
+require_once 'lib.php';
 require_once 'db.php';
 require_once 'url.php';
 

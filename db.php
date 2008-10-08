@@ -120,6 +120,14 @@ class fct_db
         }
     }
 
+    function nombre_plantilles($fct_id=false) {
+        if ($fct_id) {
+            return count_records('fct_plantilla', 'fct', $fct_id);
+        } else {
+            return count_records('fct_plantilla');
+        }
+    }
+
     function plantilla($plantilla_id) {
         return get_record('fct_plantilla', 'id', $plantilla_id);
     }
@@ -182,6 +190,14 @@ class fct_db
         }
 
         return $id;
+    }
+
+    function nombre_quaderns($fct_id=false) {
+        if ($fct_id) {
+            return count_records('fct_quadern', 'fct', $fct_id);
+        } else {
+            return count_records('fct_quadern');
+        }
     }
 
     function quadern_duplicat($fct_id, $alumne_id, $nom_empresa, $quadern_id=false) {
@@ -447,6 +463,19 @@ class fct_db
             }
         }
         return $dies;
+    }
+
+    function nombre_quinzenes($fct_id=false) {
+        global $CFG;
+        if ($fct_id) {
+            $sql = "SELECT COUNT(*) FROM {$CFG->prefix}fct_quinzena qi"
+                . " JOIN {$CFG->prefix}fct_seguiment s ON s.id = qi.seguiment"
+                . " JOIN {$CFG->prefix}fct_quadern qa ON qa.id = s.quadern"
+                . " WHERE qa.fct = $fct_id";
+            return count_records_sql($sql);
+        } else {
+            return count_records('fct_quinzena');
+        }
     }
 
     function quinzena($quinzena_id) {
