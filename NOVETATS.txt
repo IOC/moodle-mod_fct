@@ -1,3 +1,7 @@
+1.4 (2008-10-10)
+   * Implementació de les còpies de seguretat.
+   * Refactoring: eliminació de taules innecessàries.
+
 1.3 (2008-10-02)
    * Camp d'hores d'FCT realitzades anteriorments per a casos excepcionals.
    * Pàgina d'alta d'usuaris de Moodle per a tutors d'empresa.
