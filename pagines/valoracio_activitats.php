@@ -5,19 +5,11 @@ require_once 'form_valoracio_activitats.php';
 
 class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
 
-    var $pla;
     var $activitats;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-
-        $this->pla = fct_db::pla_actvitats_quadern($this->quadern->id);
-        if (!$this->pla) {
-            $this->error('recuperar_pla_activitats');
-        }
-
-        $this->activitats = fct_db::activitats_pla($this->pla->id);
-
+        $this->activitats = fct_db::activitats_pla($this->quadern->id);
         $this->url = fct_url::valoracio_activitats($this->quadern->id);
         $this->afegir_navegacio(fct_string('valoracio_activitats'), $this->url);
     }
@@ -33,7 +25,7 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
         $this->mostrar_capcalera();
         if ($this->activitats) {
             $this->form->set_data_llista('activitat',
-                fct_db::notes_activitats_pla($this->pla->id));
+                fct_db::notes_activitats_pla($this->quadern->id));
             $this->form->display();
         } else {
             print_heading(fct_string('valoracio_activitats'));
