@@ -14,6 +14,9 @@ class fct_restore
     }
 
     function get_id($table, $old_id) {
+        if ($old_id == 0) {
+            return 0;
+        }
         $result = backup_getid($this->restore->backup_unique_code, $table, $old_id);
         return $result->new_id;
     }

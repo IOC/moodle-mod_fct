@@ -14,7 +14,7 @@ class fct_pagina_base_valoracio extends fct_pagina_base_quadern {
             ($this->quadern->estat and ($this->permis_tutor_centre
             or $this->permis_tutor_empresa)));
         if ($this->accio != 'veure') {
-            $this->comprovar_permis($this->pernis_editar);
+            $this->comprovar_permis($this->permis_editar);
         }
     }
 
