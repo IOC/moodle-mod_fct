@@ -252,10 +252,9 @@ class fct_form_base extends moodleform {
         $calendari = $element->calendaris[$element->any][$element->periode];
         $congelat = ($this->congelat or $element->congelat);
 
-        require_once $CFG->libdir . '/json/JSON.php';
-        $json = new Services_JSON();
-        $json_capcalera = $json->encode($capcalera);
-        $json_calendaris = $json->encode($element->calendaris);
+        require_once($CFG->libdir.'/pear/HTML/AJAX/JSON.php');
+        $json_capcalera = json_encode($capcalera);
+        $json_calendaris = json_encode($element->calendaris);
 
         $html = "<script type=\"text/javascript\" defer=\"defer\">
             //<![CDATA[
