@@ -20,8 +20,9 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
                 fct_url::dades_centre_quadern($this->quadern->id), fct_string('centre_docent')),
             new tabobject('dades_alumne',
                 fct_url::dades_alumne($this->quadern->id), fct_string('alumne')),
-            new tabobject('dades_centre_concertat',
-                fct_url::dades_centre_concertat($this->quadern->id), fct_string('centre_concertat')),
+            // Pestanya de centre concertat ocultada temporalment
+            // new tabobject('dades_centre_concertat',
+            //    fct_url::dades_centre_concertat($this->quadern->id), fct_string('centre_concertat')),
             new tabobject('dades_emoresa',
                 fct_url::dades_empresa($this->quadern->id), fct_string('empresa')),
             new tabobject('dades_cconveni',
