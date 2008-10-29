@@ -367,10 +367,14 @@ class fct_db
     function actualitzar_quinzena($quinzena, $dies=false, $activitats=false) {
         $ok = true;
         $ok = update_record('fct_quinzena', $quinzena) && $ok;
-        $ok = delete_records('fct_dia_quinzena', 'quinzena', $quinzena->id) && $ok;
-        $ok = self::afegir_dies_quinzena($quinzena->id, $dies) && $ok;
-        $ok = delete_records('fct_activitat_quinzena', 'quinzena', $quinzena->id) && $ok;
-        $ok = self::afegir_activitats_quinzena($quinzena->id, $activitats) && $ok;
+        if ($dies !== false) {
+            $ok = delete_records('fct_dia_quinzena', 'quinzena', $quinzena->id) && $ok;
+            $ok = self::afegir_dies_quinzena($quinzena->id, $dies) && $ok;
+        }
+        if ($activitats !== false) {
+            $ok = delete_records('fct_activitat_quinzena', 'quinzena', $quinzena->id) && $ok;
+            $ok = self::afegir_activitats_quinzena($quinzena->id, $activitats) && $ok;
+        }
         return $ok;
     }
 
@@ -410,7 +414,7 @@ class fct_db
         return $ok;
     }
 
-    function afegir_quinzena($quinzena, $dies=false, $activitats=false) {
+    function afegir_quinzena($quinzena, $dies, $activitats) {
         $id = insert_record('fct_quinzena', $quinzena);
         if (!self::afegir_dies_quinzena($id, $dies)) {
             return false;
@@ -465,7 +469,7 @@ class fct_db
         global $CFG;
         $sql = 'SELECT q.*, COUNT(d.id) AS dies '
              . "FROM {$CFG->prefix}fct_quinzena q "
-             . "JOIN {$CFG->prefix}fct_dia_quinzena d "
+             . "LEFT JOIN {$CFG->prefix}fct_dia_quinzena d "
              . '          ON q.id = d.quinzena '
              . "WHERE q.quadern = '$quadern_id' "
              . 'GROUP BY q.id '
