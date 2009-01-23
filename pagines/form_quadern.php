@@ -8,16 +8,22 @@ class fct_form_quadern extends fct_form_base {
         $this->afegir_header('quadern', $this->pagina->accio == 'afegir' ?
         	fct_string('nou_quadern') : fct_string('quadern'));
 
-        $this->afegir_select('alumne', fct_string('alumne'),
-            $this->usuaris_amb_permis('mod/fct:alumne', false));
+        $this->afegir_select(
+            'alumne', fct_string('alumne'),
+            $this->usuaris_amb_permis('mod/fct:alumne',
+                                      $this->pagina->quadern->alumne, false));
 
         $this->afegir_text( 'nom_empresa', fct_string('empresa'), 48, true);
 
-        $this->afegir_select('tutor_centre', fct_string('tutor_centre'),
-            $this->usuaris_amb_permis('mod/fct:tutor_centre'));
+        $this->afegir_select(
+            'tutor_centre', fct_string('tutor_centre'),
+            $this->usuaris_amb_permis('mod/fct:tutor_centre',
+                                      $this->pagina->quadern->tutor_centre));
 
-        $this->afegir_select('tutor_empresa', fct_string('tutor_empresa'),
-            $this->usuaris_amb_permis('mod/fct:tutor_empresa'));
+        $this->afegir_select(
+            'tutor_empresa', fct_string('tutor_empresa'),
+            $this->usuaris_amb_permis('mod/fct:tutor_empresa',
+                                      $this->pagina->quadern->tutor_empresa));
 
         if ($this->pagina->accio == 'afegir') {
             $this->afegir_select('plantilla', fct_string('plantilla'),
@@ -46,20 +52,27 @@ class fct_form_quadern extends fct_form_base {
 
     }
 
-    function usuaris_amb_permis($capability, $usuari_nul=true) {
+    function usuaris_amb_permis($capability, $usuari, $usuari_nul=true) {
         $usuaris = array();
         if ($usuari_nul) {
             $usuaris[0] = '';
         }
+        if ($usuari) {
+            $usuaris[$usuari] = true;
+        }
+
         $records = get_users_by_capability($this->pagina->context, $capability,
                                            'u.id', 'u.lastname, u.firstname',
                                            '', '', '', '', false);
         if ($records) {
             foreach ($records as $record) {
-                $enllac = $this->pagina->nom_usuari($record->id, true,
-                    ($this->pagina->accio == 'veure'));
-                $usuaris[$record->id] = $enllac;
+                $usuaris[$record->id] = true;
             }
+        }
+
+        foreach (array_keys($usuaris) as $id) {
+            $usuaris[$id] = $this->pagina->nom_usuari(
+                $id, true, ($this->pagina->accio == 'veure'));
         }
         return $usuaris;
     }

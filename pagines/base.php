@@ -175,9 +175,13 @@ class fct_pagina_base {
 
     function nom_usuari($userid, $enllac=false, $correu=false) {
         global $CFG;
+
+        if (!$userid) {
+            return '';
+        }
         $user = get_record('user', 'id', $userid);
         if (!$user) {
-            return false;
+            return '';
         }
         $html = $user->firstname.' '.$user->lastname;
         if ($enllac) {
