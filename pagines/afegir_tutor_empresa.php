@@ -10,6 +10,9 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         if (!preg_match('/^[0-9]{8}[a-zA-Z]$/', $dni)) {
             return array('dni' => fct_string('dni_no_valid'));
         }
+        if (record_exists('user', 'username', $dni)) {
+            return array('dni' => fct_string('dni_existent'));
+        }
         return true;
     }
 
