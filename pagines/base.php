@@ -137,7 +137,7 @@ class fct_pagina_base {
         return $this->icona('/t/delete.gif', $url, $text);
     }
 
-    function mostrar_capcalera($buttontext='') {
+    function mostrar_capcalera() {
         $navlinks = array();
         $navlinks[] = array('name' => format_string($this->fct->name),
                             'link' => "view.php?id={$this->cm->id}",
@@ -148,10 +148,17 @@ class fct_pagina_base {
         }
         $navigation = build_navigation($navlinks);
 
+        $buttontext = update_module_button($this->cm->id, $this->course->id,
+            get_string('modulename', 'fct'));
+
         print_header_simple(format_string($this->fct->name), '',
             $navigation, '', '', true, $buttontext, navmenu($this->course, $this->cm));
 
         print_box_start('paginafct boxaligncenter');
+
+        if (!empty($this->fct->intro)) {
+            print_box(format_text($this->fct->intro), 'generalbox', 'intro');
+        }
 
         if ($this->pestanya) {
             $this->definir_pestanyes();
