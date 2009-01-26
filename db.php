@@ -781,4 +781,22 @@ class fct_db
         return $id;
     }
 
+// Llista d'empreses
+
+    function empreses($fct_id, $order=false) {
+        global $CFG;
+
+        $sql = "SELECT q.id, q.nom_empresa AS nom,
+                    e.adreca, e.poblacio, e.codi_postal,
+                    e.telefon, e.fax, e.email, e.nif
+                FROM {$CFG->prefix}fct_quadern q
+                    JOIN {$CFG->prefix}fct_dades_empresa e ON q.id = e.quadern
+                    WHERE q.fct = '$fct_id'";
+        if ($order) {
+            $sql .= " ORDER BY $order";
+        }
+
+        return get_records_sql($sql);
+    }
+
 }

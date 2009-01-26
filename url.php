@@ -74,6 +74,10 @@ class fct_url {
         return self::url('editar_activitat_plantilla', array('activitat' => $activitat_id));
     }
 
+    function llista_empreses($fct_id) {
+        return self::url('llista_empreses', array('fct' => $fct_id));
+    }
+
     function editar_plantilla($plantilla_id) {
         return self::url('editar_plantilla', array('plantilla' => $plantilla_id));
     }

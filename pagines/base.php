@@ -106,12 +106,13 @@ class fct_pagina_base {
     function definir_pestanyes() {
         if ($this->permis_admin) {
             $this->pestanyes = array(array(
-            new tabobject('quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
+                new tabobject('quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
                 new tabobject('afegir_quadern', fct_url::afegir_quadern($this->fct->id), fct_string('afegeix_quadern')),
                 new tabobject('plantilles', fct_url::llista_plantilles($this->fct->id), fct_string('plantilles_activitats')),
                 new tabobject('afegir_plantilla', fct_url::afegir_plantilla($this->fct->id), fct_string('afegeix_plantilla')),
                 new tabobject('dades_centre', fct_url::dades_centre($this->fct->id), fct_string('dades_centre')),
                 new tabobject('afegir_tutor_empresa', fct_url::afegir_tutor_empresa($this->fct->id), fct_string('afegeix_tutor_empresa')),
+                new tabobject('empreses', fct_url::llista_empreses($this->fct->id), fct_string('empreses')),
             ));
         }
     }
