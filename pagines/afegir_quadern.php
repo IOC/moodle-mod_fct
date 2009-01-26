@@ -62,5 +62,16 @@ class fct_pagina_afegir_quadern extends fct_pagina_base {
         redirect(fct_url::llista_quaderns($this->fct->id));
     }
 
+    function alumne() {
+        return false;
+    }
+
+    function tutor_centre() {
+        return false;
+    }
+
+    function tutor_empresa() {
+        return false;
+    }
 }
 

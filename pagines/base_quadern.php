@@ -50,5 +50,18 @@ class fct_pagina_base_quadern extends fct_pagina_base {
                 fct_string('qualificacio_global')),
         ));
     }
+
+    function alumne() {
+        return $this->quadern->alumne;
+    }
+
+    function tutor_centre() {
+        return $this->quadern->tutor_centre;
+    }
+
+    function tutor_empresa() {
+        return $this->quadern->tutor_empresa;
+    }
+
 }
 

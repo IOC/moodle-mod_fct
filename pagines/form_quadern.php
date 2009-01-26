@@ -11,19 +11,19 @@ class fct_form_quadern extends fct_form_base {
         $this->afegir_select(
             'alumne', fct_string('alumne'),
             $this->usuaris_amb_permis('mod/fct:alumne',
-                                      $this->pagina->quadern->alumne, false));
+                                      $this->pagina->alumne(), false));
 
         $this->afegir_text( 'nom_empresa', fct_string('empresa'), 48, true);
 
         $this->afegir_select(
             'tutor_centre', fct_string('tutor_centre'),
             $this->usuaris_amb_permis('mod/fct:tutor_centre',
-                                      $this->pagina->quadern->tutor_centre));
+                                      $this->pagina->tutor_centre()));
 
         $this->afegir_select(
             'tutor_empresa', fct_string('tutor_empresa'),
             $this->usuaris_amb_permis('mod/fct:tutor_empresa',
-                                      $this->pagina->quadern->tutor_empresa));
+                                      $this->pagina->tutor_empresa()));
 
         if ($this->pagina->accio == 'afegir') {
             $this->afegir_select('plantilla', fct_string('plantilla'),
@@ -76,6 +76,5 @@ class fct_form_quadern extends fct_form_base {
         }
         return $usuaris;
     }
-
 }
 
