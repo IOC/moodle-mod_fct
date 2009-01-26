@@ -10,12 +10,14 @@ class fct_pagina_base_quaderns extends fct_pagina_base {
     }
 
     function definir_pestanyes() {
-        parent::definir_pestanyes();
-        $pestanyes = array(
-            new tabobject('llista_quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
-            new tabobject('afegir_quadern', fct_url::afegir_quadern($this->fct->id), fct_string('afegeix_quadern')),
-        );
-        $this->pestanyes[] = $pestanyes;
+        if ($this->permis_admin) {
+            parent::definir_pestanyes();
+            $pestanyes = array(
+                new tabobject('llista_quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
+                new tabobject('afegir_quadern', fct_url::afegir_quadern($this->fct->id), fct_string('afegeix_quadern')),
+            );
+            $this->pestanyes[] = $pestanyes;
+        }
     }
 }
 

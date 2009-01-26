@@ -8,7 +8,6 @@ class fct_pagina_llista_plantilles extends fct_pagina_base_plantilles {
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
         $this->url = fct_url::llista_plantilles($this->fct->id);
-        $this->afegir_navegacio(fct_string('plantilles_activitats'));
     }
 
     function processar() {

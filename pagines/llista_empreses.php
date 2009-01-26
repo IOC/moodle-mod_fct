@@ -10,6 +10,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
             optional_param('id', 0, PARAM_INT));
         $this->url = fct_url::llista_empreses($this->fct->id);
         $this->pestanya = 'empreses';
+        $this->afegir_navegacio(fct_string('empreses'), $this->url);
         $this->comprovar_permis($this->permis_admin);
     }
 

@@ -8,6 +8,7 @@ class fct_pagina_base_plantilles extends fct_pagina_base {
         parent::configurar($fct_id);
         $this->comprovar_permis($this->permis_admin);
         $this->pestanya = 'plantilles';
+        $this->afegir_navegacio(fct_string('plantilles_activitats'));
     }
 
     function definir_pestanyes() {

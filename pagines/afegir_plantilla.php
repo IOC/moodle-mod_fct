@@ -17,7 +17,6 @@ class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
         $this->url = fct_url::afegir_plantilla($this->fct->id);
-        $this->afegir_navegacio(fct_string('afegeix_plantilla'), $this->url);
     }
 
     function processar_afegir() {
