@@ -22,11 +22,10 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
                           'telefon', 'fax', 'email', 'nif');
         $taula->define_columns($columnes);
         $taula->define_headers(array_map('fct_string', $columnes));
-        $taula->sortable(true, 'nom');
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $empreses = fct_db::empreses($this->fct->id, $taula->get_sql_sort());
+        $empreses = fct_db::empreses($this->fct->id, 'nom');
 
         $this->mostrar_capcalera();
 
