@@ -1,15 +1,14 @@
 <?php
 
 require_once $CFG->libdir . '/tablelib.php';
-require_once 'base.php';
+require_once 'base_quaderns.php';
 
-class fct_pagina_llista_quaderns extends fct_pagina_base {
+class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
     function configurar() {
         parent::configurar(optional_param('fct', 0, PARAM_INT),
             optional_param('id', 0, PARAM_INT));
         $this->url = fct_url::llista_quaderns($this->fct->id);
-        $this->pestanya = 'quaderns';
     }
 
     function processar() {

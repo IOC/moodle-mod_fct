@@ -1,9 +1,9 @@
 <?php
 
-require_once 'base.php';
+require_once 'base_quaderns.php';
 require_once 'form_quadern.php';
 
-class fct_pagina_afegir_quadern extends fct_pagina_base {
+class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
     var $plantilles;
 
@@ -20,7 +20,6 @@ class fct_pagina_afegir_quadern extends fct_pagina_base {
         parent::configurar(required_param('fct', PARAM_INT));
         $this->comprovar_permis($this->permis_admin);
         $this->url = fct_url::afegir_quadern($this->fct->id);
-        $this->pestanya = 'afegir_quadern';
         $this->afegir_navegacio(fct_string('afegeix_quadern'), $this->url);
     }
 

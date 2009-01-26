@@ -2,7 +2,7 @@
 
 require_once 'base_plantilles.php';
 
-class fct_pagina_base_plantilla extends fct_pagina_base_plantilles {
+class fct_pagina_base_plantilla extends fct_pagina_base {
 
     var $plantilla;
 
@@ -13,6 +13,8 @@ class fct_pagina_base_plantilla extends fct_pagina_base_plantilles {
         }
 
         parent::configurar($this->plantilla->fct);
+        $this->comprovar_permis($this->permis_admin);
+
         $this->afegir_navegacio(fct_string('plantilles_activitats'),
             fct_url::llista_plantilles($this->fct->id));
         $this->afegir_navegacio($this->plantilla->nom,
