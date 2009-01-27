@@ -193,12 +193,24 @@ class fct_db
         return $id;
     }
 
-    function nombre_quaderns($fct_id=false) {
+    function nombre_quaderns($fct_id=false, $select=false) {
+        global $CFG;
+
+        $sql = "SELECT COUNT(*)"
+            . " FROM {$CFG->prefix}fct_quadern q";
+
+        $where = array();
         if ($fct_id) {
-            return count_records('fct_quadern', 'fct', $fct_id);
-        } else {
-            return count_records('fct_quadern');
+            $where[] = "q.fct = $fct_id";
         }
+        if ($select) {
+            $where[] =  "$select";
+        }
+        if ($where)  {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+       return count_records_sql($sql);
     }
 
     function quadern_duplicat($fct_id, $alumne_id, $nom_empresa, $quadern_id=false) {
@@ -216,19 +228,18 @@ class fct_db
     function quaderns($fct_id, $select=false, $order=false) {
         global $CFG;
 
-        $sql = "SELECT q.id,
-                    CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,
-                    q.nom_empresa AS empresa,
-                    CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,
-                    CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,
-                    q.estat,
-                    c.data_final
-                FROM {$CFG->prefix}fct_quadern q
-                    JOIN {$CFG->prefix}user ua ON q.alumne = ua.id
-                    LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id
-                    LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id
-                    JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern
-                    WHERE q.fct = '$fct_id'";
+        $sql = "SELECT q.id,"
+            . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
+            . " q.nom_empresa AS empresa,"
+            . " CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,"
+            . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
+            . " q.estat, c.data_final"
+            . " FROM {$CFG->prefix}fct_quadern q"
+            . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
+            . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
+            . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
+            . " JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern"
+            . " WHERE q.fct = '$fct_id'";
         if ($select) {
             $sql .= " AND ($select)";
         }
@@ -626,6 +637,16 @@ class fct_db
 
     function dades_conveni($quadern_id) {
         return get_record('fct_dades_conveni', 'quadern', $quadern_id);
+    }
+
+    function data_final_convenis_min_max($fct_id) {
+        global $CFG;
+        $sql = "SELECT MIN(c.data_final) AS data_min, MAX(c.data_final) AS data_max"
+            . " FROM {$CFG->prefix}fct_dades_conveni c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id"
+            . " WHERE q.fct = $fct_id";
+        $record = get_record_sql($sql);
+        return array($record->data_min, $record->data_max);
     }
 
     function suprimir_dades_conveni($quadern_id) {

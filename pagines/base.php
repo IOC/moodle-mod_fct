@@ -219,24 +219,4 @@ class fct_pagina_base {
         }
         add_to_log($this->course->id, 'fct', $action, $url, $info, $this->cm->id);
     }
-
-    function select_quaderns() {
-        global $USER;
-
-        $select = 'FALSE';
-        if ($this->permis_alumne) {
-            $select .= ' OR q.alumne = '.$USER->id;
-        }
-        if ($this->permis_tutor_centre) {
-            $select .= ' OR q.tutor_centre = '.$USER->id;
-        }
-        if ($this->permis_tutor_empresa) {
-            $select .= ' OR q.tutor_empresa = '.$USER->id;
-        }
-        if ($this->permis_admin) {
-            $select = '';
-        }
-        return $select;
-    }
 }
-

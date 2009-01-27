@@ -100,6 +100,10 @@
 	text-decoration: none;
 }
 
+#fct_selectors_quaderns {
+    margin-bottom: 1em;
+}
+
 #calendari_dia table {
 	font-size: 0.8em;
 	margin: 5px 0;
