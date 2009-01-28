@@ -6,8 +6,8 @@ require_once 'form_cicle.php';
 class fct_pagina_editar_nom_cicle extends fct_pagina_base_cicle {
 
     function comprovar_nom($data) {
-        if (fct_db::plantilla_duplicada($this->fct->id, addslashes($data['nom']),
-                                        $this->cicle->id)) {
+        if (fct_db::cicle_duplicat($this->fct->id, addslashes($data['nom']),
+                                   $this->cicle->id)) {
             return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
 
@@ -27,7 +27,7 @@ class fct_pagina_editar_nom_cicle extends fct_pagina_base_cicle {
         $data = $form->get_data();
         if ($data) {
             $cicle = (object) array('id' => $this->cicle->id, 'nom' => $data->nom);
-            $ok = fct_db::actualitzar_plantilla($cicle);
+            $ok = fct_db::actualitzar_cicle($cicle);
             if ($ok) {
                 $this->registrar('update cicle',
                     fct_url::cicle($this->cicle->id), $data->nom);

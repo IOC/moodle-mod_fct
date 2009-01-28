@@ -13,7 +13,7 @@ class fct_pagina_suprimir_cicle extends fct_pagina_base_cicle {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $ok = fct_db::suprimir_plantilla($this->cicle->id);
+        $ok = fct_db::suprimir_cicle($this->cicle->id);
         if ($ok) {
             $this->registrar('delete cicle',
                 fct_url::llista_cicles($this->fct->id),

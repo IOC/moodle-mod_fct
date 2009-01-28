@@ -23,7 +23,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicle {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $activitats = fct_db::activitats_plantilla($this->cicle->id);
+        $activitats = fct_db::activitats_cicle($this->cicle->id);
 
         if (!$activitats) {
            echo '<p>' . fct_string('cap_activitat') . '</p>';

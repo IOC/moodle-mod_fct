@@ -6,7 +6,7 @@ require_once 'form_cicle.php';
 class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 
     function comprovar_nom($data) {
-        if (fct_db::plantilla_duplicada($this->fct->id, addslashes($data['nom']))) {
+        if (fct_db::cicle_duplicat($this->fct->id, addslashes($data['nom']))) {
             return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
 
@@ -24,7 +24,7 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 
         $data = $form->get_data();
         if ($data) {
-            $id = fct_db::afegir_plantilla($this->fct->id, $data->nom, $data->activitats);
+            $id = fct_db::afegir_cicle($this->fct->id, $data->nom, $data->activitats);
             if ($id) {
                 $this->registrar('add cicle', fct_url::cicle($id), $data->nom);
             } else {

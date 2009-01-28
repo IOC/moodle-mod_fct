@@ -6,10 +6,11 @@ require_once 'form_activitat.php';
 class fct_pagina_editar_activitat_cicle extends fct_pagina_base_activitat_cicle  {
 
     function comprovar_descripcio($data) {
-       if (fct_db::activitat_plantilla_duplicada($this->cicle->id,
-                addslashes($data['descripcio']), $this->cicle->id)) {
-            return array('descripcio' => fct_string('activitat_duplicada'));
-        }
+       if (fct_db::activitat_cicle_duplicada(
+               $this->cicle->id, addslashes($data['descripcio']),
+               $this->cicle->id)) {
+           return array('descripcio' => fct_string('activitat_duplicada'));
+       }
         return true;
     }
 
@@ -30,12 +31,12 @@ class fct_pagina_editar_activitat_cicle extends fct_pagina_base_activitat_cicle 
         if ($data) {
             $activitat = (object) array(
                 'id' => $this->activitat->id,
-                'descripcio' => $data->descripcio);
-            $ok = fct_db::actualitzar_activitat_plantilla($activitat);
+                'descripcio' => $data->descripcio));
+            $ok = fct_db::actualitzar_activitat_cicle($activitat);
             if ($ok) {
                 $this->registrar('update activitat_cicle',
-                    fct_url::cicle($this->cicle->id),
-                    $data->descripcio);
+                                 fct_url::cicle($this->cicle->id),
+                                 $data->descripcio);
             } else {
                 $this->error('desar_activitat');
             }

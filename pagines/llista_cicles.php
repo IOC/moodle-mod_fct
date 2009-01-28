@@ -22,7 +22,7 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $cicles = fct_db::plantilles($this->fct->id);
+        $cicles = fct_db::cicles($this->fct->id);
 
         if (!$cicles) {
            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';

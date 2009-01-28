@@ -5,7 +5,7 @@ require_once 'form_cicle_pla.php';
 
 class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
 
-    var $plantilles;
+    var $cicles;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
@@ -15,16 +15,16 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
     }
 
     function processar_afegir() {
-        $this->plantilles = fct_db::plantilles($this->fct->id);
-        if ($this->plantilles) {
+        $this->cicles = fct_db::cicles($this->fct->id);
+        if ($this->cicles) {
             $form = new fct_form_cicle_pla($this);
             $data = $form->get_data();
             if ($data) {
-                $id = fct_db::afegir_activitats_plantilla_pla($this->quadern->id, $data->plantilla);
+                $id = fct_db::afegir_activitats_cicle_pla($this->quadern->id, $data->cicle);
                 if ($id) {
-                    $this->registrar('add activitats_plantilla_pla',
+                    $this->registrar('add activitats_cicle_pla',
                         fct_url::pla_activitats($this->quadern->id),
-                        $this->plantilles[$data->plantilla]->nom);
+                        $this->cicles[$data->cicle]->nom);
                 } else {
                    $this->error('afegir_activitats');
                 }
@@ -33,7 +33,7 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
         }
 
         $this->mostrar_capcalera();
-        if ($this->plantilles) {
+        if ($this->cicles) {
             $form->display();
         } else {
             print_heading(fct_string('afegeix_activitats_cicle'));

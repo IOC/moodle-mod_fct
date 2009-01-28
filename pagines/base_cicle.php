@@ -7,7 +7,7 @@ class fct_pagina_base_cicle extends fct_pagina_base {
     var $cicle;
 
     function configurar($id) {
-        $this->cicle = fct_db::plantilla($id);
+        $this->cicle = fct_db::cicle($id);
         if (!$this->cicle) {
             $this->error('recuperar_cicle');
         }

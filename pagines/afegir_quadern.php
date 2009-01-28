@@ -24,7 +24,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
     function processar_afegir() {
         $this->plantilles = array(0 => (object) array('nom' => ''));
-        $plantilles = fct_db::plantilles($this->fct->id);
+        $plantilles = fct_db::cicles($this->fct->id);
         if ($plantilles) {
             foreach ($plantilles as $id => $plantilla) {
                 $this->plantilles[$id] = $plantilla;

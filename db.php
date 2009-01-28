@@ -37,7 +37,7 @@ class fct_db
 
         $ok = delete_records('fct', 'id', $id) && $ok;
         $ok = self::suprimir_dades_centre($id) && $ok;
-        $ok = self::suprimir_plantilles($id) && $ok;
+        $ok = self::suprimir_cicles($id) && $ok;
         $ok = self::suprimir_quaderns($id) && $ok;
         $ok = self::suprimir_dades_alumnes($id) && $ok;
         $ok = self::suprimir_dades_relatives($id) && $ok;
@@ -65,62 +65,78 @@ class fct_db
         return delete_records('fct_dades_centre', 'fct', $fct_id);
     }
 
-// Plantilles
+// Cicles
 
-    function activitat_plantilla($activitat_id) {
+    function activitat_cicle($activitat_id) {
         return get_record('fct_activitat_plantilla', 'id', $activitat_id);
     }
 
-    function activitat_plantilla_duplicada($plantilla_id, $descripcio, $activitat_id=false) {
-        $select = "plantilla = '$plantilla_id' AND descripcio = '$descripcio'";
+    function activitat_cicle_duplicada($cicle_id, $descripcio, $activitat_id=false) {
+        $select = "plantilla = '$cicle_id' AND descripcio = '$descripcio'";
         if ($activitat_id) {
             $select .= " AND id != '$activitat_id'";
         }
         return record_exists_select('fct_activitat_plantilla', $select);
     }
 
-    function activitats_plantilla($plantilla_id) {
+    function activitats_cicle($cicle_id) {
         return get_records('fct_activitat_plantilla',
-        	'plantilla', $plantilla_id, 'descripcio');
+                           'plantilla', $cicle_id, 'descripcio');
     }
 
-    function actualitzar_activitat_plantilla($activitat) {
+    function actualitzar_activitat_cicle($activitat) {
         return update_record('fct_activitat_plantilla', $activitat);
     }
 
-    function actualitzar_plantilla($plantilla) {
-        return update_record('fct_plantilla', $plantilla);
+    function actualitzar_cicle($cicle) {
+        return update_record('fct_plantilla', $cicle);
     }
 
-    function afegir_activitat_plantilla($plantilla_id, $descripcio) {
+    function afegir_activitat_cicle($cicle_id, $descripcio) {
         $activitat = (object) array(
-            'plantilla' => $plantilla_id,
+            'plantilla' => $cicle_id,
             'descripcio' => $descripcio);
         return insert_record('fct_activitat_plantilla', $activitat);
     }
 
-    function afegir_plantilla($fct_id, $nom, $activitats='') {
+    function afegir_cicle($fct_id, $nom, $activitats='') {
         $ok = true;
 
-        $plantilla = (object) array('fct' => $fct_id, 'nom' => $nom);
-        $ok = $ok && ($id = insert_record('fct_plantilla', $plantilla));
+        $cicle = (object) array('fct' => $fct_id, 'nom' => $nom);
+        $ok = $ok && ($id = insert_record('fct_plantilla', $cicle));
 
         $activitats = explode("\n", $activitats);
         foreach ($activitats as $activitat) {
             if (trim($activitat)) {
-                $ok = $ok && self::afegir_activitat_plantilla($id, $activitat);
+                $ok = $ok && self::afegir_activitat_cicle($id, $activitat);
             }
         }
 
         if ($ok) {
             return $id;
         } else {
-            self::suprimir_plantilla($id);
+            self::suprimir_cicle($id);
             return false;
         }
     }
 
-    function nombre_plantilles($fct_id=false) {
+    function cicle($cicle_id) {
+        return get_record('fct_plantilla', 'id', $cicle_id);
+    }
+
+    function cicle_duplicat($fct_id, $nom, $cicle_id=false) {
+        $select = "fct = '$fct_id' AND nom = '$nom'";
+        if ($cicle_id) {
+            $select .= " AND id != '$cicle_id'";
+        }
+        return record_exists_select('fct_plantilla', $select);
+    }
+
+    function cicles($fct_id) {
+        return get_records('fct_plantilla', 'fct', $fct_id, 'nom');
+    }
+
+    function nombre_cicles($fct_id=false) {
         if ($fct_id) {
             return count_records('fct_plantilla', 'fct', $fct_id);
         } else {
@@ -128,39 +144,23 @@ class fct_db
         }
     }
 
-    function plantilla($plantilla_id) {
-        return get_record('fct_plantilla', 'id', $plantilla_id);
-    }
-
-    function plantilla_duplicada($fct_id, $nom, $plantilla_id=false) {
-        $select = "fct = '$fct_id' AND nom = '$nom'";
-        if ($plantilla_id) {
-            $select .= " AND id != '$plantilla_id'";
-        }
-        return record_exists_select('fct_plantilla', $select);
-    }
-
-    function plantilles($fct_id) {
-        return get_records('fct_plantilla', 'fct', $fct_id, 'nom');
-    }
-
-    function suprimir_activitat_plantilla($activitat_id){
+    function suprimir_activitat_cicle($activitat_id){
         return delete_records('fct_activitat_plantilla', 'id', $activitat_id);
     }
 
-    function suprimir_plantilla($plantilla_id) {
+    function suprimir_cicle($cicle_id) {
         $ok = true;
-        $ok = delete_records('fct_plantilla', 'id', $plantilla_id) && $ok;
-        $ok = delete_records('fct_activitat_plantilla', 'plantilla', $plantilla_id) && $ok;
+        $ok = delete_records('fct_plantilla', 'id', $cicle_id) && $ok;
+        $ok = delete_records('fct_activitat_plantilla', 'plantilla', $cicle_id) && $ok;
         return $ok;
     }
 
-    function suprimir_plantilles($fct_id) {
-        $plantilles = self::plantilles($fct_id);
+    function suprimir_cicles($fct_id) {
+        $cicles = self::cicles($fct_id);
         $ok = true;
-        if ($plantilles) {
-            foreach ($plantilles as $plantilla) {
-                $ok = self::suprimir_plantilla($plantilla->id) && $ok;
+        if ($cicles) {
+            foreach ($cicles as $cicle) {
+                $ok = self::suprimir_cicle($cicle->id) && $ok;
             }
         }
         return $ok;
@@ -172,12 +172,12 @@ class fct_db
         return update_record('fct_quadern', $quadern);
     }
 
-    function afegir_quadern($quadern, $plantilla_id=false) {
+    function afegir_quadern($quadern, $cicle_id=false) {
         $ok = true;
 
         $ok = $ok && ($id = insert_record('fct_quadern', $quadern));
-        if ($ok && $plantilla_id) {
-            $ok = self::afegir_activitats_plantilla_pla($id, $plantilla_id);
+        if ($ok && $cicle_id) {
+            $ok = self::afegir_activitats_cicle_pla($id, $cicle_id);
         }
         $ok = $ok && self::afegir_dades_centre_concertat($id);
         $ok = $ok && self::afegir_dades_empresa($id);
@@ -319,8 +319,8 @@ class fct_db
         return insert_record('fct_activitat_pla', $activitat);
     }
 
-    function afegir_activitats_plantilla_pla($quadern_id, $plantilla_id) {
-        $activitats = self::activitats_plantilla($plantilla_id);
+    function afegir_activitats_cicle_pla($quadern_id, $cicle_id) {
+        $activitats = self::activitats_cicle($cicle_id);
         if ($activitats) {
             foreach ($activitats as $activitat) {
                 if (!self::activitat_pla_duplicada($quadern_id, $activitat->descripcio)) {
