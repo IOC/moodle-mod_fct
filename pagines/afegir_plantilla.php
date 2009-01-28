@@ -7,7 +7,7 @@ class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
 
     function comprovar_nom($data) {
         if (fct_db::plantilla_duplicada($this->fct->id, addslashes($data['nom']))) {
-            return array('nom' => fct_string('plantilla_duplicada'));
+            return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
 
         return true;
@@ -28,7 +28,7 @@ class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
             if ($id) {
                 $this->registrar('add plantilla', fct_url::plantilla($id), $data->nom);
             } else {
-                $this->error('afegir_plantilla');
+                $this->error('afegir_cicle_formatiu');
             }
             redirect(fct_url::plantilla($id));
         }

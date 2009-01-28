@@ -8,7 +8,7 @@ class fct_pagina_editar_plantilla extends fct_pagina_base_plantilla {
     function comprovar_nom($data) {
         if (fct_db::plantilla_duplicada($this->fct->id, addslashes($data['nom']),
                 $this->plantilla->id)) {
-            return array('nom' => fct_string('plantilla_duplicada'));
+            return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
 
         return true;
@@ -32,7 +32,7 @@ class fct_pagina_editar_plantilla extends fct_pagina_base_plantilla {
                 $this->registrar('update plantilla',
                     fct_url::plantilla($this->plantilla->id), $data->nom);
             } else {
-                $this->error('desar_plantilla');
+                $this->error('desar_cicle_formatiu');
             }
             redirect(fct_url::plantilla($this->plantilla->id));
         }

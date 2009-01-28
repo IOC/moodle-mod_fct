@@ -36,8 +36,8 @@ class fct_pagina_afegir_activitats_plantilla_pla extends fct_pagina_base_pla_act
         if ($this->plantilles) {
             $form->display();
         } else {
-            print_heading(fct_string('importa_activitats'));
-            echo '<p>' . fct_string('cap_plantilla') . '</p>';
+            print_heading(fct_string('afegeix_activitats_cicle'));
+            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         }
         $this->mostrar_peu();
     }

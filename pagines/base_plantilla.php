@@ -9,13 +9,13 @@ class fct_pagina_base_plantilla extends fct_pagina_base {
     function configurar($plantilla_id) {
         $this->plantilla = fct_db::plantilla($plantilla_id);
         if (!$this->plantilla) {
-            $this->error('recuperar_plantilla');
+            $this->error('recuperar_cicle_formatiu');
         }
 
         parent::configurar($this->plantilla->fct);
         $this->comprovar_permis($this->permis_admin);
 
-        $this->afegir_navegacio(fct_string('plantilles_activitats'),
+        $this->afegir_navegacio(fct_string('cicles_formatius'),
             fct_url::llista_plantilles($this->fct->id));
         $this->afegir_navegacio($this->plantilla->nom,
             fct_url::plantilla($this->plantilla->id));

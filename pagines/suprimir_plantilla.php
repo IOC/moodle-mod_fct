@@ -20,7 +20,7 @@ class fct_pagina_suprimir_plantilla extends fct_pagina_base_plantilla {
                 fct_url::llista_plantilles($this->fct->id),
                 $this->plantilla->nom);
         } else {
-            $this->error('suprimir_plantilla');
+            $this->error('suprimir_cicle_formatiu');
         }
         redirect(fct_url::llista_plantilles($this->fct->id));
     }
@@ -28,7 +28,7 @@ class fct_pagina_suprimir_plantilla extends fct_pagina_base_plantilla {
     function processar_suprimir() {
         $this->mostrar_capcalera();
 
-        notice_yesno(fct_string('segur_suprimir_plantilla', $this->plantilla->nom),
+        notice_yesno(fct_string('segur_suprimir_cicle_formatiu', $this->plantilla->nom),
             $this->url, fct_url::plantilla($this->plantilla->id),
             array('confirmar' => 1, 'sesskey' => sesskey()));
 

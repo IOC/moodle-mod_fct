@@ -14,7 +14,7 @@ class fct_pagina_llista_plantilles extends fct_pagina_base_plantilles {
 
         $this->mostrar_capcalera();
 
-        print_heading(fct_string('plantilles_activitats'));
+        print_heading(fct_string('cicles_formatius'));
 
         $taula = new flexible_table('fct_quaderns');
         $taula->define_columns(array('plantilla'));
@@ -25,7 +25,7 @@ class fct_pagina_llista_plantilles extends fct_pagina_base_plantilles {
         $plantilles = fct_db::plantilles($this->fct->id);
 
         if (!$plantilles) {
-           echo '<p>' . fct_string('cap_plantilla') . '</p>';
+           echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         } else {
             foreach ($plantilles as $plantilla) {
                 $taula->add_data(array('<a href="'

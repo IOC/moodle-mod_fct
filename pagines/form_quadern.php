@@ -26,7 +26,7 @@ class fct_form_quadern extends fct_form_base {
                                       $this->pagina->tutor_empresa()));
 
         if ($this->pagina->accio == 'afegir') {
-            $this->afegir_select('plantilla', fct_string('plantilla'),
+            $this->afegir_select('plantilla', fct_string('cicle_formatiu'),
                 $this->pagina->plantilles, 'nom');
         } else {
             $this->afegir_select('estat', fct_string('estat'),

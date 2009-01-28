@@ -7,7 +7,7 @@ class fct_form_plantilla extends fct_form_base {
     function configurar() {
         $this->afegir_header('plantilla_activitats',
             $this->pagina->accio == 'afegir' ?
-            fct_string('nova_plantilla') : fct_string('canvia_nom'));
+            fct_string('nou_cicle_formatiu') : fct_string('canvia_nom'));
 
         $this->afegir_text('nom', fct_string('nom'), 48, true);
         if ($this->pagina->accio == 'afegir') {

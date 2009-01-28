@@ -107,7 +107,7 @@ class fct_pagina_base {
         if ($this->permis_admin) {
             $this->pestanyes = array(array(
                 new tabobject('quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
-                new tabobject('plantilles', fct_url::llista_plantilles($this->fct->id), fct_string('plantilles_activitats')),
+                new tabobject('plantilles', fct_url::llista_plantilles($this->fct->id), fct_string('cicles_formatius')),
                 new tabobject('dades_centre', fct_url::dades_centre($this->fct->id), fct_string('dades_centre')),
                 new tabobject('empreses', fct_url::llista_empreses($this->fct->id), fct_string('empreses')),
                 new tabobject('afegir_tutor_empresa', fct_url::afegir_tutor_empresa($this->fct->id), fct_string('afegeix_tutor_empresa')),
