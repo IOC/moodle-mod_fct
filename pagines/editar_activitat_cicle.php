@@ -31,7 +31,7 @@ class fct_pagina_editar_activitat_cicle extends fct_pagina_base_activitat_cicle 
         if ($data) {
             $activitat = (object) array(
                 'id' => $this->activitat->id,
-                'descripcio' => $data->descripcio));
+                'descripcio' => $data->descripcio);
             $ok = fct_db::actualitzar_activitat_cicle($activitat);
             if ($ok) {
                 $this->registrar('update activitat_cicle',

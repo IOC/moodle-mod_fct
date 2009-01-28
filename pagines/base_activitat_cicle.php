@@ -11,7 +11,7 @@ class fct_pagina_base_activitat_cicle extends fct_pagina_base_cicle {
         if (!$this->activitat) {
             $this->error('recuperar_activitat');
         }
-        parent::configurar($this->activitat->plantilla);
+        parent::configurar($this->activitat->cicle);
     }
 }
 

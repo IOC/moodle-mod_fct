@@ -54,6 +54,39 @@ function xmldb_fct_upgrade($oldversion=0) {
         $result = $result && drop_table($table, false);
     }
 
+    if ($result && $oldversion < 2009012800) {
+        $table_plantilla = new XMLDBTable('fct_plantilla');
+        $table_activitat_plantilla = new XMLDBTable('fct_activitat_plantilla');
+        $table_cicle = new XMLDBTable('fct_cicle');
+        $table_activitat_cicle = new XMLDBTable('fct_activitat_cicle');
+
+        $field_plantilla = new XMLDBField('plantilla');
+        $field_plantilla->setAttributes(XMLDB_TYPE_INTEGER, '10', null, true, null, null, null, '0', 'id');
+
+        $key_fct = new XMLDBKey('fct');
+        $key_fct->setAttributes(XMLDB_KEY_FOREIGN, array('fct'), 'fct', 'id');
+        $key_fct_nom = new XMLDBKey('fct_nom');
+        $key_fct_nom->setAttributes(XMLDB_KEY_UNIQUE, array('fct', 'nom'));
+        $key_plantilla = new XMLDBKey('plantilla');
+        $key_plantilla->setAttributes(XMLDB_KEY_FOREIGN, array('plantilla'),
+                                      'fct_plantilla', 'id');
+        $key_cicle = new XMLDBKey('cicle');
+        $key_cicle->setAttributes(XMLDB_KEY_FOREIGN, array('cicle'),
+                                  'fct_cicle', 'id');
+
+        $result = drop_key($table_plantilla, $key_fct, false)
+            && drop_key($table_plantilla, $key_fct_nom, false)
+            && drop_key($table_activitat_plantilla, $key_plantilla, false)
+            && rename_table($table_plantilla, 'fct_cicle')
+            && rename_field($table_activitat_plantilla,
+                            $field_plantilla, 'cicle', false)
+            && rename_table($table_activitat_plantilla,
+                            'fct_activitat_cicle', false)
+            && add_key($table_cicle, $key_fct, false)
+            && add_key($table_cicle, $key_fct_nom, false)
+            && add_key($table_activitat_cicle, $key_cicle, false);
+    }
+
     return $result;
 }
 

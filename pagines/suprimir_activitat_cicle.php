@@ -17,7 +17,7 @@ class fct_pagina_suprimir_activitat_cicle extends fct_pagina_base_activitat_cicl
         if ($ok) {
            $this->registrar('delete activitat_cicle',
                 fct_url::cicle($this->cicle->id),
-                $this->activitat->plantilla);
+                $this->activitat->cicle);
         } else {
             $this->error('suprimir_activitat');
         }

@@ -102,9 +102,8 @@ function fct_restore_mods($mod, $restore) {
     $r->insert_record('fct', $fct);
 
     $r->restore_table('fct_dades_centre', array('fct' => 'fct'));
-    $r->restore_table('fct_plantilla', array('fct' => 'fct'));
-    $r->restore_table('fct_activitat_plantilla',
-                      array('plantilla' => 'fct_plantilla'));
+    $r->restore_table('fct_cicle', array('fct' => 'fct'));
+    $r->restore_table('fct_activitat_cicle', array('cicle' => 'fct_cicle'));
 
     if ($userdata) {
         $r->restore_table('fct_dades_alumne',

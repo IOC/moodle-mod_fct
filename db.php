@@ -68,42 +68,42 @@ class fct_db
 // Cicles
 
     function activitat_cicle($activitat_id) {
-        return get_record('fct_activitat_plantilla', 'id', $activitat_id);
+        return get_record('fct_activitat_cicle', 'id', $activitat_id);
     }
 
     function activitat_cicle_duplicada($cicle_id, $descripcio, $activitat_id=false) {
-        $select = "plantilla = '$cicle_id' AND descripcio = '$descripcio'";
+        $select = "cicle = '$cicle_id' AND descripcio = '$descripcio'";
         if ($activitat_id) {
             $select .= " AND id != '$activitat_id'";
         }
-        return record_exists_select('fct_activitat_plantilla', $select);
+        return record_exists_select('fct_activitat_cicle', $select);
     }
 
     function activitats_cicle($cicle_id) {
-        return get_records('fct_activitat_plantilla',
-                           'plantilla', $cicle_id, 'descripcio');
+        return get_records('fct_activitat_cicle',
+                           'cicle', $cicle_id, 'descripcio');
     }
 
     function actualitzar_activitat_cicle($activitat) {
-        return update_record('fct_activitat_plantilla', $activitat);
+        return update_record('fct_activitat_cicle', $activitat);
     }
 
     function actualitzar_cicle($cicle) {
-        return update_record('fct_plantilla', $cicle);
+        return update_record('fct_cicle', $cicle);
     }
 
     function afegir_activitat_cicle($cicle_id, $descripcio) {
         $activitat = (object) array(
-            'plantilla' => $cicle_id,
+            'cicle' => $cicle_id,
             'descripcio' => $descripcio);
-        return insert_record('fct_activitat_plantilla', $activitat);
+        return insert_record('fct_activitat_cicle', $activitat);
     }
 
     function afegir_cicle($fct_id, $nom, $activitats='') {
         $ok = true;
 
         $cicle = (object) array('fct' => $fct_id, 'nom' => $nom);
-        $ok = $ok && ($id = insert_record('fct_plantilla', $cicle));
+        $ok = $ok && ($id = insert_record('fct_cicle', $cicle));
 
         $activitats = explode("\n", $activitats);
         foreach ($activitats as $activitat) {
@@ -121,7 +121,7 @@ class fct_db
     }
 
     function cicle($cicle_id) {
-        return get_record('fct_plantilla', 'id', $cicle_id);
+        return get_record('fct_cicle', 'id', $cicle_id);
     }
 
     function cicle_duplicat($fct_id, $nom, $cicle_id=false) {
@@ -129,29 +129,29 @@ class fct_db
         if ($cicle_id) {
             $select .= " AND id != '$cicle_id'";
         }
-        return record_exists_select('fct_plantilla', $select);
+        return record_exists_select('fct_cicle', $select);
     }
 
     function cicles($fct_id) {
-        return get_records('fct_plantilla', 'fct', $fct_id, 'nom');
+        return get_records('fct_cicle', 'fct', $fct_id, 'nom');
     }
 
     function nombre_cicles($fct_id=false) {
         if ($fct_id) {
-            return count_records('fct_plantilla', 'fct', $fct_id);
+            return count_records('fct_cicle', 'fct', $fct_id);
         } else {
-            return count_records('fct_plantilla');
+            return count_records('fct_cicle');
         }
     }
 
     function suprimir_activitat_cicle($activitat_id){
-        return delete_records('fct_activitat_plantilla', 'id', $activitat_id);
+        return delete_records('fct_activitat_cicle', 'id', $activitat_id);
     }
 
     function suprimir_cicle($cicle_id) {
         $ok = true;
-        $ok = delete_records('fct_plantilla', 'id', $cicle_id) && $ok;
-        $ok = delete_records('fct_activitat_plantilla', 'plantilla', $cicle_id) && $ok;
+        $ok = delete_records('fct_cicle', 'id', $cicle_id) && $ok;
+        $ok = delete_records('fct_activitat_cicle', 'cicle', $cicle_id) && $ok;
         return $ok;
     }
 
