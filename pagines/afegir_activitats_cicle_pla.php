@@ -1,9 +1,9 @@
 <?php
 
 require_once 'base_pla_activitats.php';
-require_once 'form_plantilla_pla.php';
+require_once 'form_cicle_pla.php';
 
-class fct_pagina_afegir_activitats_plantilla_pla extends fct_pagina_base_pla_activitats  {
+class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
 
     var $plantilles;
 
@@ -11,13 +11,13 @@ class fct_pagina_afegir_activitats_plantilla_pla extends fct_pagina_base_pla_act
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
-        $this->url = fct_url::afegir_activitats_plantilla_pla($this->quadern->id);
+        $this->url = fct_url::afegir_activitats_cicle_pla($this->quadern->id);
     }
 
     function processar_afegir() {
         $this->plantilles = fct_db::plantilles($this->fct->id);
         if ($this->plantilles) {
-            $form = new fct_form_plantilla_pla($this);
+            $form = new fct_form_cicle_pla($this);
             $data = $form->get_data();
             if ($data) {
                 $id = fct_db::afegir_activitats_plantilla_pla($this->quadern->id, $data->plantilla);

@@ -1,12 +1,12 @@
 <?php
 
-require_once 'base_plantilla.php';
+require_once 'base_cicle.php';
 require_once 'form_activitat.php';
 
-class fct_pagina_afegir_activitat_plantilla extends fct_pagina_base_plantilla {
+class fct_pagina_afegir_activitat_cicle extends fct_pagina_base_cicle {
 
     function comprovar_descripcio($data) {
-       if (fct_db::activitat_plantilla_duplicada($this->plantilla->id,
+       if (fct_db::activitat_plantilla_duplicada($this->cicle->id,
                 addslashes($data['descripcio']))) {
             return array('descripcio' => fct_string('activitat_duplicada'));
         }
@@ -15,8 +15,8 @@ class fct_pagina_afegir_activitat_plantilla extends fct_pagina_base_plantilla {
 
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
-        parent::configurar(required_param('plantilla', PARAM_INT));
-        $this->url = fct_url::afegir_activitat_plantilla($this->plantilla->id);
+        parent::configurar(required_param('id', PARAM_INT));
+        $this->url = fct_url::afegir_activitat_cicle($this->cicle->id);
         $this->pestanya = 'afegir_activitat';
     }
 
@@ -24,16 +24,16 @@ class fct_pagina_afegir_activitat_plantilla extends fct_pagina_base_plantilla {
         $form = new fct_form_activitat($this);
         $data = $form->get_data();
         if ($data) {
-            $id = fct_db::afegir_activitat_plantilla($this->plantilla->id,
+            $id = fct_db::afegir_activitat_plantilla($this->cicle->id,
                 $data->descripcio);
             if ($id) {
-                $this->registrar('add activitat_plantilla',
-                    fct_url::plantilla($this->plantilla->id),
+                $this->registrar('add activitat_cicle',
+                    fct_url::cicle($this->cicle->id),
                     $data->descripcio);
             } else {
                 $this->error('afegir_activitat');
             }
-            redirect(fct_url::plantilla($this->plantilla->id));
+            redirect(fct_url::cicle($this->cicle->id));
         }
         $this->mostrar_capcalera();
         $form->display();
@@ -41,7 +41,7 @@ class fct_pagina_afegir_activitat_plantilla extends fct_pagina_base_plantilla {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::plantilla($this->plantilla->id));
+        redirect(fct_url::cicle($this->cicle->id));
     }
 
 }

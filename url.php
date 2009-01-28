@@ -2,20 +2,20 @@
 
 class fct_url {
 
+    function afegir_activitat_cicle($id) {
+        return self::url('afegir_activitat_cicle', array('id' => $id));
+    }
+
     function afegir_activitat_pla($quadern_id) {
         return self::url('afegir_activitat_pla', array('quadern' => $quadern_id));
     }
 
-    function afegir_activitats_plantilla_pla($quadern_id) {
-        return self::url('afegir_activitats_plantilla_pla', array('quadern' => $quadern_id));
+    function afegir_activitats_cicle_pla($quadern_id) {
+        return self::url('afegir_activitats_cicle_pla', array('quadern' => $quadern_id));
     }
 
-    function afegir_activitat_plantilla($plantilla_id) {
-        return self::url('afegir_activitat_plantilla', array('plantilla' => $plantilla_id));
-    }
-
-    function afegir_plantilla($fct_id) {
-        return self::url('afegir_plantilla', array('fct' => $fct_id));
+    function afegir_cicle($fct_id) {
+        return self::url('afegir_cicle', array('fct' => $fct_id));
     }
 
     function afegir_quadern($fct_id) {
@@ -28,6 +28,10 @@ class fct_url {
 
     function afegir_tutor_empresa($fct_id) {
         return self::url('afegir_tutor_empresa', array('fct' => $fct_id));
+    }
+
+    function cicle($id) {
+        return self::url('cicle', array('id' => $id));
     }
 
     function configurar_quadern($quadern_id) {
@@ -66,24 +70,24 @@ class fct_url {
         return self::url('dades_relatives', array('quadern' => $quadern_id));
     }
 
+    function editar_activitat_cicle($id) {
+        return self::url('editar_activitat_cicle', array('id' => $id));
+    }
+
     function editar_activitat_pla($activitat_id) {
         return self::url('editar_activitat_pla', array('activitat' => $activitat_id));
     }
 
-    function editar_activitat_plantilla($activitat_id) {
-        return self::url('editar_activitat_plantilla', array('activitat' => $activitat_id));
+    function editar_nom_cicle($id) {
+        return self::url('editar_nom_cicle', array('id' => $id));
+    }
+
+    function llista_cicles($fct_id) {
+        return self::url('llista_cicles', array('fct' => $fct_id));
     }
 
     function llista_empreses($fct_id) {
         return self::url('llista_empreses', array('fct' => $fct_id));
-    }
-
-    function editar_plantilla($plantilla_id) {
-        return self::url('editar_plantilla', array('plantilla' => $plantilla_id));
-    }
-
-    function llista_plantilles($fct_id) {
-        return self::url('llista_plantilles', array('fct' => $fct_id));
     }
 
     function llista_quaderns($fct_id) {
@@ -92,10 +96,6 @@ class fct_url {
 
     function pla_activitats($quadern_id) {
         return self::url('pla_activitats', array('quadern' => $quadern_id));
-    }
-
-    function plantilla($plantilla_id) {
-        return self::url('plantilla', array('plantilla' => $plantilla_id));
     }
 
     function quadern($quadern_id) {
@@ -136,12 +136,12 @@ class fct_url {
         return self::url('suprimir_activitats_pla', array('quadern' => $quadern_id));
     }
 
-    function suprimir_activitat_plantilla($activitat_id) {
-        return self::url('suprimir_activitat_plantilla', array('activitat' => $activitat_id));
+    function suprimir_activitat_cicle($id) {
+        return self::url('suprimir_activitat_cicle', array('id' => $id));
     }
 
-    function suprimir_plantilla($plantilla_id) {
-        return self::url('suprimir_plantilla', array('plantilla' => $plantilla_id));
+    function suprimir_cicle($id) {
+        return self::url('suprimir_cicle', array('id' => $id));
     }
 
     function url($pagina, $params) {

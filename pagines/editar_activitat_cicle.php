@@ -1,13 +1,13 @@
 <?php
 
-require_once 'base_activitat_plantilla.php';
+require_once 'base_activitat_cicle.php';
 require_once 'form_activitat.php';
 
-class fct_pagina_editar_activitat_plantilla extends fct_pagina_base_activitat_plantilla  {
+class fct_pagina_editar_activitat_cicle extends fct_pagina_base_activitat_cicle  {
 
     function comprovar_descripcio($data) {
-       if (fct_db::activitat_plantilla_duplicada($this->plantilla->id,
-                addslashes($data['descripcio']), $this->activitat->id)) {
+       if (fct_db::activitat_plantilla_duplicada($this->cicle->id,
+                addslashes($data['descripcio']), $this->cicle->id)) {
             return array('descripcio' => fct_string('activitat_duplicada'));
         }
         return true;
@@ -15,13 +15,13 @@ class fct_pagina_editar_activitat_plantilla extends fct_pagina_base_activitat_pl
 
     function configurar() {
         $this->configurar_accio(array('editar', 'cancellar'), 'editar');
-        parent::configurar(required_param('activitat', PARAM_INT));
-        $this->url = fct_url::editar_activitat_plantilla($this->activitat->id);
+        parent::configurar(required_param('id', PARAM_INT));
+        $this->url = fct_url::editar_activitat_cicle($this->activitat->id);
         $this->pestanya = 'activitats';
     }
 
     function processar_cancellar() {
-        redirect(fct_url::plantilla($this->plantilla->id));
+        redirect(fct_url::cicle($this->cicle->id));
     }
 
     function processar_editar() {
@@ -33,13 +33,13 @@ class fct_pagina_editar_activitat_plantilla extends fct_pagina_base_activitat_pl
                 'descripcio' => $data->descripcio);
             $ok = fct_db::actualitzar_activitat_plantilla($activitat);
             if ($ok) {
-                $this->registrar('update activitat_plantilla',
-                    fct_url::plantilla($this->plantilla->id),
+                $this->registrar('update activitat_cicle',
+                    fct_url::cicle($this->cicle->id),
                     $data->descripcio);
             } else {
                 $this->error('desar_activitat');
             }
-            redirect(fct_url::plantilla($this->plantilla->id));
+            redirect(fct_url::cicle($this->cicle->id));
         }
         $this->mostrar_capcalera();
         $form->set_data($this->activitat);

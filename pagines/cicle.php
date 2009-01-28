@@ -1,13 +1,13 @@
 <?php
 
 require_once $CFG->libdir . '/tablelib.php';
-require_once 'base_plantilla.php';
+require_once 'base_cicle.php';
 
-class fct_pagina_plantilla extends fct_pagina_base_plantilla {
+class fct_pagina_cicle extends fct_pagina_base_cicle {
 
     function configurar() {
-        parent::configurar(required_param('plantilla', PARAM_INT));
-        $this->url = fct_url::plantilla($this->plantilla->id);
+        parent::configurar(required_param('id', PARAM_INT));
+        $this->url = fct_url::cicle($this->cicle->id);
         $this->pestanya = 'activitats';
     }
 
@@ -23,14 +23,14 @@ class fct_pagina_plantilla extends fct_pagina_base_plantilla {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $activitats = fct_db::activitats_plantilla($this->plantilla->id);
+        $activitats = fct_db::activitats_plantilla($this->cicle->id);
 
         if (!$activitats) {
            echo '<p>' . fct_string('cap_activitat') . '</p>';
         } else {
             foreach ($activitats as $activitat) {
-                $url_editar = fct_url::editar_activitat_plantilla($activitat->id);
-                $url_suprimir = fct_url::suprimir_activitat_plantilla($activitat->id);
+                $url_editar = fct_url::editar_activitat_cicle($activitat->id);
+                $url_suprimir = fct_url::suprimir_activitat_cicle($activitat->id);
                 $icona_editar = $this->icona_editar($url_editar, fct_string('edita_activitat'));
                 $icona_suprimir = $this->icona_suprimir($url_suprimir, fct_string('suprimeix_activitat'));
                 $taula->add_data(array($activitat->descripcio, "$icona_editar $icona_suprimir"));
@@ -40,7 +40,7 @@ class fct_pagina_plantilla extends fct_pagina_base_plantilla {
 
         $this->mostrar_peu();
 
-        $this->registrar('view plantilla');
+        $this->registrar('view cicle');
     }
 }
 

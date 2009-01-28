@@ -1,9 +1,9 @@
 <?php
 
-require_once 'base_plantilles.php';
-require_once 'form_plantilla.php';
+require_once 'base_cicles.php';
+require_once 'form_cicle.php';
 
-class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
+class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 
     function comprovar_nom($data) {
         if (fct_db::plantilla_duplicada($this->fct->id, addslashes($data['nom']))) {
@@ -16,21 +16,21 @@ class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->url = fct_url::afegir_plantilla($this->fct->id);
+        $this->url = fct_url::afegir_cicle($this->fct->id);
     }
 
     function processar_afegir() {
-        $form = new fct_form_plantilla($this);
+        $form = new fct_form_cicle($this);
 
         $data = $form->get_data();
         if ($data) {
             $id = fct_db::afegir_plantilla($this->fct->id, $data->nom, $data->activitats);
             if ($id) {
-                $this->registrar('add plantilla', fct_url::plantilla($id), $data->nom);
+                $this->registrar('add cicle', fct_url::cicle($id), $data->nom);
             } else {
-                $this->error('afegir_cicle_formatiu');
+                $this->error('afegir_cicle');
             }
-            redirect(fct_url::plantilla($id));
+            redirect(fct_url::cicle($id));
         }
 
         $this->mostrar_capcalera();
@@ -39,7 +39,7 @@ class fct_pagina_afegir_plantilla extends fct_pagina_base_plantilles {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::llista_plantilles($this->fct->id));
+        redirect(fct_url::llista_cicles($this->fct->id));
     }
 
 }

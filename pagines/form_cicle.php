@@ -2,10 +2,10 @@
 
 require_once 'form_base.php';
 
-class fct_form_plantilla extends fct_form_base {
+class fct_form_cicle extends fct_form_base {
 
     function configurar() {
-        $this->afegir_header('plantilla_activitats',
+        $this->afegir_header('cicle_formatiu',
             $this->pagina->accio == 'afegir' ?
             fct_string('nou_cicle_formatiu') : fct_string('canvia_nom'));
 
