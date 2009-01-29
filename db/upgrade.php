@@ -87,6 +87,17 @@ function xmldb_fct_upgrade($oldversion=0) {
             && add_key($table_activitat_cicle, $key_cicle, false);
     }
 
+    if ($result && $oldversion < 2009112900) {
+        $table = new XMLDBTable('fct_quadern');
+        $field = new XMLDBField('cicle');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, null, 'nom_empresa');
+        $result = $result && add_field($table, $field, false);
+
+        $key = new XMLDBKey('cicle');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('cicle'), 'fct_cicle', 'id');
+        $result = $result && add_key($table, $key, false);
+    }
+
     return $result;
 }
 

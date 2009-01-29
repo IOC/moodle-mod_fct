@@ -115,7 +115,8 @@ function fct_restore_mods($mod, $restore) {
         $r->restore_table( 'fct_quadern',
                            array('fct' => 'fct', 'alumne' => 'user',
                                  'tutor_centre' => 'user',
-                                 'tutor_empresa' => 'user'));
+                                 'tutor_empresa' => 'user',
+                                 'cicle' => 'fct_cicle'));
         $r->restore_table('fct_dades_centre_concertat',
                           array('quadern' => 'fct_quadern'));
         $r->restore_table('fct_dades_conveni',
