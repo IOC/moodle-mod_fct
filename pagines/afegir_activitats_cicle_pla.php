@@ -1,11 +1,9 @@
 <?php
 
 require_once 'base_pla_activitats.php';
-require_once 'form_cicle_pla.php';
+require_once 'form_activitats_cicle_pla.php';
 
 class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
-
-    var $cicles;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
@@ -15,16 +13,16 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
     }
 
     function processar_afegir() {
-        $this->cicles = fct_db::cicles($this->fct->id);
-        if ($this->cicles) {
-            $form = new fct_form_cicle_pla($this);
+        if ($this->quadern->cicle) {
+            $form = new fct_form_activitats_cicle_pla($this);
             $data = $form->get_data();
             if ($data) {
-                $id = fct_db::afegir_activitats_cicle_pla($this->quadern->id, $data->cicle);
-                if ($id) {
+                $activitats = $form->get_data_llista('activitat');
+                $ok = fct_db::afegir_activitats_cicle_pla($this->quadern->id,
+                                                          $activitats);
+                if ($ok) {
                     $this->registrar('add activitats_cicle_pla',
-                        fct_url::pla_activitats($this->quadern->id),
-                        $this->cicles[$data->cicle]->nom);
+                                     fct_url::pla_activitats($this->quadern->id));
                 } else {
                    $this->error('afegir_activitats');
                 }
@@ -33,11 +31,11 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
         }
 
         $this->mostrar_capcalera();
-        if ($this->cicles) {
+        if ($this->quadern->cicle) {
             $form->display();
         } else {
             print_heading(fct_string('afegeix_activitats_cicle'));
-            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
+            echo '<p>' . fct_string('quadern_sense_cicle_formatiu') . '</p>';
         }
         $this->mostrar_peu();
     }
@@ -47,4 +45,3 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
     }
 
 }
-

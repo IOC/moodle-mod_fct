@@ -316,18 +316,16 @@ class fct_db
         return insert_record('fct_activitat_pla', $activitat);
     }
 
-    function afegir_activitats_cicle_pla($quadern_id, $cicle_id) {
-        $activitats = self::activitats_cicle($cicle_id);
-        if ($activitats) {
-            foreach ($activitats as $activitat) {
-                if (!self::activitat_pla_duplicada($quadern_id, $activitat->descripcio)) {
-                    if (!self::afegir_activitat_pla($quadern_id, $activitat->descripcio)) {
-                        return false;
-                    }
-                }
+    function afegir_activitats_cicle_pla($quadern_id, $activitats) {
+        $ok = true;
+        foreach ($activitats as $id => $afegir) {
+            if ($afegir) {
+                $descripcio = get_field('fct_activitat_cicle', 'descripcio', 'id', $id);
+                $ok = $ok && !empty($descripcio);
+                $ok = $ok && self::afegir_activitat_pla($quadern_id,$descripcio);
             }
         }
-        return true;
+        return $ok;
     }
 
     function notes_activitats_pla($quadern_id) {
