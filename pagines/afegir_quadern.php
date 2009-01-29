@@ -5,7 +5,7 @@ require_once 'form_quadern.php';
 
 class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
-    var $plantilles;
+    var $cicles;
 
     function comprovar_nom_empresa($data) {
         if (fct_db::quadern_duplicat($this->fct->id, addslashes($data['alumne']),
@@ -23,11 +23,11 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     }
 
     function processar_afegir() {
-        $this->plantilles = array(0 => (object) array('nom' => ''));
-        $plantilles = fct_db::cicles($this->fct->id);
-        if ($plantilles) {
-            foreach ($plantilles as $id => $plantilla) {
-                $this->plantilles[$id] = $plantilla;
+        $this->cicles = array(0 => (object) array('nom' => ''));
+        $cicles = fct_db::cicles($this->fct->id);
+        if ($cicles) {
+            foreach ($cicles as $id => $cicle) {
+                $this->cicles[$id] = $cicle;
             }
         }
 
@@ -41,7 +41,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
                 'tutor_centre' => $data->tutor_centre,
                 'tutor_empresa' => $data->tutor_empresa,
                 'estat' => '1');
-            $id = fct_db::afegir_quadern($quadern, $data->plantilla);
+            $id = fct_db::afegir_quadern($quadern, $data->cicle);
             if ($id) {
                 $this->registrar('add quadern', fct_url::quadern($id),
                     $this->nom_usuari($data->alumne) . " ({$data->nom_empresa})");

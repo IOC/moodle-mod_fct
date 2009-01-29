@@ -15,7 +15,7 @@ class fct_pagina_base_cicles extends fct_pagina_base {
         parent::definir_pestanyes();
         $pestanyes = array(
             new tabobject('llista_cicles', fct_url::llista_cicles($this->fct->id), fct_string('cicles_formatius')),
-            new tabobject('afegir_plantilla', fct_url::afegir_cicle($this->fct->id), fct_string('afegeix_cicle_formatiu')),
+            new tabobject('afegir_cicle', fct_url::afegir_cicle($this->fct->id), fct_string('afegeix_cicle_formatiu')),
         );
         $this->pestanyes[] = $pestanyes;
     }

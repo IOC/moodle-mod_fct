@@ -25,7 +25,7 @@ class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
                 fct_url::pla_activitats($this->quadern->id), fct_string('activitats'));
             $pestanyes[] = new tabobject('afegir_activitat_pla',
                 fct_url::afegir_activitat_pla($this->quadern->id), fct_string('afegeix_activitat'));
-            $pestanyes[] = new tabobject('afegir_activitats_plantilla_pla',
+            $pestanyes[] = new tabobject('afegir_activitats_cicle_pla',
                 fct_url::afegir_activitats_cicle_pla($this->quadern->id), fct_string('afegeix_activitats_cicle'));
             $pestanyes[] = new tabobject('suprimeix_activitats_pla',
                 fct_url::suprimir_activitats_pla($this->quadern->id), fct_string('suprimeix_activitats'));

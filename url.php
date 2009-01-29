@@ -124,10 +124,6 @@ class fct_url {
         return self::url('seguiment', array('quadern' => $quadern_id));
     }
 
-    function seleccionar_plantilla($quadern_id) {
-        return self::url('seleccionar_plantilla', array('quadern' => $quadern_id));
-    }
-
     function suprimir_activitat_pla($activitat_id) {
         return self::url('suprimir_activitat_pla', array('activitat' => $activitat_id));
     }
