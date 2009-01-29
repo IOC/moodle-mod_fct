@@ -5,8 +5,6 @@ require_once 'form_quadern.php';
 
 class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
-    var $cicles;
-
     function comprovar_nom_empresa($data) {
         if (fct_db::quadern_duplicat($this->fct->id, addslashes($data['alumne']),
                 addslashes($data['nom_empresa']))) {
@@ -23,14 +21,6 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     }
 
     function processar_afegir() {
-        $this->cicles = array(0 => (object) array('nom' => ''));
-        $cicles = fct_db::cicles($this->fct->id);
-        if ($cicles) {
-            foreach ($cicles as $id => $cicle) {
-                $this->cicles[$id] = $cicle;
-            }
-        }
-
         $form = new fct_form_quadern($this);
         $data = $form->get_data();
         if ($data) {
@@ -40,8 +30,9 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
                 'nom_empresa' => $data->nom_empresa,
                 'tutor_centre' => $data->tutor_centre,
                 'tutor_empresa' => $data->tutor_empresa,
-                'estat' => '1');
-            $id = fct_db::afegir_quadern($quadern, $data->cicle);
+                'cicle' => $data->cicle,
+                'estat' => $data->estat);
+            $id = fct_db::afegir_quadern($quadern);
             if ($id) {
                 $this->registrar('add quadern', fct_url::quadern($id),
                     $this->nom_usuari($data->alumne) . " ({$data->nom_empresa})");

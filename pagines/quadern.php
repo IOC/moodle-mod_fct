@@ -55,6 +55,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
                 'nom_empresa' => $data->nom_empresa,
                 'tutor_centre' => $data->tutor_centre,
                 'tutor_empresa' => $data->tutor_empresa,
+                'cicle' => $data->cicle,
                 'estat' => $data->estat);
             $ok = fct_db::actualitzar_quadern($quadern);
             if ($ok) {

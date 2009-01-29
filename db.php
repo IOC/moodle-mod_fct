@@ -172,13 +172,10 @@ class fct_db
         return update_record('fct_quadern', $quadern);
     }
 
-    function afegir_quadern($quadern, $cicle_id=false) {
+    function afegir_quadern($quadern) {
         $ok = true;
 
         $ok = $ok && ($id = insert_record('fct_quadern', $quadern));
-        if ($ok && $cicle_id) {
-            $ok = self::afegir_activitats_cicle_pla($id, $cicle_id);
-        }
         $ok = $ok && self::afegir_dades_centre_concertat($id);
         $ok = $ok && self::afegir_dades_empresa($id);
         $ok = $ok && self::afegir_dades_conveni($id);
