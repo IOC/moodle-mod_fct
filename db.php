@@ -799,18 +799,29 @@ class fct_db
 
 // Llista d'empreses
 
-    function empreses($fct_id, $order=false) {
+    function empreses($fct_id, $cicles) {
         global $CFG;
 
-        $sql = "SELECT q.id, q.nom_empresa AS nom,
+        $ids_cicles = false;
+        foreach ($cicles as $id => $seleccionat) {
+            if ($seleccionat) {
+                $ids_cicles[] = $id;
+            }
+        }
+
+        if (!$ids_cicles) {
+            return false;
+        }
+
+        $where_cicles = 'q.cicle IN (' . implode(',', $ids_cicles) . ')';
+
+        $sql = "SELECT DISTINCT q.nom_empresa AS nom,
                     e.adreca, e.poblacio, e.codi_postal,
                     e.telefon, e.fax, e.email, e.nif
                 FROM {$CFG->prefix}fct_quadern q
                     JOIN {$CFG->prefix}fct_dades_empresa e ON q.id = e.quadern
-                    WHERE q.fct = '$fct_id'";
-        if ($order) {
-            $sql .= " ORDER BY $order";
-        }
+                WHERE q.fct = '$fct_id' AND ($where_cicles)
+                ORDER BY q.nom_empresa";
 
         return get_records_sql($sql);
     }

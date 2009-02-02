@@ -87,7 +87,7 @@ function xmldb_fct_upgrade($oldversion=0) {
             && add_key($table_activitat_cicle, $key_cicle, false);
     }
 
-    if ($result && $oldversion < 2009112900) {
+    if ($result && $oldversion < 2009012900) {
         $table = new XMLDBTable('fct_quadern');
         $field = new XMLDBField('cicle');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, null, null, null, 'nom_empresa');
