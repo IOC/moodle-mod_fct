@@ -639,12 +639,15 @@ class fct_db
         return get_record('fct_dades_conveni', 'quadern', $quadern_id);
     }
 
-    function data_final_convenis_min_max($fct_id) {
+    function data_final_convenis_min_max($fct_id, $select=false) {
         global $CFG;
         $sql = "SELECT MIN(c.data_final) AS data_min, MAX(c.data_final) AS data_max"
             . " FROM {$CFG->prefix}fct_dades_conveni c"
             . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id"
             . " WHERE q.fct = $fct_id";
+        if ($select) {
+            $sql .= " AND ($select)";
+        }
         $record = get_record_sql($sql);
         return array($record->data_min, $record->data_max);
     }
