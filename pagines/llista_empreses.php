@@ -13,7 +13,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         $this->comprovar_permis($this->permis_admin);
         $this->url = fct_url::llista_empreses($this->fct->id);
         $this->pestanya = 'empreses';
-        $this->afegir_navegacio(fct_string('empreses'), $this->url);
+        $this->afegir_navegacio(fct_string('llista_empreses'), $this->url);
     }
 
     function processar() {
@@ -26,7 +26,6 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
                 $empreses = fct_db::empreses($this->fct->id, $cicles);
                 $this->registrar('view baixa_empreses', $this->url);
                 $this->enviar_csv($empreses);
-                die;
             }
         }
 
@@ -34,7 +33,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         if ($this->cicles) {
             $form->display();
         } else {
-            print_heading(fct_string('empreses'));
+            print_heading(fct_string('llista_empreses'));
             echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         }
         $this->mostrar_peu();
@@ -63,8 +62,9 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
             $csv[] = "\n";
         }
         $csv = implode($csv);
-        send_file($csv, fct_string('empreses') . '.csv',
+        send_file($csv, fct_string('llista_empreses') . '.csv',
                   'default', 0, true, true, '');
+        die;
     }
 
 }
