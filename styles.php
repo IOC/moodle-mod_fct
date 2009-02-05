@@ -62,12 +62,14 @@
 	width: 20%;
 }
 
-#activitats_realitzades .fcontainer .fitem .fitemtitle {
+#activitats_realitzades .fcontainer .fitem .fitemtitle,
+#activitats_cicle .fcontainer .fitem .fitemtitle  {
 	width: 10%;
 	text-align: left;
 }
 
-#activitats_realitzades .fcontainer .fitem .felement {
+#activitats_realitzades .fcontainer .fitem .felement,
+#activitats_cicle .fcontainer .fitem .felement {
 	width: 80%;
 }
 
