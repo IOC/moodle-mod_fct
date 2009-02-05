@@ -24,29 +24,24 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->configurar_taula();
 
         $select = $this->select_quaderns();
-        $redireccio = false;
         if (!$this->permis_admin) {
-            $redireccio = (fct_db::nombre_quaderns($this->fct->id, $select) == 1);
+            if (fct_db::nombre_quaderns($this->fct->id, $select) == 1) {
+                $quaderns = fct_db::quaderns($this->fct->id, $select);
+                $quadern = array_pop($quaderns);
+                redirect(fct_url::quadern($quadern->id));
+            }
         }
 
-        if (!$redireccio) {
-            $select = "($select) AND (" . $this->select_curs() . ')';
-        }
 
+        $select = "($select) AND (" . $this->select_curs() . ')';
         $this->quaderns = fct_db::quaderns($this->fct->id, $select,
                                            $this->taula->get_sql_sort());
 
-        if ($redireccio) {
-            $q = array_pop($this->quaderns);
-            redirect(fct_url::quadern($q->id));
-        }
-
         $this->mostrar_capcalera();
-
         print_heading(fct_string('quaderns'));
+        $this->mostrar_selectors();
 
         if ($this->quaderns) {
-            $this->mostrar_selectors();
             $this->mostrar_taula();
         } else {
             echo '<p>' . fct_string('cap_quadern') . '</p>';
@@ -121,7 +116,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function valors_curs() {
-        list($min, $max) = fct_db::data_final_convenis_min_max($this->fct->id);
+        list($min, $max) = fct_db::data_final_convenis_min_max(
+            $this->fct->id, $this->select_quaderns());
 
         if (!$min and !$max) {
             return array();
