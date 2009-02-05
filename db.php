@@ -228,14 +228,16 @@ class fct_db
         $sql = "SELECT q.id,"
             . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
             . " q.nom_empresa AS empresa,"
+            . " c.nom AS cicle_formatiu,"
             . " CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,"
             . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
-            . " q.estat, c.data_final"
+            . " q.estat, dc.data_final"
             . " FROM {$CFG->prefix}fct_quadern q"
             . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
             . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
             . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
-            . " JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern"
+            . " LEFT JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}fct_dades_conveni dc ON q.id = dc.quadern"
             . " WHERE q.fct = '$fct_id'";
         if ($select) {
             $sql .= " AND ($select)";

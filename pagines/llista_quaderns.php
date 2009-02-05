@@ -55,8 +55,9 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     function configurar_taula() {
         $this->taula = new flexible_table('fct_quaderns');
         $this->taula->set_attribute('id', 'fct_quaderns');
-        $columnes = array('alumne', 'empresa', 'tutor_centre',
-                          'tutor_empresa', 'estat', 'data_final');
+        $columnes = array('alumne', 'empresa', 'cicle_formatiu',
+                          'tutor_centre', 'tutor_empresa',
+                          'estat', 'data_final');
         $this->taula->define_columns($columnes);
         $this->taula->define_headers(array_map('fct_string', $columnes));
         $this->taula->sortable(true, 'data_final');
@@ -76,6 +77,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             $this->taula->add_data(
                 array("<a href=\"$url\">{$q->alumne}</a>",
                       "<a href=\"$url\">{$q->empresa}</a>",
+                      "<a href=\"$url\">{$q->cicle_formatiu}</a>",
                       "<a href=\"$url\">$tutor_centre</a>",
                       "<a href=\"$url\">$tutor_empresa</a>",
                       "<a href=\"$url\" class=\"$estat\">$str_estat</a>",
