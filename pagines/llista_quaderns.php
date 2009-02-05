@@ -15,6 +15,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             optional_param('id', 0, PARAM_INT));
         $this->url = fct_url::llista_quaderns($this->fct->id);
         $this->curs = optional_param('curs', -1, PARAM_INT);
+        $this->cerca = optional_param('cerca', '', PARAM_TEXT);
         $this->cursos = $this->valors_curs();
     }
 
@@ -32,9 +33,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             }
         }
 
-
         $select = "($select) AND (" . $this->select_curs() . ')';
-        $this->quaderns = fct_db::quaderns($this->fct->id, $select,
+        $this->quaderns = fct_db::quaderns($this->fct->id, $select, $this->cerca,
                                            $this->taula->get_sql_sort());
 
         $this->mostrar_capcalera();
@@ -107,14 +107,25 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function mostrar_selectors() {
-        echo '<form action="view.php" method="get">';
-        echo '<input type="hidden" name="pagina" value="llista_quaderns"/>';
-        echo '<input type="hidden" name="fct" value="' . $this->fct->id . '" />';
-        echo '<div id="fct_selectors_quaderns">';
-        echo fct_string('curs') . ': ';
-        echo choose_from_menu($this->cursos, 'curs', $this->curs,
-                              '', 'this.form.submit()');
-        echo '</div></form>';
+        $selectors = array(
+            array('curs',
+                  choose_from_menu($this->cursos, 'curs', $this->curs,
+                                   '', 'this.form.submit()', '', true,
+                                   false, false, 'id_curs')),
+            array('cerca',
+                  '<input type="text" id="id_cerca" name="cerca"'
+                  . ' value="' . s($this->cerca)
+                  . '" onchange="this.form.submit()" />'),
+        );
+
+        echo '<form id="selectors_quaderns" action="view.php" method="get">'
+            . '<input type="hidden" name="pagina" value="llista_quaderns"/>'
+            . '<input type="hidden" name="fct" value="' . $this->fct->id . '"/>';
+        foreach ($selectors as $selector) {
+            echo '<div><label for="id_' . $selector[0] . '">'
+                . fct_string($selector[0]) . ':</label>' . $selector[1] . '</div>';
+        }
+        echo '</form>';
     }
 
     function valors_curs() {
@@ -145,7 +156,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
     function select_curs() {
         if (!$this->curs) {
-            return '(TRUE)';
+            return 'TRUE';
         }
         $data_min = mktime(0, 0, 0, 9, 1, $this->curs);
         $data_max = mktime(0, 0, 0, 9, 1, $this->curs + 1);

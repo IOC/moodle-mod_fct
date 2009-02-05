@@ -120,3 +120,16 @@
 .botoenllac { 
 	margin: 10px;
 }
+
+#selectors_quaderns {
+    margin-bottom: 1em;
+}
+
+#selectors_quaderns div  {
+    display: inline;
+    margin-right: 20px;
+}
+
+#selectors_quaderns div label {
+    margin-right: 5px;
+}

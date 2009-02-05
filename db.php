@@ -222,7 +222,7 @@ class fct_db
         return get_record('fct_quadern', 'id', $quadern_id);
     }
 
-    function quaderns($fct_id, $select=false, $order=false) {
+    function quaderns($fct_id, $select=false, $cerca=false, $order=false) {
         global $CFG;
 
         $sql = "SELECT q.id,"
@@ -241,6 +241,14 @@ class fct_db
             . " WHERE q.fct = '$fct_id'";
         if ($select) {
             $sql .= " AND ($select)";
+        }
+        if ($cerca) {
+            $sql .= " AND ("
+                . " CONCAT(ua.firstname, ' ', ua.lastname) LIKE '%$cerca%'"
+                . " OR q.nom_empresa LIKE '%$cerca%'"
+                . " OR c.nom LIKE '%$cerca%'"
+                . " OR CONCAT(uc.firstname, ' ', uc.lastname) LIKE '%$cerca%'"
+                . " OR CONCAT(ue.firstname, ' ', ue.lastname) LIKE '%$cerca%')";
         }
         if ($order) {
             $sql .= " ORDER BY $order";
