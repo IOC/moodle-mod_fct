@@ -63,13 +63,15 @@
 }
 
 #activitats_realitzades .fcontainer .fitem .fitemtitle,
-#activitats_cicle .fcontainer .fitem .fitemtitle  {
+#activitats_cicle .fcontainer .fitem .fitemtitle,
+#llista_empreses .fcontainer .fitem .fitemtitle  {
 	width: 10%;
 	text-align: left;
 }
 
 #activitats_realitzades .fcontainer .fitem .felement,
-#activitats_cicle .fcontainer .fitem .felement {
+#activitats_cicle .fcontainer .fitem .felement,
+#llista_empreses .fcontainer .fitem .felement {
 	width: 80%;
 }
 

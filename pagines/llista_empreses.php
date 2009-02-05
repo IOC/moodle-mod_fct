@@ -1,9 +1,12 @@
 <?php
 
 require_once 'base.php';
-require_once 'form_cicles_empreses.php';
+require_once 'form_llista_empreses.php';
 
 class fct_pagina_llista_empreses extends fct_pagina_base {
+
+    const FORMAT_EXCEL = 1;
+    const FORMAT_CSV = 2;
 
     var $cicles;
 
@@ -25,7 +28,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
                 $cicles = $form->get_data_llista('cicle');
                 $empreses = fct_db::empreses($this->fct->id, $cicles);
                 $this->registrar('view baixa_empreses', $this->url);
-                $this->enviar_csv($empreses);
+                $this->enviar($empreses, $data->format);
             }
         }
 
@@ -40,10 +43,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         $this->registrar('view llista_empreses', $this->url);
     }
 
-    function enviar_csv($empreses) {
-        global $CFG;
-        require_once("{$CFG->dirroot}/lib/filelib.php");
-
+    function enviar($empreses, $format) {
         $camps = array('nom', 'adreca', 'poblacio', 'codi_postal',
                        'telefon', 'fax', 'email', 'nif');
         $linies = array(array_map('fct_string', $camps));
@@ -54,6 +54,33 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
             }
             $linies[] = $linia;
         }
+
+        if ($format == self::FORMAT_EXCEL) {
+            $this->enviar_excel($linies);
+        } elseif ($format == self::FORMAT_CSV) {
+            $this->enviar_csv($linies);
+        }
+
+        die;
+    }
+
+    function enviar_excel($linies) {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/excellib.class.php");
+        $workbook = new MoodleExcelWorkbook('-');
+        $workbook->send(fct_string('llista_empreses') . '.xls');
+        $worksheet = $workbook->add_worksheet(fct_string('llista_empreses'));
+        foreach ($linies as $fila => $linia) {
+            foreach ($linia as $columna => $camp) {
+                $worksheet->write_string($fila, $columna, $camp);
+            }
+        }
+        $workbook->close();
+    }
+
+    function enviar_csv($linies) {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/filelib.php");
         $csv = array();
         foreach ($linies as $linia) {
             foreach ($linia as $camp) {
@@ -64,8 +91,6 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         $csv = implode($csv);
         send_file($csv, fct_string('llista_empreses') . '.csv',
                   'default', 0, true, true, '');
-        die;
     }
 
 }
-
