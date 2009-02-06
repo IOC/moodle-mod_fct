@@ -1,7 +1,7 @@
 <?php
 
-require_once $CFG->libdir . '/formslib.php';
-require_once $CFG->libdir . '/pear/HTML/QuickForm/date.php';
+require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/pear/HTML/QuickForm/date.php');
 
 class fct_form_base extends moodleform {
 

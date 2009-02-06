@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base.php';
+fct_require('pagines/base.php');
 
 class fct_pagina_base_quaderns extends fct_pagina_base {
 

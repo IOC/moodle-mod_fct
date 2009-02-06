@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_quadern.php';
-require_once 'form_quadern.php';
+fct_require('pagines/base_quadern.php',
+            'pagines/form_quadern.php');
 
 class fct_pagina_quadern extends fct_pagina_base_quadern {
 

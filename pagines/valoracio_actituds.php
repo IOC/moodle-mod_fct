@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_valoracio.php';
-require_once 'form_valoracio_actituds.php';
+fct_require('pagines/base_valoracio.php',
+            'pagines/form_valoracio_actituds.php');
 
 class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
 

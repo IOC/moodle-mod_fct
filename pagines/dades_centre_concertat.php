@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_dades_quadern.php';
-require_once 'form_dades_centre_concertat.php';
+fct_require('pagines/base_dades_quadern.php',
+            'pagines/form_dades_centre_concertat.php');
 
 class fct_pagina_dades_centre_concertat extends fct_pagina_base_dades_quadern {
 

@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_seguiment.php';
-require_once 'form_quinzena.php';
+fct_require('pagines/base_seguiment.php',
+            'pagines/form_quinzena.php');
 
 class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
 

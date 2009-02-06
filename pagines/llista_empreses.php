@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base.php';
-require_once 'form_llista_empreses.php';
+fct_require('pagines/base.php',
+            'pagines/form_llista_empreses.php');
 
 class fct_pagina_llista_empreses extends fct_pagina_base {
 

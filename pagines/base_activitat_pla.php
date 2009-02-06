@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base_pla_activitats.php';
+fct_require('pagines/base_pla_activitats.php');
 
 class fct_pagina_base_activitat_pla extends fct_pagina_base_pla_activitats {
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base_quadern.php';
+fct_require('pagines/base_quadern.php');
 
 class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
 

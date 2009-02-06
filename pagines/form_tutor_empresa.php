@@ -1,6 +1,6 @@
 <?php
 
-require_once 'form_base.php';
+fct_require('pagines/form_base.php');
 
 class fct_form_tutor_empresa extends fct_form_base {
 

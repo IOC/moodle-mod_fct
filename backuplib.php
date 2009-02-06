@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/lib.php';
+require_once($CFG->dirroot . '/mod/fct//lib.php');
 
 class fct_backup
 {

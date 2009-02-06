@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_cicles.php';
-require_once 'form_cicle.php';
+fct_require('pagines/base_cicles.php',
+            'pagines/form_cicle.php');
 
 class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 

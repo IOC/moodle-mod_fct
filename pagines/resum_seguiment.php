@@ -1,7 +1,7 @@
 <?php
 
-require_once $CFG->libdir . '/tablelib.php';
-require_once 'base_seguiment.php';
+require_once($CFG->libdir . '/tablelib.php');
+fct_require('pagines/base_seguiment.php');
 
 class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
 

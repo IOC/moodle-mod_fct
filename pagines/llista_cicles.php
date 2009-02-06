@@ -1,7 +1,7 @@
 <?php
 
-require_once $CFG->libdir . '/tablelib.php';
-require_once 'base_cicles.php';
+require_once($CFG->libdir . '/tablelib.php');
+fct_require('pagines/base_cicles.php');
 
 class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
 

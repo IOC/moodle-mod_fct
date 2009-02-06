@@ -1,6 +1,6 @@
 <?php
 
-require_once 'form_base.php';
+fct_require('pagines/form_base.php');
 
 class fct_form_dades_relatives extends fct_form_base {
 

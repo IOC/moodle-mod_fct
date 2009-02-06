@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base.php';
-require_once 'form_dades_centre.php';
+fct_require('pagines/base.php',
+            'pagines/form_dades_centre.php');
 
 class fct_pagina_dades_centre extends fct_pagina_base {
 

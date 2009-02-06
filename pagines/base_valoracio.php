@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base_quadern.php';
+fct_require('pagines/base_quadern.php');
 
 class fct_pagina_base_valoracio extends fct_pagina_base_quadern {
 

@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_quadern.php';
-require_once 'form_qualificacio.php';
+fct_require('pagines/base_quadern.php',
+            'pagines/form_qualificacio.php');
 
 class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 

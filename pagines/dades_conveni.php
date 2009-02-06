@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_dades_quadern.php';
-require_once 'form_dades_conveni.php';
+fct_require('pagines/base_dades_quadern.php',
+            'pagines/form_dades_conveni.php');
 
 class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 

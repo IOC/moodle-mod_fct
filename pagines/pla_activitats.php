@@ -1,7 +1,7 @@
 <?php
 
-require_once $CFG->libdir . '/tablelib.php';
-require_once 'base_pla_activitats.php';
+require_once($CFG->libdir . '/tablelib.php');
+fct_require('pagines/base_pla_activitats.php');
 
 class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
 

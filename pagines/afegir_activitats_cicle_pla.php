@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base_pla_activitats.php';
-require_once 'form_activitats_cicle_pla.php';
+fct_require('pagines/base_pla_activitats.php',
+            'pagines/form_activitats_cicle_pla.php');
 
 class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
 

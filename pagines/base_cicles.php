@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base.php';
+fct_require('pagines/base.php');
 
 class fct_pagina_base_cicles extends fct_pagina_base {
 

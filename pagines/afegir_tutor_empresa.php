@@ -1,7 +1,7 @@
 <?php
 
-require_once 'base.php';
-require_once 'form_tutor_empresa.php';
+fct_require('pagines/base.php',
+            'pagines/form_tutor_empresa.php');
 
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 

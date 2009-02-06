@@ -1,6 +1,6 @@
 <?php
 
-require_once 'base_activitat_cicle.php';
+fct_require('pagines/base_activitat_cicle.php');
 
 class fct_pagina_suprimir_activitat_cicle extends fct_pagina_base_activitat_cicle {
 
