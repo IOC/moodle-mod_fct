@@ -190,6 +190,10 @@ class fct_db
         return $id;
     }
 
+    function data_final_quadern($quadern_id) {
+        return get_field('fct_dades_conveni', 'data_final', 'quadern', $quadern_id);
+    }
+
     function nombre_quaderns($fct_id=false, $select=false) {
         global $CFG;
 
@@ -686,21 +690,32 @@ class fct_db
         return update_record('fct_dades_relatives', $data);
     }
 
-    function dades_relatives($fct_id, $alumne) {
-        $record = get_record('fct_dades_relatives', 'fct', $fct_id, 'alumne', $alumne);
-        if (!$record) {
-            $record = (object) array(
-            	'fct' => $fct_id,
-            	'alumne' => $alumne,
+    function dades_relatives($quadern) {
+        $dades = get_record('fct_dades_relatives', 'fct', $quadern->fct,
+                            'alumne', $quadern->alumne);
+        if (!$dades) {
+            $ades = (object) array(
+                'fct' => $quadern->fct,
+                'alumne' => $quadern->alumne,
                 'hores_credit' => '0',
                 'exempcio' => '0',
                 'hores_anteriors' => '0',
             );
-            if (!insert_record('fct_dades_relatives', $record)) {
+            if (!insert_record('fct_dades_relatives', $dades)) {
                 return false;
             }
         }
-        return $record;
+
+        $data_final = fct_db::data_final_quadern($quadern->id);
+        $dades->hores_practiques = fct_db::hores_realitzades_fct(
+            $quadern->fct, $quadern->alumne, $data_final);
+        $dades->hores_exempcio = ceil((float) $dades->exempcio / 100
+                                      * $dades->hores_credit);
+        $dades->hores_realitzades = $dades->hores_practiques
+            + $dades->hores_exempcio + $dades->hores_anteriors;
+        $dades->hores_pendents = max(0, $dades->hores_credit
+                                     - $dades->hores_realitzades);
+        return $dades;
     }
 
     function suprimir_dades_relatives($fct_id) {
@@ -709,12 +724,14 @@ class fct_db
 
 // Hores realitzdes
 
-    function hores_realitzades_fct($fct_id, $alumne) {
+    function hores_realitzades_fct($fct_id, $alumne, $data_final) {
         global $CFG;
         $sql = 'SELECT SUM(qi.hores) AS hores '
             . "FROM {$CFG->prefix}fct_quadern qa "
             . "JOIN {$CFG->prefix}fct_quinzena qi ON qa.id = qi.quadern "
-            . "WHERE qa.fct = '$fct_id' AND qa.alumne = '$alumne'";
+            . "JOIN {$CFG->prefix}fct_dades_conveni c ON qa.id = c.quadern "
+            . "WHERE qa.fct = $fct_id AND qa.alumne = $alumne"
+            . " AND c.data_final <= $data_final";
         $record = get_record_sql($sql);
         return ($record and $record->hores) ? $record->hores : 0;
     }
