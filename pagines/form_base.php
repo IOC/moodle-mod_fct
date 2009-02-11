@@ -76,24 +76,28 @@ class fct_form_base extends moodleform {
     }
 
     function afegir_calendari($name, $label, $calendaris,
-            $any, $periode, $dies=array(), $congelat, $sep=':') {
+                              $any, $periode, $dies=array(), $congelat,
+                              $sep=':', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'calendari',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'calendaris' => $calendaris,
             'any' => $any,
             'periode' => $periode,
             'dies' => array_keys($dies),
             'congelat' => $congelat,
+            'sep' => $sep,
+            'help' => $help,
         );
     }
 
-    function afegir_checkbox($name, $label) {
+    function afegir_checkbox($name, $label, $help=false) {
         $this->elements[] = (object) array(
             'type' => 'checkbox',
             'name' => $name,
             'label' => $label,
+            'help' => $help,
         );
     }
 
@@ -104,30 +108,35 @@ class fct_form_base extends moodleform {
         $this->comprovacions[] = array($instance, $method);
     }
 
-    function afegir_date($name, $label, $sep=':') {
+    function afegir_date($name, $label, $sep=':', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'date',
             'name' => $name,
-            'label'=> $label.$sep,
+            'label'=> $label,
+            'sep' => $sep,
+            'help' => $help,
         );
     }
 
-    function afegir_header($name, $label) {
+    function afegir_header($name, $label, $help=false) {
         $this->elements[] = (object) array(
             'type' => 'header',
             'name' => $name,
             'label'=> $label,
+            'help' => $help,
         );
     }
 
     function afegir_hierselect($name, $label, $options, $sep=':',
-            $onchange='') {
+                               $onchange='', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'hierselect',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'options' => $options,
             'onchange' => $onchange,
+            'sep' => $sep,
+            'help' => $help,
         );
     }
 
@@ -156,39 +165,48 @@ class fct_form_base extends moodleform {
         $this->elements[] = (object) array(
             'type' => 'select',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'options' => $options,
+            'sep' => $sep,
         );
     }
 
-   function afegir_static($name, $label, $text, $sep=':') {
+    function afegir_static($name, $label, $text, $sep=':', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'static',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'text' => $text,
+            'help' => $help,
+            'sep' => $sep,
         );
     }
 
-    function afegir_text($name, $label, $size, $required=false, $numeric=false, $sep=':') {
+    function afegir_text($name, $label, $size, $required=false, $numeric=false,
+                        $sep=':', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'text',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'size' => $size,
             'required' => $required,
             'numeric' => $numeric,
+            'sep' => $sep,
+            'help' => $help,
         );
     }
 
-    function afegir_textarea($name, $label, $rows, $cols, $required=false, $sep=':') {
+    function afegir_textarea($name, $label, $rows, $cols, $required=false,
+                             $sep=':', $help=false) {
         $this->elements[] = (object) array(
             'type' => 'textarea',
             'name' => $name,
-            'label' => $label.$sep,
+            'label' => $label,
             'rows' => $rows,
             'cols' => $cols,
             'required' => $required,
+            'sep' => $sep,
+            'help' => $help,
         );
     }
 
@@ -197,7 +215,8 @@ class fct_form_base extends moodleform {
     }
 
     function congelar_element($elements) {
-        $this->elements_congelats = array_merge($this->elements_congelats, $elements);
+        $this->elements_congelats = array_merge($this->elements_congelats,
+                                                $elements);
     }
 
     function congelar_llista($name) {
@@ -334,7 +353,7 @@ class fct_form_base extends moodleform {
         $html .= '</tr></table></div>';
 
         $this->_form->addElement('static', $element->name,
-            $element->label, $html);
+            $element->label . $element->sep, $html);
     }
 
     function definition_checkbox($element) {
@@ -349,8 +368,10 @@ class fct_form_base extends moodleform {
     }
 
     function definition_date($element) {
-        $this->_form->addElement(new fct_HTML_QuickForm_date(
-            $element->name, $element->label, array('maxYear' => date('Y') + 3)));
+        $element = new fct_HTML_QuickForm_date(
+            $element->name, $element->label . $element->sep,
+            array('maxYear' => date('Y') + 3));
+        $this->_form->addElement($element);
     }
 
     function definition_elements() {
@@ -362,36 +383,42 @@ class fct_form_base extends moodleform {
                 $form->addRule($element->name, get_string('required'),
                     'required', null, 'client');
             }
+            if (!empty($element->help)) {
+                $form->setHelpButton($element->name, array($element->help,
+                                                           $element->label,
+                                                           'fct'));
+            }
         }
     }
 
     function definition_header($element) {
-        $this->_form->addElement('header', $element->name,
-            '<h2 class="main">' . $element->label . '</h2>');
+        $this->_form->addElement('header', $element->name, $element->label);
     }
 
     function definition_hierselect($element) {
         $attributes = $element->onchange ?
             array('onchange' => $element->onchange) : null;
         $select =& $this->_form->addElement('hierselect', $element->name,
-            $element->label, $attributes, ' / ');
+            $element->label . $element->sep, $attributes, ' / ');
         $select->setOptions($element->options);
         $this->_form->setType($element->name, PARAM_INT);
     }
 
     function definition_select($element) {
-        $this->_form->addElement('select', $element->name, $element->label, $element->options);
+        $this->_form->addElement('select', $element->name,$element->label
+                                 . $element->sep, $element->options);
         $this->_form->setType($element->name, PARAM_INT);
     }
 
     function definition_static($element) {
-        $this->_form->addElement('static', $element->name, $element->label,
-            $element->text);
+        $this->_form->addElement('static', $element->name, $element->label
+                                 . $element->sep, $element->text);
     }
 
     function definition_text($element) {
-        $this->_form->addElement('text', $element->name, $element->label,
-            array('size'=>$element->size));
+        $this->_form->addElement('text', $element->name,
+                                 $element->label . $element->sep,
+                                 array('size' => $element->size));
         $this->_form->setType($element->name, PARAM_TEXT);
         if ($element->numeric) {
             $this->_form->addRule($element->name, "Numèric", 'regex', "/^[0-9]+$/", 'client');
@@ -399,8 +426,10 @@ class fct_form_base extends moodleform {
     }
 
     function definition_textarea($element) {
-        $this->_form->addElement('textarea', $element->name, $element->label,
-            array('cols'=>$element->cols, 'rows'=>$element->rows));
+        $this->_form->addElement('textarea', $element->name,
+                                 $element->label. $element->sep,
+                                 array('cols' => $element->cols,
+                                       'rows' => $element->rows));
         $this->_form->setType($element->name, PARAM_TEXT);
     }
 
