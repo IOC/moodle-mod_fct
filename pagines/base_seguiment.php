@@ -18,9 +18,6 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
             $this->error('recuperar_conveni');
         }
 
-        $this->afegir_navegacio(fct_string('seguiment_quinzenal'),
-            fct_url::seguiment($this->quadern->id));
-
         $this->pestanya = 'seguiment_quinzenal';
         $this->permis_editar = ($this->permis_admin or $this->quadern->estat);
         $this->permis_editar_centre = ($this->permis_admin or $this->quadern->estat

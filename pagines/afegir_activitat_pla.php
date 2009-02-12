@@ -18,6 +18,7 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_activitat_pla($this->quadern->id);
+        $this->subpestanya = 'afegir_activitat_pla';
     }
 
     function processar_afegir() {

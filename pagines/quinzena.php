@@ -61,7 +61,6 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
 
         $this->titol = self::nom_periode($this->quinzena->periode).' de '.$this->quinzena->any_;
         $this->url = fct_url::quinzena($this->quinzena->id);
-        $this->afegir_navegacio($this->titol, $this->url);
     }
 
     function configurar_formulari() {

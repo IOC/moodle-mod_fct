@@ -27,8 +27,6 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         $this->url = fct_url::qualificacio_global($this->quadern->id);
         $this->titol = fct_string('qualificacio_global');
         $this->pestanya = 'qualificacio_global';
-        $this->afegir_navegacio(fct_string('qualificacio_global'),
-            $this->url);
         $this->form = new fct_form_qualificacio($this);
     }
 

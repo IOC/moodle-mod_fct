@@ -17,6 +17,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->curs = optional_param('curs', -1, PARAM_INT);
         $this->cerca = optional_param('cerca', '', PARAM_TEXT);
         $this->cursos = $this->valors_curs();
+        $this->subpestanya = 'llista_quaderns';
     }
 
     function processar() {
@@ -38,7 +39,6 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
                                            $this->taula->get_sql_sort());
 
         $this->mostrar_capcalera();
-        print_heading(fct_string('quaderns'));
         $this->mostrar_selectors();
 
         if ($this->quaderns) {

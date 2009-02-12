@@ -8,11 +8,11 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->url = fct_url::seguiment($this->quadern->id);
+        $this->subpestanya = 'quinzenes';
     }
 
     function processar() {
         $this->mostrar_capcalera();
-        print_heading(fct_string('seguiment_quinzenal'));
 
         $taula = new flexible_table('fct_seguiment');
         $taula->set_attribute('id', 'fct_seguiment');

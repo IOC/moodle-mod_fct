@@ -21,6 +21,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         $this->comprovar_permis($this->permis_editar_alumne);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_quinzena($this->quadern->id);
+        $this->subpestanya = 'afegir_quinzena';
         $this->activitats = fct_db::activitats_pla($this->quadern->id);
     }
 

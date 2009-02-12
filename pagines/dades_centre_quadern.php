@@ -14,7 +14,7 @@ class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
            $this->error('recuperar_centre_docent');
         }
         $this->url = fct_url::dades_centre_quadern($this->quadern->id);
-        $this->afegir_navegacio(fct_string('centre_docent'), $this->url);
+        $this->subpestanya = 'dades_centre_quadern';
     }
 
     function processar() {

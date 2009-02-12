@@ -11,7 +11,7 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->activitats = fct_db::activitats_pla($this->quadern->id);
         $this->url = fct_url::valoracio_activitats($this->quadern->id);
-        $this->afegir_navegacio(fct_string('valoracio_activitats'), $this->url);
+        $this->subpestanya = 'valoracio_activitats';
     }
 
     function configurar_formulari() {
@@ -28,7 +28,6 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
                 fct_db::notes_activitats_pla($this->quadern->id));
             $this->form->display();
         } else {
-            print_heading(fct_string('valoracio_activitats'));
             echo '<p>' . fct_string('cap_activitat') . '</p>';
         }
         $this->mostrar_peu();

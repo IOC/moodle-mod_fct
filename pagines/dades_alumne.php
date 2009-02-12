@@ -21,7 +21,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         }
 
         $this->url = fct_url::dades_alumne($this->quadern->id);
-        $this->afegir_navegacio(fct_string('alumne'), $this->url);
+        $this->subpestanya = 'dades_alumne';
         $this->form = new fct_form_dades_alumne($this);
     }
 

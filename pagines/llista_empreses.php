@@ -36,7 +36,6 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         if ($this->cicles) {
             $form->display();
         } else {
-            print_heading(fct_string('llista_empreses'));
             echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         }
         $this->mostrar_peu();

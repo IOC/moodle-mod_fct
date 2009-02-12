@@ -8,13 +8,11 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
         $this->url = fct_url::llista_cicles($this->fct->id);
+        $this->subpestanya = 'llista_cicles';
     }
 
     function processar() {
-
         $this->mostrar_capcalera();
-
-        print_heading(fct_string('cicles_formatius'));
 
         $taula = new flexible_table('fct_quaderns');
         $taula->define_columns(array('nom'));

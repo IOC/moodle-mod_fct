@@ -21,7 +21,7 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
         }
 
         $this->url = fct_url::dades_empresa($this->quadern->id);
-        $this->afegir_navegacio(fct_string('empresa'), $this->url);
+        $this->subpestanya = 'dades_empresa';
         $this->form = new fct_form_dades_empresa($this);
     }
 

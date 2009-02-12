@@ -10,6 +10,7 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_activitats_cicle_pla($this->quadern->id);
+        $this->subpestanya = 'afegir_activitats_cicle_pla';
     }
 
     function processar_afegir() {
@@ -34,7 +35,6 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
         if ($this->quadern->cicle) {
             $form->display();
         } else {
-            print_heading(fct_string('afegeix_activitats_cicle'));
             echo '<p>' . fct_string('quadern_sense_cicle_formatiu') . '</p>';
         }
         $this->mostrar_peu();

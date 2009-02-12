@@ -14,8 +14,6 @@ class fct_pagina_cicle extends fct_pagina_base_cicle {
     function processar() {
         $this->mostrar_capcalera();
 
-        print_heading(fct_string('activitats'));
-
         $taula = new flexible_table('fct_activitats');
         $taula->define_columns(array('descripcio', 'accions'));
         $taula->column_class('accions', 'columna_accions');

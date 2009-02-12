@@ -9,6 +9,7 @@ class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats 
         parent::configurar( required_param('quadern', PARAM_INT));
         $this->url = fct_url::suprimir_activitats_pla($this->quadern->id);
         $this->comprovar_permis($this->permis_editar);
+        $this->subpestanya = 'suprimir_activitats_pla';
     }
 
     function processar_confirmar() {

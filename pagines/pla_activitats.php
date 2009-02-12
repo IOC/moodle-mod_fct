@@ -8,11 +8,11 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->url = fct_url::pla_activitats($this->quadern->id);
+        $this->subpestanya = 'activitats_pla';
     }
 
     function processar() {
         $this->mostrar_capcalera();
-        print_heading(fct_string('activitats'));
 
         $taula = new flexible_table('fct_activitats');
         $taula->define_columns(array('descripcio', 'accions'));

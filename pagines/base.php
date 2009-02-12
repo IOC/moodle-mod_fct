@@ -18,6 +18,7 @@ class fct_pagina_base {
     var $navegacio = array();
     var $pestanyes = array();
     var $pestanya = false;
+    var $subpestanya = false;
 
     function __construct() {
         $this->configurar();
@@ -163,7 +164,9 @@ class fct_pagina_base {
         if ($this->pestanya) {
             $this->definir_pestanyes();
             if ($this->pestanyes) {
-                print_tabs($this->pestanyes, $this->pestanya);
+                $active = (!empty($this->subpestanya) ?
+                           array($this->subpestanya) : null);
+                print_tabs($this->pestanyes, $this->pestanya, null, $active);
             }
         }
 

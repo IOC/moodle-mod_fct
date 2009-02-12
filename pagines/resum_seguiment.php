@@ -45,6 +45,7 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->url = fct_url::resum_seguiment($this->quadern->id);
+        $this->subpestanya = 'resum_seguiment';
     }
 
     function mostrar_resum_trimestre($any, $trimestre) {
@@ -82,7 +83,6 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
         $this->calcular_resum();
 
         $this->mostrar_capcalera();
-        print_heading(fct_string('resum_seguiment'));
 
         if ($this->resum) {
             foreach ($this->resum as $any => $resum_any) {

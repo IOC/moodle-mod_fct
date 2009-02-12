@@ -14,24 +14,13 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
         $this->url = fct_url::valoracio_actituds($this->quadern->id, $this->final);
         $this->titol = $this->final ? fct_string('valoracio_final_actituds')
             : fct_string('valoracio_parcial_actituds');
-        $this->afegir_navegacio($this->titol, $this->url);
+        $this->subpestanya = ($this->final ? 'valoracio_actituds_final'
+                              : 'valoracio_actituds_parcial');
     }
 
     function configurar_formulari() {
         $this->form = new fct_form_valoracio_actituds($this);
         return $this->form->get_data();
-    }
-
-    function definir_pestanyes() {
-        parent::definir_pestanyes();
-        $this->pestanyes[] = array(
-            new tabobject('valoracio_actituds_parcial',
-                fct_url::valoracio_actituds($this->quadern->id, 0),
-                "Valoració parcial"),
-            new tabobject('valoracio_actituds_final',
-                fct_url::valoracio_actituds($this->quadern->id, 1),
-                "Valoració ffinal"),
-        );
     }
 
     function mostrar() {

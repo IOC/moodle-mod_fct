@@ -23,9 +23,9 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
             // Pestanya de centre concertat ocultada temporalment
             // new tabobject('dades_centre_concertat',
             //    fct_url::dades_centre_concertat($this->quadern->id), fct_string('centre_concertat')),
-            new tabobject('dades_emoresa',
+            new tabobject('dades_empresa',
                 fct_url::dades_empresa($this->quadern->id), fct_string('empresa')),
-            new tabobject('dades_cconveni',
+            new tabobject('dades_conveni',
                 fct_url::dades_conveni($this->quadern->id), fct_string('conveni')),
             new tabobject('dades_horari',
                 fct_url::dades_horari($this->quadern->id), fct_string('horari_practiques')),

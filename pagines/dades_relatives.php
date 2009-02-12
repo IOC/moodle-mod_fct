@@ -21,7 +21,7 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
         }
 
         $this->url = fct_url::dades_relatives($this->quadern->id);
-        $this->afegir_navegacio(fct_string('dades_relatives'), $this->url);
+        $this->subpestanya = 'dades_relatives';
         $this->form = new fct_form_dades_relatives($this);
     }
 

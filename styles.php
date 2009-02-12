@@ -1,126 +1,104 @@
 
 .paginafct {
-	width: 90%;
-	padding-top: 0.5em;
+    padding: 0.5em;
 }
 
 .contingutfct {
-	background-color: #f8f8f4;
-	padding: 1.5em;
-	margin-left: 2px;
+    background-color: #f8f8f4;
+    padding: 2.5em 1.5em 1.5em 1.5em;
+    margin-left: 2px;
 }
 
 .paginafct .tabtree .tabrow0 {
-	margin-left:auto;
-	margin-right:auto;
-	padding-bottom: 0;
+    margin: 0 auto;
+    padding-bottom: 0;
 }
 
 .paginafct .tabtree .tabrow1 {
-	margin: 0;
-	border-left: 1px solid #ddd;
-	border-right: 1px solid #ddd;
+    margin: 0;
 }
 
-.paginafct p {
-	margin-left: 2em;
+.paginafct .tabtree ul.tabrow1 li.active {
+    font-weight: bold;
 }
 
-.paginafct ul {
-	margin-left: 2em;
-}
-
-.paginafct table {
-	margin-left: 2em;
-}
 
 .paginafct table tr th {
-	text-align: left;
-	padding: 0.1em 1em;
+    text-align: left;
+    padding: 0.1em 1em;
 }
 
 .paginafct table tr td {
-	text-align: left;
-	padding: 0.2em 1em;
+    text-align: left;
+    padding: 0.2em 1em;
 }
 
-#valoracio_actituds .fcontainer .fitem .fitemtitle {
-	width: 70%;
-	text-align: left;
-}
-
-#valoracio_actituds .fcontainer .fitem .felement {
-	width: 20%;
-}
-
+#valoracio_actituds .fcontainer .fitem .fitemtitle,
 #activitats .fcontainer .fitem .fitemtitle {
-	width: 70%;
-	text-align: left;
+    width: 70%;
+    text-align: left;
 }
 
+#valoracio_actituds .fcontainer .fitem .felement,
 #activitats .fcontainer .fitem .felement {
-	width: 20%;
+    width: 20%;
 }
 
 #activitats_realitzades .fcontainer .fitem .fitemtitle,
 #activitats_cicle .fcontainer .fitem .fitemtitle,
 #llista_empreses .fcontainer .fitem .fitemtitle  {
-	width: 10%;
-	text-align: left;
+    width: 10%;
+    text-align: left;
 }
 
 #activitats_realitzades .fcontainer .fitem .felement,
 #activitats_cicle .fcontainer .fitem .felement,
 #llista_empreses .fcontainer .fitem .felement {
-	width: 80%;
+    width: 80%;
 }
 
 .paginafct a.estat_obert {
-	color: green;
+    color: green;
 }
 
 .paginafct a.estat_tancat {
-	color: red;
+    color: red;
 }
 
 .paginafct .columna_accions {
-	width: 2em;
+    width: 2em;
 }
 
 #fct_quaderns td, #fct_seguiment td {
-	padding: 0;
+    padding: 0;
 }
 
 #fct_quaderns tr:hover, #fct_seguiment tr:hover {
-	background: #dddddd;
+    background: #dddddd;
 }
 
 #fct_quaderns td a, #fct_seguiment td a  {
-	display: block;
-	padding: 2px 14px;
+    display: block;
+    padding: 2px 14px;
 }
 
 #fct_quaderns td a:hover, #fct_seguiment td a:hover {
-	text-decoration: none;
-}
-
-#fct_selectors_quaderns {
-    margin-bottom: 1em;
+    text-decoration: none;
 }
 
 #calendari_dia table {
-	font-size: 0.8em;
-	margin: 5px 0;
+    font-size: 0.8em;
+    margin: 5px 0;
 }
 
 #calendari_dia td, #calendari_dia th {
-	border: 1px solid #dddddd;
-	text-align: center;
-	width: 2em;
+    border: 1px solid #dddddd;
+    text-align: center;
+    width: 2em;
 }
 
 .botoenllac { 
-	margin: 10px;
+    margin: 10px;
 }
 
 #selectors_quaderns {
