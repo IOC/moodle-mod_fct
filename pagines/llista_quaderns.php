@@ -132,12 +132,11 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         list($min, $max) = fct_db::data_final_convenis_min_max(
             $this->fct->id, $this->select_quaderns());
 
-        if (!$min and !$max) {
+        if (!$min or !$max) {
+            $this->curs = false;
             return array();
         }
 
-        $min = ($min ? $min : $max);
-        $max = ($max ? $max : $min);
         $min = getdate($min);
         $max = getdate($max);
         $any_min = ($min['mon'] >= 9 ? $min['year']  : $min['year'] - 1);
