@@ -1,7 +1,13 @@
 <?php
 
 function xmldb_fct_upgrade($oldversion=0) {
+    global $CFG;
+
     $result = true;
+
+    $xmldb_file = new XMLDBFile($CFG->dirroot . '/mod/fct/db/install.xml');
+    $xmldb_file->loadXMLStructure();
+    $structure = $xmldb_file->getStructure();
 
     if ($result && $oldversion < 2008100200) {
         $table = new XMLDBTable('fct_dades_relatives');
@@ -96,6 +102,38 @@ function xmldb_fct_upgrade($oldversion=0) {
         $key = new XMLDBKey('cicle');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('cicle'), 'fct_cicle', 'id');
         $result = $result && add_key($table, $key, false);
+    }
+
+    if ($result && $oldversion < 2009021200) {
+        $table = new XMLDBTable('fct_dades_relatives');
+        $table_temp = new XMLDBTable('fct_dades_relatives_temp');
+        $result = $result && rename_table($table, $table_temp->getName(), false);
+
+        $table = $structure->getTable('fct_dades_relatives');
+        $result = $result && create_table($table, false);
+
+        $quaderns = get_records('fct_quadern');
+
+        if ($result && $quaderns) {
+            foreach ($quaderns as $quadern) {
+                $dades = array('quadern' => $quadern->id,
+                               'hores_credit' => 0,
+                               'exempcio' => 0,
+                               'hores_anteriors' => 0);
+                $record = get_record('fct_dades_relatives_temp',
+                                     'fct', $quadern->fct,
+                                     'alumne', $quadern->alumne);
+                if ($record) {
+                    $dades['hores_credit'] = $record->hores_credit;
+                    $dades['exempcio'] = $record->exempcio;
+                    $dades['hores_anteriors'] = $record->hores_anteriors;
+                }
+                $result = $result && insert_record('fct_dades_relatives',
+                                                   (object) $dades);
+            }
+        }
+
+        $result = $result && drop_table($table_temp);
     }
 
     return $result;

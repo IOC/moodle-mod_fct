@@ -40,7 +40,6 @@ class fct_db
         $ok = self::suprimir_cicles($id) && $ok;
         $ok = self::suprimir_quaderns($id) && $ok;
         $ok = self::suprimir_dades_alumnes($id) && $ok;
-        $ok = self::suprimir_dades_relatives($id) && $ok;
         $ok = self::suprimir_qualificacions_global($id) && $ok;
 
         return $ok;
@@ -180,6 +179,7 @@ class fct_db
         $ok = $ok && self::afegir_dades_empresa($id);
         $ok = $ok && self::afegir_dades_conveni($id);
         $ok = $ok && self::afegir_dades_horari($id);
+        $ok = $ok && self::afegir_dades_relatives($id);
         $ok = $ok && self::afegir_qualificacio_quadern($id);
 
         if (!$ok) {
@@ -276,6 +276,7 @@ class fct_db
         $ok = self::suprimir_dades_empresa($id) && $ok;
         $ok = self::suprimir_dades_conveni($id) && $ok;
         $ok = self::suprimir_dades_horari($id) && $ok;
+        $ok = self::suprimir_dades_relatives($id) && $ok;
         $ok = self::suprimir_qualificacio_quadern($id) && $ok;
 
         return $ok;
@@ -290,6 +291,28 @@ class fct_db
             }
         }
         return $ok;
+    }
+
+    function ultim_quadern($quadern_id, $exclou=false) {
+        global $CFG;
+
+        $quadern = get_record('fct_quadern', 'id', $quadern_id);
+        if (!$quadern) {
+            return false;
+        }
+
+        $select = "q.fct = {$quadern->fct} AND q.alumne = {$quadern->alumne}";
+        if ($exclou) {
+            $select .= " AND q.id != $quadern_id";
+        }
+        $sql = "SELECT q.id"
+            . " FROM {$CFG->prefix}fct_quadern q"
+            . " JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern"
+            . " WHERE $select"
+            . " ORDER BY c.data_final DESC LIMIT 1";
+
+        $records = get_records_sql($sql);
+        return $records ? array_pop($records) : false;
     }
 
 
@@ -690,20 +713,31 @@ class fct_db
         return update_record('fct_dades_relatives', $data);
     }
 
-    function dades_relatives($quadern) {
-        $dades = get_record('fct_dades_relatives', 'fct', $quadern->fct,
-                            'alumne', $quadern->alumne);
-        if (!$dades) {
-            $ades = (object) array(
-                'fct' => $quadern->fct,
-                'alumne' => $quadern->alumne,
-                'hores_credit' => '0',
-                'exempcio' => '0',
-                'hores_anteriors' => '0',
-            );
-            if (!insert_record('fct_dades_relatives', $dades)) {
-                return false;
-            }
+    function afegir_dades_relatives($quadern_id) {
+        $record = (object) array(
+            'quadern' => $quadern_id,
+            'hores_credit' => '0',
+            'exempcio' => '0',
+            'hores_anteriors' => '0',
+        );
+
+        $ultim_quadern = self::ultim_quadern($quadern_id, true);
+        if ($ultim_quadern) {
+            $dades = self::dades_relatives($ultim_quadern->id);
+            $record->hores_credit = $dades->hores_credit;
+            $record->exempcio = $dades->exempcio;
+            $record->hores_anteriors = $dades->hores_anteriors;
+        }
+
+        return insert_record('fct_dades_relatives', $record);
+    }
+
+    function dades_relatives($quadern_id) {
+        $dades = get_record('fct_dades_relatives', 'quadern', $quadern_id);
+        $quadern = get_record('fct_quadern', 'id', $quadern_id);
+
+        if (!$dades or !$quadern) {
+            return false;
         }
 
         $data_final = fct_db::data_final_quadern($quadern->id);
@@ -718,8 +752,8 @@ class fct_db
         return $dades;
     }
 
-    function suprimir_dades_relatives($fct_id) {
-        return delete_records('fct_dades_relatives', 'fct', $fct_id);
+    function suprimir_dades_relatives($quadern_id) {
+        return delete_records('fct_dades_relatives', 'quadern', $quadern_id);
     }
 
 // Hores realitzdes

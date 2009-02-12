@@ -165,18 +165,15 @@
     </TABLE>
     <TABLE NAME="fct_dades_relatives" COMMENT="-" PREVIOUS="fct_dades_horari" NEXT="fct_activitat_pla">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="fct"/>
-        <FIELD NAME="fct" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="alumne"/>
-        <FIELD NAME="alumne" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="fct" NEXT="hores_credit"/>
-        <FIELD NAME="hores_credit" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="alumne" NEXT="exempcio"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="quadern"/>
+        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="hores_credit"/>
+        <FIELD NAME="hores_credit" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="quadern" NEXT="exempcio"/>
         <FIELD NAME="exempcio" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="hores_credit" NEXT="hores_anteriors"/>
         <FIELD NAME="hores_anteriors" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="exempcio"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="fct"/>
-        <KEY NAME="fct" TYPE="foreign" FIELDS="fct" REFTABLE="fct" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="alumne"/>
-        <KEY NAME="alumne" TYPE="foreign" FIELDS="alumne" REFTABLE="user" REFFIELDS="id" COMMENT="-" PREVIOUS="fct" NEXT="fct_alumne"/>
-        <KEY NAME="fct_alumne" TYPE="unique" FIELDS="fct, alumne" COMMENT="-" PREVIOUS="alumne"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="quadern"/>
+        <KEY NAME="quadern" TYPE="foreign-unique" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="fct_activitat_pla" COMMENT="-" PREVIOUS="fct_dades_relatives" NEXT="fct_quinzena">

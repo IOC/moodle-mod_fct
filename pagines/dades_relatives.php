@@ -10,7 +10,7 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->dades = fct_db::dades_relatives($this->quadern);
+        $this->dades = fct_db::dades_relatives($this->quadern->id);
         if (!$this->dades) {
             $this->error('recuperar_dades_relatives');
         }
@@ -40,8 +40,7 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
         $data = $this->form->get_data();
         if ($data) {
             $data->id = $this->dades->id;
-            $data->fct = $this->dades->fct;
-            $data->alumne = $this->dades->alumne;
+            $data->quadern = $this->dades->quadern;
             $ok = fct_db::actualitzar_dades_relatives($data);
             if ($ok) {
                 $this->registrar('update dades_relatives');
