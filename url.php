@@ -2,10 +2,6 @@
 
 class fct_url {
 
-    function afegir_activitat_cicle($id) {
-        return self::url('afegir_activitat_cicle', array('id' => $id));
-    }
-
     function afegir_activitat_pla($quadern_id) {
         return self::url('afegir_activitat_pla', array('quadern' => $quadern_id));
     }
@@ -70,16 +66,8 @@ class fct_url {
         return self::url('dades_relatives', array('quadern' => $quadern_id));
     }
 
-    function editar_activitat_cicle($id) {
-        return self::url('editar_activitat_cicle', array('id' => $id));
-    }
-
     function editar_activitat_pla($activitat_id) {
         return self::url('editar_activitat_pla', array('activitat' => $activitat_id));
-    }
-
-    function editar_nom_cicle($id) {
-        return self::url('editar_nom_cicle', array('id' => $id));
     }
 
     function llista_cicles($fct_id) {
@@ -130,14 +118,6 @@ class fct_url {
 
     function suprimir_activitats_pla($quadern_id) {
         return self::url('suprimir_activitats_pla', array('quadern' => $quadern_id));
-    }
-
-    function suprimir_activitat_cicle($id) {
-        return self::url('suprimir_activitat_cicle', array('id' => $id));
-    }
-
-    function suprimir_cicle($id) {
-        return self::url('suprimir_cicle', array('id' => $id));
     }
 
     function url($pagina, $params) {

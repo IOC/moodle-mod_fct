@@ -36,7 +36,6 @@ $string['barem_b'] = 'B. Bona/Bé';
 $string['barem_c'] = 'C. Normal';
 $string['barem_d'] = 'D. Passiva';
 $string['barem_e'] = 'E. Negativa';
-$string['canvia_nom'] = "Canvia el nom";
 $string['cap_activitat'] = "No hi ha cap activitat.";
 $string['cap_cicle_formatiu'] = "No hi ha cap cicle formatiu.";
 $string['cap_empresa'] = "No hi ha cap empresa.";

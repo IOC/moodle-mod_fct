@@ -66,25 +66,9 @@ class fct_db
 
 // Cicles
 
-    function activitat_cicle($activitat_id) {
-        return get_record('fct_activitat_cicle', 'id', $activitat_id);
-    }
-
-    function activitat_cicle_duplicada($cicle_id, $descripcio, $activitat_id=false) {
-        $select = "cicle = '$cicle_id' AND descripcio = '$descripcio'";
-        if ($activitat_id) {
-            $select .= " AND id != '$activitat_id'";
-        }
-        return record_exists_select('fct_activitat_cicle', $select);
-    }
-
     function activitats_cicle($cicle_id) {
         return get_records('fct_activitat_cicle',
                            'cicle', $cicle_id, 'descripcio');
-    }
-
-    function actualitzar_activitat_cicle($activitat) {
-        return update_record('fct_activitat_cicle', $activitat);
     }
 
     function actualitzar_cicle($cicle) {
@@ -95,20 +79,14 @@ class fct_db
         return $ok;
     }
 
-    function afegir_activitat_cicle($cicle_id, $descripcio) {
-        $activitat = (object) array(
-            'cicle' => $cicle_id,
-            'descripcio' => $descripcio);
-        return insert_record('fct_activitat_cicle', $activitat);
-    }
-
     function afegir_activitats_cicle($cicle_id, $activitats) {
         $ok = true;
         $activitats = explode("\n", $activitats);
         foreach ($activitats as $activitat) {
             if (trim($activitat)) {
-                $ok = $ok && self::afegir_activitat_cicle(
-                    $cicle_id, trim($activitat));
+                $record = (object) array('cicle' => $cicle_id,
+                                         'descripcio' => trim($activitat));
+                $ok = $ok && insert_record('fct_activitat_cicle', $record);
             }
         }
         return $ok;
@@ -165,10 +143,6 @@ class fct_db
         } else {
             return count_records('fct_cicle');
         }
-    }
-
-    function suprimir_activitat_cicle($activitat_id){
-        return delete_records('fct_activitat_cicle', 'id', $activitat_id);
     }
 
     function suprimir_cicle($cicle_id) {
