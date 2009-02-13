@@ -88,7 +88,11 @@ class fct_db
     }
 
     function actualitzar_cicle($cicle) {
-        return update_record('fct_cicle', $cicle);
+        $ok = update_record('fct_cicle', $cicle);
+        $ok = $ok && delete_records('fct_activitat_cicle', 'cicle', $cicle->id);
+        $ok = $ok && self::afegir_activitats_cicle($cicle->id,
+                                                   $cicle->activitats);
+        return $ok;
     }
 
     function afegir_activitat_cicle($cicle_id, $descripcio) {
@@ -98,18 +102,24 @@ class fct_db
         return insert_record('fct_activitat_cicle', $activitat);
     }
 
+    function afegir_activitats_cicle($cicle_id, $activitats) {
+        $ok = true;
+        $activitats = explode("\n", $activitats);
+        foreach ($activitats as $activitat) {
+            if (trim($activitat)) {
+                $ok = $ok && self::afegir_activitat_cicle(
+                    $cicle_id, trim($activitat));
+            }
+        }
+        return $ok;
+    }
+
     function afegir_cicle($fct_id, $nom, $activitats='') {
         $ok = true;
 
         $cicle = (object) array('fct' => $fct_id, 'nom' => $nom);
         $ok = $ok && ($id = insert_record('fct_cicle', $cicle));
-
-        $activitats = explode("\n", $activitats);
-        foreach ($activitats as $activitat) {
-            if (trim($activitat)) {
-                $ok = $ok && self::afegir_activitat_cicle($id, $activitat);
-            }
-        }
+        $ok = $ok && self::afegir_activitats_cicle($id, $activitats);
 
         if ($ok) {
             return $id;
@@ -120,7 +130,21 @@ class fct_db
     }
 
     function cicle($cicle_id) {
-        return get_record('fct_cicle', 'id', $cicle_id);
+        $cicle = get_record('fct_cicle', 'id', $cicle_id);
+        if (!$cicle) {
+            return false;
+        }
+
+        $activitats = array();
+        $records = self::activitats_cicle($cicle_id);
+        if ($records) {
+            foreach ($records as $record) {
+                $activitats[] = $record->descripcio;
+            }
+        }
+
+        $cicle->activitats = implode("\n", $activitats);
+        return $cicle;
     }
 
     function cicle_duplicat($fct_id, $nom, $cicle_id=false) {
@@ -151,6 +175,7 @@ class fct_db
         $ok = true;
         $ok = delete_records('fct_cicle', 'id', $cicle_id) && $ok;
         $ok = delete_records('fct_activitat_cicle', 'cicle', $cicle_id) && $ok;
+        $ok = set_field('fct_quadern', 'cicle', null, 'cicle', $cicle_id) && $ok;
         return $ok;
     }
 
