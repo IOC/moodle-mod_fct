@@ -9,6 +9,15 @@
     margin-left: 2px;
 }
 
+.contingutfct table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contingutfct p {
+    text-align: center;
+}
+
 .paginafct .tabtree .tabrow0 {
     margin: 0 auto;
     padding-bottom: 0;
