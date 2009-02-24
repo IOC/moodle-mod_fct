@@ -44,6 +44,7 @@ $string['cap_quinzena'] = "No hi ha cap quinzena";
 $string['centre_concertat'] = "Centre concertat";
 $string['centre_docent'] = "Centre docent";
 $string['cerca'] = "Cerca";
+$string['cicle'] = "Cicle";
 $string['cicle_formatiu'] = "Cicle formatiu";
 $string['cicle_formatiu_duplicat'] = "Ja existeix un cicle formatiu amb aquest nom";
 $string['cicles_formatius'] = "Cicles formatius";

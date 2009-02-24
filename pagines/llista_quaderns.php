@@ -8,38 +8,67 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     var $taula;
     var $quaderns;
     var $curs;
-    var $cursos;
+    var $cicle;
+    var $estat;
+    var $cerca;
 
     function configurar() {
         parent::configurar(optional_param('fct', 0, PARAM_INT),
             optional_param('id', 0, PARAM_INT));
         $this->url = fct_url::llista_quaderns($this->fct->id);
+
         $this->curs = optional_param('curs', -1, PARAM_INT);
+        $this->cicle = optional_param('cicle', 0, PARAM_INT);
+        $this->estat = optional_param('estat', 1, PARAM_INT);
         $this->cerca = optional_param('cerca', '', PARAM_TEXT);
-        $this->cursos = $this->valors_curs();
+
         $this->subpestanya = 'llista_quaderns';
     }
 
     function processar() {
         global $CFG, $USER;
 
+        $params = (object) array(
+            'usuari' => $USER->id,
+            'permis_admin' => $this->permis_admin,
+            'permis_alumne' => $this->permis_alumne,
+            'permis_tutor_centre' => $this->permis_tutor_centre,
+            'permis_tutor_empresa' => $this->permis_tutor_empresa,
+        );
+
+        $valors_curs = $this->valors_curs($params);
+        $valors_cicle = $this->valors_cicle();
+        $valors_estat = $this->valors_estat();
+
         $this->configurar_taula();
 
-        $select = $this->select_quaderns();
         if (!$this->permis_admin) {
-            if (fct_db::nombre_quaderns($this->fct->id, $select) == 1) {
-                $quaderns = fct_db::quaderns($this->fct->id, $select);
+            if (fct_db::nombre_quaderns($this->fct->id, $params) == 1) {
+                $quaderns = fct_db::quaderns($this->fct->id, $params);
                 $quadern = array_pop($quaderns);
                 redirect(fct_url::quadern($quadern->id));
             }
         }
 
-        $select = "($select) AND (" . $this->select_curs() . ')';
-        $this->quaderns = fct_db::quaderns($this->fct->id, $select, $this->cerca,
+        if ($this->curs) {
+            $params->data_final_min = mktime(0, 0, 0, 9, 1, $this->curs);
+            $params->data_final_max = mktime(0, 0, 0, 9, 1, $this->curs + 1);
+        }
+        if ($this->cicle) {
+            $params->cicle = $this->cicle;
+        }
+        if ($this->estat != -1) {
+            $params->estat = $this->estat;
+        }
+        if ($this->cerca) {
+            $params->cerca = $this->cerca;
+        }
+
+        $this->quaderns = fct_db::quaderns($this->fct->id, $params,
                                            $this->taula->get_sql_sort());
 
         $this->mostrar_capcalera();
-        $this->mostrar_selectors();
+        $this->mostrar_selectors($valors_curs, $valors_cicle, $valors_estat);
 
         if ($this->quaderns) {
             $this->mostrar_taula();
@@ -87,31 +116,20 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->taula->print_html();
     }
 
-    function select_quaderns() {
-        global $USER;
-
-        $select = 'FALSE';
-        if ($this->permis_alumne) {
-            $select .= ' OR q.alumne = '.$USER->id;
-        }
-        if ($this->permis_tutor_centre) {
-            $select .= ' OR q.tutor_centre = '.$USER->id;
-        }
-        if ($this->permis_tutor_empresa) {
-            $select .= ' OR q.tutor_empresa = '.$USER->id;
-        }
-        if ($this->permis_admin) {
-            $select = 'TRUE';
-        }
-        return "$select";
-    }
-
-    function mostrar_selectors() {
+    function mostrar_selectors($cursos, $cicles, $estats) {
         $selectors = array(
             array('curs',
-                  choose_from_menu($this->cursos, 'curs', $this->curs,
+                  choose_from_menu($cursos, 'curs', $this->curs,
                                    '', 'this.form.submit()', '', true,
                                    false, false, 'id_curs')),
+            array('cicle',
+                  choose_from_menu($cicles, 'cicle', $this->cicle,
+                                   '', 'this.form.submit()', '', true,
+                                   false, false, 'id_cicle')),
+            array('estat',
+                  choose_from_menu($estats, 'estat', $this->estat,
+                                   '', 'this.form.submit()', '', true,
+                                   false, false, 'id_estat')),
             array('cerca',
                   '<input type="text" id="id_cerca" name="cerca"'
                   . ' value="' . s($this->cerca)
@@ -128,9 +146,20 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         echo '</form>';
     }
 
-    function valors_curs() {
-        list($min, $max) = fct_db::data_final_convenis_min_max(
-            $this->fct->id, $this->select_quaderns());
+    function valors_cicle() {
+        $cicles = array(0 => fct_string('tots'));
+        $records = fct_db::cicles($this->fct->id);
+        if ($records) {
+            foreach ($records as $record) {
+                $cicles[$record->id] = $record->nom;
+            }
+        }
+        return $cicles;
+    }
+
+    function valors_curs($params) {
+        list($min, $max) = fct_db::data_final_convenis_min_max($this->fct->id,
+                                                               $params);
 
         if (!$min or !$max) {
             $this->curs = false;
@@ -153,13 +182,11 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         return $cursos;
     }
 
-    function select_curs() {
-        if (!$this->curs) {
-            return 'TRUE';
-        }
-        $data_min = mktime(0, 0, 0, 9, 1, $this->curs);
-        $data_max = mktime(0, 0, 0, 9, 1, $this->curs + 1);
-        return "data_final >= $data_min AND data_final < $data_max";
+    function valors_estat() {
+        $estats = array(-1 => fct_string('tots'),
+                        1 => fct_string('estat_obert'),
+                        0 => fct_string('estat_tancat'));
+        return $estats;
     }
-}
 
+}

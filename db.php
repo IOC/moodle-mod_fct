@@ -193,22 +193,12 @@ class fct_db
         return get_field('fct_dades_conveni', 'data_final', 'quadern', $quadern_id);
     }
 
-    function nombre_quaderns($fct_id=false, $select=false) {
+    function nombre_quaderns($fct_id=false, $params=false) {
         global $CFG;
 
         $sql = "SELECT COUNT(*)"
-            . " FROM {$CFG->prefix}fct_quadern q";
-
-        $where = array();
-        if ($fct_id) {
-            $where[] = "q.fct = $fct_id";
-        }
-        if ($select) {
-            $where[] =  "$select";
-        }
-        if ($where)  {
-            $sql .= " WHERE " . implode(" AND ", $where);
-        }
+            . " FROM {$CFG->prefix}fct_quadern q"
+            . self::quaderns_where_sql($fct_id, $params);
 
        return count_records_sql($sql);
     }
@@ -225,7 +215,7 @@ class fct_db
         return get_record('fct_quadern', 'id', $quadern_id);
     }
 
-    function quaderns($fct_id, $select=false, $cerca=false, $order=false) {
+    function quaderns($fct_id, $params=false, $order=false) {
         global $CFG;
 
         $sql = "SELECT q.id,"
@@ -241,23 +231,67 @@ class fct_db
             . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
             . " LEFT JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
             . " JOIN {$CFG->prefix}fct_dades_conveni dc ON q.id = dc.quadern"
-            . " WHERE q.fct = '$fct_id'";
-        if ($select) {
-            $sql .= " AND ($select)";
-        }
-        if ($cerca) {
-            $sql .= " AND ("
-                . " CONCAT(ua.firstname, ' ', ua.lastname) LIKE '%$cerca%'"
-                . " OR q.nom_empresa LIKE '%$cerca%'"
-                . " OR c.nom LIKE '%$cerca%'"
-                . " OR CONCAT(uc.firstname, ' ', uc.lastname) LIKE '%$cerca%'"
-                . " OR CONCAT(ue.firstname, ' ', ue.lastname) LIKE '%$cerca%')";
-        }
+            . self::quaderns_where_sql($fct_id, $params);
+
         if ($order) {
             $sql .= " ORDER BY $order";
         }
 
         return get_records_sql($sql);
+    }
+
+    function quaderns_where_sql($fct_id=false, $params=false) {
+        $select = array('TRUE');
+
+        if ($fct_id) {
+            $select[] = "q.fct = $fct_id";
+        }
+
+        if ($params) {
+            if (!$params->permis_admin) {
+                $select_usuari = array('FALSE');
+                if ($params->permis_alumne) {
+                    $select_usuari[] = "q.alumne = $params->usuari";
+                }
+                if ($params->permis_tutor_centre) {
+                    $select_usuari[] = "q.tutor_centre = $params->usuari";
+                }
+                if ($params->permis_tutor_empresa) {
+                    $select_usuari[] = "q.tutor_empresa = $params->usuari";
+                }
+                $select[] = '(' . implode(' OR ', $select_usuari) . ')';
+            }
+
+            if (isset($params->data_final_min)) {
+                $select[] = "dc.data_final >= $params->data_final_min";
+            }
+
+            if (isset($params->data_final_max)) {
+                $select[] = "dc.data_final < $params->data_final_max";
+            }
+
+            if (isset($params->cicle)) {
+                $select[] = "q.cicle = $params->cicle";
+            }
+
+            if (isset($params->estat)) {
+                $select[] = "q.estat = $params->estat";
+            }
+
+            if (isset($params->cerca)) {
+                $fields = array("CONCAT(ua.firstname, ' ', ua.lastname)",
+                                "q.nom_empresa",
+                                "CONCAT(uc.firstname, ' ', uc.lastname)",
+                                "CONCAT(ue.firstname, ' ', ue.lastname)");
+                $select_cerca = array();
+                foreach ($fields as $field) {
+                    $select_cerca[] = "$field LIKE '%$params->cerca%'";
+                }
+                $select[] = '(' . implode(' OR ', $select_cerca) . ')';
+            }
+        }
+
+        return ' WHERE ' . implode(' AND ', $select);
     }
 
     function suprimir_quadern($id) {
@@ -282,7 +316,7 @@ class fct_db
     }
 
     function suprimir_quaderns($id) {
-        $quaderns = self::quaderns($id, false, false);
+        $quaderns = self::quaderns($id);
         $ok = true;
         if ($quaderns) {
             foreach ($quaderns as $quadern) {
@@ -670,15 +704,12 @@ class fct_db
         return get_record('fct_dades_conveni', 'quadern', $quadern_id);
     }
 
-    function data_final_convenis_min_max($fct_id, $select=false) {
+    function data_final_convenis_min_max($fct_id, $params=false) {
         global $CFG;
         $sql = "SELECT MIN(c.data_final) AS data_min, MAX(c.data_final) AS data_max"
             . " FROM {$CFG->prefix}fct_dades_conveni c"
             . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id"
-            . " WHERE q.fct = $fct_id";
-        if ($select) {
-            $sql .= " AND ($select)";
-        }
+            . self::quaderns_where_sql($fct_id, $params);
         $record = get_record_sql($sql);
         return array($record->data_min, $record->data_max);
     }
