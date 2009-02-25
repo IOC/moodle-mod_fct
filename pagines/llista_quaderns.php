@@ -158,12 +158,14 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function valors_curs($params) {
+        $cursos = array(0 => fct_string('tots'));
+
         list($min, $max) = fct_db::data_final_convenis_min_max($this->fct->id,
                                                                $params);
 
         if (!$min or !$max) {
             $this->curs = false;
-            return array();
+            return $cursos;
         }
 
         $min = getdate($min);
@@ -175,7 +177,6 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             $this->curs = $any_max;
         }
 
-        $cursos = array(0 => fct_string('tots'));
         for ($curs = $any_max; $curs >= $any_min;  $curs--) {
             $cursos[$curs] = $curs . '-' . ($curs + 1);
         }
