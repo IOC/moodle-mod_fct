@@ -191,6 +191,7 @@ $string['quadern_duplicat'] = "L'alumne ja té un quadern amb aquesta empresa";
 $string['quadern_sense_cicle_formatiu'] = "No heu seleccionat el cicle formatiu del quadern.";
 $string['qualificacio'] = "Qualificació";
 $string['qualificacio_global'] = "Qualificació global de l'FCT";
+$string['qualificacio_global_a_ultim_quadern'] = 'La qualificació global de l\'FCT es troba a <a href=\"$a\">l\'últim quadern de pràctiques realitzat</a>.';
 $string['qualificacio_quadern'] = "Qualificació del quadern";
 $string['quinzena'] = "Quinzena";
 $string['quinzena_duplicada'] = "Ja s'ha afegit aquesta quinzena";

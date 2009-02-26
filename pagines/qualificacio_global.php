@@ -22,14 +22,16 @@ fct_require('pagines/base_quadern.php',
 
 class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 
+    var $ultim_quadern;
     var $qualificacio;
     var $form;
     var $permis_editar;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
+        $this->ultim_quadern = fct_db::ultim_quadern($this->quadern->id);
         $this->qualificacio = fct_db::qualificacio_global($this->fct->id,
-            $this->quadern->alumne);
+                                                          $this->quadern->alumne);
         if (!$this->qualificacio) {
             $this->error('recuperar_qualificacio_global');
         }
@@ -50,7 +52,13 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
     function mostrar() {
         $this->form->set_data($this->qualificacio);
         $this->mostrar_capcalera();
-        $this->form->display();
+        if ($this->ultim_quadern->id != $this->quadern->id) {
+            $url = fct_url::qualificacio_global($this->ultim_quadern->id);
+            $avis = fct_string('qualificacio_global_a_ultim_quadern', $url);
+            echo "<p>$avis</p>";
+        } else {
+            $this->form->display();
+        }
         $this->mostrar_peu();
     }
 
