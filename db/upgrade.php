@@ -153,6 +153,25 @@ function xmldb_fct_upgrade($oldversion=0) {
         $result = $result && drop_table($table_temp);
     }
 
+    if ($result && $oldversion < 2009022700) {
+        $quaderns = get_records_select('fct_quadern',
+                                      "cicle IS NULL or cicle = 0");
+        if ($quaderns) {
+            foreach ($quaderns as $quadern) {
+                $cicles = get_records('fct_cicle', 'fct', $quadern->fct);
+                if ($cicles) {
+                    $cicle = array_pop($cicles);
+                    set_field('fct_quadern', 'cicle', $cicle->id,
+                              'id', $quadern->id);
+                }
+            }
+        }
+
+        $table = $structure->getTable('fct_quadern');
+        $field = $table->getField('cicle');
+        $result = change_field_type($table, $field, false);
+    }
+
     return $result;
 }
 

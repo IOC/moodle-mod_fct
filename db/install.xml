@@ -68,7 +68,7 @@
         <FIELD NAME="tutor_centre" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="alumne" NEXT="tutor_empresa"/>
         <FIELD NAME="tutor_empresa" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="tutor_centre" NEXT="nom_empresa"/>
         <FIELD NAME="nom_empresa" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="tutor_empresa" NEXT="cicle"/>
-        <FIELD NAME="cicle" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="nom_empresa" NEXT="estat"/>
+        <FIELD NAME="cicle" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="nom_empresa" NEXT="estat"/>
         <FIELD NAME="estat" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="cicle"/>
       </FIELDS>
       <KEYS>
