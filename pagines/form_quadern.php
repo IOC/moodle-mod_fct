@@ -67,7 +67,7 @@ class fct_form_quadern extends fct_form_base {
     }
 
     function cicles() {
-        $cicles = array(0 => '');
+        $cicles = array();
         $cicles_fct = fct_db::cicles($this->pagina->fct->id);
         if ($cicles_fct) {
             foreach ($cicles_fct as $id => $cicle) {

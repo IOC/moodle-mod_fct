@@ -22,6 +22,8 @@ fct_require('pagines/base_quaderns.php',
 
 class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
+    var $n_cicles;
+
     function comprovar_nom_empresa($data) {
         if (fct_db::quadern_duplicat($this->fct->id, addslashes($data['alumne']),
                 addslashes($data['nom_empresa']))) {
@@ -33,6 +35,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
+        $this->n_cicles = fct_db::nombre_cicles($this->fct->id);
         $this->comprovar_permis($this->permis_admin);
         $this->url = fct_url::afegir_quadern($this->fct->id);
         $this->subpestanya = 'afegir_quadern';
@@ -61,7 +64,12 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
         }
 
         $this->mostrar_capcalera();
-        $form->display();
+        if (!$this->n_cicles) {
+            $missatge = fct_string('cicle_necessari_per_afegir_quaderns');
+            echo "<p>$missatge</p>";
+        } else {
+            $form->display();
+        }
         $this->mostrar_peu();
     }
 
