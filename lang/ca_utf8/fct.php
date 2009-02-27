@@ -64,6 +64,7 @@ $string['cerca'] = "Cerca";
 $string['cicle'] = "Cicle";
 $string['cicle_formatiu'] = "Cicle formatiu";
 $string['cicle_formatiu_duplicat'] = "Ja existeix un cicle formatiu amb aquest nom";
+$string['cicle_formatiu_no_suprimible'] = "No es pot suprimir el cicle formatiu <strong>\$a->nom_cicle</strong> perquè hi ha \$a->n_quaderns quaderns amb aquest cicle.";
 $string['cicles_formatius'] = "Cicles formatius";
 $string['codi'] = 'Codi';
 $string['codi_postal'] = 'Codi postal';

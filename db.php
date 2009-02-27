@@ -220,6 +220,10 @@ class fct_db
        return count_records_sql($sql);
     }
 
+    function nombre_quaderns_cicle($cicle_id) {
+        return count_records('fct_quadern', 'cicle', $cicle_id);
+    }
+
     function quadern_duplicat($fct_id, $alumne_id, $nom_empresa, $quadern_id=false) {
         $select = "fct = '$fct_id' AND alumne = '$alumne_id' AND nom_empresa = '$nom_empresa'";
         if ($quadern_id) {

@@ -23,6 +23,7 @@ fct_require('pagines/form_cicle.php');
 class fct_pagina_cicle extends fct_pagina_base_cicles {
 
     var $cicle;
+    var $n_quaderns;
 
     function comprovar_nom($data) {
         if (fct_db::cicle_duplicat($this->fct->id, addslashes($data['nom']),
@@ -40,6 +41,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
         if (!$this->cicle) {
             $this->error('recuperar_cicle');
         }
+        $this->n_quaderns = fct_db::nombre_quaderns_cicle($this->cicle->id);
 
         parent::configurar($this->cicle->fct);
 
@@ -97,9 +99,16 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     function processar_suprimir() {
         $this->mostrar_capcalera();
 
-        notice_yesno(fct_string('segur_suprimir_cicle_formatiu', $this->cicle->nom),
-            $this->url, fct_url::cicle($this->cicle->id),
-            array('confirmar' => 1, 'sesskey' => sesskey()));
+        if ($this->n_quaderns) {
+            $missatge = fct_string('cicle_formatiu_no_suprimible',
+                                   array('nom_cicle' => $this->cicle->nom,
+                                         'n_quaderns' => $this->n_quaderns));
+            echo "<p>$missatge</p>";
+        } else {
+            notice_yesno(fct_string('segur_suprimir_cicle_formatiu', $this->cicle->nom),
+                         $this->url, fct_url::cicle($this->cicle->id),
+                         array('confirmar' => 1, 'sesskey' => sesskey()));
+        }
 
         $this->mostrar_peu();
     }
