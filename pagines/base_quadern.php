@@ -22,6 +22,7 @@ fct_require('pagines/base.php');
 class fct_pagina_base_quadern extends fct_pagina_base {
 
     var $quadern;
+    var $cicle;
     var $titol;
 
     function configurar($quadern_id) {
@@ -32,7 +33,12 @@ class fct_pagina_base_quadern extends fct_pagina_base {
             $this->error('recuperar_quadern');
         }
 
-        parent::configurar($this->quadern->fct);
+        $this->cicle = fct_db::cicle($this->quadern->cicle);
+        if (!$this->cicle) {
+            $this->error('recuperar_cicle');
+        }
+
+        parent::configurar($this->cicle->fct);
 
         $this->comprovar_permis($this->permis_admin
             or ($this->permis_alumne and $this->quadern->alumne == $USER->id)
