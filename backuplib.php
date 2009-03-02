@@ -173,9 +173,10 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
     $backup->write_table_fct('fct_activitat_cicle',
                              array('cicle' => 'fct_cicle'));
     if ($userdata) {
-        $backup->write_tables_fct(array('fct_dades_alumne',
-                                        'fct_qualificacio_global'));
-        $backup->write_table_fct('fct_quadern', array('cicle' => 'fct_cicle'));
+        $backup->write_table_fct('fct_dades_alumne');
+        $backup->write_tables_fct(array('fct_quadern',
+                                        'fct_qualificacio_global'),
+                                  array('cicle' => 'fct_cicle'));
         $backup->write_tables_fct(array('fct_dades_centre_concertat',
                                         'fct_dades_empresa',
                                         'fct_dades_conveni',

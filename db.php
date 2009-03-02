@@ -54,9 +54,7 @@ class fct_db
 
         $ok = delete_records('fct', 'id', $id) && $ok;
         $ok = self::suprimir_dades_centre($id) && $ok;
-        $ok = self::suprimir_quaderns($id) && $ok;
         $ok = self::suprimir_dades_alumnes($id) && $ok;
-        $ok = self::suprimir_qualificacions_global($id) && $ok;
         $ok = self::suprimir_cicles($id) && $ok;
 
         return $ok;
@@ -166,7 +164,8 @@ class fct_db
         $ok = true;
         $ok = delete_records('fct_cicle', 'id', $cicle_id) && $ok;
         $ok = delete_records('fct_activitat_cicle', 'cicle', $cicle_id) && $ok;
-        $ok = set_field('fct_quadern', 'cicle', null, 'cicle', $cicle_id) && $ok;
+        $ok = self::suprimir_quaderns($cicle_id) && $ok;
+        $ok = self::suprimir_qualificacions_globals($cicle_id) && $ok;
         return $ok;
     }
 
@@ -215,6 +214,7 @@ class fct_db
 
         $sql = "SELECT COUNT(*)"
             . " FROM {$CFG->prefix}fct_quadern q"
+            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
             . self::quaderns_where_sql($fct_id, $params);
 
        return count_records_sql($sql);
@@ -225,11 +225,17 @@ class fct_db
     }
 
     function quadern_duplicat($fct_id, $alumne_id, $nom_empresa, $quadern_id=false) {
-        $select = "fct = '$fct_id' AND alumne = '$alumne_id' AND nom_empresa = '$nom_empresa'";
+        global $CFG;
+        $sql = "SELECT COUNT(*)"
+            . " FROM {$CFG->prefix}fct_quadern q"
+            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
+            . " WHERE c.fct = $fct_id"
+            . " AND q.alumne = $alumne_id"
+            . " AND q.nom_empresa = '$nom_empresa'";
         if ($quadern_id) {
-            $select .= " AND id != '$quadern_id'";
+            $sql .= " AND q.id != '$quadern_id'";
         }
-        return record_exists_select('fct_quadern', $select);
+        return count_records_sql($sql) > 0;
     }
 
     function quadern($quadern_id) {
@@ -250,7 +256,7 @@ class fct_db
             . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
             . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
             . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
-            . " LEFT JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
             . " JOIN {$CFG->prefix}fct_dades_conveni dc ON q.id = dc.quadern"
             . self::quaderns_where_sql($fct_id, $params);
 
@@ -265,7 +271,7 @@ class fct_db
         $select = array('TRUE');
 
         if ($fct_id) {
-            $select[] = "q.fct = $fct_id";
+            $select[] = "c.fct = $fct_id";
         }
 
         if ($params) {
@@ -336,8 +342,8 @@ class fct_db
         return $ok;
     }
 
-    function suprimir_quaderns($id) {
-        $quaderns = self::quaderns($id);
+    function suprimir_quaderns($cicle_id) {
+        $quaderns = get_records('fct_quadern', 'cicle', $cicle_id);
         $ok = true;
         if ($quaderns) {
             foreach ($quaderns as $quadern) {
@@ -535,7 +541,8 @@ class fct_db
         if ($fct_id) {
             $sql = "SELECT COUNT(*) FROM {$CFG->prefix}fct_quinzena qi"
                 . " JOIN {$CFG->prefix}fct_quadern qa ON qa.id = qi.quadern"
-                . " WHERE qa.fct = $fct_id";
+                . " JOIN {$CFG->prefix}fct_cicle c ON qa.cicle = c.id"
+                . " WHERE c.fct = $fct_id";
             return count_records_sql($sql);
         } else {
             return count_records('fct_quinzena');
@@ -724,9 +731,11 @@ class fct_db
 
     function data_final_convenis_min_max($fct_id, $params=false) {
         global $CFG;
-        $sql = "SELECT MIN(c.data_final) AS data_min, MAX(c.data_final) AS data_max"
-            . " FROM {$CFG->prefix}fct_dades_conveni c"
-            . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id"
+        $sql = "SELECT MIN(dc.data_final) AS data_min,"
+            . " MAX(dc.data_final) AS data_max"
+            . " FROM {$CFG->prefix}fct_dades_conveni dc"
+            . " JOIN {$CFG->prefix}fct_quadern q ON dc.quadern = q.id"
+            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
             . self::quaderns_where_sql($fct_id, $params);
         $record = get_record_sql($sql);
         return array($record->data_min, $record->data_max);
@@ -862,12 +871,8 @@ class fct_db
         return $record;
     }
 
-    function suprimir_qualificacions_global($fct_id) {
-        global $CFG;
-        $select = "cicle IN (SELECT id"
-            . " FROM {$CFG->prefix}fct_cicle"
-            . " WHERE fct = $fct_id)";
-        return delete_records_select('fct_qualificacio_global', $select);
+    function suprimir_qualificacions_globals($cicle_id) {
+        return delete_records('fct_qualificacio_global', 'cicle', $cicle_id);
     }
 
 // Tutor d'empresa

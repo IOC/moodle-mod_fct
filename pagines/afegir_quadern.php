@@ -46,7 +46,6 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
         $data = $form->get_data();
         if ($data) {
            $quadern = (object) array(
-                'fct' => $this->fct->id,
                 'alumne' => $data->alumne,
                 'nom_empresa' => $data->nom_empresa,
                 'tutor_centre' => $data->tutor_centre,

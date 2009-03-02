@@ -195,6 +195,15 @@ function xmldb_fct_upgrade($oldversion=0) {
             && add_key($table, $key_cicle_alumne, false);
     }
 
+    if ($result && $oldversion < 2009030201) {
+        $table = new XMLDBTable('fct_quadern');
+        $field = new XMLDBField('fct');
+        $key = new XMLDBKey('fct');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('fct'), 'fct', 'id');
+        $result = drop_key($table, $key, false)
+            && drop_field($table, $field, false);
+    }
+
     return $result;
 }
 
