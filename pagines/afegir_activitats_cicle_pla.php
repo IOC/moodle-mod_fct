@@ -22,16 +22,19 @@ fct_require('pagines/base_pla_activitats.php',
 
 class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
 
+    var $activitats;
+
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_activitats_cicle_pla($this->quadern->id);
         $this->subpestanya = 'afegir_activitats_cicle_pla';
+        $this->activitats = fct_db::activitats_cicle($this->quadern->cicle);
     }
 
     function processar_afegir() {
-        if ($this->quadern->cicle) {
+        if ($this->activitats) {
             $form = new fct_form_activitats_cicle_pla($this);
             $data = $form->get_data();
             if ($data) {
@@ -42,17 +45,18 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
                     $this->registrar('add activitats_cicle_pla',
                                      fct_url::pla_activitats($this->quadern->id));
                 } else {
-                   $this->error('afegir_activitats');
+                    $this->error('afegir_activitats');
                 }
                 redirect(fct_url::pla_activitats($this->quadern->id));
             }
         }
 
         $this->mostrar_capcalera();
-        if ($this->quadern->cicle) {
+        if ($this->activitats) {
             $form->display();
         } else {
-            echo '<p>' . fct_string('quadern_sense_cicle_formatiu') . '</p>';
+            echo '<p>' . fct_string('cicle_formatiu_sense_activitats',
+                                     $this->cicle->nom) . '</p>';
         }
         $this->mostrar_peu();
     }
