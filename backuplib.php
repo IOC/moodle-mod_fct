@@ -170,13 +170,13 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
     $backup->write_table_fct2('fct_activitat_cicle', 'cicle', 'fct_cicle');
     if ($userdata) {
         $backup->write_table_fct('fct_dades_alumne');
-        $backup->write_table_fct('fct_dades_relatives');
         $backup->write_table_fct('fct_qualificacio_global');
         $backup->write_table_fct('fct_quadern');   
         $backup->write_table_fct2('fct_dades_centre_concertat', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_dades_empresa', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_dades_conveni', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_dades_horari', 'quadern', 'fct_quadern');
+        $backup->write_table_fct2('fct_dades_relatives', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_activitat_pla', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_valoracio_actituds', 'quadern', 'fct_quadern');
         $backup->write_table_fct2('fct_qualificacio_quadern', 'quadern', 'fct_quadern');
