@@ -30,7 +30,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->ultim_quadern = fct_db::ultim_quadern($this->quadern->id);
-        $this->qualificacio = fct_db::qualificacio_global($this->fct->id,
+        $this->qualificacio = fct_db::qualificacio_global($this->quadern->cicle,
                                                           $this->quadern->alumne);
         if (!$this->qualificacio) {
             $this->error('recuperar_qualificacio_global');
@@ -70,7 +70,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         $data = $this->form->get_data();
         if ($data) {
             $data->id = $this->qualificacio->id;
-            $data->fct = $this->qualificacio->fct;
+            $data->cicle = $this->qualificacio->cicle;
             $data->alumne = $this->qualificacio->alumne;
             $data->data = $this->form->date2unix($data->data);
             $ok = fct_db::actualitzar_qualificacio_global($data);

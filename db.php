@@ -54,10 +54,10 @@ class fct_db
 
         $ok = delete_records('fct', 'id', $id) && $ok;
         $ok = self::suprimir_dades_centre($id) && $ok;
-        $ok = self::suprimir_cicles($id) && $ok;
         $ok = self::suprimir_quaderns($id) && $ok;
         $ok = self::suprimir_dades_alumnes($id) && $ok;
         $ok = self::suprimir_qualificacions_global($id) && $ok;
+        $ok = self::suprimir_cicles($id) && $ok;
 
         return $ok;
     }
@@ -850,11 +850,11 @@ class fct_db
         return update_record('fct_qualificacio_global', $data);
     }
 
-    function qualificacio_global($fct_id, $alumne) {
+    function qualificacio_global($cicle_id, $alumne) {
         $record = get_record('fct_qualificacio_global',
-            'fct', $fct_id, 'alumne', $alumne);
+            'cicle', $cicle_id, 'alumne', $alumne);
         if (!$record) {
-            $record = (object) array('fct' => $fct_id, 'alumne' => $alumne);
+            $record = (object) array('cicle' => $cicle_id, 'alumne' => $alumne);
             if (!insert_record('fct_qualificacio_global', $record)) {
                 return false;
             }
@@ -863,7 +863,11 @@ class fct_db
     }
 
     function suprimir_qualificacions_global($fct_id) {
-        return delete_records('fct_qualificacio_global', 'fct', $fct_id);
+        global $CFG;
+        $select = "cicle IN (SELECT id"
+            . " FROM {$CFG->prefix}fct_cicle"
+            . " WHERE fct = $fct_id)";
+        return delete_records_select('fct_qualificacio_global', $select);
     }
 
 // Tutor d'empresa

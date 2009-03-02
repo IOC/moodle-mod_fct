@@ -172,6 +172,29 @@ function xmldb_fct_upgrade($oldversion=0) {
         $result = change_field_type($table, $field, false);
     }
 
+    if ($result && $oldversion < 2009030200) {
+        $table = $structure->getTable('fct_qualificacio_global');
+        $field_fct = new XMLDBField('fct');
+        $field_fct->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, null, 'id');
+        $key_cicle = $table->getKey('cicle');
+        $key_cicle_alumne = $table->getKey('cicle_alumne');
+        $key_fct = new XMLDBKey('fct');
+        $key_fct->setAttributes(XMLDB_KEY_FOREIGN, array('fct'), 'fct', 'id');
+        $key_fct_alumne = new XMLDBKey('fct_alumne');
+        $key_fct_alumne->setAttributes(XMLDB_KEY_UNIQUE, array('fct', 'alumne'));
+
+        $sql = "UPDATE {$CFG->prefix}fct_qualificacio_global qg,"
+            . " {$CFG->prefix}fct_quadern q SET qg.cicle = q.cicle "
+            . " WHERE qg.cicle = q.fct AND qg.alumne = q.alumne";
+
+        $result = drop_key($table, $key_fct_alumne, false)
+            && drop_key($table, $key_fct, false)
+            && rename_field($table, $field_fct, 'cicle', false)
+            && execute_sql($sql, false)
+            && add_key($table, $key_cicle, false)
+            && add_key($table, $key_cicle_alumne, false);
+    }
+
     return $result;
 }
 

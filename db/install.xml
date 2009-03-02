@@ -261,19 +261,19 @@
     </TABLE>
     <TABLE NAME="fct_qualificacio_global" COMMENT="-" PREVIOUS="fct_qualificacio_quadern">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="fct"/>
-        <FIELD NAME="fct" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="alumne"/>
-        <FIELD NAME="alumne" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="fct" NEXT="qualificacio"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="cicle"/>
+        <FIELD NAME="cicle" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="alumne"/>
+        <FIELD NAME="alumne" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="cicle" NEXT="qualificacio"/>
         <FIELD NAME="qualificacio" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="alumne" NEXT="nota"/>
         <FIELD NAME="nota" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="qualificacio" NEXT="data"/>
         <FIELD NAME="data" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="nota" NEXT="observacions"/>
         <FIELD NAME="observacions" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="data"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="fct"/>
-        <KEY NAME="fct" TYPE="foreign" FIELDS="fct" REFTABLE="fct" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="alumne"/>
-        <KEY NAME="alumne" TYPE="foreign" FIELDS="alumne" REFTABLE="user" REFFIELDS="id" COMMENT="-" PREVIOUS="fct" NEXT="fct_alumne"/>
-        <KEY NAME="fct_alumne" TYPE="unique" FIELDS="fct, alumne" COMMENT="-" PREVIOUS="alumne"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="cicle"/>
+        <KEY NAME="cicle" TYPE="foreign" FIELDS="cicle" REFTABLE="cicle" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="alumne"/>
+        <KEY NAME="alumne" TYPE="foreign" FIELDS="alumne" REFTABLE="user" REFFIELDS="id" COMMENT="-" PREVIOUS="cicle" NEXT="cicle_alumne"/>
+        <KEY NAME="cicle_alumne" TYPE="unique" FIELDS="cicle, alumne" COMMENT="-" PREVIOUS="alumne"/>
       </KEYS>
     </TABLE>
   </TABLES>
