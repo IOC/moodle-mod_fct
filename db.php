@@ -355,20 +355,17 @@ class fct_db
             return false;
         }
 
-        $select = "q.fct = {$quadern->fct} AND q.alumne = {$quadern->alumne}";
-        if ($exclou) {
-            $select .= " AND q.id != $quadern_id";
-        }
-        $sql = "SELECT q.id"
+        $sql = "SELECT q.*"
             . " FROM {$CFG->prefix}fct_quadern q"
             . " JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern"
-            . " WHERE $select"
+            . " WHERE q.cicle = {$quadern->cicle}"
+            . " AND q.alumne = {$quadern->alumne}"
+            . ($exclou ? " AND q.id != $quadern_id" : "")
             . " ORDER BY c.data_final DESC LIMIT 1";
 
         $records = get_records_sql($sql);
         return $records ? array_pop($records) : false;
     }
-
 
 // Pla d'activitats
 
@@ -792,8 +789,8 @@ class fct_db
         }
 
         $data_final = fct_db::data_final_quadern($quadern->id);
-        $dades->hores_practiques = fct_db::hores_realitzades_fct(
-            $quadern->fct, $quadern->alumne, $data_final);
+        $dades->hores_practiques = fct_db::hores_realitzades_cicle(
+            $quadern->cicle, $quadern->alumne, $data_final);
         $dades->hores_exempcio = ceil((float) $dades->exempcio / 100
                                       * $dades->hores_credit);
         $dades->hores_realitzades = $dades->hores_practiques
@@ -809,13 +806,13 @@ class fct_db
 
 // Hores realitzdes
 
-    function hores_realitzades_fct($fct_id, $alumne, $data_final) {
+    function hores_realitzades_cicle($cicle_id, $alumne, $data_final) {
         global $CFG;
         $sql = 'SELECT SUM(qi.hores) AS hores '
             . "FROM {$CFG->prefix}fct_quadern qa "
             . "JOIN {$CFG->prefix}fct_quinzena qi ON qa.id = qi.quadern "
             . "JOIN {$CFG->prefix}fct_dades_conveni c ON qa.id = c.quadern "
-            . "WHERE qa.fct = $fct_id AND qa.alumne = $alumne"
+            . "WHERE qa.cicle = $cicle_id AND qa.alumne = $alumne"
             . " AND c.data_final <= $data_final";
         $record = get_record_sql($sql);
         return ($record and $record->hores) ? $record->hores : 0;
