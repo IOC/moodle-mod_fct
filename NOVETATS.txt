@@ -4,6 +4,7 @@
    * Filtres i cerca a la llista de quaderns.
    * Canvi de les plantilles per cicles formatius.
    * Dades relatives separades per quadern.
+   * Quaderns de cicles diferents separats.
    * Correcció de diversos errors.
 
 1.4 (2008-10-10)

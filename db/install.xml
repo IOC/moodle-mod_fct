@@ -269,7 +269,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="cicle"/>
-        <KEY NAME="cicle" TYPE="foreign" FIELDS="cicle" REFTABLE="cicle" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="alumne"/>
+        <KEY NAME="cicle" TYPE="foreign" FIELDS="cicle" REFTABLE="fct_cicle" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="alumne"/>
         <KEY NAME="alumne" TYPE="foreign" FIELDS="alumne" REFTABLE="user" REFFIELDS="id" COMMENT="-" PREVIOUS="cicle" NEXT="cicle_alumne"/>
         <KEY NAME="cicle_alumne" TYPE="unique" FIELDS="cicle, alumne" COMMENT="-" PREVIOUS="alumne"/>
       </KEYS>
