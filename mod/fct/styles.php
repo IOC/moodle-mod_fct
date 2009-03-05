@@ -16,45 +16,49 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-.paginafct {
+#paginafct {
     padding: 0.5em;
 }
 
-.contingutfct {
-    background-color: #f8f8f4;
+#contingutfct {
     padding: 2.5em 1.5em 1.5em 1.5em;
     margin-left: 2px;
 }
 
-.contingutfct table {
+#content #contingutfct,
+#content #contingutfct div {
+    background-color: #f8f8f4;
+}
+
+#contingutfct table {
     margin-left: auto;
     margin-right: auto;
 }
 
-.contingutfct p {
+#contingutfct p {
     text-align: center;
 }
 
-.paginafct .tabtree .tabrow0 {
+#paginafct .tabtree .tabrow0 {
     margin: 0 auto;
     padding-bottom: 0;
 }
 
-.paginafct .tabtree .tabrow1 {
+#paginafct .tabtree .tabrow1 {
     margin: 0;
 }
 
-.paginafct .tabtree ul.tabrow1 li.active {
+#paginafct .tabtree ul.tabrow1 li.active {
     font-weight: bold;
 }
 
 
-.paginafct table tr th {
+#paginafct table tr th {
     text-align: left;
     padding: 0.1em 1em;
 }
 
-.paginafct table tr td {
+#paginafct table tr td {
     text-align: left;
     padding: 0.2em 1em;
 }
@@ -88,15 +92,15 @@
     width: 80%;
 }
 
-.paginafct a.estat_obert {
+#paginafct a.estat_obert {
     color: green;
 }
 
-.paginafct a.estat_tancat {
+#paginafct a.estat_tancat {
     color: red;
 }
 
-.paginafct .columna_accions {
+#paginafct .columna_accions {
     width: 2em;
 }
 
