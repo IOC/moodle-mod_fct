@@ -3,6 +3,7 @@ Quadern virtual d'FCT
 
 Copyright © 2008,2009  Institut Obert de Catalunya
 
+
 Introducció
 -----------
 
@@ -10,6 +11,7 @@ El quadern virtual d'FCT és un projecte de l'Institut Obert de
 Catalunya per a realitzar els quaderns de pràctiques de la Formació en
 Centres de Treball (crèdit de la Formació Professional). L'aplicació
 és un mòdul per a Moodle 1.9, en forma de tipus d'activitat de curs.
+
 
 Llicència
 ---------
@@ -24,11 +26,25 @@ General de GNU, visiteu les pàgines següents:
    * http://www.gnu.org/philosophy/free-sw.ca.html
    * http://www.gnu.org/licenses/licenses.ca.html
 
+
 Autors
 ------
+
+Albert Gasset Romo <albert@ioc.cat>
+
 
 Instal·lació
 ------------
 
+El procés d'instal·lació és similar als altres mòduls, vegeu la
+documentaió de Moodle:
+
+   http://docs.moodle.org/ca/Instal·lació_de_complements
+
+
 Projecte
 --------
+
+El lloc web de desenvolupament del projecte es troba a LaFarga.cat:
+
+   http://projectes.lafarga.cat/projects/quadernfct
