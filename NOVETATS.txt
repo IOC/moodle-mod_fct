@@ -1,10 +1,10 @@
-1.5 (?)
+1.5 (2009-03-10)
    * Pàgina d'exportació de la llista d'empreses.
    * Petites millores visuals i de navegació.
    * Filtres i cerca a la llista de quaderns.
    * Canvi de les plantilles per cicles formatius.
    * Dades relatives separades per quadern.
-   * Quaderns de cicles diferents separats.
+   * Separació dels quaderns per cicles.
    * Correcció de diversos errors.
 
 1.4 (2008-10-10)

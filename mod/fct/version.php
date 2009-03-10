@@ -21,7 +21,7 @@
  * Definició de la versió del mòdul.
  *
  * @author Albert Gasset Romo
- * @version 1.4
+ * @version 1.5
  * @package fct
  **/
 
