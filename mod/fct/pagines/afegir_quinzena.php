@@ -78,7 +78,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         }
 
         $form->set_data((object) array(
-            'periode' => array(0 => $any, 1 => $periode)));
+            'periode' => array(0 => $form->any, 1 => $form->periode)));
         $this->mostrar_capcalera();
         $form->display();
         $this->mostrar_peu();

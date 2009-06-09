@@ -107,17 +107,16 @@ class fct_form_quinzena extends fct_form_base {
 
         $any0 = $this->pagina->any_data($this->pagina->conveni->data_inici);
         $any1 = $this->pagina->any_data($this->pagina->conveni->data_final);
+        $periode0 = $this->pagina->periode_data($this->pagina->conveni->data_inici);
+        $periode1 = $this->pagina->periode_data($this->pagina->conveni->data_final);
 
         for ($any = $any0; $any <= $any1; $any++) {
             $options_anys[$any] = $any;
             $options_periodes[$any] = array();
 
-            $periode0 = ($any == $any0) ? $this->pagina->periode_data(
-                $this->pagina->conveni->data_inici) : 0;
-            $periode1 = ($any == $any1) ? $this->pagina->periode_data(
-                $this->pagina->conveni->data_final) : 23;
-
-            for ($periode = $periode0; $periode <= $periode1; $periode++) {
+            for ($periode = ($any == $any0 ? $periode0 : 0);
+                 $periode <= ($any == $any1 ? $periode1 : 23);
+                 $periode++) {
                 $options_periodes[$any][$periode] =
                     $this->pagina->nom_periode($periode, $any);
                 $calendari = $this->pagina->calendari_periode($any, $periode);
@@ -129,6 +128,19 @@ class fct_form_quinzena extends fct_form_base {
         }
 
         $this->options = array($options_anys, $options_periodes);
+
+        if ($this->any <= $any0) {
+            $this->any = $any0;
+            if ($this->periode < $periode0) {
+                $this->peridoe = $periode0;
+            }
+        }
+        if ($this->any >= $any1) {
+            $this->any = $any1;
+            if ($this->periode > $periode1) {
+                $this->periode = $periode1;
+            }
+        }
     }
 
 }
