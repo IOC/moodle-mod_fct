@@ -474,13 +474,16 @@ class fct_form_base extends moodleform {
         if (!$data) {
             return false;
         }
+        $data = (array) $data;
 
         $values = array();
-        foreach ((array) $data as $param => $value) {
-            preg_match("/^$name([0-9]+)$/", $param, &$match);
-            if ($match) {
-                $values[$match[1]] = $value;
-            }
+        foreach ($this->elements as $element) {
+             preg_match("/^$name([0-9]+)$/", $element->name, $match);
+             if ($match) {
+                 if (isset($data[$element->name])) {
+                     $values[$match[1]] = $data[$element->name];
+                 }
+             }
         }
         return $values;
     }
