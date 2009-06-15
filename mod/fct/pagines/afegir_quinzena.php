@@ -24,11 +24,12 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
 
     var $activitats;
 
-    function comprovar_quinzena($data) {
+    function comprovar_quinzena($valors) {
         if (fct_db::quinzena_duplicada($this->quadern->id,
-                addslashes($data['periode'][0]),
-                addslashes($data['periode'][1]))) {
-            return array('periode' => fct_string('quinzena_duplicada'));
+                addslashes($valors->any),
+                addslashes($valors->periode))) {
+            return array('any' => fct_string('quinzena_duplicada'),
+                         'periode' => fct_string('quinzena_duplicada'));
         }
         return true;
     }
@@ -43,44 +44,50 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_afegir() {
-        list($any, $periode) = self::quinzena_actual();
-        $form = new fct_form_quinzena($this, $any, $periode);
-        $data = $form->get_data();
-
-        if ($data) {
+        $form = new fct_form_quinzena($this);
+        if ($form->validar()) {
             $quinzena = (object) array(
                 'quadern' => $this->quadern->id,
-                'any_' => $data->periode[0],
-                'periode' => $data->periode[1],
-                'hores' => $data->hores,
-                'valoracions' => $data->valoracions,
-                'observacions_alumne' => $data->observacions_alumne,
+                'any' => $form->valor('any'),
+                'periode' => $form->valor('periode'),
+                'hores' => $form->valor('hores'),
+                'valoracions' => $form->valor('valoracions'),
+                'observacions_alumne' => $form->valor('observacions_alumne'),
             );
-            $dies = $form->get_data_calendari('dia',
-                $this->calendari_periode($quinzena->any_, $quinzena->periode));
-            $activitats = $form->get_data_llista('activitat');
             if ($this->permis_editar_centre) {
-                $quinzena->observacions_centre = $data->observacions_centre;
+                $quinzena->observacions_centre = $form->valor('observacions_centre');
             }
             if ($this->permis_editar_empresa) {
-                $quinzena->observacions_empresa = $data->observacions_empresa;
+                $quinzena->observacions_empresa = $form->valor('observacions_empresa');
             }
-
-            $id = fct_db::afegir_quinzena($quinzena, $dies, $activitats);
+            $dies = $this->filtrar_dies($form->valor('dies'),
+                                        $form->valor('periode'),
+                                        $form->valor('any'));
+            $id = fct_db::afegir_quinzena($quinzena, $dies,
+                                          $form->valor('activitats_realitzades'));
             if ($id) {
                 $this->registrar('add quinzena', fct_url::quinzena($id),
-                    self::nom_periode($data->periode[1]) . ' '
-                    . $data->periode[0]);
+                                 $this->nom_periode($form->valor('periode'),
+                                                    $form->valor('any')));
             } else {
                 $this->error('afegir_quinzena');
             }
             redirect(fct_url::quinzena($id));
         }
 
-        $form->set_data((object) array(
-            'periode' => array(0 => $form->any, 1 => $form->periode)));
+        list($any, $periode) = $this->quinzena_actual();
+        $form->valor('any', $any);
+        $form->valor('periode', $periode);
+        $form->valor('any_inici',
+                     $this->any_data($this->conveni->data_inici));
+        $form->valor('any_final',
+                     $this->any_data($this->conveni->data_final));
+        $form->valor('periode_inici',
+                     $this->periode_data($this->conveni->data_inici));
+        $form->valor('periode_final',
+                     $this->periode_data($this->conveni->data_final));
         $this->mostrar_capcalera();
-        $form->display();
+        $form->mostrar();
         $this->mostrar_peu();
     }
 

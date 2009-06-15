@@ -20,18 +20,24 @@
 require_once($CFG->libdir . '/formslib.php');
 require_once($CFG->libdir . '/pear/HTML/QuickForm/date.php');
 
-class fct_form_base extends moodleform {
+class fct_form_base {
 
+    var $comprovacions = array();
+    var $data = array();
+    var $elements = array();
+    var $mform;
     var $pagina;
-    private $botons;
-    private $comprovacions;
-    private $elements;
-    private $congelat = false;
-    private $elements_congelats = array();
 
-    static function options_barem() {
+    function __construct($pagina) {
+        $this->configurar($pagina);
+        $this->mform = new fct_form_moodle(get_class($this), $pagina->url,
+                                           $this->elements, $this->comprovacions,
+                                           $this->data);
+    }
+
+    function barem_valoracio() {
         return array(
-            0 => '',
+            0 => '-',
             1 => fct_string('barem_a'),
             2 => fct_string('barem_b'),
             3 => fct_string('barem_c'),
@@ -40,487 +46,398 @@ class fct_form_base extends moodleform {
         );
     }
 
-    static function options_barem_qualificacio() {
+    function barem_qualificacio() {
         return array(
-            0 => '',
+            0 => '-',
             1 => fct_string('apte'),
             2 => fct_string('noapte'),
         );
     }
 
-    function __construct($pagina) {
-        $this->pagina = $pagina;
-        $this->botons = array();
-        $this->comprovacions = array();
-        $this->elements = array();
-        $this->elements_congelats = array();
-        $this->configurar();
-        parent::moodleform($pagina->url);
+    function comprovacio($objecte, $metode) {
+        $comprovacio = new fct_form_comprovacio($this, $objecte, $metode);
+        $this->comprovacions[] = $comprovacio;
     }
 
-    function afegir_boto($name, $label) {
-        $this->botons[] = (object) array(
-            'type' => 'submit',
-            'name' => $name,
-            'label' => $label,
-        );
+    function configurar() {
     }
 
-    function afegir_boto_cancellar($name='cancellar') {
-        $this->botons[] = (object) array(
-            'type' => 'cancel',
-            'name' => $name,
-        );
-    }
-
-    function afegir_boto_enllac($name, $label) {
-        $this->botons[] = (object) array(
-            'type' => 'enllac',
-            'name' => $name,
-            'label' => $label,
-        );
-    }
-
-    function afegir_boto_reset($name='desfer', $label=null) {
-        if (is_null($label)) {
-            $label = fct_string("desfes");
-        }
-        $this->botons[] = (object) array(
-            'type' => 'reset',
-            'name' => $name,
-            'label' => $label,
-        );
-    }
-
-    function afegir_calendari($name, $label, $calendaris,
-                              $any, $periode, $dies=array(), $congelat,
-                              $sep=':', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'calendari',
-            'name' => $name,
-            'label' => $label,
-            'calendaris' => $calendaris,
-            'any' => $any,
-            'periode' => $periode,
-            'dies' => array_keys($dies),
-            'congelat' => $congelat,
-            'sep' => $sep,
-            'help' => $help,
-        );
-    }
-
-    function afegir_checkbox($name, $label, $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'checkbox',
-            'name' => $name,
-            'label' => $label,
-            'help' => $help,
-        );
-    }
-
-    function afegir_comprovacio($method, $instance=false) {
-        if (!$instance) {
-            $instance = $this->pagina;
-        }
-        $this->comprovacions[] = array($instance, $method);
-    }
-
-    function afegir_date($name, $label, $sep=':', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'date',
-            'name' => $name,
-            'label'=> $label,
-            'sep' => $sep,
-            'help' => $help,
-        );
-    }
-
-    function afegir_header($name, $label, $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'header',
-            'name' => $name,
-            'label'=> $label,
-            'help' => $help,
-        );
-    }
-
-    function afegir_hierselect($name, $label, $options, $sep=':',
-                               $onchange='', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'hierselect',
-            'name' => $name,
-            'label' => $label,
-            'options' => $options,
-            'onchange' => $onchange,
-            'sep' => $sep,
-            'help' => $help,
-        );
-    }
-
-    function afegir_llista_checkbox($name, $labels, $field=false) {
-        foreach ($labels as $id => $label) {
-            $label_id = $field ? $label->id : $id;
-            $label_text = $field ? $label->$field : $label;
-            $this->afegir_checkbox($name.$label_id, $label_text);
+    function congelar($noms=null) {
+        if ($noms === null) {
+            $this->congelar(array_keys($this->elements));
+        } elseif (is_array($noms)) {
+            foreach ($noms as $nom) {
+                $this->congelar($nom);
+            }
+        } else {
+            $this->elements[$noms]->congelar();
         }
     }
 
-    function afegir_llista_select($name, $labels, $options, $field=false, $sep=':') {
-        foreach ($labels as $id => $label) {
-            $label_id = $field ? $label->id : $id;
-            $label_text = $field ? $label->$field : $label;
-            $this->afegir_select($name.$label_id, $label_text, $options, false, $sep);
-        }
+    function element($tipus, $nom, $etiqueta=false, $params=array()) {
+        $element_class = 'fct_form_element_' . $tipus;
+        $element = new $element_class($tipus, $nom, $etiqueta, $params);
+        $this->elements[$nom] = $element;
     }
 
-    function afegir_select($name, $label, $options, $field=false, $sep=':') {
-        if ($field) {
-            foreach ($options as $index => $value) {
-                $options[$index] = $value->$field;
+    function mostrar() {
+        $this->mform->set_data((object) $this->data);
+        $this->mform->display();
+    }
+
+    function validar() {
+        if ($data = $this->mform->get_data()) {
+            $this->data = (array) $data;
+            return true;
+        }
+        return false;
+    }
+
+    function valor($nom, $valor=null) {
+        if ($valor === null) {
+            if (!$this->elements[$nom]->congelat) {
+                return $this->elements[$nom]->get_data($this->data);
+            }
+        } else {
+            if (isset($this->elements[$nom])) {
+                $this->elements[$nom]->set_data($this->data, $valor);
             }
         }
-        $this->elements[] = (object) array(
-            'type' => 'select',
-            'name' => $name,
-            'label' => $label,
-            'options' => $options,
-            'sep' => $sep,
-        );
     }
 
-    function afegir_static($name, $label, $text, $sep=':', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'static',
-            'name' => $name,
-            'label' => $label,
-            'text' => $text,
-            'help' => $help,
-            'sep' => $sep,
-        );
+    function valors($valors=null) {
+        if ($valors === null) {
+            return $this->valors_data($this->data);
+        } else {
+            foreach ((array) $valors as $nom => $valor) {
+                $this->valor($nom, $valor);
+            }
+        }
     }
 
-    function afegir_text($name, $label, $size, $required=false, $numeric=false,
-                        $sep=':', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'text',
-            'name' => $name,
-            'label' => $label,
-            'size' => $size,
-            'required' => $required,
-            'numeric' => $numeric,
-            'sep' => $sep,
-            'help' => $help,
-        );
+    function valors_data($data) {
+        $valors = array();
+        foreach ($this->elements as $element) {
+            if (!$element->congelat) {
+                $valors[$element->nom] = $element->get_data($data);
+            }
+        }
+        return (object) $valors;
     }
 
-    function afegir_textarea($name, $label, $rows, $cols, $required=false,
-                             $sep=':', $help=false) {
-        $this->elements[] = (object) array(
-            'type' => 'textarea',
-            'name' => $name,
-            'label' => $label,
-            'rows' => $rows,
-            'cols' => $cols,
-            'required' => $required,
-            'sep' => $sep,
-            'help' => $help,
-        );
+}
+
+class fct_form_moodle extends moodleform {
+
+    var $botons = array();
+    var $data;
+    var $elements;
+    var $url;
+
+    function __construct($class, $url, $elements, $comprovacions, &$data) {
+        $this->url = $url;
+        $this->elements = $elements;
+        $this->comprovacions = $comprovacions;
+        $this->data = &$data;
+        parent::__construct($url, null, 'post', '', array('class' => $class));
+    }
+
+    function definition() {
+        foreach ($this->elements as $element) {
+            $element->definition($this, $this->data);
+        }
+
+        foreach ($this->comprovacions as $comprovacio) {
+            $this->_form->addFormRule(array($comprovacio, 'comprovar'));
+        }
+
+        $this->_form->addGroup($this->botons, 'buttonar', '', array(' '), false);
+        $this->_form->closeHeaderBefore('buttonar');
+    }
+}
+
+class fct_form_comprovacio {
+
+    var $form;
+    var $objecte;
+    var $metode;
+
+    function __construct($form, $objecte, $metode) {
+        $this->form = $form;
+        $this->objecte = $objecte;
+        $this->metode = $metode;
+    }
+
+    function comprovar($data) {
+        $metode = $this->metode;
+        $valors = $this->form->valors_data($data);
+        return $this->objecte->$metode($valors);
+    }
+}
+
+class fct_form_element_base {
+
+    var $congelat;
+    var $etqiueta;
+    var $nom;
+    var $params;
+    var $tipus;
+
+    function __construct($tipus, $nom, $etiqueta, $params) {
+        $this->tipus = $tipus;
+        $this->nom = $nom;
+        $this->etiqueta = ($etiqueta ? fct_string($etiqueta) : false);
+        $this->congelat = false;
+        $this->params = (object) $params;
     }
 
     function congelar() {
         $this->congelat = true;
     }
 
-    function congelar_element($elements) {
-        $this->elements_congelats = array_merge($this->elements_congelats,
-                                                $elements);
+    function definition($mform, &$data) {
     }
 
-    function congelar_llista($name) {
-        foreach ($this->elements as $element) {
-             preg_match("/^$name([0-9]+)$/", $element->name, &$match);
-             if ($match) {
-                 $this->elements_congelats[] = $element->name;
-             }
-        }
+    function get_data(&$data) {
     }
 
-    function definition() {
-        $this->definition_elements();
-        $this->definition_comprovacions();
-        $this->definition_botons();
+    function set_data(&$data, $valor) {
+    }
+}
 
+class fct_form_element_base_senzill extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $this->definition_senzill($mform);
         if ($this->congelat) {
-            foreach ($this->elements as $element) {
-                $this->elements_congelats[] = $element->name;
-            }
-        }
-        if ($this->elements_congelats) {
-            $this->_form->hardFreeze($this->elements_congelats);
+            $mform->_form->hardFreeze($this->nom);
         }
     }
 
-    function definition_botons() {
-        $form = $this->_form;
-        $buttonarray = array();
-        foreach ($this->botons as $boto) {
-            if ($boto->type == 'submit') {
-                $buttonarray[] = &$form->createElement('submit', $boto->name, $boto->label);
-            } else if ($boto->type == 'cancel') {
-                $buttonarray[] = &$form->createElement('cancel', $boto->name);
-             } else if ($boto->type == 'reset') {
-                $buttonarray[] = &$form->createElement('reset', $boto->name, $boto->label);
-            } else if ($boto->type == 'enllac') {
-                $html = '<a class="botoenllac" href="' . $this->pagina->url
-                    . '&' . $boto->name . '=1">' . $boto->label . '</a>';
-                $buttonarray[] = &$form->createElement('static', $boto->name, '', $html);
-            }
-        }
-        $form->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-        $form->closeHeaderBefore('buttonar');
+    function get_data(&$data) {
+        return $data[$this->nom];
     }
 
-    function definition_calendari($element) {
-        global $CFG;
+    function set_data(&$data, $valor) {
+        $data[$this->nom] = $valor;
+    }
+}
 
-        $id = 'calendari_' . $element->name;
-        $capcalera = array('dl', 'dt', 'dc', 'dj', 'dv', 'ds', 'dg');
-        $calendari = $element->calendaris[$element->any][$element->periode];
-        $congelat = ($this->congelat or $element->congelat);
+class fct_form_element_areatext extends fct_form_element_base_senzill {
 
-        require_once($CFG->libdir.'/pear/HTML/AJAX/JSON.php');
-        $json_capcalera = json_encode($capcalera);
-        $json_calendaris = json_encode($element->calendaris);
-
-        $html = "<script type=\"text/javascript\" defer=\"defer\">
-            //<![CDATA[
-            capcalera_$id = $json_capcalera;
-            calendaris_$id = $json_calendaris;
-            function actualitzar_$id(form) {
-                any = form['periode[0]'].value;
-                periode = form['periode[1]'].value;
-                calendari = calendaris_{$id}[any][periode]
-                table = document.getElementById('$id');
-
-                html = '<table><tr><th>' + capcalera_$id.join('</th><th>')
-                    + '</th></tr><tr>';
-
-                for (n=0; n < calendari.dia_setmana; n++) {
-                    html += '<td></td>';
-                }
-
-                for (dia = calendari.dia_inici;
-                        dia <= calendari.dia_final;
-                        dia++) {
-                    if (n == 7) {
-                        n = 0;
-                        html += '</tr><tr>';
-                    }
-                    checked = '';
-                    if ('{$element->name}' + dia in form) {
-                        if (form['{$element->name}' + dia].checked) {
-                            checked = ' checked=\"checked\" ';
-                        }
-                    }
-                    html += '<td>' + dia
-                        + ' <input type=\"checkbox\" name=\"{$element->name}'
-                        + dia + '\"' + checked + '/></td>';
-                    n++;
-                }
-
-                for (; n < 7; n++) {
-                    html += '<td></td>';
-                }
-
-                html += '</tr></table>';
-                table.innerHTML = html;
-            }
-            //]]>
-            </script>
-                ";
-
-        $html .= '<div id="' . $id . '"><table><tr><th>'
-            . implode('</th><th>', $capcalera) . '</th></tr><tr>';
-
-        for ($n = 0; $n < $calendari->dia_setmana; $n++) {
-            $html .= '<td></td>';
+    function definition_senzill($mform) {
+        if (!isset($this->params->cols)) {
+            $this->params->cols = 50;
+        }
+        if (!isset($this->params->rows)) {
+            $this->params->rows = 4;
         }
 
-        $disabled = $congelat ? ' disabled="disabled" ' : '';
-        for ($dia = $calendari->dia_inici;
-                $dia <= $calendari->dia_final;
-                $dia++) {
-            if ($n == 7) {
-                $n = 0;
-                $html .= '</tr><tr>';
-            }
-            $checked = (in_array($dia, $element->dies) 
-                        or optional_param($element->name . $dia, 0, PARAM_BOOL)) ?
-                ' checked="checked" ' : '';
-            $html .= '<td>' . $dia
-                . ' <input type="checkbox" name="'. $element->name
-                . $dia .  '"' . $disabled . $checked .'/></td>';
-            $n++;
-        }
+        $mform->_form->addElement('textarea', $this->nom, $this->etiqueta . ':',
+                                  array('cols' => $this->params->cols,
+                                        'rows' => $this->params->rows));
 
-        for (; $n < 7; $n++) {
-            $html .= '<td></td>';
-        }
+        $mform->_form->setType($this->nom, PARAM_TEXT);
 
-        $html .= '</tr></table></div>';
-
-        $this->_form->addElement('static', $element->name,
-            $element->label . $element->sep, $html);
-    }
-
-    function definition_checkbox($element) {
-        $this->_form->addElement('checkbox', $element->name, '', ' ' . $element->label);
-    }
-
-    function definition_comprovacions() {
-        foreach ($this->comprovacions as $comprovacio) {
-            list($instance, $method) = $comprovacio;
-            $this->_form->addFormRule(array($instance, $method));
+        if (!empty($this->params->required)) {
+            $mform->_form->addRule($this->nom, get_string('required'),
+                                   'required', null, 'client');
         }
     }
+}
 
-    function definition_date($element) {
-        $element = new fct_HTML_QuickForm_date(
-            $element->name, $element->label . $element->sep,
-            array('maxYear' => date('Y') + 3));
-        $this->_form->addElement($element);
+class fct_form_element_boto extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $form = $mform->_form;
+
+        if ($this->nom == 'cancellar') {
+            $boto = $form->createElement('cancel', $this->nom);
+        } elseif ($this->congelat) {
+            $url = new moodle_url($mform->url, array($this->nom => 1));
+            $html = '<a class="botoenllac" href="' . $url->out() . '">'
+                . $this->etiqueta . '</a>';
+            $boto = $form->createElement('static', $this->nom, '', $html);
+        } else {
+            $boto = $form->createElement('submit', $this->nom, $this->etiqueta);
+        }
+
+        $mform->botons[] = $boto;
+    }
+}
+
+class fct_form_element_capcalera extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $mform->_form->addElement('header', $this->nom, $this->etiqueta);
+    }
+}
+
+class fct_form_element_data extends fct_form_element_base_senzill {
+
+    function definition_senzill($mform) {
+        $mform->_form->addElement('date_selector', $this->nom, $this->etiqueta . ':',
+                                  array('startyear' => 2000, 'optional' => false), null, '/');
+
     }
 
-    function definition_elements() {
-        $form = $this->_form;
-        foreach ($this->elements as $element) {
-            $function = 'definition_'.$element->type;
-            $this->$function($element);
-            if (!empty($element->required)) {
-                $form->addRule($element->name, get_string('required'),
-                    'required', null, 'client');
-            }
-            if (!empty($element->help)) {
-                $form->setHelpButton($element->name, array($element->help,
-                                                           $element->label,
-                                                           'fct'));
+    function get_data(&$data) {
+        $valor = $data[$this->nom];
+        if (is_array($valor)) {
+            $valor = mktime(0, 0, 0, $valor['month'],
+                            $valor['day'], $valor['year']);
+        }
+        return $valor;
+    }
+}
+
+class fct_form_element_estatic extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $mform->_form->addElement('static', $this->nom, $this->etiqueta . ':');
+    }
+
+    function set_data(&$data, $valor) {
+        $data[$this->nom] = $valor;
+    }
+}
+
+class fct_form_element_hores extends fct_form_element_base_senzill {
+
+    function definition_senzill($mform) {
+        $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
+                           array('size' => 6));
+        $mform->_form->setType($this->nom, PARAM_INT);
+    }
+}
+
+class fct_form_element_llista extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $mform->_form->addElement('header', $this->nom, $this->etiqueta);
+        foreach ($this->params->elements as $id => $etiqueta) {
+            $mform->_form->addElement('checkbox', "{$this->nom}_$id",
+                                      '', " $etiqueta");
+            if ($this->congelat) {
+                $mform->_form->hardFreeze("{$this->nom}_$id");
             }
         }
     }
 
-    function definition_header($element) {
-        $this->_form->addElement('header', $element->name, $element->label);
-    }
-
-    function definition_hierselect($element) {
-        $attributes = $element->onchange ?
-            array('onchange' => $element->onchange) : null;
-        $select =& $this->_form->addElement('hierselect', $element->name,
-            $element->label . $element->sep, $attributes, ' / ');
-        $select->setOptions($element->options);
-        $this->_form->setType($element->name, PARAM_INT);
-    }
-
-    function definition_select($element) {
-        $this->_form->addElement('select', $element->name,$element->label
-                                 . $element->sep, $element->options);
-        $this->_form->setType($element->name, PARAM_INT);
-    }
-
-    function definition_static($element) {
-        $this->_form->addElement('static', $element->name, $element->label
-                                 . $element->sep, $element->text);
-    }
-
-    function definition_text($element) {
-        $this->_form->addElement('text', $element->name,
-                                 $element->label . $element->sep,
-                                 array('size' => $element->size));
-        $this->_form->setType($element->name, PARAM_TEXT);
-        if ($element->numeric) {
-            $this->_form->addRule($element->name, "Numèric", 'regex', "/^[0-9]+$/", 'client');
-        }
-    }
-
-    function definition_textarea($element) {
-        $this->_form->addElement('textarea', $element->name,
-                                 $element->label. $element->sep,
-                                 array('cols' => $element->cols,
-                                       'rows' => $element->rows));
-        $this->_form->setType($element->name, PARAM_TEXT);
-    }
-
-    function date2unix($date) {
-        return mktime(0, 0, 0, (int) $date['F'], (int) $date['d'], (int) $date['Y']);
-    }
-
-    function get_data_calendari($name, $calendari) {
-        $values = array();
-
-        for ($dia = $calendari->dia_inici;
-                $dia <= $calendari->dia_final;
-                $dia++) {
-            $value = optional_param($name.$dia, false, PARAM_BOOL);
-            if ($value) {
-                $values[$dia] = $value;
+    function get_data(&$data) {
+        $valor = array();
+        foreach (array_keys($this->params->elements) as $id) {
+            if (!empty($data["{$this->nom}_$id"])) {
+                $valor[] = $id;
             }
         }
-
-        return $values;
+        return $valor;
     }
 
-    function get_data_llista($name) {
-        $data = $this->get_data();
-        if (!$data) {
-            return false;
+    function set_data(&$data, $valor) {
+        foreach (array_keys($this->params->elements) as $id) {
+            unset($data["{$this->nom}_$id"]);
         }
-        $data = (array) $data;
+        foreach ($valor as $id) {
+            $data["{$this->nom}_$id"] = 1;
+        }
+    }
+}
 
-        $values = array();
-        foreach ($this->elements as $element) {
-             preg_match("/^$name([0-9]+)$/", $element->name, $match);
-             if ($match) {
-                 if (isset($data[$element->name])) {
-                     $values[$match[1]] = $data[$element->name];
-                 }
-             }
+class fct_form_element_llista_menu extends fct_form_element_base {
+
+    function definition($mform, &$data) {
+        $mform->_form->addElement('header', $this->nom, $this->etiqueta);
+        foreach ($this->params->elements as $id => $etiqueta) {
+            $mform->_form->addElement('select', "{$this->nom}_$id",
+                                      $etiqueta . ':', $this->params->opcions);
+            if ($this->congelat) {
+                $mform->_form->hardFreeze("{$this->nom}_$id");
+            }
         }
-        return $values;
     }
 
-    function set_data_llista($name, $values) {
-        $data = array();
-        foreach ($values as $id => $value) {
-            $data[$name.$id] = $value;
+    function get_data(&$data) {
+        $valor = array();
+        foreach (array_keys($this->params->elements) as $id)  {
+            $valor[$id] = $data["{$this->nom}_$id"];
         }
-        $this->set_data($data);
+        return $valor;
+    }
+
+    function set_data(&$data, $valor) {
+        foreach (array_keys($this->params->elements) as $id) {
+            $data["{$this->nom}_$id"] = isset($valor[$id]) ?
+                $valor[$id] : false;
+        }
+    }
+}
+
+class fct_form_element_menu extends fct_form_element_base_senzill {
+
+    function definition_senzill($mform) {
+        $mform->_form->addElement('select', $this->nom, $this->etiqueta . ':',
+                                  $this->params->opcions);
+        $mform->_form->setType($this->nom, PARAM_INT);
     }
 
 }
 
-class fct_HTML_QuickForm_date extends HTML_QuickForm_date
-{
+class fct_form_element_nombres extends fct_form_element_base {
 
-    var $_options = array(
-        'language'         => 'ca',
-        'format'           => 'd F Y',
-        'minYear'          => 2000,
-        'maxYear'          => 2020,
-        'addEmptyOption'   => false,
-        'emptyOptionValue' => '',
-        'emptyOptionText'  => '&nbsp;',
-        'optionIncrement'  => array('i' => 1, 's' => 1)
-    );
+    var $element;
 
+    function definition($mform, &$data)  {
+        $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
+                                  array('size' => 32));
+        $mform->_form->setType($this->nom, PARAM_TEXT);
+        $mform->_form->addRule($this->nom, fct_string('nombres_separats_comes'),
+                               'regex',"/^\s*([0-9]+(\s*,\s*[0-9]+)*)?\s*$/",
+                               'client');
+        if ($this->congelat) {
+            $mform->_form->hardFreeze($this->nom);
+        }
+    }
 
-    var $_locale = array(
-        'ca' => array (
-            'weekdays_short'=> array ('dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'),
-            'weekdays_long' => array ('diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'),
-            'months_short'  => array ('gen', 'feb', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'oct', 'nov', 'des'),
-            'months_long'   => array ('gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre')
-        ),
-    );
+    function get_data(&$data) {
+        $nombres = array();
+        foreach (explode(',', $data[$this->nom]) as $nombre) {
+            $nombres[] = (int) $nombre;
+        }
+        return $nombres;
+    }
 
+    function set_data(&$data, $valor) {
+        $data[$this->nom] = implode(', ', $valor);
+    }
 }
 
+class fct_form_element_ocult extends fct_form_element_base {
+
+    function definition($mform) {
+        $mform->_form->addElement('hidden', $this->nom);
+    }
+
+    function set_data(&$data, $valor) {
+        $data[$this->nom] = $valor;
+    }
+}
+
+class fct_form_element_text extends fct_form_element_base_senzill {
+
+    function definition_senzill($mform) {
+        if (!isset($this->params->size)) {
+            $this->params->size = 32;
+        }
+
+        $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
+                           array('size' => $this->params->size));
+
+        $mform->_form->setType($this->nom, PARAM_TEXT);
+
+        if (!empty($this->params->required)) {
+            $mform->_form->addRule($this->nom, get_string('required'),
+                                   'required', null, 'client');
+        }
+    }
+}

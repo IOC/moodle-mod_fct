@@ -37,8 +37,8 @@ class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
     function processar() {
         $this->mostrar_capcalera();
         $form = new fct_form_dades_centre($this);
-        $form->set_data($this->centre);
-        $form->display();
+        $form->valors($this->centre);
+        $form->mostrar();
         $this->mostrar_peu();
         $this->registrar('view dades_centre_quadern');
     }

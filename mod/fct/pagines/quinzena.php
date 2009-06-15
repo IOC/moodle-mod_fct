@@ -29,11 +29,13 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     var $activitats_quinzena;
     var $dies_quinzena;
 
-    function comprovar_quinzena($data) {
+    function comprovar_quinzena($valors) {
         if (fct_db::quinzena_duplicada($this->quadern->id,
-            addslashes($data['periode'][0]), addslashes($data['periode'][1]),
-            $this->quinzena->id)) {
-            return array('periode' => fct_string('quinzena_duplicada'));
+                                       addslashes($valors->any),
+                                       addslashes($valors->periode),
+                                       $this->quinzena->id)) {
+            return array('any' => fct_string('quinzena_duplicada'),
+                         'periode' => fct_string('quinzena_duplicada'));
         }
         return true;
     }
@@ -57,43 +59,29 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         }
 
         $this->activitats = fct_db::activitats_pla($this->quadern->id);
-        if (!$this->activitats) {
-            $this->activitats = array();
-        }
-
         $this->activitats_quinzena = fct_db::activitats_quinzena($this->quinzena->id);
-        if ($this->accio == 'veure' or !$this->permis_editar_alumne) {
-            if ($this->activitats_quinzena) {
-                foreach (array_keys($this->activitats) as $id) {
-                    if (!isset($this->activitats_quinzena[$id])) {
-                       unset($this->activitats[$id]);
-                    }
-                }
-            } else {
-                $this->activitats = array();
-            }
-        }
-
         $this->dies_quinzena = fct_db::dies_quinzena($this->quinzena->id);
 
-        $this->titol = self::nom_periode($this->quinzena->periode).' de '.$this->quinzena->any_;
+        $this->titol = self::nom_periode($this->quinzena->periode).' '.$this->quinzena->any_;
         $this->url = fct_url::quinzena($this->quinzena->id);
-    }
 
-    function configurar_formulari() {
-        $this->form = new fct_form_quinzena($this, $this->quinzena->any_,
-            $this->quinzena->periode, $this->dies_quinzena);
-        return $this->form->get_data();
+        $this->form = new fct_form_quinzena($this);
     }
 
     function mostrar() {
-        $this->quinzena->periode = array(
-            0 => $this->quinzena->any_,
-            1 => $this->quinzena->periode);
-        $this->form->set_data($this->quinzena);
-        $this->form->set_data_llista('activitat', $this->activitats_quinzena);
+        $this->form->valors($this->quinzena);
+        $this->form->valor('dies', $this->dies_quinzena);
+        $this->form->valor('activitats_realitzades', $this->activitats_quinzena);
+        $this->form->valor('any_inici',
+                           $this->any_data($this->conveni->data_inici));
+        $this->form->valor('any_final',
+                           $this->any_data($this->conveni->data_final));
+        $this->form->valor('periode_inici',
+                           $this->periode_data($this->conveni->data_inici));
+        $this->form->valor('periode_final',
+                           $this->periode_data($this->conveni->data_final));
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -113,29 +101,27 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_desar() {
-        $data = $this->configurar_formulari();
-
-        if ($data) {
+        if ($this->form->validar()) {
             $quinzena = (object) array('id' => $this->quinzena->id);
             $activitats = false;
             $dies = false;
 
             if ($this->permis_editar_alumne) {
-                $quinzena->any_ = $data->periode[0];
-                $quinzena->periode = $data->periode[1];
-                $quinzena->hores = $data->hores;
-                $quinzena->valoracions = $data->valoracions;
-                $quinzena->observacions_alumne = $data->observacions_alumne;
-                $dies = $this->form->get_data_calendari('dia',
-                    $this->calendari_periode($quinzena->any_,
-                    $quinzena->periode));
-                $activitats = $this->form->get_data_llista('activitat');
+                $quinzena->any = $this->form->valor('any');
+                $quinzena->periode = $this->form->valor('periode');
+                $quinzena->hores = $this->form->valor('hores');
+                $quinzena->valoracions = $this->form->valor('valoracions');
+                $quinzena->observacions_alumne = $this->form->valor('observacions_alumne');
+                $dies = $this->filtrar_dies($this->form->valor('dies'),
+                                            $this->form->valor('periode'),
+                                            $this->form->valor('any'));
+                $activitats = $this->form->valor('activitats_realitzades');
             }
             if ($this->permis_editar_centre) {
-                $quinzena->observacions_centre = $data->observacions_centre;
+                $quinzena->observacions_centre = $this->form->valor('observacions_centre');
             }
             if ($this->permis_editar_empresa) {
-                $quinzena->observacions_empresa = $data->observacions_empresa;
+                $quinzena->observacions_empresa = $this->form->valor('observacions_empresa');
             }
 
             $ok = fct_db::actualitzar_quinzena($quinzena, $dies, $activitats);
@@ -151,7 +137,6 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_editar() {
-        $this->configurar_formulari();
         $this->mostrar();
     }
 
@@ -163,10 +148,11 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_veure() {
-        $this->configurar_formulari();
+        $this->form->valor('any_quinzena', $this->quinzena->any);
+        $this->form->valor('periode_quinzena', $this->quinzena->periode);
+        $this->form->valor('dies_quinzena', implode(',', $this->dies_quinzena));
         $this->mostrar();
         $this->registrar('view quinzena', null, $this->titol);
     }
 
 }
-

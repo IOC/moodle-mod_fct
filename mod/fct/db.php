@@ -82,8 +82,8 @@ class fct_db
 // Cicles
 
     function activitats_cicle($cicle_id) {
-        return get_records('fct_activitat_cicle',
-                           'cicle', $cicle_id, 'descripcio');
+        return get_records_menu('fct_activitat_cicle', 'cicle', $cicle_id,
+                                'descripcio', 'id, descripcio');
     }
 
     function actualitzar_cicle($cicle) {
@@ -128,15 +128,9 @@ class fct_db
             return false;
         }
 
-        $activitats = array();
-        $records = self::activitats_cicle($cicle_id);
-        if ($records) {
-            foreach ($records as $record) {
-                $activitats[] = $record->descripcio;
-            }
-        }
-
+        $activitats = self::activitats_cicle($cicle_id);
         $cicle->activitats = implode("\n", $activitats);
+
         return $cicle;
     }
 
@@ -149,7 +143,9 @@ class fct_db
     }
 
     function cicles($fct_id) {
-        return get_records('fct_cicle', 'fct', $fct_id, 'nom');
+        $records = get_records_menu('fct_cicle', 'fct', $fct_id,
+                                    'nom', 'id, nom');
+        return $records ? $records: array();
     }
 
     function nombre_cicles($fct_id=false) {
@@ -173,8 +169,8 @@ class fct_db
         $cicles = self::cicles($fct_id);
         $ok = true;
         if ($cicles) {
-            foreach ($cicles as $cicle) {
-                $ok = self::suprimir_cicle($cicle->id) && $ok;
+            foreach (array_keys($cicles) as $id) {
+                $ok = self::suprimir_cicle($id) && $ok;
             }
         }
         return $ok;
@@ -380,7 +376,9 @@ class fct_db
     }
 
     function activitats_pla($quadern_id) {
-        return get_records('fct_activitat_pla', 'quadern', $quadern_id, 'descripcio');
+        $records = get_records_menu('fct_activitat_pla', 'quadern', $quadern_id,
+                                    'descripcio', 'id, descripcio');
+        return $records ? $records: array();
     }
 
     function activitat_pla_duplicada($quadern_id, $descripcio, $activitat_id=false) {
@@ -412,12 +410,10 @@ class fct_db
 
     function afegir_activitats_cicle_pla($quadern_id, $activitats) {
         $ok = true;
-        foreach ($activitats as $id => $afegir) {
-            if ($afegir) {
-                $descripcio = get_field('fct_activitat_cicle', 'descripcio', 'id', $id);
-                $ok = $ok && !empty($descripcio);
-                $ok = $ok && self::afegir_activitat_pla($quadern_id,$descripcio);
-            }
+        foreach ($activitats as $id) {
+            $descripcio = get_field('fct_activitat_cicle', 'descripcio', 'id', $id);
+            $ok = $ok && !empty($descripcio);
+            $ok = $ok && self::afegir_activitat_pla($quadern_id,$descripcio);
         }
         return $ok;
     }
@@ -442,11 +438,8 @@ class fct_db
 
     function suprimir_activitats_pla($quadern_id){
         $ok = true;
-        $activitats = self::activitats_pla($quadern_id);
-        if ($activitats) {
-            foreach ($activitats as $activitat) {
-                $ok = self::suprimir_activitat_pla($activitat->id) && $ok;
-            }
+        foreach (array_keys(self::activitats_pla($quadern_id)) as $id) {
+            $ok = self::suprimir_activitat_pla($id) && $ok;
         }
         return $ok;
     }
@@ -458,15 +451,17 @@ class fct_db
         $records = get_records('fct_activitat_quinzena', 'quinzena', $quinzena_id);
         if ($records) {
             foreach ($records as $record) {
-                $activitats[$record->activitat] = 1;
+                $activitats[] = $record->activitat;
             }
         }
         return $activitats;
     }
 
     function actualitzar_quinzena($quinzena, $dies=false, $activitats=false) {
-        $ok = true;
-        $ok = update_record('fct_quinzena', $quinzena) && $ok;
+        if (isset($quinzena->any)) {
+            $quinzena->any_ = $quinzena->any;
+        }
+        $ok = update_record('fct_quinzena', $quinzena);
         if ($dies !== false) {
             $ok = delete_records('fct_dia_quinzena', 'quinzena', $quinzena->id) && $ok;
             $ok = self::afegir_dies_quinzena($quinzena->id, $dies) && $ok;
@@ -481,16 +476,10 @@ class fct_db
     function afegir_activitats_quinzena($quinzena_id, $activitats) {
         $ok = true;
 
-        if ($activitats) {
-            foreach ($activitats as $activitat => $seleccionada) {
-                if ($seleccionada) {
-                    $record = (object) array(
-                    	'quinzena' => $quinzena_id,
-                    	'activitat' => $activitat,
-                    );
-                    $ok = insert_record('fct_activitat_quinzena', $record) && $ok;
-                }
-            }
+        foreach ($activitats as $activitat) {
+            $record = (object) array('quinzena' => $quinzena_id,
+                                     'activitat' => $activitat);
+            $ok = insert_record('fct_activitat_quinzena', $record) && $ok;
         }
 
         return $ok;
@@ -499,28 +488,29 @@ class fct_db
     function afegir_dies_quinzena($quinzena_id, $dies) {
         $ok = true;
 
-        if ($dies) {
-            foreach ($dies as $dia => $seleccionat) {
-                if ($seleccionat) {
-                    $record = (object) array(
-                        'quinzena' => $quinzena_id,
-                        'dia' => $dia,
-                    );
-                    $ok = insert_record('fct_dia_quinzena', $record) && $ok;
-                }
-            }
+        foreach ($dies as $dia) {
+            $record = (object) array('quinzena' => $quinzena_id,
+                                     'dia' => $dia);
+            $ok = insert_record('fct_dia_quinzena', $record) && $ok;
         }
 
         return $ok;
     }
 
-    function afegir_quinzena($quinzena, $dies, $activitats) {
-        $id = insert_record('fct_quinzena', $quinzena);
-        if (!self::afegir_dies_quinzena($id, $dies)) {
-            return false;
+    function afegir_quinzena($quinzena, $dies=false, $activitats=false) {
+        if (isset($quinzena->any)) {
+            $quinzena->any_ = $quinzena->any;
         }
-        if (!self::afegir_activitats_quinzena($id, $activitats)) {
-            return false;
+        $id = insert_record('fct_quinzena', $quinzena);
+        if ($dies !== false) {
+            if (!self::afegir_dies_quinzena($id, $dies)) {
+                return false;
+            }
+        }
+        if ($activitats !== false) {
+            if (!self::afegir_activitats_quinzena($id, $activitats)) {
+                return false;
+            }
         }
         return $id;
     }
@@ -530,7 +520,7 @@ class fct_db
         $records = get_records('fct_dia_quinzena', 'quinzena', $quinzena_id);
         if ($records) {
             foreach ($records as $record) {
-                $dies[$record->dia] = 1;
+                $dies[] = $record->dia;
             }
         }
         return $dies;
@@ -551,9 +541,10 @@ class fct_db
 
     function quinzena($quinzena_id) {
         $record = get_record('fct_quinzena', 'id', $quinzena_id);
+        $record->any = $record->any_;
         if ($record) {
-            $record->dies = count_records('fct_dia_quinzena', 'quinzena',
-                $quinzena_id);
+            //$record->dies = count_records('fct_dia_quinzena', 'quinzena',
+            //    $quinzena_id);
         }
         return $record;
     }
@@ -923,15 +914,8 @@ class fct_db
     function empreses($cicles) {
         global $CFG;
 
-        $ids_cicles = false;
-        foreach ($cicles as $id => $seleccionat) {
-            if ($seleccionat) {
-                $ids_cicles[] = $id;
-            }
-        }
-
-        if (!$ids_cicles) {
-            return false;
+        if (!$cicles) {
+            return array();
         }
 
         $sql = "SELECT DISTINCT q.nom_empresa AS nom,"
@@ -939,7 +923,7 @@ class fct_db
             . " e.telefon, e.fax, e.email, e.nif"
             . " FROM {$CFG->prefix}fct_quadern q"
             . " JOIN {$CFG->prefix}fct_dades_empresa e ON q.id = e.quadern"
-            . " WHERE q.cicle IN (" . implode(',', $ids_cicles) . ")"
+            . " WHERE q.cicle IN (" . implode(',', $cicles) . ")"
             . " ORDER BY q.nom_empresa";
 
         return get_records_sql($sql);

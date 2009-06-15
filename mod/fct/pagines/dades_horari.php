@@ -18,7 +18,31 @@
 */
 
 fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_horari.php');
+            'pagines/form_base.php');
+
+class fct_form_dades_horari extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_horari', 'horari_practiques');
+        $this->element('text', 'dilluns', 'dilluns');
+        $this->element('text', 'dimarts', 'dimarts');
+        $this->element('text', 'dimecres', 'dimecres');
+        $this->element('text', 'dijous', 'dijous');
+        $this->element('text', 'divendres', 'divendres');
+        $this->element('text', 'dissabte', 'dissabte');
+        $this->element('text', 'diumenge', 'diumenge');
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
@@ -43,9 +67,9 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->set_data($this->horari);
+        $this->form->valors($this->horari);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -54,11 +78,11 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->horari->id;
-            $data->quadern = $this->horari->quadern;
-            $ok = fct_db::actualitzar_dades_horari($data);
+        if ($this->form->validar()) {
+            $horari = $this->form->valors();
+            $horari->id = $this->horari->id;
+            $horari->quadern = $this->horari->quadern;
+            $ok = fct_db::actualitzar_dades_horari($horari);
             if ($ok) {
                 $this->registrar('update dades_horari');
             } else {
@@ -78,4 +102,3 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
         $this->registrar('view dades_horari');
     }
 }
-

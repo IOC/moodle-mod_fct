@@ -21,28 +21,26 @@ fct_require('pagines/form_base.php');
 
 class fct_form_cicle extends fct_form_base {
 
-    function configurar() {
-        $this->afegir_header('cicle_formatiu',
-            $this->pagina->accio == 'afegir' ?
-            fct_string('nou_cicle_formatiu') : fct_string('cicle_formatiu'));
+    function configurar($pagina) {
+        $this->element('capcalera', 'cicle_formatiu',
+                       $pagina->accio == 'afegir' ? 'nou_cicle_formatiu' : '');
+        $this->element('text', 'nom', 'nom',
+                       array('size' => 48, 'required' => true));
+        $this->element('areatext', 'activitats', 'activitats',
+                       array('cols' => 60, 'rows' => 20));
 
-        $this->afegir_text('nom', fct_string('nom'), 48, true);
-        $this->afegir_textarea('activitats', fct_string('activitats'), 20, 60);
+        $this->comprovacio($pagina, 'comprovar_nom');
 
-        $this->afegir_comprovacio('comprovar_nom');
-
-        if ($this->pagina->accio == 'afegir'){
-            $this->afegir_boto('afegir', fct_string('afegeix'));
-            $this->afegir_boto_cancellar();
-        } elseif ($this->pagina->accio == 'veure') {
-            $this->afegir_boto_enllac('editar', fct_string('edita'));
-            $this->afegir_boto_enllac('suprimir', fct_string('suprimeix'));
+        if ($pagina->accio == 'afegir') {
+            $this->element('boto', 'afegir', 'afegeix');
+            $this->element('boto', 'cancellar');
+        } elseif ($pagina->accio == 'veure') {
+            $this->element('boto', 'editar', 'edita');
+            $this->element('boto', 'suprimir', 'suprimeix');
             $this->congelar();
         } else {
-            $this->afegir_boto('desar', fct_string('desa'));
-            $this->afegir_boto_cancellar();
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
         }
     }
-
 }
-

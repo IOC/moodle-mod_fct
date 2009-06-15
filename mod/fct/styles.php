@@ -121,12 +121,12 @@
     text-decoration: none;
 }
 
-#calendari_dia table {
+#calendari_dies {
     font-size: 0.8em;
     margin: 5px 0;
 }
 
-#calendari_dia td, #calendari_dia th {
+#calendari_dies td, #calendari_dies th {
     border: 1px solid #dddddd;
     text-align: center;
     width: 2em;

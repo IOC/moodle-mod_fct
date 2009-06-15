@@ -18,7 +18,31 @@
 */
 
 fct_require('pagines/base_valoracio.php',
-            'pagines/form_valoracio_actituds.php');
+            'pagines/form_base.php');
+
+class fct_form_valoracio_actituds extends fct_form_base {
+
+    function configurar($pagina) {
+        $elements = array();
+        for ($i = 0; $i < 15; $i++) {
+            $elements[$i] = fct_string('actitud_' . ($i+1));
+        }
+
+        $this->element('llista_menu', 'valoracio_actituds', $pagina->titol,
+                       array('elements' => $elements,
+                             'opcions' => $this->barem_valoracio()));
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
 
@@ -29,22 +53,19 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->final = required_param('final', PARAM_BOOL);
         $this->url = fct_url::valoracio_actituds($this->quadern->id, $this->final);
-        $this->titol = $this->final ? fct_string('valoracio_final_actituds')
-            : fct_string('valoracio_parcial_actituds');
+        $this->titol = ($this->final ? 'valoracio_final_actituds'
+                        : 'valoracio_parcial_actituds');
         $this->subpestanya = ($this->final ? 'valoracio_actituds_final'
                               : 'valoracio_actituds_parcial');
-    }
-
-    function configurar_formulari() {
         $this->form = new fct_form_valoracio_actituds($this);
-        return $this->form->get_data();
     }
 
     function mostrar() {
         $this->mostrar_capcalera();
-        $this->form->set_data_llista('actitud',
-            fct_db::valoracio_actituds($this->quadern->id, $this->final));
-        $this->form->display();
+        $this->form->valor('valoracio_actituds',
+                           fct_db::valoracio_actituds($this->quadern->id,
+                                                      $this->final));
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -53,10 +74,10 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
     }
 
     function processar_desar() {
-        $data = $this->configurar_formulari();
-        if ($data) {
-            $notes = $this->form->get_data_llista('actitud');
-            $ok = fct_db::actualitzar_valoracio_actituds($this->quadern->id, $this->final, $notes);
+        if ($this->form->validar()) {
+            $ok = fct_db::actualitzar_valoracio_actituds(
+                $this->quadern->id, $this->final,
+                $this->form->valor('valoracio_actituds'));
             if ($ok) {
                 $this->registrar('update valoracio_actituds', null,
                     $this->final ? 'final' : 'parcial');
@@ -69,12 +90,10 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
     }
 
     function processar_editar() {
-        $this->configurar_formulari();
         $this->mostrar();
     }
 
     function processar_veure() {
-        $this->configurar_formulari();
         $this->mostrar();
         $this->registrar('view valoracio_acittuds', null,
             $this->final ? 'final' : 'parcial');

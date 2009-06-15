@@ -21,22 +21,20 @@ fct_require('pagines/form_base.php');
 
 class fct_form_activitat extends fct_form_base {
 
-    function configurar() {
+    function configurar($pagina) {
+        $this->element('capcalera', 'acivitat',
+                       $pagina->accio == 'afegir' ? 'nova_activitat' : '');
+        $this->element('areatext', 'descripcio', 'descripcio',
+                       array('required' => true));
 
-    	$this->afegir_header('activitat', $this->pagina->accio == 'afegir' ?
-    		fct_string('nova_activitat'): fct_string('activitat'));
+        $this->comprovacio($pagina, 'comprovar_descripcio');
 
-        $this->afegir_textarea('descripcio', fct_string('descripcio'), 3, 50, true);
-
-        $this->afegir_comprovacio('comprovar_descripcio');
-
-        if ($this->pagina->accio == 'afegir') {
-            $this->afegir_boto('afegir', fct_string('afegeix'));
+        if ($pagina->accio == 'afegir') {
+            $this->element('boto', 'afegir', 'afegeix');
         } else {
-            $this->afegir_boto('editar', fct_string('desa'));
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
         }
-
-        $this->afegir_boto_cancellar();
     }
 
 }

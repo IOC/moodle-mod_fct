@@ -178,6 +178,7 @@ $string['nif'] = "NIF";
 $string['noapte'] = "No apte/a";
 $string['nom'] = "Nom";
 $string['nom_usuari'] = "Nom d'usuari";
+$string['nombres_separats_comes'] = "Nombres separats per comes";
 $string['nova_activitat'] = "Nova activitat";
 $string['nova_quinzena'] = "Nova quinzena";
 $string['nou_cicle_formatiu'] = "Nou cicle formatiu";

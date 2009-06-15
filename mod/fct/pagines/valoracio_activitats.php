@@ -18,7 +18,26 @@
 */
 
 fct_require('pagines/base_valoracio.php',
-            'pagines/form_valoracio_activitats.php');
+            'pagines/form_base.php');
+
+class fct_form_valoracio_activitats extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('llista_menu', 'activitats', 'valoracio_activitats',
+                       array('elements' => $pagina->activitats,
+                             'opcions' => $this->barem_valoracio()));
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
 
@@ -29,21 +48,15 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
         $this->activitats = fct_db::activitats_pla($this->quadern->id);
         $this->url = fct_url::valoracio_activitats($this->quadern->id);
         $this->subpestanya = 'valoracio_activitats';
-    }
-
-    function configurar_formulari() {
-        if ($this->activitats) {
-            $this->form = new fct_form_valoracio_activitats($this);
-            return $this->form->get_data();
-        }
+        $this->form = new fct_form_valoracio_activitats($this);
     }
 
     function mostrar() {
         $this->mostrar_capcalera();
         if ($this->activitats) {
-            $this->form->set_data_llista('activitat',
-                fct_db::notes_activitats_pla($this->quadern->id));
-            $this->form->display();
+            $notes  = fct_db::notes_activitats_pla($this->quadern->id);
+            $this->form->valor('activitats', $notes);
+            $this->form->mostrar();
         } else {
             echo '<p>' . fct_string('cap_activitat') . '</p>';
         }
@@ -55,9 +68,8 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
     }
 
     function processar_desar() {
-        $data = $this->configurar_formulari();
-        if ($data) {
-            $notes = $this->form->get_data_llista('activitat');
+        if ($this->form->validar()) {
+            $notes = $this->form->valor('activitats');
             $ok = fct_db::actualitzar_notes_activitats_pla($notes);
             if ($ok) {
                 $this->registrar('update valoracio_activitats');
@@ -70,15 +82,12 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
     }
 
     function processar_editar() {
-        $this->configurar_formulari();
         $this->mostrar();
     }
 
     function processar_veure() {
-        $this->configurar_formulari();
         $this->mostrar();
         $this->registrar('view valoracio_activitats');
     }
 
 }
-

@@ -42,10 +42,9 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
         if (!$cicles) {
            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         } else {
-            foreach ($cicles as $cicle) {
-                $taula->add_data(array('<a href="'
-                    .fct_url::cicle($cicle->id).'">'
-                   ."{$cicle->nom}</a>"));
+            foreach ($cicles as $id => $nom) {
+                $taula->add_data(array('<a href="' . fct_url::cicle($id).'">'
+                                       ."$nom</a>"));
             }
             $taula->print_html();
         }

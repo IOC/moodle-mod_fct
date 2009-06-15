@@ -32,15 +32,15 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
             $this->error('recuperar_qualificacio_quadern');
         }
         $this->url = fct_url::qualificacio_quadern($this->quadern->id);
-        $this->titol = fct_string('qualificacio_quadern');
+        $this->titol = 'qualificacio_quadern';
         $this->form = new fct_form_qualificacio($this);
         $this->subpestanya = 'qualificacio_quadern';
     }
 
     function mostrar() {
-        $this->form->set_data($this->qualificacio);
+        $this->form->valors($this->qualificacio);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -49,16 +49,15 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->qualificacio->id;
-            $data->quadern = $this->quadern->id;
-            $data->data = $this->form->date2unix($data->data);
-            $ok = fct_db::actualitzar_qualificacio_quadern($data);
+        if ($this->form->validar()) {
+            $qualificacio = $this->form->valors();
+            $qualificacio->id = $this->qualificacio->id;
+            $qualificacio->quadern = $this->quadern->id;
+            $ok = fct_db::actualitzar_qualificacio_quadern($qualificacio);
             if ($ok) {
-                $barem = fct_form_qualificacio::options_barem();
-                $this->registrar('update qualificacio_quadern', null,
-                    $barem[$data->qualificacio]);
+                $barem = $this->form->barem_qualificacio();
+                $nota = $barem[$qualificacio->qualificacio];
+                $this->registrar('update qualificacio_quadern', null, $nota);
             } else {
                 $this->error('desar_qualificacio_quadern');
             }
@@ -68,9 +67,6 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
     }
 
     function processar_editar() {
-        if (!$this->qualificacio->data) {
-            $this->qualificacio->data = (int) time();
-        }
         $this->mostrar();
     }
 
@@ -79,4 +75,3 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
         $this->registrar('view qualificacio_quadern');
     }
 }
-

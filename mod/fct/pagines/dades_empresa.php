@@ -18,7 +18,33 @@
 */
 
 fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_empresa.php');
+            'pagines/form_base.php');
+
+class fct_form_dades_empresa extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_empresa', 'empresa');
+        $this->element('estatic', 'nom', 'nom');
+        $this->element('text', 'adreca', 'adreca');
+        $this->element('text', 'codi_postal', 'codi_postal',
+                       array('size' => 8));
+        $this->element('text', 'poblacio', 'poblacio');
+        $this->element('text', 'telefon', 'telefon');
+        $this->element('text', 'fax', 'fax');
+        $this->element('text', 'email', 'email');
+        $this->element('text', 'nif', 'nif', array('size' => 16));
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
 
@@ -43,9 +69,10 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->set_data($this->empresa);
+        $this->form->valor('nom', $this->quadern->nom_empresa);
+        $this->form->valors($this->empresa);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -54,11 +81,11 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->empresa->id;
-            $data->quadern = $this->empresa->quadern;
-            $ok = fct_db::actualitzar_dades_empresa($data);
+        if ($this->form->validar()) {
+            $dades = $this->form->valors();
+            $dades->id = $this->empresa->id;
+            $dades->quadern = $this->empresa->quadern;
+            $ok = fct_db::actualitzar_dades_empresa($dades);
             if ($ok) {
                 $this->registrar('update dades_empresa');
             } else {

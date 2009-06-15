@@ -21,28 +21,25 @@ fct_require('pagines/form_base.php');
 
 class fct_form_dades_centre extends fct_form_base {
 
-    function configurar() {
-        $this->afegir_header( 'dades_centre', fct_string('dades_centre'));
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_centre', 'dades_centre');
+        $this->element('text', 'nom', 'nom');
+        $this->element('text', 'adreca', 'adreca');
+        $this->element('text', 'codi_postal', 'codi_postal',
+                       array('size' => 8));
+        $this->element('text', 'poblacio', 'poblacio');
+        $this->element('text', 'telefon', 'telefon');
+        $this->element('text', 'fax', 'fax');
+        $this->element('text', 'email', 'email');
 
-        $this->afegir_text('nom', fct_string('nom'), 32);
-        $this->afegir_text('adreca', fct_string('adreca'), 32);
-        $this->afegir_text('codi_postal', fct_string('codi_postal'), 8);
-        $this->afegir_text('poblacio', fct_string('poblacio'), 32);
-        $this->afegir_text('telefon', fct_string('telefon'), 32);
-        $this->afegir_text('fax', fct_string('fax'), 32);
-        $this->afegir_text('email', fct_string('email'), 32);
-
-        if (!$this->pagina->accio) {
+        if (!$pagina->accio) {
             $this->congelar();
-        } else if ($this->pagina->accio == 'veure') {
-            $this->afegir_boto_enllac('editar', fct_string('edita'));
+        } elseif ($pagina->accio == 'veure') {
+            $this->element('boto', 'editar', 'edita');
             $this->congelar();
         } else {
-            $this->afegir_boto('desar', fct_string('desa'));
-            $this->afegir_boto_cancellar();
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
         }
     }
-
-
 }
-

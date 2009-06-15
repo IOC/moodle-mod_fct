@@ -22,8 +22,8 @@ fct_require('pagines/base_cicles.php',
 
 class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 
-    function comprovar_nom($data) {
-        if (fct_db::cicle_duplicat($this->fct->id, addslashes($data['nom']))) {
+    function comprovar_nom($valors) {
+        if (fct_db::cicle_duplicat($this->fct->id, addslashes($valors->nom))) {
             return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
 
@@ -40,11 +40,12 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
     function processar_afegir() {
         $form = new fct_form_cicle($this);
 
-        $data = $form->get_data();
-        if ($data) {
-            $id = fct_db::afegir_cicle($this->fct->id, $data->nom, $data->activitats);
+        if ($form->validar()) {
+            $id = fct_db::afegir_cicle($this->fct->id, $form->valor('nom'),
+                                       $form->valor('activitats'));
             if ($id) {
-                $this->registrar('add cicle', fct_url::cicle($id), $data->nom);
+                $this->registrar('add cicle', fct_url::cicle($id),
+                                 $form->valor('nom'));
             } else {
                 $this->error('afegir_cicle');
             }
@@ -52,7 +53,7 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
         }
 
         $this->mostrar_capcalera();
-        $form->display();
+        $form->mostrar();
         $this->mostrar_peu();
     }
 

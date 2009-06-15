@@ -21,23 +21,23 @@ fct_require('pagines/form_base.php');
 
 class fct_form_qualificacio extends fct_form_base {
 
-    function configurar() {
-        $this->afegir_header( 'header_qualificacio', $this->pagina->titol);
+    function configurar($pagina) {
+        $this->element('capcalera', 'qualificacio_quadern',  $pagina->titol);
+        $this->element('menu', 'qualificacio', 'qualificacio',
+                       array('opcions' => $this->barem_qualificacio()));
+        $this->element('menu', 'nota', false,
+                       array('opcions' => $this->barem_valoracio()));
+        $this->element('data', 'data', 'data');
+        $this->element('areatext', 'observacions', 'observacions');
 
-        $this->afegir_select('qualificacio', fct_string('qualificacio'),
-            self::options_barem_qualificacio());
-        $this->afegir_select('nota', '', self::options_barem(), false, '');
-        $this->afegir_date('data', fct_string('data'));
-        $this->afegir_textarea('observacions', fct_string('observacions'), 4, 40);
-
-        if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_editar) {
-                $this->afegir_boto_enllac('editar', fct_string('edita'));
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
             }
             $this->congelar();
         } else {
-            $this->afegir_boto('desar', fct_string('desa'));
-            $this->afegir_boto_cancellar();
+            $this->element('boto', 'desar' ,'desa');
+            $this->element('boto', 'cancellar');
         }
     }
 

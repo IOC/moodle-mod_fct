@@ -18,7 +18,43 @@
 */
 
 fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_conveni.php');
+            'pagines/form_base.php');
+
+class fct_form_dades_conveni extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_conveni', 'conveni');
+        $this->element('text', 'codi', 'codi');
+        $this->element('data', 'data_inici', 'data_inici');
+        $this->element('data', 'data_final', 'data_final');
+        $this->element('areatext', 'prorrogues', 'prorrogues');
+        $this->element('text', 'codi', 'codi');
+        $this->element('hores', 'hores_practiques', 'hores_practiques');
+        $this->element('estatic', 'hores_realitzades', 'hores_realitzades');
+        $this->element('estatic', 'hores_pendents',
+                       'hores_practiques_pendents');
+
+        $this->comprovacio($this, 'comprovar_dates');
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+
+    function comprovar_dates($valors) {
+        if ($valors->data_inici > $valors->data_final) {
+            return array('data_inici' => fct_string('anterior_data_final'),
+                         'data_final' => fct_string('posterior_data_inici'));
+        }
+        return true;
+    }
+}
 
 class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 
@@ -47,9 +83,9 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
         $this->conveni->hores_realitzades = fct_db::hores_realitzades_quadern($this->quadern->id);
         $this->conveni->hores_pendents = $this->conveni->hores_practiques
             - $this->conveni->hores_realitzades;
-        $this->form->set_data($this->conveni);
+        $this->form->valors($this->conveni);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -58,13 +94,11 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->conveni->id;
-            $data->quadern = $this->conveni->quadern;
-            $data->data_inici = $this->form->date2unix($data->data_inici);
-            $data->data_final = $this->form->date2unix($data->data_final);
-            $ok = fct_db::actualitzar_dades_conveni($data);
+        if ($this->form->validar()) {
+            $dades = $this->form->valors();
+            $dades->id = $this->conveni->id;
+            $dades->quadern = $this->conveni->quadern;
+            $ok = fct_db::actualitzar_dades_conveni($dades);
             if ($ok) {
                 $this->registrar('update dades_conveni');
             } else {
@@ -76,12 +110,14 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     }
 
     function processar_editar() {
+        /*
         if (!$this->conveni->data_inici) {
             $this->conveni->data_inici = (int) time();
         }
         if (!$this->conveni->data_final) {
             $this->conveni->data_final = (int) time();
         }
+*/
         $this->mostrar();
     }
 

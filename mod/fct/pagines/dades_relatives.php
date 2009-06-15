@@ -18,7 +18,35 @@
 */
 
 fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_relatives.php');
+            'pagines/form_base.php');
+
+class fct_form_dades_relatives extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_relatives', 'dades_relatives');
+        $this->element('hores', 'hores_credit' ,'hores_credit');
+        $opcions = array(0 => '-', 25 => '25%', 50 => '50%');
+        $this->element('menu', 'exempcio', 'exempcio',
+                       array('opcions' => $opcions));
+        $this->element('hores', 'hores_anteriors', 'hores_anteriors');
+
+        if ($pagina->accio == 'veure') {
+            $this->element('estatic', 'hores_realitzades_detall',
+                           'hores_realitzades');
+            $this->element('estatic', 'hores_pendents', 'hores_pendents');
+        }
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
 
@@ -43,9 +71,12 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->set_data($this->dades);
+        $this->form->valors($this->dades);
+        $this->form->valor('hores_realitzades_detall',
+                           fct_string('hores_realitzades_detall',
+                                      $this->dades));
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -54,11 +85,11 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->dades->id;
-            $data->quadern = $this->dades->quadern;
-            $ok = fct_db::actualitzar_dades_relatives($data);
+        if ($this->form->validar()) {
+            $dades = $this->form->valors();
+            $dades->id = $this->dades->id;
+            $dades->quadern = $this->dades->quadern;
+            $ok = fct_db::actualitzar_dades_relatives($dades);
             if ($ok) {
                 $this->registrar('update dades_relatives');
             } else {

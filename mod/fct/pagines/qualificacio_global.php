@@ -44,20 +44,20 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         }
 
         $this->url = fct_url::qualificacio_global($this->quadern->id);
-        $this->titol = fct_string('qualificacio_global');
+        $this->titol = 'qualificacio_global';
         $this->pestanya = 'qualificacio_global';
         $this->form = new fct_form_qualificacio($this);
     }
 
     function mostrar() {
-        $this->form->set_data($this->qualificacio);
         $this->mostrar_capcalera();
         if ($this->ultim_quadern->id != $this->quadern->id) {
             $url = fct_url::qualificacio_global($this->ultim_quadern->id);
             $avis = fct_string('qualificacio_global_a_ultim_quadern', $url);
             echo "<p>$avis</p>";
         } else {
-            $this->form->display();
+            $this->form->valors($this->qualificacio);
+            $this->form->mostrar();
         }
         $this->mostrar_peu();
     }
@@ -67,17 +67,16 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->qualificacio->id;
-            $data->cicle = $this->qualificacio->cicle;
-            $data->alumne = $this->qualificacio->alumne;
-            $data->data = $this->form->date2unix($data->data);
-            $ok = fct_db::actualitzar_qualificacio_global($data);
+        if ($this->form->validar()) {
+            $qualificacio = $this->form->valors();
+            $qualificacio->id = $this->qualificacio->id;
+            $qualificacio->cicle = $this->qualificacio->cicle;
+            $qualificacio->alumne = $this->qualificacio->alumne;
+            $ok = fct_db::actualitzar_qualificacio_global($qualificacio);
             if ($ok) {
-                $barem = fct_form_qualificacio::options_barem();
+                $barem = $this->form->barem_valoracio();
                 $this->registrar('update qualificacio_global', null,
-                    $barem[$data->qualificacio]);
+                                 $barem[$qualificacio->qualificacio]);
             } else {
                 $this->error('desar_qualificacio_global');
             }
@@ -87,9 +86,6 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
     }
 
     function processar_editar() {
-        if (!$this->qualificacio->data) {
-            $this->qualificacio->data = (int) time();
-        }
         $this->mostrar();
     }
 
@@ -98,4 +94,3 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         $this->registrar('view qualificacio_global');
     }
 }
-

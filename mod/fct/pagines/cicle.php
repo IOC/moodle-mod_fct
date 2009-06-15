@@ -25,8 +25,8 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     var $cicle;
     var $n_quaderns;
 
-    function comprovar_nom($data) {
-        if (fct_db::cicle_duplicat($this->fct->id, addslashes($data['nom']),
+    function comprovar_nom($valors) {
+        if (fct_db::cicle_duplicat($this->fct->id, addslashes($valors->nom),
                                    $this->cicle->id)) {
             return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
@@ -50,9 +50,9 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     }
 
     function mostrar() {
-        $this->form->set_data($this->cicle);
+        $this->form->valors($this->cicle);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -74,15 +74,15 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $cicle = (object) array('id' => $this->cicle->id,
-                                    'nom' => $data->nom,
-                                    'activitats' => $data->activitats);
-            $ok = fct_db::actualitzar_cicle($cicle);
+        if ($this->form->validar()) {
+            $cicle = array('id' => $this->cicle->id,
+                           'nom' => $this->form->valor('nom'),
+                           'activitats' => $this->form->valor('activitats'));
+            $ok = fct_db::actualitzar_cicle((object) $cicle);
             if ($ok) {
                 $this->registrar('update cicle',
-                    fct_url::cicle($this->cicle->id), $data->nom);
+                                 fct_url::cicle($this->cicle->id),
+                                 $cicle['nom']);
             } else {
                 $this->error('desar_cicle');
             }

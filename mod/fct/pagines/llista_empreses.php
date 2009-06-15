@@ -18,7 +18,20 @@
 */
 
 fct_require('pagines/base.php',
-            'pagines/form_llista_empreses.php');
+            'pagines/form_base.php');
+
+class fct_form_llista_empreses extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('llista', 'cicles', 'llista_empreses',
+                       array('elements' => $pagina->cicles));
+        $this->element('capcalera', 'configuracio', 'configuracio');
+        $opcions = array(1 => 'Excel', 2 => 'CSV');
+        $this->element('menu', 'format', 'format',
+                       array('opcions' => $opcions));
+        $this->element('boto', 'baixar', 'baixa');
+    }
+}
 
 class fct_pagina_llista_empreses extends fct_pagina_base {
 
@@ -39,19 +52,17 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
     function processar() {
         $this->cicles = fct_db::cicles($this->fct->id);
         if ($this->cicles) {
-            $form = new fct_form_cicles_empreses($this);
-            $data = $form->get_data();
-            if ($data) {
-                $cicles = $form->get_data_llista('cicle');
-                $empreses = fct_db::empreses($cicles);
+            $form = new fct_form_llista_empreses($this);
+            if ($form->validar()) {
+                $empreses = fct_db::empreses($form->valor('cicles'));
                 $this->registrar('view baixa_empreses', $this->url);
-                $this->enviar($empreses, $data->format);
+                $this->enviar($empreses, $form->valor('format'));
             }
         }
 
         $this->mostrar_capcalera();
         if ($this->cicles) {
-            $form->display();
+            $form->mostrar();
         } else {
             echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         }

@@ -164,14 +164,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function valors_cicle() {
-        $cicles = array(0 => fct_string('tots'));
-        $records = fct_db::cicles($this->fct->id);
-        if ($records) {
-            foreach ($records as $record) {
-                $cicles[$record->id] = $record->nom;
-            }
-        }
-        return $cicles;
+        return array_merge(array(0 => fct_string('tots')),
+                           fct_db::cicles($this->fct->id));
     }
 
     function valors_curs($params) {

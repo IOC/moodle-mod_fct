@@ -21,85 +21,74 @@ fct_require('pagines/form_base.php');
 
 class fct_form_quadern extends fct_form_base {
 
-    function configurar() {
-        $this->afegir_header('quadern', $this->pagina->accio == 'afegir' ?
-        	fct_string('nou_quadern') : fct_string('quadern'));
+    function configurar($pagina) {
+        $this->element('capcalera', 'quadern',
+                       $pagina->accio == 'afegir' ? 'nou_quadern' : '');
 
-        $this->afegir_select(
-            'alumne', fct_string('alumne'),
-            $this->usuaris_amb_permis('mod/fct:alumne',
-                                      $this->pagina->alumne(), false));
+        $opcions = $this->opcions_usuari($pagina, 'mod/fct:alumne',
+                                         $pagina->alumne(), false);
+        $this->element('menu', 'alumne', 'alumne',
+                       array('opcions' => $opcions));
 
-        $this->afegir_text( 'nom_empresa', fct_string('empresa'), 48, true);
+        $this->element('text', 'nom_empresa', 'empresa',
+                       array('required' => true, 'size' => 48));
 
-        $this->afegir_select(
-            'tutor_centre', fct_string('tutor_centre'),
-            $this->usuaris_amb_permis('mod/fct:tutor_centre',
-                                      $this->pagina->tutor_centre()));
+        $opcions = $this->opcions_usuari($pagina, 'mod/fct:tutor_centre',
+                                         $pagina->tutor_centre());
+        $this->element('menu', 'tutor_centre', 'tutor_centre',
+                       array('opcions' => $opcions));
 
-        $this->afegir_select(
-            'tutor_empresa', fct_string('tutor_empresa'),
-            $this->usuaris_amb_permis('mod/fct:tutor_empresa',
-                                      $this->pagina->tutor_empresa()));
+        $opcions = $this->opcions_usuari($pagina, 'mod/fct:tutor_empresa',
+                                         $pagina->tutor_empresa());
+        $this->element('menu', 'tutor_empresa', 'tutor_empresa',
+                       array('opcions' => $opcions));
 
-        $this->afegir_select('cicle', fct_string('cicle_formatiu'), $this->cicles());
+        $this->element('menu', 'cicle', 'cicle_formatiu',
+                       array('opcions' => fct_db::cicles($pagina->fct->id)));
 
-        $this->afegir_select('estat', fct_string('estat'),
-                             array(1 => '<span class="estat_obert">' . fct_string('estat_obert') . '</span>',
-                                   0 => '<span class="estat_tancat">' . fct_string('estat_tancat') . '</span>'));
+        $opcions = array(1 => '<span class="estat_obert">'
+                         . fct_string('estat_obert') . '</span>',
+                         0 => '<span class="estat_tancat">'
+                         . fct_string('estat_tancat') . '</span>');
+        $this->element('menu' , 'estat', 'estat', array('opcions' => $opcions));
 
-        $this->afegir_comprovacio('comprovar_nom_empresa');
+        $this->comprovacio($pagina, 'comprovar_nom_empresa');
 
-        if ($this->pagina->accio == 'afegir') {
-            $this->afegir_boto('afegir', fct_string('afegeix'));
-            $this->afegir_boto_cancellar();
-        } else if ($this->pagina->accio == 'veure') {
-            if ($this->pagina->permis_admin) {
-                $this->afegir_boto_enllac('editar', fct_string('edita'));
-                $this->afegir_boto_enllac('suprimir', fct_string('suprimeix'));
+        if ($pagina->accio == 'afegir') {
+            $this->element('boto', 'afegir', 'afegeix');
+        } else if ($pagina->accio == 'veure') {
+            if ($pagina->permis_admin) {
+                $this->element('boto', 'editar', 'edita');
+                $this->element('boto', 'suprimir', 'suprimeix');
             }
             $this->congelar();
         } else {
-            $this->afegir_boto('desar', fct_string('desa'));
-            $this->afegir_boto_cancellar();
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
         }
-
     }
 
-    function cicles() {
-        $cicles = array();
-        $cicles_fct = fct_db::cicles($this->pagina->fct->id);
-        if ($cicles_fct) {
-            foreach ($cicles_fct as $id => $cicle) {
-                $cicles[$id] = $cicle->nom;
-            }
-        }
-        return $cicles;
-    }
-
-    function usuaris_amb_permis($capability, $usuari, $usuari_nul=true) {
-        $usuaris = array();
+    function opcions_usuari($pagina, $capability, $usuari, $usuari_nul=true) {
+        $opcions = array();
         if ($usuari_nul) {
-            $usuaris[0] = '';
-        }
-        if ($usuari) {
-            $usuaris[$usuari] = true;
+            $opcions[0] = '';
         }
 
-        $records = get_users_by_capability($this->pagina->context, $capability,
+        $email = ($pagina->accio == 'vuere');
+
+        $records = get_users_by_capability($pagina->context, $capability,
                                            'u.id', 'u.lastname, u.firstname',
                                            '', '', '', '', false);
         if ($records) {
-            foreach ($records as $record) {
-                $usuaris[$record->id] = true;
+            foreach (array_keys($records) as $id) {
+                $opcions[$id] = $pagina->nom_usuari($id, true, $email);
             }
         }
 
-        foreach (array_keys($usuaris) as $id) {
-            $usuaris[$id] = $this->pagina->nom_usuari(
-                $id, true, ($this->pagina->accio == 'veure'));
+        if ($usuari) {
+            $opcions[$usuari] = $pagina->nom_usuari($usuari, true, $email);
         }
-        return $usuaris;
+
+        return $opcions;
     }
 }
-

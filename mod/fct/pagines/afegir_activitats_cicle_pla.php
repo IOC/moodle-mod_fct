@@ -18,7 +18,17 @@
 */
 
 fct_require('pagines/base_pla_activitats.php',
-            'pagines/form_activitats_cicle_pla.php');
+            'pagines/form_base.php');
+
+class fct_form_activitats_cicle_pla extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('llista', 'activitats_cicle', 'afegeix_activitats_cicle',
+                       array('elements' => $pagina->activitats));
+        $this->element('boto', 'afegir', 'afegeix');
+    }
+}
+
 
 class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activitats  {
 
@@ -36,11 +46,9 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
     function processar_afegir() {
         if ($this->activitats) {
             $form = new fct_form_activitats_cicle_pla($this);
-            $data = $form->get_data();
-            if ($data) {
-                $activitats = $form->get_data_llista('activitat');
-                $ok = fct_db::afegir_activitats_cicle_pla($this->quadern->id,
-                                                          $activitats);
+            if ($form->validar()) {
+                $ok = fct_db::afegir_activitats_cicle_pla(
+                    $this->quadern->id, $form->valor('activitats_cicle'));
                 if ($ok) {
                     $this->registrar('add activitats_cicle_pla',
                                      fct_url::pla_activitats($this->quadern->id));
@@ -53,7 +61,7 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
 
         $this->mostrar_capcalera();
         if ($this->activitats) {
-            $form->display();
+            $form->mostrar();
         } else {
             echo '<p>' . fct_string('cicle_formatiu_sense_activitats',
                                      $this->cicle->nom) . '</p>';

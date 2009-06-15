@@ -22,9 +22,9 @@ fct_require('pagines/base_quadern.php',
 
 class fct_pagina_quadern extends fct_pagina_base_quadern {
 
-    function comprovar_nom_empresa($data) {
-        if (fct_db::quadern_duplicat($this->fct->id, addslashes($data['alumne']),
-                addslashes($data['nom_empresa']), $this->quadern->id)) {
+    function comprovar_nom_empresa($valors) {
+        if (fct_db::quadern_duplicat($this->fct->id, addslashes($valors->alumne),
+                addslashes($valors->nom_empresa), $this->quadern->id)) {
             return array('nom_empresa' => fct_string('quadern_duplicat'));
         }
         return true;
@@ -45,9 +45,9 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
     }
 
     function mostrar() {
-        $this->form->set_data($this->quadern);
+        $this->form->valors($this->quadern);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -64,16 +64,9 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $quadern = (object) array(
-                'id' => $this->quadern->id,
-                'alumne' => $data->alumne,
-                'nom_empresa' => $data->nom_empresa,
-                'tutor_centre' => $data->tutor_centre,
-                'tutor_empresa' => $data->tutor_empresa,
-                'cicle' => $data->cicle,
-                'estat' => $data->estat);
+        if ($this->form->validar()) {
+            $quadern = $this->form->valors();
+            $quadern->id = $this->quadern->id;
             $ok = fct_db::actualitzar_quadern($quadern);
             if ($ok) {
                 $this->registrar('update quadern');

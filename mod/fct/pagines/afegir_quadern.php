@@ -24,9 +24,10 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
     var $n_cicles;
 
-    function comprovar_nom_empresa($data) {
-        if (fct_db::quadern_duplicat($this->fct->id, addslashes($data['alumne']),
-                addslashes($data['nom_empresa']))) {
+    function comprovar_nom_empresa($valors) {
+        if (fct_db::quadern_duplicat($this->fct->id,
+                                     addslashes($valors->alumne),
+                                     addslashes($valors->nom_empresa))) {
             return array('nom_empresa' => fct_string('quadern_duplicat'));
         }
         return true;
@@ -43,19 +44,12 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
     function processar_afegir() {
         $form = new fct_form_quadern($this);
-        $data = $form->get_data();
-        if ($data) {
-           $quadern = (object) array(
-                'alumne' => $data->alumne,
-                'nom_empresa' => $data->nom_empresa,
-                'tutor_centre' => $data->tutor_centre,
-                'tutor_empresa' => $data->tutor_empresa,
-                'cicle' => $data->cicle,
-                'estat' => $data->estat);
-            $id = fct_db::afegir_quadern($quadern);
+        if ($form->validar()) {
+            $id = fct_db::afegir_quadern($form->valors());
             if ($id) {
                 $this->registrar('add quadern', fct_url::quadern($id),
-                    $this->nom_usuari($data->alumne) . " ({$data->nom_empresa})");
+                                 $this->nom_usuari($form->valor('alumne'))
+                                 . ' ('. $form->valor('nom_empresa') . ')');
             } else {
                 $this->error('afegir_quadern');
             }
@@ -67,7 +61,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
             $missatge = fct_string('cicle_necessari_per_afegir_quaderns');
             echo "<p>$missatge</p>";
         } else {
-            $form->display();
+            $form->mostrar();
         }
         $this->mostrar_peu();
     }

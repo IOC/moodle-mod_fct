@@ -18,12 +18,33 @@
 */
 
 fct_require('pagines/base.php',
-            'pagines/form_tutor_empresa.php');
+            'pagines/form_base.php');
+
+class fct_form_tutor_empresa extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'tutor_empresa', 'tutor_de_empresa');
+        $this->element('text', 'dni', 'dni',
+                       array('size' => 48, 'required' => true));
+        $this->element('text', 'nom', 'nom',
+                       array('size' => 48, 'required' => true));
+        $this->element('text', 'cognoms', 'cognoms',
+                       array('size' => 48, 'required' => true));
+
+        $this->element('text', 'email', 'email', array('size' => 48));
+
+        $this->comprovacio($pagina, 'comprovar_dni');
+        $this->comprovacio($pagina, 'comprovar_nom');
+        $this->comprovacio($pagina, 'comprovar_email');
+
+        $this->element('boto', 'afegir', 'afegeix');
+    }
+}
 
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
     function comprovar_dni($data) {
-        $dni = trim(addslashes($data['dni']));
+        $dni = addslashes(trim($data->dni));
         if (!preg_match('/^[0-9]{8}[a-zA-Z]$/', $dni)) {
             return array('dni' => fct_string('dni_no_valid'));
         }
@@ -33,17 +54,17 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         return true;
     }
 
-    function comprovar_email($data) {
-        $email = trim(addslashes($data['email']));
+    function comprovar_email($valors) {
+        $email = addslashes(trim($valors->email));
         if (!empty($email) and !validate_email($email)) {
             return array('email' => get_string('invalidemail'));
         }
         return true;
     }
 
-    function comprovar_nom($data) {
-        $nom = trim(addslashes($data['nom']));
-        $cognoms = trim(addslashes($data['cognoms']));
+    function comprovar_nom($valors) {
+        $nom = addslashes(trim($valors->nom));
+        $cognoms = addslashes(trim($valors->cognoms));
         $count = count_records_select('user',
                      "firstname LIKE '$nom' AND lastname LIKE '$cognoms'");
         if ($count > 0) {
@@ -75,12 +96,14 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
     function processar_afegir() {
         $form = new fct_form_tutor_empresa($this);
-        $data = $form->get_data();
-        if ($data) {
-            $data->dni = strtolower($data->dni);
+        if ($form->validar()) {
+            $dni = strtolower($form->valor('dni'));
             $contrasenya = $this->generar_contrasenya();
-            $id = fct_db::afegir_tutor_empresa($this->course->id, $data->dni, $contrasenya,
-                                               $data->nom, $data->cognoms, $data->email);
+            $id = fct_db::afegir_tutor_empresa($this->course->id,
+                                               $dni, $contrasenya,
+                                               $form->valor('nom'),
+                                               $form->valor('cognoms'),
+                                               $form->valor('email'));
             if ($id) {
                 global $CFG;
                 $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->course->id}";
@@ -91,15 +114,16 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
             $this->mostrar_capcalera();
             echo '<dl><dt>' . fct_string('tutor_de_empresa')
-                . "</dt><dd>{$data->nom} {$data->cognoms}</dd><dt>"
-                . fct_string('nom_usuari') . "</dt><dd>{$data->dni}</dd><dt>"
+                . '</dt><dd>' . $form->valor('nom') . ' '
+                . $form->valor('cognoms') . '</dd><dt>'
+                . fct_string('nom_usuari') . "</dt><dd>$dni</dd><dt>"
                 . fct_string('contrasenya') . "</dt><dd>$contrasenya</dd>";
             $this->mostrar_peu();            
             return;
         }
 
         $this->mostrar_capcalera();
-        $form->display();
+        $form->mostrar();
         $this->mostrar_peu();
     }
 

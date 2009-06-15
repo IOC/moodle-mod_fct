@@ -18,7 +18,33 @@
 */
 
 fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_alumne.php');
+            'pagines/form_base.php');
+
+class fct_form_dades_alumne extends fct_form_base {
+
+    function configurar($pagina) {
+        $this->element('capcalera', 'dades_alumne', 'alumne');
+        $this->element('estatic', 'nom', 'nopm');
+        $this->element('text', 'adreca', 'adreca');
+        $this->element('text', 'codi_postal', 'codi_postal',
+                       array('size' => 8));
+        $this->element('text', 'poblacio', 'poblacio');
+        $this->element('text', 'telefon', 'telefon');
+        $this->element('text', 'dni', 'dni', array('size' => 16));
+        $this->element('text', 'email', 'email');
+        $this->element('text', 'targeta_sanitaria', 'targeta_sanitaria');
+
+        if ($pagina->accio == 'veure') {
+            if ($pagina->permis_editar) {
+                $this->element('boto', 'editar', 'edita');
+            }
+            $this->congelar();
+        } else {
+            $this->element('boto', 'desar', 'desa');
+            $this->element('boto', 'cancellar');
+        }
+    }
+}
 
 class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
@@ -43,9 +69,10 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->set_data($this->alumne);
+        $this->form->valor('nom', $this->nom_usuari($this->quadern->alumne, true));
+        $this->form->valors($this->alumne);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -54,12 +81,12 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->alumne->id;
-            $data->fct = $this->fct->id;
-            $data->alumne = $this->quadern->alumne;
-            $ok = fct_db::actualitzar_dades_alumne($data);
+        if ($this->form->validar()) {
+            $dades = $this->form->valors();
+            $dades->id = $this->alumne->id;
+            $dades->fct = $this->fct->id;
+            $dades->alumne = $this->quadern->alumne;
+            $ok = fct_db::actualitzar_dades_alumne($dades);
             if ($ok) {
                 $this->registrar('update dades_alumne');
             } else {

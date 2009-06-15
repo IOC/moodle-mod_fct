@@ -45,9 +45,9 @@ class fct_pagina_dades_centre extends fct_pagina_base {
     }
 
     function mostrar() {
-        $this->form->set_data($this->centre);
+        $this->form->valors($this->centre);
         $this->mostrar_capcalera();
-        $this->form->display();
+        $this->form->mostrar();
         $this->mostrar_peu();
     }
 
@@ -56,11 +56,11 @@ class fct_pagina_dades_centre extends fct_pagina_base {
     }
 
     function processar_desar() {
-        $data = $this->form->get_data();
-        if ($data) {
-            $data->id = $this->centre->id;
-            $data->fct = $this->centre->fct;
-            $ok = fct_db::actualitzar_dades_centre($data);
+        if ($this->form->validar()) {
+            $centre = $this->form->valors();
+            $centre->id = $this->centre->id;
+            $centre->fct = $this->centre->fct;
+            $ok = fct_db::actualitzar_dades_centre($centre);
             if ($ok) {
                 $this->registrar('update dades_centre');
             } else {

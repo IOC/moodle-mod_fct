@@ -85,6 +85,19 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         return $calendari;
     }
 
+    function dies_periode($periode, $any) {
+        $mes = floor($periode / 2) + 1;
+        $dia_min = ($periode % 2 == 0) ? 1 : 16;
+        $dia_max = ($periode % 2 == 0) ? 15
+            : cal_days_in_month(CAL_GREGORIAN, $mes, $any);
+        return range($dia_min, $dia_max);
+    }
+
+    function filtrar_dies($dies, $periode, $any) {
+        return array_intersect(array_unique($dies),
+                               $this->dies_periode($periode, $any));
+    }
+
     static function nom_mes($mes) {
         $time = mktime(0, 0, 0, $mes+1, 1, 2000);
         return strftime('%B', $time);
@@ -101,9 +114,27 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         return fct_string('trimestre_' . ($trimestre + 1));
     }
 
+    function opcions_any() {
+        $opcions = array();
+        $any_min = date('Y', $this->conveni->data_inici);
+        $any_max = date('Y', $this->conveni->data_final);
+        for ($any = $any_min; $any <= $any_max; $any++) {
+            $opcions[$any] = "$any";
+        }
+        return $opcions;
+    }
+
+    function opcions_periode() {
+        $opcions = array();
+        for ($periode = 0; $periode <= 23; $periode++) {
+            $opcions[$periode] = $this->nom_periode($periode);
+        }
+        return $opcions;
+    }
+
     static function periode_data($data) {
         $data = getdate($data);
-        return ((int) $data['mon'] - 1) * 2 +
+         return ((int) $data['mon'] - 1) * 2 +
             ((int) $data['mday'] > 15 ? 1 : 0);
     }
 
