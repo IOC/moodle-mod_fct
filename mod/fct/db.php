@@ -542,10 +542,6 @@ class fct_db
     function quinzena($quinzena_id) {
         $record = get_record('fct_quinzena', 'id', $quinzena_id);
         $record->any = $record->any_;
-        if ($record) {
-            //$record->dies = count_records('fct_dia_quinzena', 'quinzena',
-            //    $quinzena_id);
-        }
         return $record;
     }
 
@@ -789,7 +785,7 @@ class fct_db
         }
 
         $data_final = fct_db::data_final_quadern($quadern->id);
-        $dades->hores_practiques = fct_db::hores_realitzades_cicle(
+        $dades->hores_practiques = (float) fct_db::hores_realitzades_cicle(
             $quadern->cicle, $quadern->alumne, $data_final);
         $dades->hores_exempcio = ceil((float) $dades->exempcio / 100
                                       * $dades->hores_credit);
@@ -820,7 +816,7 @@ class fct_db
 
     function hores_realitzades_quadern($quadern_id) {
         $hores = get_field('fct_quinzena', 'SUM(hores)', 'quadern', $quadern_id);
-        return $hores ? $hores : 0;
+        return $hores ? (float) $hores : 0;
     }
 
 

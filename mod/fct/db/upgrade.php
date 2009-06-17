@@ -204,6 +204,14 @@ function xmldb_fct_upgrade($oldversion=0) {
             && drop_field($table, $field, false);
     }
 
+    if ($result && $oldversion < 2009061700) {
+        $table = new XMLDBTable('fct_quinzena');
+        $field = new XMLDBField('hores');
+        $field->setAttributes(XMLDB_TYPE_NUMBER, '4, 2', XMLDB_UNSIGNED,
+                              XMLDB_NOTNULL, null, null, null, null, 'id');
+        $result = change_field_type($table, $field, false);
+    }
+
     return $result;
 }
 

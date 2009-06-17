@@ -49,7 +49,7 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
                 $any = '<a href="'.$url.'">'.$quinzena->any_.'</a>';
                 $periode = '<a href="'.$url.'">'.self::nom_periode($quinzena->periode).'</a>';
                 $dies = '<a href="'.$url.'">'.$quinzena->dies.'</a>';
-                $hores = '<a href="'.$url.'">'.$quinzena->hores.'</a>';
+                $hores = '<a href="'.$url.'">'.(float)$quinzena->hores.'</a>';
                 $taula->add_data(array($any, $periode, $dies, $hores));
             }
             $taula->print_html();

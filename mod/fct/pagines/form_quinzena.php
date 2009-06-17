@@ -29,7 +29,7 @@ class fct_form_quinzena extends fct_form_base {
         $this->element('menu', 'periode', 'periode',
                        array('opcions' => $pagina->opcions_periode()));
         $this->element('nombres', 'dies', 'dies');
-        $this->element('hores', 'hores', 'hores');
+        $this->element('hores', 'hores', 'hores', array('minuts' => true));
 
         $this->element('ocult', 'any_inici');
         $this->element('ocult', 'any_final');

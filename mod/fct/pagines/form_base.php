@@ -302,13 +302,50 @@ class fct_form_element_estatic extends fct_form_element_base {
     }
 }
 
-class fct_form_element_hores extends fct_form_element_base_senzill {
+class fct_form_element_hores extends fct_form_element_base {
 
-    function definition_senzill($mform) {
-        $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
-                           array('size' => 6));
-        $mform->_form->setType($this->nom, PARAM_INT);
+    function definition($mform) {
+        $elements = array();
+        $elements[] =& $mform->_form->createElement('text', 'hores', '',
+                                                    array('size' => 4));
+        $mform->_form->setType("{$this->nom}[hores]", PARAM_INT);
+        if (!empty($this->params->minuts)) {
+            $elements[] =& $mform->_form->createElement('select', 'minuts', '',
+                                                        $this->opcions());
+            $mform->_form->setType("{$this->nom}[minuts]", PARAM_INT);
+        }
+        $mform->_form->addGroup($elements, $this->nom, $this->etiqueta . ':',
+                                ' ' . fct_string('hores_i') . ' ');
+        if ($this->congelat) {
+            $mform->_form->hardFreeze($this->nom);
+        }
     }
+
+    function get_data(&$data) {
+        $valor = (float) $data[$this->nom]['hores'];
+        if (!empty($this->params->minuts)) {
+            $valor += $data[$this->nom]['minuts'] / 60;
+        }
+        return $valor;
+    }
+
+    function opcions() {
+        $opcions = array();
+        for ($minuts = 0; $minuts < 60; $minuts += 15) {
+            $opcions[$minuts] = $minuts . ' ' . fct_string('minuts');
+        }
+        return $opcions;
+    }
+
+    function set_data(&$data, $valor) {
+        $hores = floor($valor);
+        $minuts = round(($valor - $hores) * 60);
+        $data[$this->nom]['hores'] = $hores;
+        if (!empty($this->params->minuts))  {
+            $data[$this->nom]['minuts'] = $minuts;
+        }
+    }
+
 }
 
 class fct_form_element_llista extends fct_form_element_base {

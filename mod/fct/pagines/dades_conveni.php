@@ -80,7 +80,8 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->conveni->hores_realitzades = fct_db::hores_realitzades_quadern($this->quadern->id);
+        $this->conveni->hores_realitzades =
+            (float) fct_db::hores_realitzades_quadern($this->quadern->id);
         $this->conveni->hores_pendents = $this->conveni->hores_practiques
             - $this->conveni->hores_realitzades;
         $this->form->valors($this->conveni);
@@ -110,14 +111,6 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     }
 
     function processar_editar() {
-        /*
-        if (!$this->conveni->data_inici) {
-            $this->conveni->data_inici = (int) time();
-        }
-        if (!$this->conveni->data_final) {
-            $this->conveni->data_final = (int) time();
-        }
-*/
         $this->mostrar();
     }
 
