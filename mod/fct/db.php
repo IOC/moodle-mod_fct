@@ -189,7 +189,6 @@ class fct_db
         $ok = $ok && self::afegir_dades_centre_concertat($id);
         $ok = $ok && self::afegir_dades_empresa($id);
         $ok = $ok && self::afegir_dades_conveni($id);
-        $ok = $ok && self::afegir_dades_horari($id);
         $ok = $ok && self::afegir_dades_relatives($id);
         $ok = $ok && self::afegir_qualificacio_quadern($id);
 
@@ -202,7 +201,7 @@ class fct_db
     }
 
     function data_final_quadern($quadern_id) {
-        return get_field('fct_dades_conveni', 'data_final', 'quadern', $quadern_id);
+        return get_field('fct_conveni', 'MAX(data_final)', 'quadern', $quadern_id);
     }
 
     function nombre_quaderns($fct_id=false, $params=false) {
@@ -247,14 +246,16 @@ class fct_db
             . " c.nom AS cicle_formatiu,"
             . " CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,"
             . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
-            . " q.estat, dc.data_final"
+            . " q.estat, MAX(dc.data_final) AS data_final"
             . " FROM {$CFG->prefix}fct_quadern q"
             . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
             . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
             . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
             . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
-            . " JOIN {$CFG->prefix}fct_dades_conveni dc ON q.id = dc.quadern"
-            . self::quaderns_where_sql($fct_id, $params);
+            . " JOIN {$CFG->prefix}fct_conveni dc ON q.id = dc.quadern"
+            . self::quaderns_where_sql($fct_id, $params)
+            . " GROUP BY q.id, alumne, empresa, cicle_formatiu,"
+            . " tutor_centre, tutor_empresa, estat";
 
         if ($order) {
             $sql .= " ORDER BY $order";
@@ -286,11 +287,11 @@ class fct_db
             }
 
             if (isset($params->data_final_min)) {
-                $select[] = "dc.data_final >= $params->data_final_min";
+                $select[] = "data_final >= $params->data_final_min";
             }
 
             if (isset($params->data_final_max)) {
-                $select[] = "dc.data_final < $params->data_final_max";
+                $select[] = "data_final < $params->data_final_max";
             }
 
             if (isset($params->cicle)) {
@@ -331,7 +332,6 @@ class fct_db
         $ok = self::suprimir_dades_centre_concertat($id) && $ok;
         $ok = self::suprimir_dades_empresa($id) && $ok;
         $ok = self::suprimir_dades_conveni($id) && $ok;
-        $ok = self::suprimir_dades_horari($id) && $ok;
         $ok = self::suprimir_dades_relatives($id) && $ok;
         $ok = self::suprimir_qualificacio_quadern($id) && $ok;
 
@@ -359,7 +359,7 @@ class fct_db
 
         $sql = "SELECT q.*"
             . " FROM {$CFG->prefix}fct_quadern q"
-            . " JOIN {$CFG->prefix}fct_dades_conveni c ON q.id = c.quadern"
+            . " JOIN {$CFG->prefix}fct_conveni c ON q.id = c.quadern"
             . " WHERE q.cicle = {$quadern->cicle}"
             . " AND q.alumne = {$quadern->alumne}"
             . ($exclou ? " AND q.id != $quadern_id" : "")
@@ -698,29 +698,55 @@ class fct_db
         return delete_records('fct_dades_empresa', 'quadern', $quadern_id);
     }
 
-// Dades conveni
+// Dades convenis
 
-    function actualitzar_dades_conveni($data) {
-        return update_record('fct_dades_conveni', $data);
+    function actualitzar_dades_conveni($record) {
+        return update_record('fct_dades_conveni', $record);
     }
 
     function afegir_dades_conveni($quadern_id) {
-        $record = (object) array('quadern' => $quadern_id,
-            'prorrogues' => '-',
-            'data_inici' => time(),
-            'data_final' => time() + 365 * 24 * 60 * 60);
-        return insert_record('fct_dades_conveni', $record);
+        $record = array('quadern' => $quadern_id, 'prorrogues' => '-');
+        $ok = insert_record('fct_dades_conveni', (object) $record);
+        $record = array('quadern' => $quadern_id,
+                        'data_inici' => time(),
+                        'data_final' => time() + 365 * 24 * 60 * 60);
+        return $ok && self::afegir_conveni((object) $record);
     }
 
     function dades_conveni($quadern_id) {
         return get_record('fct_dades_conveni', 'quadern', $quadern_id);
     }
 
+    function suprimir_dades_conveni($quadern_id) {
+        $ok = delete_records('fct_dades_conveni', 'quadern', $quadern_id);
+        return self::suprimir_convenis($quadern_id) && $ok;
+    }
+
+// Convenis
+
+    function actualitzar_conveni($record) {
+        return update_record('fct_conveni', $record);
+    }
+
+    function afegir_conveni($record) {
+        $id = insert_record('fct_conveni', $record);
+        if ($id) {
+            return self::afegir_horari($id);
+        }
+        return false;
+    }
+
+    function convenis($quadern_id) {
+        $records = get_records('fct_conveni', 'quadern', $quadern_id,
+                               'data_inici, data_final, id');
+        return $records ? $records : array();
+    }
+
     function data_final_convenis_min_max($fct_id, $params=false) {
         global $CFG;
         $sql = "SELECT MIN(dc.data_final) AS data_min,"
             . " MAX(dc.data_final) AS data_max"
-            . " FROM {$CFG->prefix}fct_dades_conveni dc"
+            . " FROM {$CFG->prefix}fct_conveni dc"
             . " JOIN {$CFG->prefix}fct_quadern q ON dc.quadern = q.id"
             . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
             . self::quaderns_where_sql($fct_id, $params);
@@ -728,27 +754,55 @@ class fct_db
         return array($record->data_min, $record->data_max);
     }
 
-    function suprimir_dades_conveni($quadern_id) {
-        return delete_records('fct_dades_conveni', 'quadern', $quadern_id);
+    function data_inici_final_quadern($quadern_id) {
+        global $CFG;
+        $sql = "SELECT MIN(c.data_inici) AS data_min,"
+            . " MAX(c.data_final) AS data_max"
+            . " FROM {$CFG->prefix}fct_conveni c"
+            . " WHERE c.quadern = $quadern_id";
+        $record = get_record_sql($sql);
+        return array($record->data_min, $record->data_max);
     }
 
-// Dades horari
-
-    function actualitzar_dades_horari($data) {
-        return update_record('fct_dades_horari', $data);
+    function suprimir_conveni($conveni_id) {
+        $ok = self::suprimir_horari($conveni_id);
+        return delete_records('fct_conveni', 'id', $conveni_id) && $ok;
     }
 
-    function afegir_dades_horari($quadern_id) {
-        $record = (object) array('quadern' => $quadern_id);
-        return insert_record('fct_dades_horari', $record);
+    function suprimir_convenis($quadern_id) {
+        $ok = true;
+        if ($convenis = self::convenis($quadern_id)) {
+            foreach ($convenis as $conveni) {
+                $ok = self::suprimir_conveni($conveni->id) && $ok;
+            }
+        }
+        return $ok;
     }
 
-    function dades_horari($quadern_id) {
-        return get_record('fct_dades_horari', 'quadern', $quadern_id);
+
+// Horaris
+
+    function actualitzar_horari($record) {
+        return update_record('fct_horari', $record);
     }
 
-    function suprimir_dades_horari($quadern_id) {
-        return delete_records('fct_dades_horari', 'quadern', $quadern_id);
+    function afegir_horari($conveni_id) {
+        $record = (object) array('conveni' => $conveni_id);
+        return insert_record('fct_horari', $record);
+    }
+
+    function horaris($quadern_id) {
+        $horaris = array();
+        foreach (self::convenis($quadern_id) as $conveni) {
+            $horari = get_record('fct_horari', 'conveni', $conveni->id);
+            $horari->codi = $conveni->codi;
+            $horaris[$horari->id] = $horari;
+        }
+        return $horaris;
+    }
+
+    function suprimir_horari($conveni_id) {
+        return delete_records('fct_horari', 'conveni', $conveni_id);
     }
 
 // Dades relatives
@@ -807,7 +861,7 @@ class fct_db
         $sql = 'SELECT SUM(qi.hores) AS hores '
             . "FROM {$CFG->prefix}fct_quadern qa "
             . "JOIN {$CFG->prefix}fct_quinzena qi ON qa.id = qi.quadern "
-            . "JOIN {$CFG->prefix}fct_dades_conveni c ON qa.id = c.quadern "
+            . "JOIN {$CFG->prefix}fct_conveni c ON qa.id = c.quadern "
             . "WHERE qa.cicle = $cicle_id AND qa.alumne = $alumne"
             . " AND c.data_final <= $data_final";
         $record = get_record_sql($sql);

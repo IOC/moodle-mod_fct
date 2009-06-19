@@ -79,13 +79,13 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         $form->valor('any', $any);
         $form->valor('periode', $periode);
         $form->valor('any_inici',
-                     $this->any_data($this->conveni->data_inici));
+                     $this->any_data($this->data_inici));
         $form->valor('any_final',
-                     $this->any_data($this->conveni->data_final));
+                     $this->any_data($this->data_final));
         $form->valor('periode_inici',
-                     $this->periode_data($this->conveni->data_inici));
+                     $this->periode_data($this->data_inici));
         $form->valor('periode_final',
-                     $this->periode_data($this->conveni->data_final));
+                     $this->periode_data($this->data_final));
         $this->mostrar_capcalera();
         $form->mostrar();
         $this->mostrar_peu();

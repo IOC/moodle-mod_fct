@@ -23,18 +23,31 @@ fct_require('pagines/base_dades_quadern.php',
 class fct_form_dades_conveni extends fct_form_base {
 
     function configurar($pagina) {
-        $this->element('capcalera', 'dades_conveni', 'conveni');
-        $this->element('text', 'codi', 'codi');
-        $this->element('data', 'data_inici', 'data_inici');
-        $this->element('data', 'data_final', 'data_final');
+        foreach (array_keys($pagina->convenis) as $id) {
+            $this->element('capcalera', "conveni_$id", 'conveni');
+            $this->element('text', "codi_$id", 'codi');
+            $this->element('data', "data_inici_$id", 'data_inici');
+            $this->element('data', "data_final_$id", 'data_final');
+            if ($pagina->accio != 'veure') {
+                $this->element('opcio', "suprimir_$id", 'suprimeix');
+            }
+        }
+
+        if ($pagina->accio != 'veure') {
+            $this->element('capcalera', "conveni_nou", 'nou_conveni');
+            $this->element('text', "codi_nou", 'codi');
+            $this->element('data', "data_inici_nou", 'data_inici');
+            $this->element('data', "data_final_nou", 'data_final');
+        }
+
+        $this->element('capcalera', 'daddes_convenis', 'general');
         $this->element('areatext', 'prorrogues', 'prorrogues');
-        $this->element('text', 'codi', 'codi');
         $this->element('hores', 'hores_practiques', 'hores_practiques');
         $this->element('estatic', 'hores_realitzades', 'hores_realitzades');
         $this->element('estatic', 'hores_pendents',
                        'hores_practiques_pendents');
 
-        $this->comprovacio($this, 'comprovar_dates');
+        $this->comprovacio($pagina, 'comprovar_dates');
 
         if ($pagina->accio == 'veure') {
             if ($pagina->permis_editar) {
@@ -46,27 +59,34 @@ class fct_form_dades_conveni extends fct_form_base {
             $this->element('boto', 'cancellar');
         }
     }
-
-    function comprovar_dates($valors) {
-        if ($valors->data_inici > $valors->data_final) {
-            return array('data_inici' => fct_string('anterior_data_final'),
-                         'data_final' => fct_string('posterior_data_inici'));
-        }
-        return true;
-    }
 }
 
 class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 
-    var $conveni;
+    var $dades;
+    var $convenis;
     var $form;
+
+    function comprovar_dates($valors) {
+        $errors = array();
+        $valors = (array) $valors;
+        foreach (array_keys($this->convenis) as $id) {
+            if ($valors["data_inici_$id"] > $valors["data_final_$id"]) {
+                return array("data_inici_$id" => fct_string('anterior_data_final'),
+                             "data_final_$id" => fct_string('posterior_data_inici'));
+            }
+        }
+        return $errors ? $errors : true;
+    }
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->conveni = fct_db::dades_conveni($this->quadern->id);
-        if (!$this->conveni) {
+
+        $this->dades = fct_db::dades_conveni($this->quadern->id);
+        if (!$this->dades) {
             $this->error('recuperar_covneni');
         }
+        $this->convenis = fct_db::convenis($this->quadern->id);
 
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
@@ -80,11 +100,16 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->conveni->hores_realitzades =
+        $this->dades->hores_realitzades =
             (float) fct_db::hores_realitzades_quadern($this->quadern->id);
-        $this->conveni->hores_pendents = $this->conveni->hores_practiques
-            - $this->conveni->hores_realitzades;
-        $this->form->valors($this->conveni);
+        $this->dades->hores_pendents = $this->dades->hores_practiques
+            - $this->dades->hores_realitzades;
+        $this->form->valors($this->dades);
+        foreach ($this->convenis as $id => $conveni) {
+            $this->form->valor("codi_$id", $conveni->codi);
+            $this->form->valor("data_inici_$id", $conveni->data_inici);
+            $this->form->valor("data_final_$id", $conveni->data_final);
+        }
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -96,10 +121,36 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $dades = $this->form->valors();
-            $dades->id = $this->conveni->id;
-            $dades->quadern = $this->conveni->quadern;
-            $ok = fct_db::actualitzar_dades_conveni($dades);
+            $this->dades->prorrogues = $this->form->valor('prorrogues');
+            $this->dades->hores_practiques =
+                $this->form->valor('hores_practiques');
+            $ok = fct_db::actualitzar_dades_conveni($this->dades);
+            foreach (array_keys($this->convenis) as $id) {
+                $conveni = array(
+                    'id' => $id,
+                    'quadern' => $this->quadern->id,
+                    'codi' => $this->form->valor("codi_$id"),
+                    'data_inici' => $this->form->valor("data_inici_$id"),
+                    'data_final' => $this->form->valor("data_final_$id"),
+                );
+                if ($this->form->valor("suprimir_$id")) {
+                    $ok = $ok && fct_db::suprimir_conveni($id);
+                    unset($this->convenis[$id]);
+                } else {
+                    $ok = $ok && fct_db::actualitzar_conveni((object) $conveni);
+                }
+            }
+
+            if ($this->form->valor('codi_nou') or !$this->convenis) {
+                $conveni = array(
+                    'quadern' => $this->quadern->id,
+                    'codi' => $this->form->valor('codi_nou'),
+                    'data_inici' => $this->form->valor('data_inici_nou'),
+                    'data_final' => $this->form->valor('data_final_nou'),
+                );
+                $ok = $ok && fct_db::afegir_conveni((object) $conveni);
+            }
+
             if ($ok) {
                 $this->registrar('update dades_conveni');
             } else {

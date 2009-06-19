@@ -460,6 +460,18 @@ class fct_form_element_ocult extends fct_form_element_base {
     }
 }
 
+class fct_form_element_opcio extends fct_form_element_base_senzill {
+
+    function definition_senzill($mform) {
+        $mform->_form->addElement('checkbox', $this->nom,
+                                  $this->etiqueta . ':');
+    }
+
+    function get_data(&$data) {
+        return !empty($data[$this->nom]);
+    }
+}
+
 class fct_form_element_text extends fct_form_element_base_senzill {
 
     function definition_senzill($mform) {

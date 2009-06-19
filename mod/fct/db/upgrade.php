@@ -212,6 +212,40 @@ function xmldb_fct_upgrade($oldversion=0) {
         $result = change_field_type($table, $field, false);
     }
 
+    if ($result && $oldversion < 2009061800) {
+        $table_dades_conveni = new XMLDBTable('fct_dades_conveni');
+        $table_dades_horari = new XMLDBTable('fct_dades_horari');
+        $field_codi = new XMLDBField('codi');
+        $field_data_inici = new XMLDBField('data_inici');
+        $field_data_final = new XMLDBField('data_final');
+        $table_conveni = $structure->getTable('fct_conveni');
+        $table_horari = $structure->getTable('fct_horari');
+
+        $sql_conveni = "INSERT INTO {$CFG->prefix}fct_conveni"
+            . " (quadern, codi, data_inici, data_final)"
+            . " SELECT quadern, codi, data_inici, data_final"
+            . " FROM {$CFG->prefix}fct_dades_conveni";
+
+        $sql_horari = "INSERT INTO {$CFG->prefix}fct_horari"
+            . " (conveni, dilluns, dimarts, dimecres, dijous,"
+            . " divendres, dissabte, diumenge)"
+            . " SELECT c.id, h.dilluns, h.dimarts, h.dimecres,"
+            . " h.dijous, h.divendres, h.dissabte, h.diumenge"
+            . " FROM {$CFG->prefix}fct_conveni c,"
+            . " {$CFG->prefix}fct_dades_horari h"
+            . " WHERE c.quadern = h.quadern";
+
+        $result = create_table($table_conveni, false)
+            && create_table($table_horari, false)
+            && execute_sql($sql_conveni)
+            && execute_sql($sql_horari)
+            && drop_field($table_dades_conveni, $field_codi, false)
+            && drop_field($table_dades_conveni, $field_data_inici, false)
+            && drop_field($table_dades_conveni, $field_data_final, false)
+            && drop_table($table_dades_horari, false);
+    }
+
+
     return $result;
 }
 

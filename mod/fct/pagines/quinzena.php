@@ -73,13 +73,13 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         $this->form->valor('dies', $this->dies_quinzena);
         $this->form->valor('activitats_realitzades', $this->activitats_quinzena);
         $this->form->valor('any_inici',
-                           $this->any_data($this->conveni->data_inici));
+                           $this->any_data($this->data_inici));
         $this->form->valor('any_final',
-                           $this->any_data($this->conveni->data_final));
+                           $this->any_data($this->data_final));
         $this->form->valor('periode_inici',
-                           $this->periode_data($this->conveni->data_inici));
+                           $this->periode_data($this->data_inici));
         $this->form->valor('periode_final',
-                           $this->periode_data($this->conveni->data_final));
+                           $this->periode_data($this->data_final));
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();

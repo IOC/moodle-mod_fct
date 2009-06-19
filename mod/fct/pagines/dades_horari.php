@@ -23,14 +23,18 @@ fct_require('pagines/base_dades_quadern.php',
 class fct_form_dades_horari extends fct_form_base {
 
     function configurar($pagina) {
-        $this->element('capcalera', 'dades_horari', 'horari_practiques');
-        $this->element('text', 'dilluns', 'dilluns');
-        $this->element('text', 'dimarts', 'dimarts');
-        $this->element('text', 'dimecres', 'dimecres');
-        $this->element('text', 'dijous', 'dijous');
-        $this->element('text', 'divendres', 'divendres');
-        $this->element('text', 'dissabte', 'dissabte');
-        $this->element('text', 'diumenge', 'diumenge');
+
+        foreach(array_keys($pagina->horaris) as $id) {
+            $this->element('capcalera', "horari_$id", 'horari_practiques');
+            $this->element('estatic', "codi_$id", 'conveni');
+            $this->element('text', "dilluns_$id", 'dilluns');
+            $this->element('text', "dimarts_$id", 'dimarts');
+            $this->element('text', "dimecres_$id", 'dimecres');
+            $this->element('text', "dijous_$id", 'dijous');
+            $this->element('text', "divendres_$id", 'divendres');
+            $this->element('text', "dissabte_$id", 'dissabte');
+            $this->element('text', "diumenge_$id", 'diumenge');
+        }
 
         if ($pagina->accio == 'veure') {
             if ($pagina->permis_editar) {
@@ -46,15 +50,15 @@ class fct_form_dades_horari extends fct_form_base {
 
 class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
-    var $horari;
+    var $dies = array('dilluns', 'dimarts', 'dimecres', 'dijous',
+                      'divendres', 'dissabte', 'diumenge');
+    var $horaris;
     var $form;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->horari = fct_db::dades_horari($this->quadern->id);
-        if (!$this->horari) {
-            $this->error('recuperar_horari');
-        }
+
+        $this->horaris = fct_db::horaris($this->quadern->id);
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
@@ -67,7 +71,12 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->valors($this->horari);
+        foreach ($this->horaris as $id => $horari) {
+            $this->form->valor("codi_$id", $horari->codi);
+            foreach ($this->dies as $dia) {
+                $this->form->valor("{$dia}_{$id}", $horari->$dia);
+            }
+        }
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -79,10 +88,13 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $horari = $this->form->valors();
-            $horari->id = $this->horari->id;
-            $horari->quadern = $this->horari->quadern;
-            $ok = fct_db::actualitzar_dades_horari($horari);
+            $ok = true;
+            foreach ($this->horaris as $id => $horari) {
+                foreach ($this->dies as $dia) {
+                    $horari->$dia = $this->form->valor("{$dia}_{$id}");
+                }
+                $ok = $ok && fct_db::actualitzar_horari($horari);
+            }
             if ($ok) {
                 $this->registrar('update dades_horari');
             } else {

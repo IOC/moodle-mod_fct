@@ -136,10 +136,12 @@ function fct_restore_mods($mod, $restore) {
                           array('quadern' => 'fct_quadern'));
         $r->restore_table('fct_dades_conveni',
                           array('quadern' => 'fct_quadern'));
+        $r->restore_table('fct_conveni',
+                          array('quadern' => 'fct_quadern'));
         $r->restore_table('fct_dades_empresa',
                           array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_dades_horari',
-                          array('quadern' => 'fct_quadern'));
+        $r->restore_table('fct_horari',
+                          array('conveni' => 'fct_conveni'));
         $r->restore_table('fct_dades_relatives',
                           array('quadern' => 'fct_quadern'));
         $r->restore_table('fct_activitat_pla',

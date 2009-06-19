@@ -180,7 +180,7 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
         $backup->write_tables_fct(array('fct_dades_centre_concertat',
                                         'fct_dades_empresa',
                                         'fct_dades_conveni',
-                                        'fct_dades_horari',
+                                        'fct_conveni',
                                         'fct_dades_relatives',
                                         'fct_activitat_pla',
                                         'fct_valoracio_actituds',
@@ -188,6 +188,10 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
                                         'fct_quinzena'),
                                   array('quadern' => 'fct_quadern',
                                         'cicle' => 'fct_cicle'));
+        $backup->write_table_fct('fct_horari',
+                                 array('conveni' => 'fct_conveni',
+                                       'quadern' => 'fct_quadern',
+                                       'cicle' => 'fct_cicle'));
         $backup->write_tables_fct(array('fct_activitat_quinzena',
                                         'fct_dia_quinzena'),
                                   array('quinzena' => 'fct_quinzena',

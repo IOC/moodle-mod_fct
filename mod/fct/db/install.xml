@@ -129,14 +129,11 @@
         <KEY NAME="quadern" TYPE="foreign-unique" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="fct_dades_conveni" COMMENT="-" PREVIOUS="fct_dades_empresa" NEXT="fct_dades_horari">
+    <TABLE NAME="fct_dades_conveni" COMMENT="-" PREVIOUS="fct_dades_empresa" NEXT="fct_conveni">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="quadern"/>
-        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="codi"/>
-        <FIELD NAME="codi" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="quadern" NEXT="data_inici"/>
-        <FIELD NAME="data_inici" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="codi" NEXT="data_final"/>
-        <FIELD NAME="data_final" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="data_inici" NEXT="prorrogues"/>
-        <FIELD NAME="prorrogues" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="data_final" NEXT="hores_practiques"/>
+        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="prorrogues"/>
+        <FIELD NAME="prorrogues" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="quadern" NEXT="hores_practiques"/>
         <FIELD NAME="hores_practiques" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="prorrogues"/>
       </FIELDS>
       <KEYS>
@@ -144,11 +141,24 @@
         <KEY NAME="quadern" TYPE="foreign-unique" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="fct_dades_horari" COMMENT="-" PREVIOUS="fct_dades_conveni" NEXT="fct_dades_relatives">
+    <TABLE NAME="fct_conveni" COMMENT="-" PREVIOUS="fct_dades_conveni" NEXT="fct_horari">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="quadern"/>
-        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="dilluns"/>
-        <FIELD NAME="dilluns" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="quadern" NEXT="dimarts"/>
+        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="codi"/>
+        <FIELD NAME="codi" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="quadern" NEXT="data_inici"/>
+        <FIELD NAME="data_inici" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="codi" NEXT="data_final"/>
+        <FIELD NAME="data_final" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="data_inici"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="quadern"/>
+        <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="fct_horari" COMMENT="-" PREVIOUS="fct_conveni" NEXT="fct_dades_relatives">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="conveni"/>
+        <FIELD NAME="conveni" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="dilluns"/>
+        <FIELD NAME="dilluns" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="conveni" NEXT="dimarts"/>
         <FIELD NAME="dimarts" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="dilluns" NEXT="dimecres"/>
         <FIELD NAME="dimecres" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="dimarts" NEXT="dijous"/>
         <FIELD NAME="dijous" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="dimecres" NEXT="divendres"/>
@@ -157,11 +167,11 @@
         <FIELD NAME="diumenge" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="dissabte"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="quadern"/>
-        <KEY NAME="quadern" TYPE="foreign-unique" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="-" NEXT="conveni"/>
+        <KEY NAME="conveni" TYPE="foreign" FIELDS="conveni" REFTABLE="fct_conveni" REFFIELDS="id" COMMENT="-" PREVIOUS="primary"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="fct_dades_relatives" COMMENT="-" PREVIOUS="fct_dades_horari" NEXT="fct_activitat_pla">
+    <TABLE NAME="fct_dades_relatives" COMMENT="-" PREVIOUS="fct_horari" NEXT="fct_activitat_pla">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="quadern"/>
         <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="hores_credit"/>
