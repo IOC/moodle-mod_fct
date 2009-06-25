@@ -27,8 +27,10 @@ class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
         parent::configurar($quadern_id);
 
         $this->pestanya = 'pla_activitats';
-        $this->permis_editar = ($this->permis_admin or $this->quadern->estat
-                                and $this->permis_tutor_centre);
+        $this->permis_editar = ($this->permis_admin
+                                or ($this->quadern->estat
+                                    and ($this->permis_tutor_centre
+                                         or $this->permis_tutor_empresa)));
     }
 
     function definir_pestanyes() {
