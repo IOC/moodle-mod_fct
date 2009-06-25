@@ -73,10 +73,10 @@ $('.fct_form_quinzena').ready(function() {
         return dies[0] + "-" + dies[1] + " " + nom_mes[mes];
     };
 
-    var any_inici = $('input[name=any_inici]').val();
-    var any_final = $('input[name=any_final]').val();
-    var periode_inici = $('input[name=periode_inici]').val();
-    var periode_final = $('input[name=periode_final]').val();
+    var any_inici = parseInt($('input[name=any_inici]').val());
+    var any_final = parseInt($('input[name=any_final]').val());
+    var periode_inici = parseInt($('input[name=periode_inici]').val());
+    var periode_final = parseInt($('input[name=periode_final]').val());
 
     var $any = $('#id_any');
     var $periode = $('#id_periode');
