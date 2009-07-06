@@ -245,6 +245,13 @@ function xmldb_fct_upgrade($oldversion=0) {
             && drop_table($table_dades_horari, false);
     }
 
+    if ($result && $oldversion < 2009070600) {
+        $table = $structure->getTable('fct');
+        $field1 = $table->getField('frases_centre');
+        $field2 = $table->getField('frases_empresa');
+        $result = add_field($table, $field1, false)
+            && add_field($table, $field2, false);
+    }
 
     return $result;
 }
