@@ -113,4 +113,23 @@ $('.fct_form_quinzena').ready(function() {
         $('#quinzena .felement').eq(2).empty().append($calendari);
     });
 
+    $('.frases_areatext').each(function (index, div) {
+        $(div).find('li')
+            .click(function () {
+                var id = $(div).attr('id').replace('_frases', '');
+                var $textarea = $('#' + id);
+                $textarea
+                    .val($textarea.val() + $(this).text())
+                    .animate({ scrollTop: $textarea[0].scrollHeight })
+                    .focus();
+                $(div).find('h4').click();
+            });
+        $(div).find('h4')
+            .click(function () {
+                $(this).find('img').toggle();
+                $(div).find('ul').slideToggle();
+            });
+        $(div).show();
+    });
+
 });

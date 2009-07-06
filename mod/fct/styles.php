@@ -148,3 +148,21 @@
 #selectors_quaderns div label {
     margin-right: 5px;
 }
+
+.frases_areatext h4 {
+    margin: 0 0;
+    cursor: pointer;
+}
+
+.frases_areatext ul {
+    margin: 5px 0;
+}
+
+.frases_areatext li:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}

@@ -48,8 +48,13 @@ class fct_form_quinzena extends fct_form_base {
 
         if ($pagina->accio != 'afegir' or $pagina->permis_editar_centre) {
             $this->element('capcalera', 'retroaccio', 'retroaccio');
-            $this->element('areatext' , 'observacions_centre', 'tutor_centre');
-            $this->element('areatext' , 'observacions_empresa', 'tutor_empresa');
+            $this->element('areatext' , 'observacions_centre', 'tutor_centre',
+                           array('frases' => $pagina->fct->frases_centre,
+                                 'frases_titol' => 'frases_retroaccio'));
+            $this->element('areatext' , 'observacions_empresa',
+                           'tutor_empresa',
+                           array('frases' => $pagina->fct->frases_empresa,
+                           'frases_titol' => 'frases_retroaccio'));
         }
 
         if ($pagina->accio == 'veure' or !$pagina->permis_editar_alumne) {
