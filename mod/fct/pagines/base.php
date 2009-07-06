@@ -127,6 +127,7 @@ class fct_pagina_base {
                 new tabobject('quaderns', fct_url::llista_quaderns($this->fct->id), fct_string('quaderns')),
                 new tabobject('cicles', fct_url::llista_cicles($this->fct->id), fct_string('cicles_formatius')),
                 new tabobject('dades_centre', fct_url::dades_centre($this->fct->id), fct_string('dades_centre')),
+                new tabobject('frases_retroaccio', fct_url::frases_retroaccio($this->fct->id), fct_string('frases_retroaccio')),
                 new tabobject('empreses', fct_url::llista_empreses($this->fct->id), fct_string('llista_empreses')),
                 new tabobject('afegir_tutor_empresa', fct_url::afegir_tutor_empresa($this->fct->id), fct_string('afegeix_tutor_empresa')),
             ));

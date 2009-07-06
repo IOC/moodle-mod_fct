@@ -87,6 +87,10 @@ class fct_url {
         return self::url('editar_activitat_pla', array('activitat' => $activitat_id));
     }
 
+    function frases_retroaccio($fct_id) {
+        return self::url('frases_retroaccio', array('fct' => $fct_id));
+    }
+
     function llista_cicles($fct_id) {
         return self::url('llista_cicles', array('fct' => $fct_id));
     }

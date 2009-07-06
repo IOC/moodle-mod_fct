@@ -24,8 +24,9 @@ class fct_db
 
     function actualitzar_fct($fct) {
         $fct->timemodified = time();
-        $fct->id = $fct->instance;
-
+        if (isset($fct->instance)) {
+            $fct->id = $fct->instance;
+        }
         return update_record('fct', $fct);
     }
 
