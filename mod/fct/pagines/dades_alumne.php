@@ -24,7 +24,7 @@ class fct_form_dades_alumne extends fct_form_base {
 
     function configurar($pagina) {
         $this->element('capcalera', 'dades_alumne', 'alumne');
-        $this->element('estatic', 'nom', 'nopm');
+        $this->element('estatic', 'nom', 'nom');
         $this->element('text', 'adreca', 'adreca');
         $this->element('text', 'codi_postal', 'codi_postal',
                        array('size' => 8));

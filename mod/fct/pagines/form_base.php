@@ -207,6 +207,13 @@ class fct_form_element_base {
 
 class fct_form_element_base_senzill extends fct_form_element_base {
 
+    function __construct($tipus, $nom, $etiqueta, $params) {
+        parent::__construct($tipus, $nom, $etiqueta, $params);
+        if ($this->etiqueta) {
+            $this->etiqueta .= ':';
+        }
+    }
+
     function definition($mform, &$data) {
         $this->definition_senzill($mform);
         if ($this->congelat) {
@@ -235,7 +242,7 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
             $this->params->rows = 4;
         }
 
-        $mform->_form->addElement('textarea', $this->nom, $this->etiqueta . ':',
+        $mform->_form->addElement('textarea', $this->nom, $this->etiqueta,
                                   array('cols' => $this->params->cols,
                                         'rows' => $this->params->rows));
 
@@ -250,12 +257,13 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
             and !empty($this->params->frases_titol)
             and !$this->congelat) {
             $html = array('<div id="id_', $this->nom, '_frases"',
-                          ' class="frases_areatext hidden">', '<h4>',
-                          '<img class="hidden" src="', $CFG->pixpath,
-                          '/t/switch_plus.gif" />', ' <img src="',
+                          ' class="frases_areatext amagat">', '<h4>',
+                          '<img src="', $CFG->pixpath,
+                          '/t/switch_plus.gif" /> ',
+                          '<img class="amagat" src="',
                           $CFG->pixpath, '/t/switch_minus.gif" /> ',
                           fct_string($this->params->frases_titol),
-                          '</h4>', '<ul class="hidden">');
+                          '</h4>', '<ul class="amagat">');
             foreach (explode("\n", $this->params->frases) as $frase) {
                 if (trim($frase)) {
                     $html[] = '<li>' . trim($frase) . '</li>';
@@ -297,7 +305,7 @@ class fct_form_element_capcalera extends fct_form_element_base {
 class fct_form_element_data extends fct_form_element_base_senzill {
 
     function definition_senzill($mform) {
-        $mform->_form->addElement('date_selector', $this->nom, $this->etiqueta . ':',
+        $mform->_form->addElement('date_selector', $this->nom, $this->etiqueta,
                                   array('startyear' => 2000, 'optional' => false), null, '/');
 
     }
@@ -315,7 +323,10 @@ class fct_form_element_data extends fct_form_element_base_senzill {
 class fct_form_element_estatic extends fct_form_element_base {
 
     function definition($mform, &$data) {
-        $mform->_form->addElement('static', $this->nom, $this->etiqueta . ':');
+        if ($this->etiqueta) {
+            $this->etiqueta .= ':';
+        }
+        $mform->_form->addElement('static', $this->nom, $this->etiqueta);
     }
 
     function set_data(&$data, $valor) {
@@ -408,7 +419,7 @@ class fct_form_element_llista_menu extends fct_form_element_base {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
         foreach ($this->params->elements as $id => $etiqueta) {
             $mform->_form->addElement('select', "{$this->nom}_$id",
-                                      $etiqueta . ':', $this->params->opcions);
+                                      $etiqueta, $this->params->opcions);
             if ($this->congelat) {
                 $mform->_form->hardFreeze("{$this->nom}_$id");
             }
@@ -434,7 +445,7 @@ class fct_form_element_llista_menu extends fct_form_element_base {
 class fct_form_element_menu extends fct_form_element_base_senzill {
 
     function definition_senzill($mform) {
-        $mform->_form->addElement('select', $this->nom, $this->etiqueta . ':',
+        $mform->_form->addElement('select', $this->nom, $this->etiqueta,
                                   $this->params->opcions);
         $mform->_form->setType($this->nom, PARAM_INT);
     }
@@ -484,8 +495,7 @@ class fct_form_element_ocult extends fct_form_element_base {
 class fct_form_element_opcio extends fct_form_element_base_senzill {
 
     function definition_senzill($mform) {
-        $mform->_form->addElement('checkbox', $this->nom,
-                                  $this->etiqueta . ':');
+        $mform->_form->addElement('checkbox', $this->nom, $this->etiqueta);
     }
 
     function get_data(&$data) {
@@ -500,7 +510,7 @@ class fct_form_element_text extends fct_form_element_base_senzill {
             $this->params->size = 32;
         }
 
-        $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
+        $mform->_form->addElement('text', $this->nom, $this->etiqueta,
                            array('size' => $this->params->size));
 
         $mform->_form->setType($this->nom, PARAM_TEXT);

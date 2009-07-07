@@ -156,6 +156,7 @@
 
 .frases_areatext ul {
     margin: 5px 0;
+    list-style-type: none;
 }
 
 .frases_areatext li:hover {
@@ -163,6 +164,6 @@
     text-decoration: underline;
 }
 
-.hidden {
+.amagat {
     display: none;
 }
