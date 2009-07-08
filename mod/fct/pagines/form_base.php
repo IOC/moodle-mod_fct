@@ -389,13 +389,17 @@ class fct_form_element_hores extends fct_form_element_base {
 
 class fct_form_element_llista extends fct_form_element_base {
 
+    function _name($id) {
+        return $this->nom . '_' . md5($id);
+    }
+
     function definition($mform) {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
         foreach ($this->params->elements as $id => $etiqueta) {
-            $mform->_form->addElement('checkbox', "{$this->nom}_$id",
+            $mform->_form->addElement('checkbox', $this->_name($id),
                                       '', " $etiqueta");
             if ($this->congelat) {
-                $mform->_form->hardFreeze("{$this->nom}_$id");
+                $mform->_form->hardFreeze($this->_name($id));
             }
         }
     }
@@ -403,7 +407,7 @@ class fct_form_element_llista extends fct_form_element_base {
     function get_data(&$data) {
         $valor = array();
         foreach (array_keys($this->params->elements) as $id) {
-            if (!empty($data["{$this->nom}_$id"])) {
+            if (!empty($data[$this->_name($id)])) {
                 $valor[] = $id;
             }
         }
@@ -412,10 +416,10 @@ class fct_form_element_llista extends fct_form_element_base {
 
     function set_data(&$data, $valor) {
         foreach (array_keys($this->params->elements) as $id) {
-            unset($data["{$this->nom}_$id"]);
+            unset($data[$this->_name($id)]);
         }
         foreach ($valor as $id) {
-            $data["{$this->nom}_$id"] = 1;
+            $data[$this->_name($id)] = 1;
         }
     }
 }
