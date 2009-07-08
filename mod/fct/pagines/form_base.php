@@ -33,8 +33,8 @@ class fct_form_base {
         $this->stripslashes = $stripslashes;
         $this->configurar($pagina);
         $this->mform = new fct_form_moodle(get_class($this), $pagina->url,
-                                           $this->elements, $this->comprovacions,
-                                           $this->data);
+                                           $this->elements,
+                                           $this->comprovacions);
     }
 
     function barem_valoracio() {
@@ -139,21 +139,19 @@ class fct_form_base {
 class fct_form_moodle extends moodleform {
 
     var $botons = array();
-    var $data;
     var $elements;
     var $url;
 
-    function __construct($class, $url, $elements, $comprovacions, &$data) {
+    function __construct($class, $url, $elements, $comprovacions) {
         $this->url = $url;
         $this->elements = $elements;
         $this->comprovacions = $comprovacions;
-        $this->data = &$data;
         parent::__construct($url, null, 'post', '', array('class' => $class));
     }
 
     function definition() {
         foreach ($this->elements as $element) {
-            $element->definition($this, $this->data);
+            $element->definition($this);
         }
 
         foreach ($this->comprovacions as $comprovacio) {
@@ -204,7 +202,7 @@ class fct_form_element_base {
         $this->congelat = true;
     }
 
-    function definition($mform, &$data) {
+    function definition($mform) {
     }
 
     function get_data(&$data) {
@@ -223,7 +221,7 @@ class fct_form_element_base_senzill extends fct_form_element_base {
         }
     }
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         $this->definition_senzill($mform);
         if ($this->congelat) {
             $mform->_form->hardFreeze($this->nom);
@@ -286,7 +284,7 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
 
 class fct_form_element_boto extends fct_form_element_base {
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         $form = $mform->_form;
 
         if ($this->nom == 'cancellar') {
@@ -306,7 +304,7 @@ class fct_form_element_boto extends fct_form_element_base {
 
 class fct_form_element_capcalera extends fct_form_element_base {
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
     }
 }
@@ -331,7 +329,7 @@ class fct_form_element_data extends fct_form_element_base_senzill {
 
 class fct_form_element_estatic extends fct_form_element_base {
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         if ($this->etiqueta) {
             $this->etiqueta .= ':';
         }
@@ -391,7 +389,7 @@ class fct_form_element_hores extends fct_form_element_base {
 
 class fct_form_element_llista extends fct_form_element_base {
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
         foreach ($this->params->elements as $id => $etiqueta) {
             $mform->_form->addElement('checkbox', "{$this->nom}_$id",
@@ -424,7 +422,7 @@ class fct_form_element_llista extends fct_form_element_base {
 
 class fct_form_element_llista_menu extends fct_form_element_base {
 
-    function definition($mform, &$data) {
+    function definition($mform) {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
         foreach ($this->params->elements as $id => $etiqueta) {
             $mform->_form->addElement('select', "{$this->nom}_$id",
@@ -465,7 +463,7 @@ class fct_form_element_nombres extends fct_form_element_base {
 
     var $element;
 
-    function definition($mform, &$data)  {
+    function definition($mform) {
         $mform->_form->addElement('text', $this->nom, $this->etiqueta . ':',
                                   array('size' => 32));
         $mform->_form->setType($this->nom, PARAM_TEXT);
