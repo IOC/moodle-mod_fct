@@ -97,6 +97,9 @@ class fct_form_base {
 
     function valor($nom, $valor=null) {
         if ($valor === null) {
+            if (!isset($this->elements[$nom])) {
+                return null;
+            }
             if (!$this->elements[$nom]->congelat) {
                 $valor = $this->elements[$nom]->get_data($this->data);
                 if ($this->stripslashes) {
