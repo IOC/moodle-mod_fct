@@ -212,6 +212,53 @@ class fct_form_element_base {
     }
 }
 
+class fct_form_element_base_grup extends fct_form_element_base {
+
+    var $elements = array();
+
+    function __construct($tipus, $nom, $etiqueta, $params) {
+        parent::__construct($tipus, $nom, false, $params);
+        $this->etiqueta = $etiqueta;
+    }
+
+    function configurar() {
+    }
+
+    function definition($mform) {
+        $this->configurar();
+        foreach ($this->elements as $element) {
+            if ($this->congelat) {
+                $element->congelar();
+            }
+            $element->definition($mform);
+        }
+    }
+
+    function element($tipus, $nom, $etiqueta=false, $params=array()) {
+        $element_class = 'fct_form_element_' . $tipus;
+        $element = new $element_class($tipus, "{$this->nom}_{$nom}",
+                                      $etiqueta, $params);
+        $this->elements[$nom] = $element;
+    }
+
+    function get_data(&$data) {
+        $valor = new object;
+        foreach ($this->elements as $nom => $element) {
+            $valor->$nom = $element->get_data($data);
+        }
+        return $valor;
+    }
+
+    function set_data(&$data, $valor) {
+        foreach ($this->elements as $nom => $element) {
+            if (isset($valor->$nom)) {
+                $element->set_data($data, $valor->$nom);
+            }
+        }
+    }
+
+}
+
 class fct_form_element_base_senzill extends fct_form_element_base {
 
     function __construct($tipus, $nom, $etiqueta, $params) {
