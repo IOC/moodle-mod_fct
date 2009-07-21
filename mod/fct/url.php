@@ -59,10 +59,6 @@ class fct_url {
         return self::url('dades_centre', array('fct' => $fct_id));
     }
 
-    function dades_centre_concertat($quadern_id) {
-        return self::url('dades_centre_concertat', array('quadern' => $quadern_id));
-    }
-
     function dades_centre_quadern($quadern_id) {
         return self::url('dades_centre_quadern', array('quadern' => $quadern_id));
     }
