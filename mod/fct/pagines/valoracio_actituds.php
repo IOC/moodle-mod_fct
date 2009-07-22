@@ -62,9 +62,11 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
 
     function mostrar() {
         $this->mostrar_capcalera();
-        $this->form->valor('valoracio_actituds',
-                           fct_db::valoracio_actituds($this->quadern->id,
-                                                      $this->final));
+
+        $this->form->valor('valoracio_actituds', $this->final ?
+                           $this->quadern->valoracio_final :
+                           $this->quadern->valoracio_parcial);
+
         $this->form->mostrar();
         $this->mostrar_peu();
     }
@@ -75,15 +77,16 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $ok = fct_db::actualitzar_valoracio_actituds(
-                $this->quadern->id, $this->final,
-                $this->form->valor('valoracio_actituds'));
-            if ($ok) {
-                $this->registrar('update valoracio_actituds', null,
-                    $this->final ? 'final' : 'parcial');
+            if ($this->final) {
+                $this->quadern->valoracio_final =
+                    $this->form->valor('valoracio_actituds');
             } else {
-                $this->error('desar_valoracio_actituds');
+                $this->quadern->valoracio_parcial =
+                    $this->form->valor('valoracio_actituds');
             }
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update valoracio_actituds', null,
+                             $this->final ? 'final' : 'parcial');
             redirect($this->url);
         }
         $this->mostrar();

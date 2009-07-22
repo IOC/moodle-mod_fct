@@ -23,18 +23,12 @@ fct_require('pagines/base_quadern.php',
 class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 
     var $ultim_quadern;
-    var $qualificacio;
     var $form;
     var $permis_editar;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->ultim_quadern = fct_db::ultim_quadern($this->quadern->id);
-        $this->qualificacio = fct_db::qualificacio_global($this->quadern->cicle,
-                                                          $this->quadern->alumne);
-        if (!$this->qualificacio) {
-            $this->error('recuperar_qualificacio_global');
-        }
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         $this->permis_editar = ($this->permis_admin or ($this->quadern->estat and
@@ -46,7 +40,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         $this->url = fct_url::qualificacio_global($this->quadern->id);
         $this->titol = 'qualificacio_global';
         $this->pestanya = 'qualificacio_global';
-        $this->form = new fct_form_qualificacio($this);
+        $this->form = new fct_form_qualificacio($this, true);
     }
 
     function mostrar() {
@@ -56,7 +50,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
             $avis = fct_string('qualificacio_global_a_ultim_quadern', $url);
             echo "<p>$avis</p>";
         } else {
-            $this->form->valors($this->qualificacio);
+            $this->form->valors($this->quadern->qualificacio_global);
             $this->form->mostrar();
         }
         $this->mostrar_peu();
@@ -68,18 +62,12 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $qualificacio = $this->form->valors();
-            $qualificacio->id = $this->qualificacio->id;
-            $qualificacio->cicle = $this->qualificacio->cicle;
-            $qualificacio->alumne = $this->qualificacio->alumne;
-            $ok = fct_db::actualitzar_qualificacio_global($qualificacio);
-            if ($ok) {
-                $barem = $this->form->barem_valoracio();
-                $this->registrar('update qualificacio_global', null,
-                                 $barem[$qualificacio->qualificacio]);
-            } else {
-                $this->error('desar_qualificacio_global');
-            }
+            fct_copy_vars($this->form->valors(),
+                          $this->quadern->qualificacio_global);
+            $this->diposit->afegir_quadern($this->quadern);
+            $barem = $this->form->barem_valoracio();
+            $this->registrar('update qualificacio_global', null,
+                             $barem[$this->quadern->qualificacio_global->apte]);
             redirect($this->url);
         }
         $this->mostrar();

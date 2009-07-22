@@ -23,7 +23,7 @@ class fct_form_qualificacio extends fct_form_base {
 
     function configurar($pagina) {
         $this->element('capcalera', 'qualificacio_quadern',  $pagina->titol);
-        $this->element('menu', 'qualificacio', 'qualificacio',
+        $this->element('menu', 'apte', 'qualificacio',
                        array('opcions' => $this->barem_qualificacio()));
         $this->element('menu', 'nota', false,
                        array('opcions' => $this->barem_valoracio()));

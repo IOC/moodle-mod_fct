@@ -48,15 +48,10 @@ class fct_form_dades_alumne extends fct_form_base {
 
 class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
-    var $alumne;
     var $form;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->alumne = fct_db::dades_alumne($this->fct->id, $this->quadern->alumne);
-        if (!$this->alumne) {
-            $this->error('recuperar_alumne');
-        }
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
@@ -65,12 +60,12 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
         $this->url = fct_url::dades_alumne($this->quadern->id);
         $this->subpestanya = 'dades_alumne';
-        $this->form = new fct_form_dades_alumne($this);
+        $this->form = new fct_form_dades_alumne($this, true);
     }
 
     function mostrar() {
         $this->form->valor('nom', $this->nom_usuari($this->quadern->alumne, true));
-        $this->form->valors($this->alumne);
+        $this->form->valors($this->quadern->dades_alumne);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -82,16 +77,9 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $dades = $this->form->valors();
-            $dades->id = $this->alumne->id;
-            $dades->fct = $this->fct->id;
-            $dades->alumne = $this->quadern->alumne;
-            $ok = fct_db::actualitzar_dades_alumne($dades);
-            if ($ok) {
-                $this->registrar('update dades_alumne');
-            } else {
-                $this->error('desar_alumne');
-            }
+            fct_copy_vars($this->form->valors(), $this->quadern->dades_alumne);
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update dades_alumne');
             redirect($this->url);
         }
         $this->mostrar();

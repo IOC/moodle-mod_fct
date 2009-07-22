@@ -26,27 +26,21 @@ class fct_pagina_base_quadern extends fct_pagina_base {
     var $titol;
 
     function configurar($quadern_id) {
-        global $USER;
-
-        $this->quadern = fct_db::quadern($quadern_id);
-        if (!$this->quadern) {
-            $this->error('recuperar_quadern');
-        }
-
-        $this->cicle = fct_db::cicle($this->quadern->cicle);
-        if (!$this->cicle) {
-            $this->error('recuperar_cicle');
-        }
+        $this->quadern = $this->diposit->quadern($quadern_id);
+        $this->cicle = $this->diposit->cicle($this->quadern->cicle);
 
         parent::configurar($this->cicle->fct);
 
-        $this->comprovar_permis($this->permis_admin
-            or ($this->permis_alumne and $this->quadern->alumne == $USER->id)
-            or ($this->permis_tutor_centre and $this->quadern->tutor_centre == $USER->id)
-            or ($this->permis_tutor_empresa and $this->quadern->tutor_empresa == $USER->id));
+        $this->comprovar_permis($this->usuari->es_administrador
+            or ($this->usuari->es_alumne and
+                $this->quadern->alumne == $this->usuari->id)
+            or ($this->usuari->es_tutor_centre and
+                $this->quadern->tutor_centre == $this->usuari->id)
+            or ($this->usuari->es_tutor_empresa and
+                $this->quadern->tutor_empresa == $this->usuri->id));
 
         $this->titol = $this->nom_usuari($this->quadern->alumne)
-            .' ('.$this->quadern->nom_empresa.')';
+            .' ('.$this->quadern->empresa->nom.')';
         $this->afegir_navegacio($this->titol,
             fct_url::quadern($this->quadern->id));
     }

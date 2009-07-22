@@ -23,10 +23,9 @@ fct_require('pagines/base_cicles.php',
 class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 
     function comprovar_nom($valors) {
-        if (fct_db::cicle_duplicat($this->fct->id, addslashes($valors->nom))) {
+        if ($this->diposit->cicles($this->fct->id, $valors->nom)) {
             return array('nom' => fct_string('cicle_formatiu_duplicat'));
         }
-
         return true;
     }
 
@@ -41,15 +40,14 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
         $form = new fct_form_cicle($this);
 
         if ($form->validar()) {
-            $id = fct_db::afegir_cicle($this->fct->id, $form->valor('nom'),
-                                       $form->valor('activitats'));
-            if ($id) {
-                $this->registrar('add cicle', fct_url::cicle($id),
-                                 $form->valor('nom'));
-            } else {
-                $this->error('afegir_cicle');
-            }
-            redirect(fct_url::cicle($id));
+            $cicle = new fct_cicle;
+            $cicle->fct = $this->fct->id;
+            $cicle->nom = $form->valor('nom');
+            $cicle->text_activitats($form->valor('activitats'));
+            $this->diposit->afegir_cicle($cicle);
+            $this->registrar('add cicle', fct_url::cicle($cicle->id),
+                             $cicle->nom);
+            redirect(fct_url::cicle($cicle->id));
         }
 
         $this->mostrar_capcalera();

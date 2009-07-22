@@ -28,24 +28,18 @@ class fct_pagina_dades_centre extends fct_pagina_base {
 
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->comprovar_permis($this->permis_admin);
-
+        $this->comprovar_permis($this->usuari->es_administrador);
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
-
-        $this->centre = fct_db::dades_centre($this->fct->id);
-        if (!$this->centre) {
-            $this->error('recuperar_centre_docent');
-        }
 
         $this->url = fct_url::dades_centre($this->fct->id);
         $this->pestanya = 'dades_centre';
         $this->afegir_navegacio(fct_string('dades_centre'));
 
-        $this->form = new fct_form_dades_centre($this);
+        $this->form = new fct_form_dades_centre($this, true);
     }
 
     function mostrar() {
-        $this->form->valors($this->centre);
+        $this->form->valors($this->fct->centre);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -57,15 +51,11 @@ class fct_pagina_dades_centre extends fct_pagina_base {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $centre = $this->form->valors();
-            $centre->id = $this->centre->id;
-            $centre->fct = $this->centre->fct;
-            $ok = fct_db::actualitzar_dades_centre($centre);
-            if ($ok) {
-                $this->registrar('update dades_centre');
-            } else {
-                $this->error('desar_centre_docent');
+            foreach ($this->form->valors() as $nom => $valor) {
+                $this->fct->centre->$nom = $valor;
             }
+            $this->diposit->afegir_fct($this->fct);
+            $this->registrar('update dades_centre');
             redirect($this->url);
         }
         $this->mostrar();

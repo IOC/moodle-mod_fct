@@ -20,20 +20,28 @@
 fct_require('pagines/base_dades_quadern.php',
             'pagines/form_base.php');
 
+class fct_form_element_horari extends fct_form_element_base_grup {
+
+    function configurar() {
+        $this->element('capcalera', "horari", 'horari_practiques');
+        $this->element('estatic', "codi", 'conveni');
+        $this->element('text', "dilluns", 'dilluns');
+        $this->element('text', "dimarts", 'dimarts');
+        $this->element('text', "dimecres", 'dimecres');
+        $this->element('text', "dijous", 'dijous');
+        $this->element('text', "divendres", 'divendres');
+        $this->element('text', "dissabte", 'dissabte');
+        $this->element('text', "diumenge", 'diumenge');
+    }
+
+}
+
 class fct_form_dades_horari extends fct_form_base {
 
     function configurar($pagina) {
 
-        foreach(array_keys($pagina->horaris) as $id) {
-            $this->element('capcalera', "horari_$id", 'horari_practiques');
-            $this->element('estatic', "codi_$id", 'conveni');
-            $this->element('text', "dilluns_$id", 'dilluns');
-            $this->element('text', "dimarts_$id", 'dimarts');
-            $this->element('text', "dimecres_$id", 'dimecres');
-            $this->element('text', "dijous_$id", 'dijous');
-            $this->element('text', "divendres_$id", 'divendres');
-            $this->element('text', "dissabte_$id", 'dissabte');
-            $this->element('text', "diumenge_$id", 'diumenge');
+        foreach($pagina->quadern->convenis as $conveni) {
+            $this->element('horari', "horari_{$conveni->id}", false);
         }
 
         if ($pagina->accio == 'veure') {
@@ -50,15 +58,10 @@ class fct_form_dades_horari extends fct_form_base {
 
 class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
-    var $dies = array('dilluns', 'dimarts', 'dimecres', 'dijous',
-                      'divendres', 'dissabte', 'diumenge');
-    var $horaris;
     var $form;
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-
-        $this->horaris = fct_db::horaris($this->quadern->id);
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
@@ -67,15 +70,22 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
         $this->url = fct_url::dades_horari($this->quadern->id);
         $this->subpestanya = 'dades_horari';
-        $this->form = new fct_form_dades_horari($this);
+        $this->form = new fct_form_dades_horari($this, true);
     }
 
     function mostrar() {
-        foreach ($this->horaris as $id => $horari) {
-            $this->form->valor("codi_$id", $horari->codi);
-            foreach ($this->dies as $dia) {
-                $this->form->valor("{$dia}_{$id}", $horari->$dia);
-            }
+        foreach ($this->quadern->convenis as $conveni) {
+            $valor = (object) array(
+                'codi' => $conveni->codi,
+                'dilluns' => $conveni->horari->dilluns,
+                'dimarts' => $conveni->horari->dimarts,
+                'dimecres' => $conveni->horari->dimecres,
+                'dijous' => $conveni->horari->dijous,
+                'divendres' => $conveni->horari->divendres,
+                'dissabte' => $conveni->horari->dissabte,
+                'diumenge' => $conveni->horari->diumenge,
+            );
+            $this->form->valor("horari_{$conveni->id}", $valor);
         }
         $this->mostrar_capcalera();
         $this->form->mostrar();
@@ -88,18 +98,20 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $ok = true;
-            foreach ($this->horaris as $id => $horari) {
-                foreach ($this->dies as $dia) {
-                    $horari->$dia = $this->form->valor("{$dia}_{$id}");
+            foreach ($this->quadern->convenis as $conveni) {
+                $valor = $this->form->valor("horari_{$conveni->id}");
+                if ($valor) {
+                    $conveni->horari->dilluns = $valor->dilluns;
+                    $conveni->horari->dimarts = $valor->dimarts;
+                    $conveni->horari->dimecres = $valor->dimecres;
+                    $conveni->horari->dijous = $valor->dijous;
+                    $conveni->horari->divendres = $valor->divendres;
+                    $conveni->horari->dissabte = $valor->dissabte;
+                    $conveni->horari->diumenge = $valor->diumenge;
                 }
-                $ok = $ok && fct_db::actualitzar_horari($horari);
             }
-            if ($ok) {
-                $this->registrar('update dades_horari');
-            } else {
-                $this->error('error_desar_horari');
-            }
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update dades_horari');
             redirect($this->url);
         }
         $this->mostrar();

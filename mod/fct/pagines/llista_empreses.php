@@ -23,8 +23,12 @@ fct_require('pagines/base.php',
 class fct_form_llista_empreses extends fct_form_base {
 
     function configurar($pagina) {
+        $elements = array();
+        foreach ($pagina->cicles as $cicle) {
+            $elements[$cicle->id] = $cicle->nom;
+        }
         $this->element('llista', 'cicles', 'llista_empreses',
-                       array('elements' => $pagina->cicles));
+                       array('elements' => $elements));
         $this->element('capcalera', 'configuracio', 'configuracio');
         $opcions = array(1 => 'Excel', 2 => 'CSV');
         $this->element('menu', 'format', 'format',
@@ -44,13 +48,13 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         parent::configurar(optional_param('fct', 0, PARAM_INT),
             optional_param('id', 0, PARAM_INT));
         $this->comprovar_permis($this->permis_admin);
+        $this->cicles = $this->diposit->cicles($this->fct->id);
         $this->url = fct_url::llista_empreses($this->fct->id);
         $this->pestanya = 'empreses';
         $this->afegir_navegacio(fct_string('llista_empreses'), $this->url);
     }
 
     function processar() {
-        $this->cicles = fct_db::cicles($this->fct->id);
         if ($this->cicles) {
             $form = new fct_form_llista_empreses($this);
             if ($form->validar()) {

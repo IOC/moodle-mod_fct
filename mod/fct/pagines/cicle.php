@@ -26,31 +26,26 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     var $n_quaderns;
 
     function comprovar_nom($valors) {
-        if (fct_db::cicle_duplicat($this->fct->id, addslashes($valors->nom),
-                                   $this->cicle->id)) {
-            return array('nom' => fct_string('cicle_formatiu_duplicat'));
+        if ($valors->nom != $this->cicle->nom) {
+            if ($this->diposit->cicles($this->cicle->fct, $valors->nom)) {
+                return array('nom' => fct_string('cicle_formatiu_duplicat'));
+            }
         }
-
         return true;
     }
 
     function configurar() {
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar',
                                       'suprimir', 'confirmar'), 'veure');
-        $this->cicle = fct_db::cicle(required_param('id', PARAM_INT));
-        if (!$this->cicle) {
-            $this->error('recuperar_cicle');
-        }
-        $this->n_quaderns = fct_db::nombre_quaderns_cicle($this->cicle->id);
-
+        $this->cicle = $this->diposit->cicle(required_param('id', PARAM_INT));
         parent::configurar($this->cicle->fct);
-
         $this->url = fct_url::cicle($this->cicle->id);
-        $this->form = new fct_form_cicle($this);
+        $this->form = new fct_form_cicle($this, true);
     }
 
     function mostrar() {
-        $this->form->valors($this->cicle);
+        $this->form->valor('nom', $this->cicle->nom);
+        $this->form->valor('activitats', $this->cicle->text_activitats());
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -62,30 +57,21 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $ok = fct_db::suprimir_cicle($this->cicle->id);
-        if ($ok) {
-            $this->registrar('delete cicle',
-                fct_url::llista_cicles($this->fct->id),
-                $this->cicle->nom);
-        } else {
-            $this->error('suprimir_cicle');
-        }
+        $this->diposit->suprimir_cicle($this->cicle);
+        $this->registrar('delete cicle',
+                         fct_url::llista_cicles($this->fct->id),
+                         $this->cicle->nom);
         redirect(fct_url::llista_cicles($this->fct->id));
     }
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $cicle = array('id' => $this->cicle->id,
-                           'nom' => $this->form->valor('nom'),
-                           'activitats' => $this->form->valor('activitats'));
-            $ok = fct_db::actualitzar_cicle((object) $cicle);
-            if ($ok) {
-                $this->registrar('update cicle',
-                                 fct_url::cicle($this->cicle->id),
-                                 $cicle['nom']);
-            } else {
-                $this->error('desar_cicle');
-            }
+            $this->cicle->nom = $this->form->valor('nom');
+            $this->cicle->text_activitats($this->form->valor('activitats'));
+            $this->diposit->afegir_cicle($this->cicle);
+            $this->registrar('update cicle',
+                             fct_url::cicle($this->cicle->id),
+                             $this->cicle->nom);
             redirect(fct_url::cicle($this->cicle->id));
         }
 
@@ -99,10 +85,10 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     function processar_suprimir() {
         $this->mostrar_capcalera();
 
-        if ($this->n_quaderns) {
+        if ($this->cicle->n_quaderns) {
             $missatge = fct_string('cicle_formatiu_no_suprimible',
                                    array('nom_cicle' => $this->cicle->nom,
-                                         'n_quaderns' => $this->n_quaderns));
+                                         'n_quaderns' => $this->cicle->n_quaderns));
             echo "<p>$missatge</p>";
         } else {
             notice_yesno(fct_string('segur_suprimir_cicle_formatiu', $this->cicle->nom),

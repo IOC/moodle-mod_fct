@@ -17,13 +17,13 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_activitat_pla.php');
+fct_require('pagines/base_pla_activitats.php');
 
 class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats  {
 
     function configurar() {
         $this->configurar_accio(array('suprimir', 'confirmar'), 'suprimir');
-        parent::configurar( required_param('quadern', PARAM_INT));
+        parent::configurar(required_param('quadern', PARAM_INT));
         $this->url = fct_url::suprimir_activitats_pla($this->quadern->id);
         $this->comprovar_permis($this->permis_editar);
         $this->subpestanya = 'suprimir_activitats_pla';
@@ -31,13 +31,12 @@ class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats 
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $ok = fct_db::suprimir_activitats_pla($this->quadern->id);
-        if ($ok) {
-            $this->registrar('delete activitats_pla',
-                fct_url::pla_activitats($this->quadern->id));
-        } else {
-           $this->error('suprimir_activitats');
+        $activitats = $this->diposit->activitats($this->quadern->id);
+        foreach ($activitats as $activitat) {
+            $this->diposit->suprimir_activitat($activitat);
         }
+        $this->registrar('delete activitats_pla',
+                         fct_url::pla_activitats($this->quadern->id));
         redirect(fct_url::pla_activitats($this->quadern->id));
     }
 

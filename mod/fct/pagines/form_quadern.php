@@ -44,7 +44,7 @@ class fct_form_quadern extends fct_form_base {
                        array('opcions' => $opcions));
 
         $this->element('menu', 'cicle', 'cicle_formatiu',
-                       array('opcions' => fct_db::cicles($pagina->fct->id)));
+                       array('opcions' => $this->opcions_cicle($pagina)));
 
         $opcions = array(1 => '<span class="estat_obert">'
                          . fct_string('estat_obert') . '</span>',
@@ -68,6 +68,15 @@ class fct_form_quadern extends fct_form_base {
         }
     }
 
+    function opcions_cicle($pagina) {
+        $opcions = array();
+        $cicles = $pagina->diposit->cicles($pagina->fct->id);
+        foreach ($cicles as $cicle) {
+            $opcions[$cicle->id] = $cicle->nom;
+        }
+        return $opcions;
+    }
+
     function opcions_usuari($pagina, $capability, $usuari, $usuari_nul=true) {
         $opcions = array();
         if ($usuari_nul) {
@@ -76,7 +85,7 @@ class fct_form_quadern extends fct_form_base {
 
         $email = ($pagina->accio == 'vuere');
 
-        $records = get_users_by_capability($pagina->context, $capability,
+        $records = get_users_by_capability($pagina->fct->context, $capability,
                                            'u.id', 'u.lastname, u.firstname',
                                            '', '', '', '', false);
         if ($records) {

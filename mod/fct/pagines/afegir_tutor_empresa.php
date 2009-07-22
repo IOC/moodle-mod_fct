@@ -99,14 +99,14 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         if ($form->validar()) {
             $dni = strtolower($form->valor('dni'));
             $contrasenya = $this->generar_contrasenya();
-            $id = fct_db::afegir_tutor_empresa($this->course->id,
+            $id = fct_db::afegir_tutor_empresa($this->fct->course->id,
                                                $dni, $contrasenya,
                                                $form->valor('nom'),
                                                $form->valor('cognoms'),
                                                $form->valor('email'));
             if ($id) {
                 global $CFG;
-                $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->course->id}";
+                $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->fct->course->id}";
                 $this->registrar('add tutor_empresa', $url, $id);
             } else {
                 $this->error('afegir_tutor_empresa');

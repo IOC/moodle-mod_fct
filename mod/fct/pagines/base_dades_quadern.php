@@ -26,8 +26,10 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
     function configurar($quadern_id) {
         parent::configurar($quadern_id);
         $this->pestanya = 'dades_generals';
-        $this->permis_editar = ($this->permis_admin or $this->quadern->estat
-                                and ($this->permis_tutor_centre or $this->permis_alumne));
+        $this->permis_editar = ($this->usuari->es_administrador
+                                or $this->quadern->estat
+                                and ($this->usuari->es_tutor_centre
+                                     or $this->usuari->es_alumne));
     }
 
     function definir_pestanyes() {

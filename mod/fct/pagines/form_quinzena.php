@@ -36,11 +36,13 @@ class fct_form_quinzena extends fct_form_base {
         $this->element('ocult', 'periode_inici');
         $this->element('ocult', 'periode_final');
 
-        if ($pagina->activitats) {
-            $this->element('llista', 'activitats_realitzades',
-                           'activitats_realitzades',
-                           array('elements' => $pagina->activitats));
+        $elements = array();
+        foreach ($pagina->activitats as $activitat) {
+            $elements[$activitat->id] = $activitat->descripcio;
         }
+        $this->element('llista', 'activitats_realitzades',
+                       'activitats_realitzades',
+                       array('elements' => $elements));
 
         $this->element('capcalera', 'observacions', 'valoracions_observacions');
         $this->element('areatext' , 'valoracions', 'valoracions');

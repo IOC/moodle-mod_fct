@@ -23,9 +23,14 @@ fct_require('pagines/base_quadern.php',
 class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function comprovar_nom_empresa($valors) {
-        if (fct_db::quadern_duplicat($this->fct->id, addslashes($valors->alumne),
-                addslashes($valors->nom_empresa), $this->quadern->id)) {
-            return array('nom_empresa' => fct_string('quadern_duplicat'));
+        if ($valors->alumne != $this->quadern->alumne
+            or $valors->nom_empresa != $this->quadern->empresa->nom) {
+            $especificacio = new fct_especificacio_quaderns($this->fct);
+            $especificacio->alumne = $valors->alumne;
+            $especificacio->empresa = $valors->nom_empresa;
+            if ($this->diposit->quaderns($especificacio)) {
+                return array('nom_empresa' => fct_string('quadern_duplicat'));
+            }
         }
         return true;
     }
@@ -41,11 +46,12 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
         $this->url = fct_url::quadern($this->quadern->id);
         $this->pestanya = 'quadern';
-        $this->form = new fct_form_quadern($this);
+        $this->form = new fct_form_quadern($this, true);
     }
 
     function mostrar() {
         $this->form->valors($this->quadern);
+        $this->form->valor('nom_empresa', $this->quadern->empresa->nom);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -65,14 +71,10 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $quadern = $this->form->valors();
-            $quadern->id = $this->quadern->id;
-            $ok = fct_db::actualitzar_quadern($quadern);
-            if ($ok) {
-                $this->registrar('update quadern');
-            } else {
-                $this->error('desar_quadern');
-            }
+            fct_copy_vars($this->form->valors(), $this->quadern);
+            $this->quadern->empresa->nom = $this->form->valor('nom_empresa');
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update quadern');
             redirect(fct_url::quadern($this->quadern->id));
         }
         $this->mostrar();

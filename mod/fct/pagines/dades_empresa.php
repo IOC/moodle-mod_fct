@@ -24,7 +24,7 @@ class fct_form_dades_empresa extends fct_form_base {
 
     function configurar($pagina) {
         $this->element('capcalera', 'dades_empresa', 'empresa');
-        $this->element('estatic', 'nom', 'nom');
+        $this->element('estatic', 'nom_empresa', 'nom');
         $this->element('text', 'adreca', 'adreca');
         $this->element('text', 'codi_postal', 'codi_postal',
                        array('size' => 8));
@@ -53,10 +53,6 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->empresa = fct_db::dades_empresa($this->quadern->id);
-        if (!$this->empresa) {
-            $this->error('recuperar_empresa');
-        }
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
         if ($this->accio != 'veure') {
@@ -69,8 +65,8 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->valor('nom', $this->quadern->nom_empresa);
-        $this->form->valors($this->empresa);
+        $this->form->valors($this->quadern->empresa);
+        $this->form->valor('nom_empresa', $this->quadern->empresa->nom);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -82,15 +78,9 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $dades = $this->form->valors();
-            $dades->id = $this->empresa->id;
-            $dades->quadern = $this->empresa->quadern;
-            $ok = fct_db::actualitzar_dades_empresa($dades);
-            if ($ok) {
-                $this->registrar('update dades_empresa');
-            } else {
-                $this->error('desar_empresa');
-            }
+            fct_copy_vars($this->form->valors(), $this->quadern->empresa);
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update dades_empresa');
             redirect($this->url);
         }
         $this->mostrar();

@@ -39,16 +39,16 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $quinzenes = fct_db::quinzenes($this->quadern->id);
+        $quinzenes = $this->diposit->quinzenes($this->quadern->id);
 
         if (!$quinzenes) {
            echo '<p>' . fct_string('cap_quinzena') . '</p>';
         } else {
             foreach ($quinzenes as $quinzena) {
                 $url = fct_url::quinzena($quinzena->id);
-                $any = '<a href="'.$url.'">'.$quinzena->any_.'</a>';
+                $any = '<a href="'.$url.'">'.$quinzena->any.'</a>';
                 $periode = '<a href="'.$url.'">'.self::nom_periode($quinzena->periode).'</a>';
-                $dies = '<a href="'.$url.'">'.$quinzena->dies.'</a>';
+                $dies = '<a href="'.$url.'">'.count($quinzena->dies).'</a>';
                 $hores = '<a href="'.$url.'">'.(float)$quinzena->hores.'</a>';
                 $taula->add_data(array($any, $periode, $dies, $hores));
             }

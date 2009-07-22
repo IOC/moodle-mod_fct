@@ -23,7 +23,7 @@ class fct_pagina_base_cicles extends fct_pagina_base {
 
     function configurar($fct_id) {
         parent::configurar($fct_id);
-        $this->comprovar_permis($this->permis_admin);
+        $this->comprovar_permis($this->usuari->es_administrador);
         $this->pestanya = 'cicles';
         $this->afegir_navegacio(fct_string('cicles_formatius'));
     }

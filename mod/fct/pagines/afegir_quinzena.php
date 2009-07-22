@@ -25,9 +25,10 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     var $activitats;
 
     function comprovar_quinzena($valors) {
-        if (fct_db::quinzena_duplicada($this->quadern->id,
-                addslashes($valors->any),
-                addslashes($valors->periode))) {
+        $quinzenes = $this->diposit->quinzenes($this->quadern->id,
+                                               $valors->any,
+                                               $valors->periode);
+        if ($quinzenes) {
             return array('any' => fct_string('quinzena_duplicada'),
                          'periode' => fct_string('quinzena_duplicada'));
         }
@@ -40,52 +41,47 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         $this->url = fct_url::afegir_quinzena($this->quadern->id);
         $this->subpestanya = 'afegir_quinzena';
-        $this->activitats = fct_db::activitats_pla($this->quadern->id);
+        $this->activitats = $this->diposit->activitats($this->quadern->id);
     }
 
     function processar_afegir() {
-        $form = new fct_form_quinzena($this);
+        $form = new fct_form_quinzena($this, true);
         if ($form->validar()) {
-            $quinzena = (object) array(
-                'quadern' => $this->quadern->id,
-                'any' => $form->valor('any'),
-                'periode' => $form->valor('periode'),
-                'hores' => $form->valor('hores'),
-                'valoracions' => $form->valor('valoracions'),
-                'observacions_alumne' => $form->valor('observacions_alumne'),
-            );
+            $quinzena = new fct_quinzena;
+            $quinzena->quadern = $this->quadern->id;
+            $quinzena->any = $form->valor('any');
+            $quinzena->periode = $form->valor('periode');
+            $quinzena->hores = $form->valor('hores');
+            $quinzena->valoracions = $form->valor('valoracions');
+            $quinzena->observacions_alumne = $form->valor('observacions_alumne');
             if ($this->permis_editar_centre) {
                 $quinzena->observacions_centre = $form->valor('observacions_centre');
             }
             if ($this->permis_editar_empresa) {
                 $quinzena->observacions_empresa = $form->valor('observacions_empresa');
             }
-            $dies = $this->filtrar_dies($form->valor('dies'),
-                                        $form->valor('periode'),
-                                        $form->valor('any'));
-            $id = fct_db::afegir_quinzena($quinzena, $dies,
-                                          $form->valor('activitats_realitzades'));
-            if ($id) {
-                $this->registrar('add quinzena', fct_url::quinzena($id),
-                                 $this->nom_periode($form->valor('periode'),
-                                                    $form->valor('any')));
-            } else {
-                $this->error('afegir_quinzena');
-            }
-            redirect(fct_url::quinzena($id));
+            $quinzena->dies = $this->filtrar_dies($form->valor('dies'),
+                                                  $form->valor('periode'),
+                                                  $form->valor('any'));
+            $quinzena->activitats = $form->valor('activitats_realitzades');
+            $this->diposit->afegir_quinzena($quinzena);
+            $this->registrar('add quinzena', fct_url::quinzena($quinzena->id),
+                             $this->nom_periode($quinzena->periode,
+                                                $quinzena->any));
+            redirect(fct_url::quinzena($quinzena->id));
         }
 
         list($any, $periode) = $this->quinzena_actual();
         $form->valor('any', $any);
         $form->valor('periode', $periode);
         $form->valor('any_inici',
-                     $this->any_data($this->data_inici));
+                     $this->any_data($this->quadern->data_inici()));
         $form->valor('any_final',
-                     $this->any_data($this->data_final));
+                     $this->any_data($this->quadern->data_final()));
         $form->valor('periode_inici',
-                     $this->periode_data($this->data_inici));
+                     $this->periode_data($this->quadern->data_inici()));
         $form->valor('periode_final',
-                     $this->periode_data($this->data_final));
+                     $this->periode_data($this->quadern->data_final()));
         $this->mostrar_capcalera();
         $form->mostrar();
         $this->mostrar_peu();

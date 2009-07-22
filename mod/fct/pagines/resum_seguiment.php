@@ -29,11 +29,11 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
 
     function calcular_resum() {
         $resum = array();
-        $records = fct_db::quinzenes($this->quadern->id);
-        if ($records) {
-            foreach ($records as $record) {
-                $any = $record->any_;
-                $periode = $record->periode;
+        $quinzenes = $this->diposit->quinzenes($this->quadern->id);
+        if ($quinzenes) {
+            foreach ($quinzenes as $quinzena) {
+                $any = $quinzena->any;
+                $periode = $quinzena->periode;
                 $mes = (int) ($periode / 2);
                 $trimestre = (int) ($mes / 3);
 
@@ -50,10 +50,10 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
                         'dies' => 0, 'hores' => 0);
                 }
 
-                $resum[$any][$trimestre][$mes]->dies += $record->dies;
-                $resum[$any][$trimestre][$mes]->hores += $record->hores;
-                $this->total_hores += $record->hores;
-                $this->total_dies += $record->dies;
+                $resum[$any][$trimestre][$mes]->dies += count($quinzena->dies);
+                $resum[$any][$trimestre][$mes]->hores += $quinzena->hores;
+                $this->total_hores += $quinzena->hores;
+                $this->total_dies += count($quinzena->dies);
             }
         }
         $this->resum = $resum;

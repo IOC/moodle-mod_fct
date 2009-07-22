@@ -55,15 +55,21 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->dades = fct_db::dades_relatives($this->quadern->id);
-        if (!$this->dades) {
-            $this->error('recuperar_dades_relatives');
-        }
-        $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
+        $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'),
+                                'veure');
 
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }
+
+        $this->quadern->hores_realitzades =
+            fct_db::hores_realitzades_quadern($this->quadern->id);
+        $this->quadern->hores_exempcio =
+            ceil((float) $this->quadern->exempcio / 100
+                 * $this->quadern->hores_credit);
+        $this->quadern->hores_pendents = (string)
+            max(0, $this->quadern->hores_credit
+                - $this->quadern->hores_realitzades);
 
         $this->url = fct_url::dades_relatives($this->quadern->id);
         $this->subpestanya = 'dades_relatives';
@@ -71,10 +77,10 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
     }
 
     function mostrar() {
-        $this->form->valors($this->dades);
+        $this->form->valors($this->quadern);
         $this->form->valor('hores_realitzades_detall',
                            fct_string('hores_realitzades_detall',
-                                      $this->dades));
+                                      $this->quadern));
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -86,15 +92,10 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $dades = $this->form->valors();
-            $dades->id = $this->dades->id;
-            $dades->quadern = $this->dades->quadern;
-            $ok = fct_db::actualitzar_dades_relatives($dades);
-            if ($ok) {
-                $this->registrar('update dades_relatives');
-            } else {
-                $this->error('desar_dades_relatives');
-            }
+            fct_copy_vars($this->form->valors(), $this->quadern,
+                          array('hores_credit', 'exempcio', 'hores_anteriors'));
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update dades_relatives');
             redirect($this->url);
         }
         $this->mostrar();

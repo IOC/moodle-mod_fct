@@ -17,12 +17,11 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+fct_require('domini.php', 'diposit.php');
+
 class fct_pagina_base {
 
     var $accio = false;
-    var $cm;
-    var $course;
-    var $context;
     var $fct;
     var $param = array();
     var $permis_admin;
@@ -37,7 +36,11 @@ class fct_pagina_base {
     var $pestanya = false;
     var $subpestanya = false;
 
+    var $diposit;
+    var $usuari;
+
     function __construct() {
+        $this->diposit = new fct_diposit();
         $this->configurar();
         $this->processar();
     }
@@ -62,46 +65,26 @@ class fct_pagina_base {
     }
 
     function configurar($fct_id=false, $cm_id=false) {
+        global $USER;
 
-        if ($cm_id) {
-
-            if (!$this->cm = get_coursemodule_from_id('fct', $cm_id)) {
-                error("Course Module ID was incorrect");
-            }
-            if (!$this->course = get_record('course', 'id', $this->cm->course)) {
-                error("Course is misconfigured");
-            }
-            if (!$this->fct = get_record('fct', 'id', $this->cm->instance)) {
-                error("quadernfct ID was incorrect");
-            }
-
-        } else if ($fct_id) {
-
-            if (!$this->fct = get_record('fct', 'id', $fct_id)) {
-                error("fct ID was incorrect or no longer exists");
-            }
-            if (!$this->course = get_record('course', 'id', $this->fct->course)) {
-                error("fct is misconfigured - don't know what course it's from");
-            }
-            if (!$this->cm = get_coursemodule_from_instance('fct',
-                    $this->fct->id, $this->course->id)) {
-                error("Course Module ID was incorrect");
-            }
-
+        if ($fct_id) {
+            $this->fct = $this->diposit->fct($fct_id);
         } else {
-            error('Must specify a course module or a qudernfct ID');
+            $this->fct = $this->diposit->fct_cm($cm_id);
         }
+        $this->usuari = $this->diposit->usuari($this->fct, $USER->id);
 
-        require_course_login($this->course, true, $this->cm);
-        $this->context = get_context_instance(CONTEXT_MODULE, $this->cm->id);
+        require_course_login($this->fct->course, true, $this->fct->cm);
 
-        $this->permis_admin = has_capability('mod/fct:admin', $this->context);
-        $this->permis_alumne = has_capability('mod/fct:alumne', $this->context);
-        $this->permis_tutor_centre = has_capability('mod/fct:tutor_centre', $this->context);
-        $this->permis_tutor_empresa = has_capability('mod/fct:tutor_empresa', $this->context);
+        $this->permis_admin = $this->usuari->es_administrador;
+        $this->permis_alumne = $this->usuari->es_alumne;
+        $this->permis_tutor_centre = $this->usuari->es_tutor_centre;
+        $this->permis_tutor_empresa = $this->usuari->es_tutor_empresa;
 
-        if (!$this->permis_admin and !$this->permis_alumne
-            and !$this->permis_tutor_centre and !$this->permis_tutor_empresa) {
+        if (!$this->usuari->es_administrador
+            and! $this->usuari->es_alumne
+            and !$this->usuari->es_tutor_centre
+            and !$this->usuari->es_tutor_empresa) {
             $this->error('permis_activitat');
         }
     }
@@ -168,7 +151,7 @@ class fct_pagina_base {
 
         $navlinks = array();
         $navlinks[] = array('name' => format_string($this->fct->name),
-                            'link' => "view.php?id={$this->cm->id}",
+                            'link' => "view.php?id={$this->fct->cm->id}",
                             'type' => 'activityinstance');
         foreach ($this->navegacio as $enllac) {
             $navlinks[] = array('name' => $enllac->nom, 'link' => $enllac->url,
@@ -176,12 +159,13 @@ class fct_pagina_base {
         }
         $navigation = build_navigation($navlinks);
 
-        $buttontext = update_module_button($this->cm->id, $this->course->id,
-            get_string('modulename', 'fct'));
+        $buttontext = update_module_button($this->fct->cm->id,
+                                           $this->fct->course->id,
+                                           get_string('modulename', 'fct'));
 
         print_header_simple(format_string($this->fct->name), '', $navigation,
                             '', '', true, $buttontext,
-                            navmenu($this->course, $this->cm));
+                            navmenu($this->fct->course, $this->fct->cm));
 
         print_box_start('boxaligncenter', 'paginafct');
 
@@ -207,7 +191,7 @@ class fct_pagina_base {
             print_box_end();
             print_box_end();
         }
-        print_footer($this->course);
+        print_footer($this->fct->course);
     }
 
     function nom_usuari($userid, $enllac=false, $correu=false) {
@@ -223,7 +207,7 @@ class fct_pagina_base {
         $html = $user->firstname.' '.$user->lastname;
         if ($enllac) {
         	$html = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$userid
-                .'&amp;course='.$this->course->id.'">'.$html.'</a>';
+                .'&amp;course='.$this->fct->course->id.'">'.$html.'</a>';
         }
         if ($correu) {
             $html .= ' (<a href="mailto:' . $user->email . '">'
@@ -248,6 +232,7 @@ class fct_pagina_base {
         if (is_null($url)) {
             $url = $this->url;
         }
-        add_to_log($this->course->id, 'fct', $action, $url, $info, $this->cm->id);
+        add_to_log($this->fct->course->id, 'fct', $action, $url, $info,
+                   $this->fct->cm->id);
     }
 }

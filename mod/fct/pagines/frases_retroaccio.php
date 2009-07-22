@@ -55,7 +55,7 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
         $this->pestanya = 'frases_retroaccio';
         $this->afegir_navegacio(fct_string('frases_retroaccio'));
 
-        $this->form = new fct_form_frases_retroaccio($this);
+        $this->form = new fct_form_frases_retroaccio($this, true);
     }
 
     function mostrar() {
@@ -73,12 +73,8 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
         if ($this->form->validar()) {
             $this->fct->frases_centre = $this->form->valor('frases_centre');
             $this->fct->frases_empresa = $this->form->valor('frases_empresa');
-            $ok = fct_db::actualitzar_fct($this->fct);
-            if ($ok) {
-                $this->registrar('update frases_retroaccio');
-            } else {
-                $this->error('desar_fct');
-            }
+            $this->diposit->afegir_fct($this->fct);
+            $this->registrar('update frases_retroaccio');
             redirect($this->url);
         }
         $this->mostrar();

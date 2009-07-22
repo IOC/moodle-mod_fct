@@ -43,46 +43,37 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function processar() {
-        global $CFG, $USER;
-
-        $params = (object) array(
-            'usuari' => $USER->id,
-            'permis_admin' => $this->permis_admin,
-            'permis_alumne' => $this->permis_alumne,
-            'permis_tutor_centre' => $this->permis_tutor_centre,
-            'permis_tutor_empresa' => $this->permis_tutor_empresa,
-        );
-
-        $valors_curs = $this->valors_curs($params);
+        $valors_curs = $this->valors_curs();
         $valors_cicle = $this->valors_cicle();
         $valors_estat = $this->valors_estat();
 
-        $this->configurar_taula();
-
-        if (!$this->permis_admin) {
-            if (fct_db::nombre_quaderns($this->fct->id, $params) == 1) {
-                $quaderns = fct_db::quaderns($this->fct->id, $params);
-                $quadern = array_pop($quaderns);
-                redirect(fct_url::quadern($quadern->id));
-            }
+        $especificacio = new fct_especificacio_quaderns($this->fct);
+        $especificacio->usuari = $this->usuari;
+        if ($this->curs > 0) {
+            $especificacio->data_final_min = mktime(0, 0, 0, 9, 1,
+                                                    $this->curs);
+            $especificacio->data_final_max = mktime(0, 0, 0, 9, 1,
+                                                    $this->curs + 1);
         }
-
-        if ($this->curs) {
-            $params->data_final_min = mktime(0, 0, 0, 9, 1, $this->curs);
-            $params->data_final_max = mktime(0, 0, 0, 9, 1, $this->curs + 1);
+        if ($this->cicle > 0) {
+            $especificacio->cicle = $this->cicle;
         }
-        if ($this->cicle) {
-            $params->cicle = $this->cicle;
-        }
-        if ($this->estat != -1) {
-            $params->estat = $this->estat;
+        if ($this->estat >= 0) {
+            $especificacio->estat = $this->estat;
         }
         if ($this->cerca) {
-            $params->cerca = $this->cerca;
+            $especificacio->cerca = $this->cerca;
         }
 
-        $this->quaderns = fct_db::quaderns($this->fct->id, $params,
-                                           $this->taula->get_sql_sort());
+        $this->configurar_taula();
+
+        $this->quaderns = $this->diposit->quaderns($especificacio,
+                                                   $this->taula->get_sql_sort());
+
+        if (!$this->usuari->es_administrador and count($quaderns) == 1) {
+            $quadern = array_pop($quaderns);
+            redirect(fct_url::quadern($quadern->id));
+        }
 
         $this->mostrar_capcalera();
         $this->mostrar_selectors($valors_curs, $valors_cicle, $valors_estat);
@@ -114,16 +105,20 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     function mostrar_taula() {
         foreach ($this->quaderns as $q) {
             $url = fct_url::quadern($q->id);
+            $alumne = $this->diposit->usuari($this->fct, $q->alumne)->nom_sencer();
+            $tutor_centre = $q->tutor_centre ?
+                $this->diposit->usuari($this->fct, $q->tutor_centre)->nom_sencer() : '-';
+            $tutor_empresa = $q->tutor_empresa ?
+                $this->diposit->usuari($this->fct, $q->tutor_empresa)->nom_sencer() : '-';
+            $cicle = $this->diposit->cicle($q->cicle)->nom;
             $estat = ($q->estat ? 'estat_obert' : 'estat_tancat');
             $str_estat = fct_string($estat);
-            $tutor_centre = ($q->tutor_centre ? $q->tutor_centre : '-');
-            $tutor_empresa = ($q->tutor_empresa ? $q->tutor_empresa : '-');
-            $data_final = ($q->data_final ?
-                           userdate($q->data_final, "%d/%m/%Y") : '-');
+            $data_final = ($q->data_final() ?
+                           userdate($q->data_final(), "%d/%m/%Y") : '-');
             $this->taula->add_data(
-                array("<a href=\"$url\">{$q->alumne}</a>",
-                      "<a href=\"$url\">{$q->empresa}</a>",
-                      "<a href=\"$url\">{$q->cicle_formatiu}</a>",
+                array("<a href=\"$url\">$alumne</a>",
+                      "<a href=\"$url\">{$q->empresa->nom}</a>",
+                      "<a href=\"$url\">$cicle</a>",
                       "<a href=\"$url\">$tutor_centre</a>",
                       "<a href=\"$url\">$tutor_empresa</a>",
                       "<a href=\"$url\" class=\"$estat\">$str_estat</a>",
@@ -164,13 +159,24 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function valors_cicle() {
-        return array_merge(array(0 => fct_string('tots')),
-                           fct_db::cicles($this->fct->id));
+        $valors = array(0 => fct_string('tots'));
+        $cicles = $this->diposit->cicles($this->fct->id);
+        foreach ($cicles as $cicle) {
+            $valors[$cicle->id] = $cicle->nom;
+        }
+        return $valors;
     }
 
-    function valors_curs($params) {
+    function valors_curs() {
         $cursos = array(0 => fct_string('tots'));
 
+        $params = (object) array(
+            'usuari' => $this->usuari->id,
+            'permis_admin' => $this->usuari->es_administrador,
+            'permis_alumne' => $this->usuari->es_alumne,
+            'permis_tutor_centre' => $this->usuari->es_tutor_centre,
+            'permis_tutor_empresa' => $this->usuari->es_tutor_empresa,
+        );
         list($min, $max) = fct_db::data_final_convenis_min_max($this->fct->id,
                                                                $params);
 

@@ -31,14 +31,28 @@ function fct_string($identifier, $a=null) {
     return get_string($identifier, 'fct', $a);
 }
 
-fct_require('db.php');
+fct_require('db.php', 'moodle.php', 'domini.php', 'diposit.php');
 
-function fct_add_instance($fct) {
-    return fct_db::afegir_fct($fct);
+function fct_add_instance($data) {
+    $fct = new fct;
+    $fct->course = get_record('course', 'id', $data->course);
+    $fct->name = $data->name;
+    $fct->intro = $data->intro;
+    $fct->timecreated = time();
+    $fct->timemodified = time();
+    $diposit = new fct_diposit;
+    $diposit->afegir_fct($fct);
+    return $fct->id;
 }
 
-function fct_update_instance($fct) {
-    return fct_db::actualitzar_fct($fct);
+function fct_update_instance($data) {
+    $diposit = new fct_diposit;
+    $fct = $diposit->fct($data->instance);
+    $fct->name = $data->name;
+    $fct->intro = $data->intro;
+    $fct->timemodified = time();
+    $diposit->afegir_fct($fct);
+    return true;
 }
 
 function fct_delete_instance($id) {

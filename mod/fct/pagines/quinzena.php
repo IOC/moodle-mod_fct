@@ -26,25 +26,24 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     var $titol;
     var $form;
     var $activitats;
-    var $activitats_quinzena;
-    var $dies_quinzena;
 
     function comprovar_quinzena($valors) {
-        if (fct_db::quinzena_duplicada($this->quadern->id,
-                                       addslashes($valors->any),
-                                       addslashes($valors->periode),
-                                       $this->quinzena->id)) {
-            return array('any' => fct_string('quinzena_duplicada'),
-                         'periode' => fct_string('quinzena_duplicada'));
+        if ($valors->any != $this->quinzena->any
+            or $valors->periode != $this->quinzena->periode) {
+            $quinzenes = $this->diposit->quinzenes($this->quadern->id,
+                                                   $valors->any,
+                                                   $valors->periode);
+            if ($quinzenes) {
+                return array('any' => fct_string('quinzena_duplicada'),
+                             'periode' => fct_string('quinzena_duplicada'));
+            }
         }
         return true;
     }
 
     function configurar() {
-        $this->quinzena = fct_db::quinzena(required_param('quinzena', PARAM_INT));
-        if (!$this->quinzena) {
-            $this->error('recuperar_quinzena');
-        }
+        $quinzena_id = required_param('quinzena', PARAM_INT);
+        $this->quinzena = $this->diposit->quinzena($quinzena_id);
 
         parent::configurar($this->quinzena->quadern);
 
@@ -58,28 +57,26 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
             $this->comprovar_permis($this->permis_editar_alumne);
         }
 
-        $this->activitats = fct_db::activitats_pla($this->quadern->id);
-        $this->activitats_quinzena = fct_db::activitats_quinzena($this->quinzena->id);
-        $this->dies_quinzena = fct_db::dies_quinzena($this->quinzena->id);
+        $this->activitats = $this->diposit->activitats($this->quadern->id);
 
-        $this->titol = self::nom_periode($this->quinzena->periode).' '.$this->quinzena->any_;
+        $this->titol = self::nom_periode($this->quinzena->periode).' '.$this->quinzena->any;
         $this->url = fct_url::quinzena($this->quinzena->id);
 
-        $this->form = new fct_form_quinzena($this);
+        $this->form = new fct_form_quinzena($this, true);
     }
 
     function mostrar() {
         $this->form->valors($this->quinzena);
-        $this->form->valor('dies', $this->dies_quinzena);
-        $this->form->valor('activitats_realitzades', $this->activitats_quinzena);
+        $this->form->valor('dies', $this->quinzena->dies);
+        $this->form->valor('activitats_realitzades', $this->quinzena->activitats);
         $this->form->valor('any_inici',
-                           $this->any_data($this->data_inici));
+                           $this->any_data($this->quadern->data_inici()));
         $this->form->valor('any_final',
-                           $this->any_data($this->data_final));
+                           $this->any_data($this->quadern->data_final()));
         $this->form->valor('periode_inici',
-                           $this->periode_data($this->data_inici));
+                           $this->periode_data($this->quadern->data_inici()));
         $this->form->valor('periode_final',
-                           $this->periode_data($this->data_final));
+                           $this->periode_data($this->quadern->data_final()));
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -91,45 +88,33 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $ok = fct_db::suprimir_quinzena($this->quinzena->id);
-        if ($ok) {
-            $this->registrar('delete quinzena', null, $this->titol);
-        } else {
-            $this->error('suprimir_quinzena');
-        }
+        $this->diposit->suprimir_quinzena($this->quinzena);
+        $this->registrar('delete quinzena', null, $this->titol);
         redirect(fct_url::seguiment($this->quadern->id));
     }
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $quinzena = (object) array('id' => $this->quinzena->id);
-            $activitats = false;
-            $dies = false;
-
             if ($this->permis_editar_alumne) {
-                $quinzena->any = $this->form->valor('any');
-                $quinzena->periode = $this->form->valor('periode');
-                $quinzena->hores = $this->form->valor('hores');
-                $quinzena->valoracions = $this->form->valor('valoracions');
-                $quinzena->observacions_alumne = $this->form->valor('observacions_alumne');
-                $dies = $this->filtrar_dies($this->form->valor('dies'),
-                                            $this->form->valor('periode'),
-                                            $this->form->valor('any'));
-                $activitats = $this->form->valor('activitats_realitzades');
+                $this->quinzena->any = $this->form->valor('any');
+                $this->quinzena->periode = $this->form->valor('periode');
+                $this->quinzena->hores = $this->form->valor('hores');
+                $this->quinzena->valoracions = $this->form->valor('valoracions');
+                $this->quinzena->observacions_alumne = $this->form->valor('observacions_alumne');
+                $this->quinzena->dies = $this->filtrar_dies($this->form->valor('dies'),
+                                                            $this->form->valor('periode'),
+                                                            $this->form->valor('any'));
+                $this->activitats = $this->form->valor('activitats_realitzades');
             }
             if ($this->permis_editar_centre) {
-                $quinzena->observacions_centre = $this->form->valor('observacions_centre');
+                $this->quinzena->observacions_centre = $this->form->valor('observacions_centre');
             }
             if ($this->permis_editar_empresa) {
-                $quinzena->observacions_empresa = $this->form->valor('observacions_empresa');
+                $this->quinzena->observacions_empresa = $this->form->valor('observacions_empresa');
             }
 
-            $ok = fct_db::actualitzar_quinzena($quinzena, $dies, $activitats);
-            if ($ok) {
-                $this->registrar('update quinzena', null, $this->titol);
-            } else {
-               $this->error('desar_quinzena');
-            }
+            $this->diposit->afegir_quinzena($this->quinzena);
+            $this->registrar('update quinzena', null, $this->titol);
             redirect($this->url);
         }
 
@@ -150,7 +135,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
     function processar_veure() {
         $this->form->valor('any_quinzena', $this->quinzena->any);
         $this->form->valor('periode_quinzena', $this->quinzena->periode);
-        $this->form->valor('dies_quinzena', implode(',', $this->dies_quinzena));
+        $this->form->valor('dies_quinzena', implode(',', $this->quinzena->dies));
         $this->mostrar();
         $this->registrar('view quinzena', null, $this->titol);
     }

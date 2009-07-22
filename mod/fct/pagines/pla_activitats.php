@@ -38,21 +38,21 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $activitats = fct_db::activitats_pla($this->quadern->id);
+        $activitats = $this->diposit->activitats($this->quadern->id);
 
         if (!$activitats) {
            echo '<p>' . fct_string('cap_activitat') . '</p>';
         } else {
-            foreach ($activitats as $id => $descripcio) {
+            foreach ($activitats as $activitat) {
                 $accions = '';
                 if ($this->permis_editar) {
-                    $url_editar = fct_url::editar_activitat_pla($id);
-                    $url_suprimir = fct_url::suprimir_activitat_pla($id);
+                    $url_editar = fct_url::editar_activitat_pla($activitat->id);
+                    $url_suprimir = fct_url::suprimir_activitat_pla($activitat->id);
                     $icona_editar = $this->icona_editar($url_editar, fct_string('edita_activitat'));
                     $icona_suprimir = $this->icona_suprimir($url_suprimir, fct_string('suprimeix_activitat'));
                     $accions = "$icona_editar $icona_suprimir";
                 }
-                $taula->add_data(array($descripcio, $accions));
+                $taula->add_data(array($activitat->descripcio, $accions));
             }
             $taula->print_html();
         }

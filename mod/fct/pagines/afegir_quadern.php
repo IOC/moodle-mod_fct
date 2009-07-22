@@ -22,12 +22,11 @@ fct_require('pagines/base_quaderns.php',
 
 class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
-    var $n_cicles;
-
     function comprovar_nom_empresa($valors) {
-        if (fct_db::quadern_duplicat($this->fct->id,
-                                     addslashes($valors->alumne),
-                                     addslashes($valors->nom_empresa))) {
+        $especificacio = new fct_especificacio_quaderns($this->fct);
+        $especificacio->alumne = $valors->alumne;
+        $especificacio->empresa = $valors->nom_empresa;
+        if ($this->diposit->quaderns($especificacio)) {
             return array('nom_empresa' => fct_string('quadern_duplicat'));
         }
         return true;
@@ -36,28 +35,27 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->n_cicles = fct_db::nombre_cicles($this->fct->id);
         $this->comprovar_permis($this->permis_admin);
         $this->url = fct_url::afegir_quadern($this->fct->id);
         $this->subpestanya = 'afegir_quadern';
     }
 
     function processar_afegir() {
-        $form = new fct_form_quadern($this);
+        $form = new fct_form_quadern($this, true);
         if ($form->validar()) {
-            $id = fct_db::afegir_quadern($form->valors());
-            if ($id) {
-                $this->registrar('add quadern', fct_url::quadern($id),
-                                 $this->nom_usuari($form->valor('alumne'))
-                                 . ' ('. $form->valor('nom_empresa') . ')');
-            } else {
-                $this->error('afegir_quadern');
-            }
-            redirect(fct_url::quadern($id));
+            $quadern = new fct_quadern;
+            fct_copy_vars($form->valors(), $quadern);
+            $quadern->empresa->nom = $form->valor('nom_empresa');
+            $quadern->afegir_conveni(new fct_conveni);
+            $this->diposit->afegir_quadern($quadern);
+            $this->registrar('add quadern', fct_url::quadern($quadern->id),
+                             $this->nom_usuari($quadern->alumne)
+                             . ' ('. $quadern->empresa->nom . ')');
+            redirect(fct_url::quadern($quadern->id));
         }
 
         $this->mostrar_capcalera();
-        if (!$this->n_cicles) {
+        if (!$this->diposit->cicles($this->fct->id)){
             $missatge = fct_string('cicle_necessari_per_afegir_quaderns');
             echo "<p>$missatge</p>";
         } else {

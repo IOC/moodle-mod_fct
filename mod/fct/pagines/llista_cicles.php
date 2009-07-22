@@ -37,14 +37,14 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();
 
-        $cicles = fct_db::cicles($this->fct->id);
+        $cicles = $this->diposit->cicles($this->fct->id);
 
         if (!$cicles) {
            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         } else {
-            foreach ($cicles as $id => $nom) {
-                $taula->add_data(array('<a href="' . fct_url::cicle($id).'">'
-                                       ."$nom</a>"));
+            foreach ($cicles as $cicle) {
+                $taula->add_data(array('<a href="' . fct_url::cicle($cicle->id)
+                                       .'">' . $cicle->nom . '</a>'));
             }
             $taula->print_html();
         }

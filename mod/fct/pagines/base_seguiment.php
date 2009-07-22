@@ -21,8 +21,6 @@ fct_require('pagines/base_quadern.php');
 
 class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
 
-    var $data_inici;
-    var $data_final;
     var $permis_editar;
     var $permis_editar_centre;
     var $permis_editar_alumne;
@@ -30,9 +28,6 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
 
     function configurar($quadern_id) {
         parent::configurar($quadern_id);
-
-        list($this->data_inici, $this->data_final) =
-            fct_db::data_inici_final_quadern($quadern_id);
 
         $this->pestanya = 'seguiment_quinzenal';
         $this->permis_editar = ($this->permis_admin or $this->quadern->estat);
@@ -115,8 +110,8 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
 
     function opcions_any() {
         $opcions = array();
-        $any_min = date('Y', $this->data_inici);
-        $any_max = date('Y', $this->data_final);
+        $any_min = date('Y', $this->quadern->data_inici());
+        $any_max = date('Y', $this->quadern->data_final());
         for ($any = $any_min; $any <= $any_max; $any++) {
             $opcions[$any] = "$any";
         }

@@ -27,18 +27,14 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
 
     function configurar() {
         parent::configurar();
-        $this->qualificacio = fct_db::qualificacio_quadern($this->quadern->id);
-        if (!$this->qualificacio) {
-            $this->error('recuperar_qualificacio_quadern');
-        }
         $this->url = fct_url::qualificacio_quadern($this->quadern->id);
         $this->titol = 'qualificacio_quadern';
-        $this->form = new fct_form_qualificacio($this);
+        $this->form = new fct_form_qualificacio($this, true);
         $this->subpestanya = 'qualificacio_quadern';
     }
 
     function mostrar() {
-        $this->form->valors($this->qualificacio);
+        $this->form->valors($this->quadern->qualificacio);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -50,17 +46,9 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $qualificacio = $this->form->valors();
-            $qualificacio->id = $this->qualificacio->id;
-            $qualificacio->quadern = $this->quadern->id;
-            $ok = fct_db::actualitzar_qualificacio_quadern($qualificacio);
-            if ($ok) {
-                $barem = $this->form->barem_qualificacio();
-                $nota = $barem[$qualificacio->qualificacio];
-                $this->registrar('update qualificacio_quadern', null, $nota);
-            } else {
-                $this->error('desar_qualificacio_quadern');
-            }
+            fct_copy_vars($this->form->valors(), $this->quadern->qualificacio);
+            $this->diposit->afegir_quadern($this->quadern);
+            $this->registrar('update qualificacio_quadern');
             redirect($this->url);
         }
         $this->mostrar();

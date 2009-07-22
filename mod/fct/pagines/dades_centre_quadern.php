@@ -26,10 +26,6 @@ class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->centre = fct_db::dades_centre($this->fct->id);
-        if (!$this->centre) {
-           $this->error('recuperar_centre_docent');
-        }
         $this->url = fct_url::dades_centre_quadern($this->quadern->id);
         $this->subpestanya = 'dades_centre_quadern';
     }
@@ -37,7 +33,7 @@ class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
     function processar() {
         $this->mostrar_capcalera();
         $form = new fct_form_dades_centre($this);
-        $form->valors($this->centre);
+        $form->valors($this->fct->centre);
         $form->mostrar();
         $this->mostrar_peu();
         $this->registrar('view dades_centre_quadern');
