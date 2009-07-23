@@ -52,7 +52,7 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
         $this->activitats = $this->diposit->activitats($this->quadern->id);
         $this->url = fct_url::valoracio_activitats($this->quadern->id);
         $this->subpestanya = 'valoracio_activitats';
-        $this->form = new fct_form_valoracio_activitats($this, true);
+        $this->form = new fct_form_valoracio_activitats($this);
     }
 
     function mostrar() {

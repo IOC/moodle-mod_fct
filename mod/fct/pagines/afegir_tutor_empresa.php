@@ -43,6 +43,49 @@ class fct_form_tutor_empresa extends fct_form_base {
 
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
+    function afegir_tutor_empresa($courseid, $dni, $contrasenya,
+                                  $nom, $cognoms, $email) {
+        global $USER;
+
+        $roleid = get_field('role', 'id', 'shortname', 'tutorempresa');
+        if (!$roleid) {
+            return false;
+        }
+
+        $record = array('username' => addslashes(strtolower($dni)),
+                        'password' => hash_internal_user_password($contrasenya),
+                        'firstname' => addslashes($nom),
+                        'lastname' => addslashes($cognoms),
+                        'email' => addslashes($email),
+                        'auth' => 'manual',
+                        'confirmed' => 1,
+                        'deleted' => 0,
+                        'mnethostid' => 1,
+                        'country'  => 'CT',
+                        'lang' => 'ca_utf8',
+                        'maildigest' => 1,
+                        'autosubscribe' => 0,
+                        'ajax' => 0,
+                        'timemodified' => time());
+        $id = insert_record('user', (object) $record);
+        if (!$id) {
+            return false;
+        }
+
+        $context = get_context_instance(CONTEXT_COURSE, $courseid);
+        $record = array('roleid' => $roleid,
+                        'userid' => $id,
+                        'contextid' => $context->id,
+                        'timestart' => time(),
+                        'timemodified' => time(),
+                        'modifierid' => $USER->id,
+                        'enrol' => 'manual');
+        insert_record('role_assignments', (object) $record);
+
+        return $id;
+    }
+
+
     function comprovar_dni($data) {
         $dni = addslashes(trim($data->dni));
         if (!preg_match('/^[0-9]{8}[a-zA-Z]$/', $dni)) {
@@ -99,11 +142,11 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         if ($form->validar()) {
             $dni = strtolower($form->valor('dni'));
             $contrasenya = $this->generar_contrasenya();
-            $id = fct_db::afegir_tutor_empresa($this->fct->course->id,
-                                               $dni, $contrasenya,
-                                               $form->valor('nom'),
-                                               $form->valor('cognoms'),
-                                               $form->valor('email'));
+            $id = $this->afegir_tutor_empresa($this->fct->course->id,
+                                              $dni, $contrasenya,
+                                              $form->valor('nom'),
+                                              $form->valor('cognoms'),
+                                              $form->valor('email'));
             if ($id) {
                 global $CFG;
                 $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->fct->course->id}";

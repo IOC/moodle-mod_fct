@@ -25,7 +25,8 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
     function comprovar_nom_empresa($valors) {
         if ($valors->alumne != $this->quadern->alumne
             or $valors->nom_empresa != $this->quadern->empresa->nom) {
-            $especificacio = new fct_especificacio_quaderns($this->fct);
+            $especificacio = new fct_especificacio_quaderns;
+            $especificacio->fct = $fct->id;
             $especificacio->alumne = $valors->alumne;
             $especificacio->empresa = $valors->nom_empresa;
             if ($this->diposit->quaderns($especificacio)) {
@@ -46,7 +47,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
         $this->url = fct_url::quadern($this->quadern->id);
         $this->pestanya = 'quadern';
-        $this->form = new fct_form_quadern($this, true);
+        $this->form = new fct_form_quadern($this);
     }
 
     function mostrar() {
@@ -63,9 +64,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        if (!fct_db::suprimir_quadern($this->quadern->id)) {
-            $this->error('suprimir_quadern');
-        }
+        $this->serveis->suprimir_quadern($this->quadern);
         redirect(fct_url::llista_quaderns($this->fct->id));
     }
 

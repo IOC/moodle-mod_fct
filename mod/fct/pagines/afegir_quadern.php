@@ -23,7 +23,8 @@ fct_require('pagines/base_quaderns.php',
 class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
 
     function comprovar_nom_empresa($valors) {
-        $especificacio = new fct_especificacio_quaderns($this->fct);
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->fct = $this->fct->id;
         $especificacio->alumne = $valors->alumne;
         $especificacio->empresa = $valors->nom_empresa;
         if ($this->diposit->quaderns($especificacio)) {
@@ -41,7 +42,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     }
 
     function processar_afegir() {
-        $form = new fct_form_quadern($this, true);
+        $form = new fct_form_quadern($this);
         if ($form->validar()) {
             $quadern = new fct_quadern;
             fct_copy_vars($form->valors(), $quadern);

@@ -45,7 +45,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_afegir() {
-        $form = new fct_form_quinzena($this, true);
+        $form = new fct_form_quinzena($this);
         if ($form->validar()) {
             $quinzena = new fct_quinzena;
             $quinzena->quadern = $this->quadern->id;

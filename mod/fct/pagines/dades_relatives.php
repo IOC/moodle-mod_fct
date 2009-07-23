@@ -62,25 +62,20 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->quadern->hores_realitzades =
-            fct_db::hores_realitzades_quadern($this->quadern->id);
-        $this->quadern->hores_exempcio =
-            ceil((float) $this->quadern->exempcio / 100
-                 * $this->quadern->hores_credit);
-        $this->quadern->hores_pendents = (string)
-            max(0, $this->quadern->hores_credit
-                - $this->quadern->hores_realitzades);
-
         $this->url = fct_url::dades_relatives($this->quadern->id);
         $this->subpestanya = 'dades_relatives';
         $this->form = new fct_form_dades_relatives($this);
     }
 
     function mostrar() {
-        $this->form->valors($this->quadern);
-        $this->form->valor('hores_realitzades_detall',
-                           fct_string('hores_realitzades_detall',
-                                      $this->quadern));
+        $hores = $this->serveis->resum_hores_fct($this->quadern);
+
+        $this->form->valor('hores_credit', $this->quadern->hores_credit);
+        $this->form->valor('exempcio', $this->quadern->exempcio);
+        $this->form->valor('hores_anteriors', $this->quadern->hores_anteriors);
+        $this->form->valor('hores_realitzades_detall', fct_string('hores_realitzades_detall', $hores));
+        $this->form->valor('hores_pendents', $hores->pendents);
+
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();

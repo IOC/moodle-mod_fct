@@ -100,7 +100,7 @@ class fct_empresa {
 }
 
 class fct_especificacio_quaderns {
-    var $fct;
+    var $fct = false;
     var $usuari = false;
     var $data_final_min = false;
     var $data_final_max = false;
@@ -109,10 +109,6 @@ class fct_especificacio_quaderns {
     var $cerca = false;
     var $alumne = false;
     var $empresa = false;
-
-    function __construct($fct) {
-        $this->fct = $fct;
-    }
 }
 
 class fct_horari {
@@ -223,6 +219,106 @@ class fct_qualificacio {
     var $nota = 0;
     var $data = 0;
     var $observacions = '';
+}
+
+class fct_resum_hores_fct {
+    var $credit;
+    var $exempcio;
+    var $anteriors;
+    var $practiques;
+
+    var $realitzades;
+    var $pendents;
+
+
+    function __construct($hores_credit, $hores_anteriors,
+                         $exempcio, $hores_practiques) {
+        $this->credit = $hores_credit;
+        $this->anteriors = $hores_anteriors;
+        $this->practiques = $hores_practiques;
+        $this->exempcio = ceil((float) $exempcio / 100 * $hores_credit);
+
+        $this->realitzades = $this->anteriors + $this->exempcio
+            + $this->practiques;
+        $this->pendents = max(0, $this->credit - $this->realitzades);
+    }
+}
+
+class fct_serveis {
+
+    var $diposit;
+
+    function __construct($diposit) {
+        $this->diposit = $diposit;
+    }
+
+    function hores_realitzades_quadern($quadern) {
+        $hores = 0;
+        $quinzenes = $this->diposit->quinzenes($quadern->id);
+        foreach ($quinzenes as $quinzena) {
+            $hores += $quinzena->hores;
+        }
+        return $hores;
+    }
+
+    function resum_hores_fct($quadern) {
+        $hores_practiques = 0;
+
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->cicle = $quadern->cicle;
+        $especificacio->alumne = $quadern->alumne;
+        $especificacio->data_final_max = $quadern->data_final();
+
+        $quaderns = $this->diposit->quaderns($especificacio);
+        foreach ($quaderns as $quadern) {
+            $hores_practiques += $this->hores_realitzades_quadern($quadern);
+        }
+
+        return new fct_resum_hores_fct($quadern->hores_credit,
+                                       $quadern->hores_anteriors,
+                                       $quadern->exempcio,
+                                       $hores_practiques);
+    }
+
+    function suprimir_fct($fct) {
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->fct = $fct->id;
+        $quaderns = $this->diposit->quaderns($especificacio);
+        foreach ($quaderns as $quadern) {
+            $this->suprimir_quadern($quadern);
+        }
+
+        $cicles = $this->diposit->cicles($fct->id);
+        foreach ($cicles as $cicle) {
+            $this->diposit->suprimir_cicle($cicle);
+        }
+
+        $this->diposit->suprimir_fct($fct);
+    }
+
+    function suprimir_quadern($quadern) {
+        $quinzenes = $this->diposit->quinzenes($quadern->id);
+        foreach ($quinzenes as $quinzena) {
+            $this->diposit->suprimir_quinzena($quinzena);
+        }
+
+        $activitats = $this->diposit->activitats($quadern->id);
+        foreach ($activitats as $activitat) {
+            $this->diposit->suprimir_activitat($activitat);
+        }
+
+        $this->diposit->suprimir_quadern($quadern);
+    }
+
+    function ultim_quadern($alumne, $cicle) {
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->alumne = $alumne;
+        $especificacio->cicle = $cicle;
+
+        $quaderns = $this->diposit->quaderns($especificacio, 'data_final');
+
+        return array_pop($quaderns);
+    }
 }
 
 class fct_usuari {

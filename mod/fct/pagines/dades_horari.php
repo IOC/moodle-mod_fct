@@ -70,7 +70,7 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
 
         $this->url = fct_url::dades_horari($this->quadern->id);
         $this->subpestanya = 'dades_horari';
-        $this->form = new fct_form_dades_horari($this, true);
+        $this->form = new fct_form_dades_horari($this);
     }
 
     function mostrar() {

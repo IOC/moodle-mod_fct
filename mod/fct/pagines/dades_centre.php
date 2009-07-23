@@ -35,7 +35,7 @@ class fct_pagina_dades_centre extends fct_pagina_base {
         $this->pestanya = 'dades_centre';
         $this->afegir_navegacio(fct_string('dades_centre'));
 
-        $this->form = new fct_form_dades_centre($this, true);
+        $this->form = new fct_form_dades_centre($this);
     }
 
     function mostrar() {

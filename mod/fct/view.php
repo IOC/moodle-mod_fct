@@ -29,7 +29,7 @@ if ($installed_version != $module->version) {
 require_once($CFG->dirroot . '/mod/fct/lib.php');
 
 $pagina = optional_param('pagina', 'llista_quaderns', PARAM_ALPHAEXT);
-fct_require('db.php', 'url.php' , "pagines/$pagina.php");
+fct_require('url.php' , "pagines/$pagina.php");
 $class = "fct_pagina_$pagina";
 if (!class_exists($class)) {
     error("S'ha produït un error intern: la classe <em>$class</em> no existeix.");

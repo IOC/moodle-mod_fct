@@ -55,7 +55,7 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
         $this->pestanya = 'frases_retroaccio';
         $this->afegir_navegacio(fct_string('frases_retroaccio'));
 
-        $this->form = new fct_form_frases_retroaccio($this, true);
+        $this->form = new fct_form_frases_retroaccio($this);
     }
 
     function mostrar() {

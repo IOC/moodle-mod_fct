@@ -27,10 +27,8 @@ class fct_form_base {
     var $elements = array();
     var $mform;
     var $pagina;
-    var $stripslashes;
 
-    function __construct($pagina, $stripslashes=false) {
-        $this->stripslashes = $stripslashes;
+    function __construct($pagina) {
         $this->configurar($pagina);
         $this->mform = new fct_form_moodle(get_class($this), $pagina->url,
                                            $this->elements,
@@ -102,10 +100,7 @@ class fct_form_base {
             }
             if (!$this->elements[$nom]->congelat) {
                 $valor = $this->elements[$nom]->get_data($this->data);
-                if ($this->stripslashes) {
-                    $valor = stripslashes_recursive($valor);
-                }
-                return $valor;
+                return stripslashes_recursive($valor);
             }
         } else {
             if (isset($this->elements[$nom])) {
@@ -117,10 +112,7 @@ class fct_form_base {
     function valors($valors=null) {
         if ($valors === null) {
             $valors = $this->valors_data($this->data);
-            if ($this->stripslashes) {
-                $valors = stripslashes_recursive($valors);
-            }
-            return $valors;
+            return stripslashes_recursive($valors);
         } else {
             foreach ((array) $valors as $nom => $valor) {
                 $this->valor($nom, $valor);

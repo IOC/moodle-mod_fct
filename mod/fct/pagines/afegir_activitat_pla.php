@@ -39,7 +39,7 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
     }
 
     function processar_afegir() {
-        $form = new fct_form_activitat($this, true);
+        $form = new fct_form_activitat($this);
         if ($form->validar()) {
             $activitat = new fct_activitat;
             $activitat->quadern = $this->quadern->id;

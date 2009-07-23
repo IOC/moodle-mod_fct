@@ -5,7 +5,7 @@ require_once 'PHPUnit/Framework.php';
 class fct_tests {
 
     public static function suite() {
-        $tests = array('diposit');
+        $tests = array('diposit', 'serveis');
 
         $suite = new PHPUnit_Framework_TestSuite('FCT');
         foreach ($tests as $test) {

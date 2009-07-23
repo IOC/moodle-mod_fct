@@ -36,11 +36,15 @@ class fct_pagina_base {
     var $pestanya = false;
     var $subpestanya = false;
 
+    var $moodle;
     var $diposit;
+    var $serveis;
     var $usuari;
 
     function __construct() {
-        $this->diposit = new fct_diposit();
+        $this->moodle = new fct_moodle;
+        $this->diposit = new fct_diposit($this->moodle);
+        $this->serveis = new fct_serveis($this->diposit);
         $this->configurar();
         $this->processar();
     }

@@ -97,15 +97,17 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 
         $this->url = fct_url::dades_conveni($this->quadern->id);
         $this->subpestanya = 'dades_conveni';
-        $this->form = new fct_form_dades_conveni($this, true);
+        $this->form = new fct_form_dades_conveni($this);
     }
 
     function mostrar() {
-        $this->quadern->hores_realitzades =
-            (float) fct_db::hores_realitzades_quadern($this->quadern->id);
-        $this->quadern->hores_pendents = $this->quadern->hores_practiques
-            - $this->quadern->hores_realitzades;
-        $this->form->valors($this->quadern);
+        $hores = $this->serveis->hores_realitzades_quadern($this->quadern);
+        $this->form->valor('prorrogues', $this->quadern->prorrogues);
+        $this->form->valor('hores_practiques',
+                           $this->quadern->hores_practiques);
+        $this->form->valor('hores_realitzades', $hores);
+        $this->form->valor('hores_pendents',
+                           $this->quadern->hores_practiques - (float) $hores);
         foreach ($this->quadern->convenis as $conveni) {
             $this->form->valor('conveni_' .  $conveni->id, $conveni);
         }

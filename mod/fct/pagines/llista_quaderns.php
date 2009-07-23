@@ -47,7 +47,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $valors_cicle = $this->valors_cicle();
         $valors_estat = $this->valors_estat();
 
-        $especificacio = new fct_especificacio_quaderns($this->fct);
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->fct = $this->fct->id;
         $especificacio->usuari = $this->usuari;
         if ($this->curs > 0) {
             $especificacio->data_final_min = mktime(0, 0, 0, 9, 1,
@@ -70,7 +71,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->quaderns = $this->diposit->quaderns($especificacio,
                                                    $this->taula->get_sql_sort());
 
-        if (!$this->usuari->es_administrador and count($quaderns) == 1) {
+        if (!$this->usuari->es_administrador and count($this->quaderns) == 1) {
             $quadern = array_pop($quaderns);
             redirect(fct_url::quadern($quadern->id));
         }
@@ -177,8 +178,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             'permis_tutor_centre' => $this->usuari->es_tutor_centre,
             'permis_tutor_empresa' => $this->usuari->es_tutor_empresa,
         );
-        list($min, $max) = fct_db::data_final_convenis_min_max($this->fct->id,
-                                                               $params);
+        list($min, $max) =
+            $this->diposit->min_max_data_final_quaderns($this->fct->id);
 
         if (!$min or !$max) {
             $this->curs = false;

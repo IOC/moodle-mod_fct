@@ -31,7 +31,7 @@ function fct_string($identifier, $a=null) {
     return get_string($identifier, 'fct', $a);
 }
 
-fct_require('db.php', 'moodle.php', 'domini.php', 'diposit.php');
+fct_require('moodle.php', 'domini.php', 'diposit.php');
 
 function fct_add_instance($data) {
     $fct = new fct;
@@ -56,5 +56,9 @@ function fct_update_instance($data) {
 }
 
 function fct_delete_instance($id) {
-    return fct_db::suprimir_fct($id);
+    $diposit = new fct_diposit;
+    $serveis = new fct_serveis($diposit);
+    $fct = $diposit->fct($id);
+    $serveis->suprimir_fct($fct);
+    return true;
 }

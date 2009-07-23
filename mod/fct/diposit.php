@@ -261,6 +261,31 @@ class fct_diposit {
         return $cicles;
     }
 
+    function empreses($cicles) {
+        global $CFG;
+
+        $empreses = array();
+
+        if ($cicles) {
+            $sql = "SELECT DISTINCT q.nom_empresa AS nom,"
+                . " e.adreca, e.poblacio, e.codi_postal,"
+                . " e.telefon, e.fax, e.email, e.nif"
+                . " FROM {$CFG->prefix}fct_quadern q"
+                . " JOIN {$CFG->prefix}fct_dades_empresa e ON q.id = e.quadern"
+                . " WHERE q.cicle IN (" . implode(',', $cicles) . ")"
+                . " ORDER BY q.nom_empresa";
+
+            $records = $this->moodle->get_records_sql($sql);
+            foreach ($records as $record) {
+                $empresa = new fct_empresa;
+                fct_copy_vars($record, $empresa);
+                $empreses[] = $empresa;
+            }
+        }
+
+        return $empreses;
+    }
+
     function fct($id) {
         $fct = new fct;
         $record = $this->moodle->get_record('fct', 'id', $id);
@@ -279,6 +304,52 @@ class fct_diposit {
     function fct_cm($cmid) {
         $cm = $this->moodle->get_coursemodule_from_id('fct', $cmid);
         return $this->fct($cm->instance);
+    }
+
+    function min_max_data_final_quaderns($fct_id) {
+        global $CFG;
+
+        $sql = "SELECT MIN(c.data_final) AS min_data_final,"
+            . " MAX(c.data_final) AS max_data_final"
+            . " FROM {$CFG->prefix}fct_conveni c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id";
+
+        $record = $this->moodle->get_record_sql($sql);
+
+        return array($record->min_data_final, $record->max_data_final);
+    }
+
+    function nombre_cicles($fct_id=false) {
+        if ($fct_id) {
+            return $this->moodle->count_records('fct_cicle', 'fct', $fct_id);
+        } else {
+            return $this->moodle->count_records('fct_cicle');
+        }
+    }
+
+    function nombre_quaderns($fct_id=false) {
+        global $CFG;
+
+        if ($fct_id) {
+            $where = "cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
+                . " WHERE fct = $fct_id)";
+            return $this->moodle->count_records_select('fct_quadern', $where);
+        } else {
+            return $this->moodle->count_records('fct_quadern');
+        }
+    }
+
+    function nombre_quinzenes($fct_id=false) {
+        global $CFG;
+
+        if ($fct_id) {
+            $where = "quadern IN (SELECT id FROM {$CFG->prefix}fct_quadern"
+                . " WHERE cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
+                . " WHERE fct = $fct_id))";
+            return $this->moodle->count_records_select('fct_quinzena', $where);
+        } else {
+            return $this->moodle->count_records('fct_quinzena');
+        }
     }
 
     function quadern($id) {
@@ -352,7 +423,10 @@ class fct_diposit {
     function quaderns($especificacio, $ordenacio=false) {
         global $CFG;
         $usuari = $especificacio->usuari;
-        $select = array('c.fct = ' . $especificacio->fct->id);
+        $select = array();
+        if ($especificacio->fct !== false) {
+            $select[] = 'c.fct = ' . $especificacio->fct;
+        }
         if ($usuari !== false and !$usuari->es_administrador) {
             $select_usuari = array('FALSE');
             if ($usuari->es_alumne) {
@@ -370,7 +444,7 @@ class fct_diposit {
             $select[] = "data_final >= $especificacio->data_final_min";
         }
         if ($especificacio->data_final_max !== false) {
-            $select[] = "data_final < $especificacio->data_final_max";
+            $select[] = "data_final <= $especificacio->data_final_max";
         }
         if ($especificacio->cicle !== false) {
             $select[] = "q.cicle = $especificacio->cicle";

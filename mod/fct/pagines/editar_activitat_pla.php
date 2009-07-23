@@ -48,7 +48,7 @@ class fct_pagina_editar_activitat_pla extends fct_pagina_base_pla_activitats  {
     }
 
     function processar_editar() {
-        $form = new fct_form_activitat($this, true);
+        $form = new fct_form_activitat($this);
         if ($form->validar()) {
             $this->activitat->descripcio = $form->valor('descripcio');
             $this->diposit->afegir_activitat($this->activitat);

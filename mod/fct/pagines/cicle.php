@@ -40,7 +40,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
         $this->cicle = $this->diposit->cicle(required_param('id', PARAM_INT));
         parent::configurar($this->cicle->fct);
         $this->url = fct_url::cicle($this->cicle->id);
-        $this->form = new fct_form_cicle($this, true);
+        $this->form = new fct_form_cicle($this);
     }
 
     function mostrar() {
@@ -57,10 +57,12 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $this->diposit->suprimir_cicle($this->cicle);
-        $this->registrar('delete cicle',
-                         fct_url::llista_cicles($this->fct->id),
-                         $this->cicle->nom);
+        if ($this->cicle->n_quaderns == 0) {
+            $this->diposit->suprimir_cicle($this->cicle);
+            $this->registrar('delete cicle',
+                             fct_url::llista_cicles($this->fct->id),
+                             $this->cicle->nom);
+        }
         redirect(fct_url::llista_cicles($this->fct->id));
     }
 

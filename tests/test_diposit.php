@@ -721,6 +721,105 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->assertEquals($this->fct, $fct);
     }
 
+    function test_min_max_data_final_quaderns() {
+        global $CFG;
+        $fct_id = 4801;
+
+        $sql = "SELECT MIN(c.data_final) AS min_data_final,"
+            . " MAX(c.data_final) AS max_data_final"
+            . " FROM {$CFG->prefix}fct_conveni c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON c.quadern = q.id";
+        $record = (object) array('min_data_final' => 3874292,
+                                 'max_data_final' => 3819388);
+
+        $this->moodle->expects($this->once())->method('get_record_sql')
+            ->with($sql)->will($this->returnValue($record));
+
+        list($min, $max) = $this->diposit->min_max_data_final_quaderns($fct_id);
+
+        $this->assertEquals($record->min_data_final, $min);
+        $this->assertEquals($record->max_data_final, $max);
+    }
+
+    function test_nombre_cicles() {
+        $nombre = 132;
+
+        $this->moodle->expects($this->once())->method('count_records')
+            ->with('fct_cicle')->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_cicles();
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
+    function test_nombre_cicles__fct() {
+        $nombre = 32;
+        $fct_id = 2938;
+
+        $this->moodle->expects($this->once())
+            ->method('count_records')->with('fct_cicle', 'fct', $fct_id)
+            ->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_cicles($fct_id);
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
+    function test_nombre_quaderns() {
+        $nombre = 482;
+
+        $this->moodle->expects($this->once())->method('count_records')
+            ->with('fct_quadern')->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_quaderns();
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
+    function test_nombre_quaderns__fct() {
+        global $CFG;
+
+        $nombre = 239;
+        $fct_id = 3847;
+
+        $where = "cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
+            . " WHERE fct = $fct_id)";
+        $this->moodle->expects($this->once())->method('count_records_select')
+            ->with('fct_quadern', $where)->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_quaderns($fct_id);
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
+    function test_nombre_quinzenes() {
+        $nombre = 1832;
+
+        $this->moodle->expects($this->once())->method('count_records')
+            ->with('fct_quinzena')->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_quinzenes();
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
+    function test_nombre_quinzenes__fct() {
+        global $CFG;
+
+        $nombre = 983;
+        $fct_id = 3842;
+
+        $where = "quadern IN (SELECT id FROM {$CFG->prefix}fct_quadern"
+            . " WHERE cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
+            . " WHERE fct = $fct_id))";
+        $this->moodle->expects($this->once())->method('count_records_select')
+            ->with('fct_quinzena', $where)->will($this->returnValue($nombre));
+
+        $resultat = $this->diposit->nombre_quinzenes($fct_id);
+
+        $this->assertEquals($nombre, $resultat);
+    }
+
     function test_quadern() {
         $index = 0;
 

@@ -109,12 +109,13 @@ function fct_check_backup_mods($course, $user_data=false, $backup_unique_code, $
         $info[0][0] = get_string('modulenameplural', 'fct');
         $info[0][1] = count_records('fct', 'course', $course);
         if ($user_data) {
+            $diposit = new fct_diposit;
             $info[1][0] = fct_string('cicles_formatius');
-            $info[1][1] = fct_db::nombre_cicles();
+            $info[1][1] = $diposit->nombre_cicles();
             $info[2][0] = fct_string('quaderns');
-            $info[2][1] = fct_db::nombre_quaderns();
+            $info[2][1] = $diposit->nombre_quaderns();
             $info[3][0] = fct_string('quinzenes');
-            $info[3][1] = fct_db::nombre_quinzenes();
+            $info[3][1] = $diposit->nombre_quinzenes();
         }
     }
 
@@ -126,12 +127,13 @@ function fct_check_backup_mods_instances($instance, $backup_unique_code) {
     $info[$instance->id.'0'][0] = '<b>'.$instance->name.'</b>';
     $info[$instance->id.'0'][1] = '';
     if ($instance->userdata) {
+        $diposit = new fct_diposit;
         $info[$instance->id.'1'][0] = fct_string('cicles_formatius');
-        $info[$instance->id.'1'][1] = fct_db::nombre_cicles($instance->id);
+        $info[$instance->id.'1'][1] = $diposit->nombre_cicles($instance->id);
         $info[$instance->id.'2'][0] = fct_string('quaderns');
-        $info[$instance->id.'2'][1] = fct_db::nombre_quaderns($instance->id);
+        $info[$instance->id.'2'][1] = $diposit->nombre_quaderns($instance->id);
         $info[$instance->id.'3'][0] = fct_string('quinzenes');
-        $info[$instance->id.'3'][1] = fct_db::nombre_quinzenes($instance->id);
+        $info[$instance->id.'3'][1] = $diposit->nombre_quinzenes($instance->id);
     }
 
     return $info;

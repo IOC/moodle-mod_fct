@@ -9,6 +9,10 @@ class fct_moodle {
                              $field3, addslashes($value3));
     }
 
+    function count_records_select($table, $select='') {
+        return count_records_select($table, $select);
+    }
+
     function delete_records($table, $field1='', $value1='',
                             $field2='', $value2='', $field3='', $value3='') {
         $rs = delete_records($table, $field1, addslashes($value1),
@@ -67,6 +71,14 @@ class fct_moodle {
         $record = get_record_select($table, $select, $fields);
         if (!$record) {
             throw new Exception('get_record');
+        }
+        return $record;
+    }
+
+    function get_record_sql($sql) {
+        $record = get_record_sql($sql);
+        if (!$record) {
+            throw new Exception('get_record_sql');
         }
         return $record;
     }
