@@ -2,19 +2,19 @@
 
 class fct {
     var $id;
+    var $course;
     var $name = '';
     var $intro = '';
     var $timecreated = 0;
     var $timemodified = 0;
-    var $frases_centre = '';
-    var $frases_empresa = '';
-    var $cm;
-    var $context;
-    var $course;
     var $centre;
+    var $frases_centre;
+    var $frases_empresa;
 
     function __construct() {
         $this->centre = new fct_centre;
+        $this->frases_centre = array();
+        $this->frases_empresa = array();
     }
 }
 
@@ -23,6 +23,10 @@ class fct_activitat {
     var $quadern;
     var $descripcio;
     var $nota = 0;
+
+    function cmp($a, $b) {
+        return strcmp($a->descripcio, $b->descripcio);
+    }
 }
 
 class fct_centre {
@@ -40,35 +44,22 @@ class fct_cicle {
     var $fct;
     var $nom;
     var $activitats;
-    var $n_quaderns;
+    var $n_quaderns = 0;
 
     function __construct() {
         $this->activitats = array();
     }
-
-    function text_activitats($text=false) {
-        if ($text === false) {
-            return implode("\n", $this->activitats);
-        } else {
-            $this->activitats = array();
-            foreach (explode("\n", $text) as $activitat) {
-                if (trim($activitat)) {
-                    $this->activitats[] = trim($activitat);
-                }
-            }
-        }
-    }
-
 }
 
 class fct_conveni {
-    var $id = 0;
+    var $uuid;
     var $codi = '';
     var $data_inici;
     var $data_final;
     var $horari;
 
     function __construct() {
+        $this->uuid = fct_uuid();
         $date = getdate();
         $this->data_inici = mktime(0, 0, 0, (int) $date['mon'],
                                    (int) $date['mday'], (int) $date['year']);
@@ -152,18 +143,11 @@ class fct_quadern {
     }
 
     function afegir_conveni($conveni) {
-        if ($conveni->id) {
-            $this->suprimir_conveni($conveni->id);
-        }
-        $this->convenis[] = $conveni;
+        $this->convenis[$conveni->uuid] = $conveni;
     }
 
-    function conveni($id) {
-        foreach ($this->convenis as $conveni) {
-            if ($conveni->id == $id) {
-                return $conveni;
-            }
-        }
+    function conveni($uuid) {
+        return isset($this->convenis[$uuid]) ? $this->convenis[$uuid] : false;
     }
 
     function data_inici() {
@@ -186,13 +170,18 @@ class fct_quadern {
         return $data;
     }
 
-    function suprimir_conveni($id) {
-        foreach (array_keys($this->convenis) as $index) {
-            if ($this->convenis[$index]->id == $id) {
-                unset($this->convenis[$index]);
-            }
+    function suprimir_conveni($conveni) {
+        if (isset($this->convenis[$conveni->uuid])) {
+            unset($this->convenis[$conveni->uuid]);
         }
     }
+}
+
+class fct_qualificacio {
+    var $apte = 0;
+    var $nota = 0;
+    var $data = 0;
+    var $observacions = '';
 }
 
 class fct_quinzena {
@@ -212,13 +201,6 @@ class fct_quinzena {
         $this->dies = array();
         $this->activitats = array();
     }
-}
-
-class fct_qualificacio {
-    var $apte = 0;
-    var $nota = 0;
-    var $data = 0;
-    var $observacions = '';
 }
 
 class fct_resum_hores_fct {
@@ -250,6 +232,48 @@ class fct_serveis {
 
     function __construct($diposit) {
         $this->diposit = $diposit;
+    }
+
+    function crear_quadern($alumne, $cicle) {
+        $quadern = new fct_quadern;
+        $quadern->alumne = $alumne;
+        $quadern->cicle = $cicle;
+        $quadern->afegir_conveni(new fct_conveni);
+
+        $ultim_quadern = $this->ultim_quadern($alumne, $cicle);
+        if ($ultim_quadern) {
+            $quadern->dades_alumne = clone($ultim_quadern->dades_alumne);
+            $quadern->hores_credit = $ultim_quadern->hores_credit;
+            $quadern->exempcio = $ultim_quadern->exempcio;
+            $quadern->hores_anteriors = $ultim_quadern->hores_anteriors;
+            $quadern->qualificacio_global =
+                clone($ultim_quadern->qualificacio_global);
+        }
+
+        return $quadern;
+    }
+
+    function empreses($cicles) {
+        $empreses = array();
+        if ($cicles) {
+            foreach ($cicles as $cicle) {
+                $noms = $this->diposit->noms_empreses($cicle);
+                foreach ($noms as $nom) {
+                    if (!isset($empreses[$nom])) {
+                        $especificacio = new fct_especificacio_quaderns;
+                        $especificacio->cicle = $cicle;
+                        $especificacio->empresa = $nom;
+                        $quaderns = $this->diposit->quaderns($especificacio,
+                                                             'data_final');
+                        if ($quaderns)  {
+                            $quadern = array_pop($quaderns);
+                            $empreses[$nom] = $quadern->empresa;
+                        }
+                    }
+                }
+            }
+        }
+        return $empreses;
     }
 
     function hores_realitzades_quadern($quadern) {
@@ -337,11 +361,39 @@ class fct_usuari {
     }
 }
 
-function fct_copy_vars($source, $dest, $vars=false) {
+function fct_copy_vars($source, $dest, $include=false, $exclude=array()) {
+    if (!$include) {
+        $include = array_keys((array) $dest);
+    }
     foreach ($source as $key => $value) {
-        if (($vars and in_array($key, $vars))
-            or (!$vars and property_exists($dest, $key))) {
+        if (in_array($key, $include) and !in_array($key, $exclude)) {
             $dest->$key = $value;
         }
     }
+}
+
+function fct_linies_text($text) {
+    $linies = array();
+    foreach (explode("\n", $text) as $linia) {
+        if (trim($linia)) {
+            $linies[] = trim($linia);
+        }
+    }
+    return $linies;
+}
+
+function fct_uuid() {
+    $octets = array();
+    for ($n = 0; $n < 16; $n++) {
+        $octets[] = mt_rand(0, 255);
+    }
+    $octets[8] = ($octets[8] | 0x80) & 0xbf; // variant ISO/IEC 11578:1996
+    $octets[6] = ($octets[6] & 0x0f) | 0x40; // version 4 (random)
+
+    return sprintf('%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x'
+                   .'-%02x%02x%02x%02x%02x%02x',
+                   $octets[0], $octets[1], $octets[2], $octets[3],
+                   $octets[4], $octets[5], $octets[6], $octets[7],
+                   $octets[8], $octets[9], $octets[10], $octets[11],
+                   $octets[12], $octets[13], $octets[14], $octets[15]);
 }

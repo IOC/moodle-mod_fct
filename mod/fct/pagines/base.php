@@ -22,6 +22,8 @@ fct_require('domini.php', 'diposit.php');
 class fct_pagina_base {
 
     var $accio = false;
+    var $cm;
+    var $course;
     var $fct;
     var $param = array();
     var $permis_admin;
@@ -72,13 +74,17 @@ class fct_pagina_base {
         global $USER;
 
         if ($fct_id) {
-            $this->fct = $this->diposit->fct($fct_id);
+            $this->cm = get_coursemodule_from_instance('fct', $fct_id);
         } else {
-            $this->fct = $this->diposit->fct_cm($cm_id);
+            $this->cm = get_coursemodule_from_id('fct', $cm_id);
         }
+
+        $this->fct = $this->diposit->fct($this->cm->instance);
         $this->usuari = $this->diposit->usuari($this->fct, $USER->id);
 
-        require_course_login($this->fct->course, true, $this->fct->cm);
+        $this->course = get_record('course', 'id', $this->fct->course);
+
+        require_course_login($this->course, true, $this->cm);
 
         $this->permis_admin = $this->usuari->es_administrador;
         $this->permis_alumne = $this->usuari->es_alumne;
@@ -155,7 +161,7 @@ class fct_pagina_base {
 
         $navlinks = array();
         $navlinks[] = array('name' => format_string($this->fct->name),
-                            'link' => "view.php?id={$this->fct->cm->id}",
+                            'link' => "view.php?id={$this->cm->id}",
                             'type' => 'activityinstance');
         foreach ($this->navegacio as $enllac) {
             $navlinks[] = array('name' => $enllac->nom, 'link' => $enllac->url,
@@ -163,13 +169,13 @@ class fct_pagina_base {
         }
         $navigation = build_navigation($navlinks);
 
-        $buttontext = update_module_button($this->fct->cm->id,
-                                           $this->fct->course->id,
+        $buttontext = update_module_button($this->cm->id,
+                                           $this->fct->course,
                                            get_string('modulename', 'fct'));
 
         print_header_simple(format_string($this->fct->name), '', $navigation,
                             '', '', true, $buttontext,
-                            navmenu($this->fct->course, $this->fct->cm));
+                            navmenu($this->course, $this->cm));
 
         print_box_start('boxaligncenter', 'paginafct');
 
@@ -195,7 +201,7 @@ class fct_pagina_base {
             print_box_end();
             print_box_end();
         }
-        print_footer($this->fct->course);
+        print_footer($this->course);
     }
 
     function nom_usuari($userid, $enllac=false, $correu=false) {
@@ -211,7 +217,7 @@ class fct_pagina_base {
         $html = $user->firstname.' '.$user->lastname;
         if ($enllac) {
         	$html = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$userid
-                .'&amp;course='.$this->fct->course->id.'">'.$html.'</a>';
+                .'&amp;course='.$this->fct->course.'">'.$html.'</a>';
         }
         if ($correu) {
             $html .= ' (<a href="mailto:' . $user->email . '">'
@@ -236,7 +242,7 @@ class fct_pagina_base {
         if (is_null($url)) {
             $url = $this->url;
         }
-        add_to_log($this->fct->course->id, 'fct', $action, $url, $info,
-                   $this->fct->cm->id);
+        add_to_log($this->fct->course, 'fct', $action, $url, $info,
+                   $this->cm->id);
     }
 }

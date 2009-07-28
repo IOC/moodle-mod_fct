@@ -60,6 +60,10 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
 
     function mostrar() {
         $this->form->valors($this->fct);
+        $this->form->valor('frases_centre',
+                           implode("\n", $this->fct->frases_centre));
+        $this->form->valor('frases_empresa',
+                           implode("\n", $this->fct->frases_empresa));
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -71,8 +75,10 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $this->fct->frases_centre = $this->form->valor('frases_centre');
-            $this->fct->frases_empresa = $this->form->valor('frases_empresa');
+            $this->fct->frases_centre = fct_linies_text(
+                $this->form->valor('frases_centre'));
+            $this->fct->frases_empresa = fct_linies_text(
+                $this->form->valor('frases_empresa'));
             $this->diposit->afegir_fct($this->fct);
             $this->registrar('update frases_retroaccio');
             redirect($this->url);

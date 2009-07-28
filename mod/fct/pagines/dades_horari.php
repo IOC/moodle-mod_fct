@@ -41,7 +41,7 @@ class fct_form_dades_horari extends fct_form_base {
     function configurar($pagina) {
 
         foreach($pagina->quadern->convenis as $conveni) {
-            $this->element('horari', "horari_{$conveni->id}", false);
+            $this->element('horari', "horari_{$conveni->uuid}", false);
         }
 
         if ($pagina->accio == 'veure') {
@@ -85,7 +85,7 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
                 'dissabte' => $conveni->horari->dissabte,
                 'diumenge' => $conveni->horari->diumenge,
             );
-            $this->form->valor("horari_{$conveni->id}", $valor);
+            $this->form->valor("horari_{$conveni->uuid}", $valor);
         }
         $this->mostrar_capcalera();
         $this->form->mostrar();
@@ -99,7 +99,7 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
     function processar_desar() {
         if ($this->form->validar()) {
             foreach ($this->quadern->convenis as $conveni) {
-                $valor = $this->form->valor("horari_{$conveni->id}");
+                $valor = $this->form->valor("horari_{$conveni->uuid}");
                 if ($valor) {
                     $conveni->horari->dilluns = $valor->dilluns;
                     $conveni->horari->dimarts = $valor->dimarts;

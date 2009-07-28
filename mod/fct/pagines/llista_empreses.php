@@ -58,7 +58,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
         if ($this->cicles) {
             $form = new fct_form_llista_empreses($this);
             if ($form->validar()) {
-                $empreses = $this->diposit->empreses($form->valor('cicles'));
+                $empreses = $this->serveis->empreses($form->valor('cicles'));
                 $this->registrar('view baixa_empreses', $this->url);
                 $this->enviar($empreses, $form->valor('format'));
             }

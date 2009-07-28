@@ -44,10 +44,12 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function processar_afegir() {
         $form = new fct_form_quadern($this);
         if ($form->validar()) {
-            $quadern = new fct_quadern;
-            fct_copy_vars($form->valors(), $quadern);
+            $quadern = $this->serveis->crear_quadern($form->valor('alumne'),
+                                                     $form->valor('cicle'));
+            $quadern->tutor_centre = $form->valor('tutor_centre');
+            $quadern->tutor_empresa = $form->valor('tutor_empresa');
             $quadern->empresa->nom = $form->valor('nom_empresa');
-            $quadern->afegir_conveni(new fct_conveni);
+            $quadern->estat = $form->valor('estat');
             $this->diposit->afegir_quadern($quadern);
             $this->registrar('add quadern', fct_url::quadern($quadern->id),
                              $this->nom_usuari($quadern->alumne)
@@ -81,4 +83,3 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
         return false;
     }
 }
-

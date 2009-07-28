@@ -17,6 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once($CFG->dirroot . '/mod/fct/lib.php');
+
 function xmldb_fct_upgrade($oldversion=0) {
     global $CFG;
 
@@ -251,6 +253,212 @@ function xmldb_fct_upgrade($oldversion=0) {
         $field2 = $table->getField('frases_empresa');
         $result = add_field($table, $field1, false)
             && add_field($table, $field2, false);
+    }
+
+    if ($result && $oldversion < 2009072700) {
+        $table = $structure->getTable('fct_quinzena');
+        $field = $table->getField('objecte');
+        $result = add_field($table, $field, false);
+
+        if ($result) {
+            $records = get_records('fct_quinzena');
+            $records = $records ? $records : array();
+            foreach ($records as $record) {
+                $quinzena = new fct_quinzena;
+                fct_copy_vars($record, $quinzena);
+                $quinzena->any = $record->any_;
+
+                $records_dies = get_records('fct_dia_quinzena',
+                                            'quinzena', $record->id);
+                if ($records_dies) {
+                    foreach ($records_dies as $record_dia) {
+                        $quinzena->dies[] = $record_dia->dia;
+                    }
+                }
+
+                $records_activitats = get_records('fct_activitat_quinzena',
+                                                  'quinzena', $record->id);
+                if ($records_activitats) {
+                    foreach ($records_activitats as $record_activitat) {
+                        $quinzena->activitats[] = $record_activitat->activitat;
+                    }
+                }
+
+                $record->objecte = fct_json::serialitzar_quinzena($quinzena);
+                update_record('fct_quinzena', addslashes_recursive($record));
+            }
+        }
+
+        $fields = array('hores', 'valoracions', 'observacions_alumne',
+                        'observacions_centre', 'observacions_empresa');
+        foreach ($fields as $name) {
+            $result = $result && drop_field($table, new XMLDBField($name), false);
+        }
+
+        $tables = array('fct_dia_quinzena', 'fct_activitat_quinzena');
+        foreach ($tables as $name) {
+            $result = $result && drop_table(new XMLDBTable($name), false);
+        }
+    }
+
+    if ($result && $oldversion < 2009072701) {
+        $table = $structure->getTable('fct_activitat');
+        $field = $table->getField('objecte');
+        $result = rename_table(new XMLDBTable('fct_activitat_pla'),
+                               'fct_activitat', false)
+            && add_field($table, $field, false);
+
+        if ($result) {
+            $records = get_records('fct_activitat');
+            $records = $records ? $records : array();
+            foreach ($records as $record) {
+                $activitat = new fct_activitat;
+                fct_copy_vars($record, $activitat);
+                $record->objecte = fct_json::serialitzar_activitat($activitat);
+                update_record('fct_activitat', addslashes_recursive($record));
+            }
+
+            $result =  drop_field($table, new XMLDBField('descripcio'), false)
+                && drop_field($table, new XMLDBField('nota'), false);
+        }
+    }
+
+    if ($result && $oldversion < 2009072702) {
+        $table = $structure->getTable('fct_quadern');
+        $result = add_field($table, $table->getField('data_final'), false)
+            && add_field($table, $table->getField('objecte'), false)
+            && add_index($table, $table->getIndex('estat'), false)
+            && add_index($table, $table->getIndex('data_final'), false);
+
+        if ($result) {
+            $records_quaderns = get_records('fct_quadern');
+            $records_quaderns = $records_quaderns ? $records_quaderns : array();
+            foreach ($records_quaderns as $record_quadern) {
+                $quadern = new fct_quadern;
+                fct_copy_vars($record_quadern, $quadern);
+
+                $record = get_record('fct_dades_empresa',
+                                     'quadern', $quadern->id);
+                fct_copy_vars($record, $quadern->empresa);
+                $quadern->empresa->nom = $record_quadern->nom_empresa;
+
+                $record = get_record('fct_dades_relatives',
+                                     'quadern', $quadern->id);
+                fct_copy_vars($record, $quadern,
+                              array('hores_credit', 'exempcio',
+                                    'hores_anteriors'));
+
+                $record = get_record('fct_dades_conveni',
+                                     'quadern', $quadern->id);
+                fct_copy_vars($record, $quadern,
+                              array('prorrogues', 'hores_practiques'));
+
+                $record = get_record('fct_qualificacio_quadern',
+                                     'quadern', $quadern->id);
+                fct_copy_vars($record, $quadern->qualificacio);
+                $quadern->qualificacio->apte = $record->qualificacio;
+
+                $records = get_records('fct_conveni', 'quadern',
+                                       $quadern->id, 'data_inici');
+                if ($records) {
+                    foreach ($records as $record) {
+                        $conveni = new fct_conveni;
+                        fct_copy_vars($record, $conveni);
+                        $record = get_record('fct_horari','conveni', $record->id);
+                        fct_copy_vars($record, $conveni->horari);
+                        $quadern->convenis[] = $conveni;
+                    }
+                }
+
+                $records = get_records('fct_valoracio_actituds',
+                                       'quadern', $quadern->id, 'actitud');
+                if ($records) {
+                    foreach ($records as $record) {
+                        if ($record->final) {
+                            $quadern->valoracio_final[$record->actitud] = $record->nota;
+                        } else {
+                            $quadern->valoracio_parcial[$record->actitud] = $record->nota;
+                        }
+                    }
+                }
+
+                $fct_id = get_field('fct_cicle', 'fct', 'id', $quadern->cicle);
+                $where = "fct = {$fct_id} AND alumne = {$quadern->alumne}";
+                $records = get_records_select('fct_dades_alumne', $where);
+                if ($records) {
+                    $record = array_pop($records);
+                    fct_copy_vars($record, $quadern->dades_alumne);
+                }
+
+                $where = "cicle = {$quadern->cicle} AND alumne = {$quadern->alumne}";
+                $records = get_records_select('fct_qualificacio_global', $where);
+                if ($records) {
+                    $record = array_pop($records);
+                    fct_copy_vars($record, $quadern->qualificacio_global);
+                    $quadern->qualificacio_global->apte = $record->qualificacio;
+                }
+
+                $record_quadern->data_final = $quadern->data_final();
+                $record_quadern->objecte = fct_json::serialitzar_quadern($quadern);
+                update_record('fct_quadern', addslashes_recursive($record_quadern));
+            }
+        }
+
+        $tables = array('fct_dades_alumne', 'fct_dades_centre_concertat',
+                        'fct_dades_empresa', 'fct_dades_conveni',
+                        'fct_conveni', 'fct_horari', 'fct_dades_relatives',
+                        'fct_valoracio_actituds', 'fct_qualificacio_quadern',
+                        'fct_qualificacio_global');
+        foreach ($tables as $name) {
+            $result = $result && drop_table(new XMLDBTable($name), false);
+        }
+    }
+
+    if ($result && $oldversion < 2009072703) {
+        $table = $structure->getTable('fct_cicle');
+        $result = add_field($table, $table->getField('objecte'), false);
+
+        if ($result) {
+            $records = get_records('fct_cicle');
+            $records = $records ? $records : array();
+            foreach ($records as $record) {
+                $cicle = new fct_cicle;
+                fct_copy_vars($record, $cicle);
+                $cicle->n_quaderns = count_records('fct_quadern', 'cicle', $record->id);
+                $activitats = get_records('fct_activitat_cicle', 'cicle', $record->id, 'descripcio');
+                foreach ($activitats as $activitat) {
+                    $cicle->activitats[] = $activitat->descripcio;
+                }
+                $record->objecte = fct_json::serialitzar_cicle($cicle);
+                update_record('fct_cicle', addslashes_recursive($record));
+            }
+
+            $result = drop_table(new XMLDBTable('fct_activitat_cicle'), false);
+        }
+    }
+
+    if ($result && $oldversion < 2009072704) {
+        $table = $structure->getTable('fct');
+        $result = add_field($table, $table->getField('objecte'), false);
+
+        if ($result) {
+            $records = get_records('fct');
+            $records = $records ? $records : array();
+            foreach ($records as $record) {
+                $fct = new fct;
+                fct_copy_vars($record, $fct);
+                $fct->frases_centre = fct_linies_text($record->frases_centre);
+                $fct->frases_empresa = fct_linies_text($record->frases_empresa);
+                $record_centre = get_record('fct_dades_centre', 'fct', $record->id);
+                fct_copy_vars($record_centre, $fct->centre);
+                $record->objecte = fct_json::serialitzar_fct($fct);
+                update_record('fct', addslashes_recursive($record));
+            }
+
+            $result = drop_field($table, new XMLDBField('frases_centre'), false)
+                && drop_field($table, new XMLDBField('frases_empresa'), false)
+                && drop_table(new XMLDBTable('fct_dades_centre'), false);
+        }
     }
 
     return $result;

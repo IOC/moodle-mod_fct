@@ -85,7 +85,8 @@ class fct_form_quadern extends fct_form_base {
 
         $email = ($pagina->accio == 'vuere');
 
-        $records = get_users_by_capability($pagina->fct->context, $capability,
+        $context = get_context_instance(CONTEXT_MODULE, $pagina->cm->id);
+        $records = get_users_by_capability($context, $capability,
                                            'u.id', 'u.lastname, u.firstname',
                                            '', '', '', '', false);
         if ($records) {

@@ -23,16 +23,18 @@ class fct_backup
 {
     var $bf;
     var $level;
-    var $fct;
+    var $userdata;
+    var $diposit;
 
-    function __construct($bf, $level, $fct) {
+    function __construct($bf, $level, $userdata) {
         $this->bf = $bf;
         $this->level = $level;
-        $this->fct = $fct;
+        $this->userdata = $userdata;
+        $this->diposit = new fct_diposit;
     }
 
     function write($text) {
-        fwrite ($this->bf, $text);
+        fwrite($this->bf, $text);
     }
 
     function write_end_tag($name) {
@@ -44,50 +46,60 @@ class fct_backup
         $this->write(full_tag($name, $this->level, false, $value));
     }
 
-    function write_record($record) {
-        $this->write_start_tag('RECORD');
-        foreach ((array) $record as $name => $value) {
-            $this->write_full_tag(strtoupper($name), $value);
-        }
-        $this->write_end_tag('RECORD');
+    function write_objecte_activitat($activitat) {
+        $json = fct_json::serialitzar_activitat($activitat);
+        $this->write_full_tag('ACTIVITAT', $json);
     }
 
-    function write_table($table, $records) {
-        if (!empty($records) and !is_array($records)) {
-            $records = array($records);
-        }
-        $this->write_start_tag(strtoupper($table));
-        if ($records) {
-            foreach ($records as $record) {
-                $this->write_record($record);
+    function write_objecte_cicle($cicle) {
+        $json = fct_json::serialitzar_cicle($cicle);
+        $this->write_full_tag('CICLE', $json);
+
+        if ($this->userdata) {
+            $especificacio = new fct_especificacio_quaderns;
+            $especificacio->cicle = $cicle->id;
+            $quaderns = $this->diposit->quaderns($especificacio);
+            foreach ($quaderns as $quadern) {
+                $this->write_objecte_quadern($quadern);
             }
         }
-        $this->write_end_tag(strtoupper($table));
     }
 
-    function write_table_fct($table, $ftables=false) {
-        global $CFG;
+    function write_objecte_fct($fct) {
+        $json = fct_json::serialitzar_fct($fct);
+        $this->write_full_tag('FCT', $json);
 
-        $select = "fct = {$this->fct->id}";
-
-        if ($ftables) {
-            $fkeys = array_keys($ftables);
-            while ($fkeys) {
-                $fkey = array_pop($fkeys);
-                $ftable = $ftables[$fkey];
-                $select = "$fkey IN (SELECT id FROM {$CFG->prefix}$ftable"
-                    . " WHERE $select)";
-            }
+        $cicles = $this->diposit->cicles($fct->id);
+        foreach ($cicles as $cicle) {
+            $this->write_objecte_cicle($cicle);
         }
-
-        $records = get_records_select($table, $select);
-        $this->write_table($table, $records);
     }
 
-    function write_tables_fct($tables, $ftables=false) {
-        foreach ($tables as $table) {
-            $this->write_table_fct($table, $ftables);
+    function write_objecte_quadern($quadern) {
+        $json = fct_json::serialitzar_quadern($quadern);
+        $this->write_full_tag('QUADERN', $json);
+
+        $activitats = $this->diposit->activitats($quadern->id);
+        foreach ($activitats as $activitat) {
+            $this->write_objecte_activitat($activitat);
         }
+
+        $quinzenes = $this->diposit->quinzenes($quadern->id);
+        foreach ($quinzenes as $quinzena) {
+            $this->write_objecte_quinzena($quinzena);
+        }
+    }
+
+    function write_objecte_quinzena($quinzena) {
+        $json = fct_json::serialitzar_quinzena($quinzena);
+        $this->write_full_tag('QUINZENA', $json);
+    }
+
+    function write_objectes($fct_id) {
+        $this->write_start_tag('OBJECTES');
+        $fct = $this->diposit->fct($fct_id);
+        $this->write_objecte_fct($fct);
+        $this->write_end_tag('OBJECTES');
     }
 
     function write_start_tag($name) {
@@ -153,53 +165,17 @@ function fct_backup_mods($bf, $preferences) {
 }
 
 function fct_backup_one_mod($bf, $preferences, $fct) {
-    if (is_numeric($fct)) {
-        $fct = get_record('fct', 'id', $fct);
-    }
-    $instanceid = $fct->id;
-    $userdata = backup_userdata_selected($preferences,'fct', $fct->id);
-    
+    $fct_id = is_numeric($fct) ? $fct : $fct->id;
+    $userdata = backup_userdata_selected($preferences,'fct', $fct_id);
     $status = true;
 
-    $backup = new fct_backup($bf, 3, $fct);
+    $backup = new fct_backup($bf, 3, $userdata);
     $backup->write_start_tag('MOD');
-    $backup->write_full_tag('ID', $fct->id);
+    $backup->write_full_tag('ID', $fct_id);
     $backup->write_full_tag('MODTYPE', 'fct');
     $backup->write_full_tag('VERSION',
                             get_field('modules', 'version' , 'name', 'fct'));
-    $backup->write_full_tag('NAME', $fct->name);
-    $backup->write_full_tag('INTRO', $fct->intro);
-    $backup->write_full_tag('TIMECREATED', $fct->timecreated);
-    $backup->write_full_tag('TIMEMODIFIED', $fct->timemodified);
-    $backup->write_tables_fct(array('fct_dades_centre', 'fct_cicle'));
-    $backup->write_table_fct('fct_activitat_cicle',
-                             array('cicle' => 'fct_cicle'));
-    if ($userdata) {
-        $backup->write_table_fct('fct_dades_alumne');
-        $backup->write_tables_fct(array('fct_quadern',
-                                        'fct_qualificacio_global'),
-                                  array('cicle' => 'fct_cicle'));
-        $backup->write_tables_fct(array('fct_dades_centre_concertat',
-                                        'fct_dades_empresa',
-                                        'fct_dades_conveni',
-                                        'fct_conveni',
-                                        'fct_dades_relatives',
-                                        'fct_activitat_pla',
-                                        'fct_valoracio_actituds',
-                                        'fct_qualificacio_quadern',
-                                        'fct_quinzena'),
-                                  array('quadern' => 'fct_quadern',
-                                        'cicle' => 'fct_cicle'));
-        $backup->write_table_fct('fct_horari',
-                                 array('conveni' => 'fct_conveni',
-                                       'quadern' => 'fct_quadern',
-                                       'cicle' => 'fct_cicle'));
-        $backup->write_tables_fct(array('fct_activitat_quinzena',
-                                        'fct_dia_quinzena'),
-                                  array('quinzena' => 'fct_quinzena',
-                                        'quadern' => 'fct_quadern',
-                                        'cicle' => 'fct_cicle'));
-    }
+    $backup->write_objectes($fct_id);
     $backup->write_end_tag('MOD');
 
     return $status;

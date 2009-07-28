@@ -31,13 +31,13 @@ function fct_string($identifier, $a=null) {
     return get_string($identifier, 'fct', $a);
 }
 
-fct_require('moodle.php', 'domini.php', 'diposit.php');
+fct_require('moodle.php', 'domini.php', 'diposit.php', 'json.php');
 
 function fct_add_instance($data) {
     $fct = new fct;
-    $fct->course = get_record('course', 'id', $data->course);
-    $fct->name = $data->name;
-    $fct->intro = $data->intro;
+    $fct->course = (int) $data->course;
+    $fct->name = stripslashes($data->name);
+    $fct->intro = stripslashes($data->intro);
     $fct->timecreated = time();
     $fct->timemodified = time();
     $diposit = new fct_diposit;
@@ -48,8 +48,8 @@ function fct_add_instance($data) {
 function fct_update_instance($data) {
     $diposit = new fct_diposit;
     $fct = $diposit->fct($data->instance);
-    $fct->name = $data->name;
-    $fct->intro = $data->intro;
+    $fct->name = stripslashes($data->name);
+    $fct->intro = stripslashes($data->intro);
     $fct->timemodified = time();
     $diposit->afegir_fct($fct);
     return true;

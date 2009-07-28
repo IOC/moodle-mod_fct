@@ -14,6 +14,60 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $this->serveis = new fct_serveis($this->diposit);
     }
 
+    function test_crear_quadern() {
+        $this->serveis = $this->getMock('fct_serveis',
+                                        array('ultim_quadern'),
+                                        array($this->diposit));
+
+        $alumne = 3821;
+        $cicle = 8427;
+
+        $this->serveis->expects($this->once())->method('ultim_quadern')
+            ->with($alumne, $cicle)->will($this->returnValue(false));
+
+        $quadern = $this->serveis->crear_quadern($alumne, $cicle);
+
+        $this->assertType('fct_quadern', $quadern);
+        $this->assertEquals($alumne, $quadern->alumne);
+        $this->assertEquals($cicle, $quadern->cicle);
+        $this->assertEquals(1, count($quadern->convenis));
+    }
+
+    function test_crear_quadern__ultim() {
+        $this->serveis = $this->getMock('fct_serveis',
+                                        array('ultim_quadern'),
+                                        array($this->diposit));
+
+        $ultim = new fct_quadern;
+        $ultim->alumne = 3821;
+        $ultim->cicle = 8427;
+        $ultim->dades_alumne->adreca = 'adreca alumne';
+        $ultim->hores_credit = 239;
+        $ultim->exempcio = 25;
+        $ultim->hores_anteriors = 34;
+        $ultim->qualificacio_global->nota = 3;
+
+        $this->serveis->expects($this->once())->method('ultim_quadern')
+            ->with($ultim->alumne, $ultim->cicle)
+            ->will($this->returnValue($ultim));
+
+
+        $quadern = $this->serveis->crear_quadern($ultim->alumne,
+                                                 $ultim->cicle);
+
+        $this->assertType('fct_quadern', $quadern);
+        $this->assertEquals(1, count($quadern->convenis));
+        $this->assertEquals($ultim->alumne, $quadern->alumne);
+        $this->assertEquals($ultim->cicle, $quadern->cicle);
+        $this->assertEquals($ultim->dades_alumne, $quadern->dades_alumne);
+        $this->assertEquals($ultim->hores_credit, $quadern->hores_credit);
+        $this->assertEquals($ultim->exempcio, $quadern->exempcio);
+        $this->assertEquals($ultim->hores_anteriors,
+                            $quadern->hores_anteriors);
+        $this->assertEquals($ultim->qualificacio_global,
+                            $quadern->qualificacio_global);
+    }
+
     function test_hores_realitzades_quadern() {
         $quadern = new fct_quadern;
         $quadern->id = 3394;

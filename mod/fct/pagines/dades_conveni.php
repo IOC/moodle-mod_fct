@@ -38,7 +38,7 @@ class fct_form_dades_conveni extends fct_form_base {
 
     function configurar($pagina) {
         foreach ($pagina->quadern->convenis as $conveni) {
-            $this->element('conveni', 'conveni_' . $conveni->id, 'conveni',
+            $this->element('conveni', 'conveni_' . $conveni->uuid, 'conveni',
                            array('suprimir' => $pagina->accio != 'veure'));
         }
 
@@ -76,7 +76,7 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
     function comprovar_dates($valors) {
         $errors = array();
         foreach ($this->quadern->convenis as $conveni) {
-            $index = 'conveni_' . $conveni->id;
+            $index = 'conveni_' . $conveni->uuid;
             if (isset($valors->$index)) {
                 if ($valors->$index->data_inici > $valors->$index->data_final) {
                     $errors["$index_data_inici"] = fct_string('anterior_data_final');
@@ -109,7 +109,7 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
         $this->form->valor('hores_pendents',
                            $this->quadern->hores_practiques - (float) $hores);
         foreach ($this->quadern->convenis as $conveni) {
-            $this->form->valor('conveni_' .  $conveni->id, $conveni);
+            $this->form->valor('conveni_' .  $conveni->uuid, $conveni);
         }
         $this->mostrar_capcalera();
         $this->form->mostrar();
@@ -129,13 +129,13 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
                 $this->form->valor('hores_practiques');
 
             foreach ($this->quadern->convenis as $conveni) {
-                $index = 'conveni_' . $conveni->id;
+                $index = 'conveni_' . $conveni->uuid;
                 if (isset($valors->$index)) {
                     $conveni->codi = $valors->$index->codi;
                     $conveni->data_inici = $valors->$index->data_inici;
                     $conveni->data_final = $valors->$index->data_final;
                     if (!empty($valors->$index->suprimir)) {
-                        $this->quadern->suprimir_conveni($conveni->id);
+                        $this->quadern->suprimir_conveni($conveni);
                     }
                 }
             }

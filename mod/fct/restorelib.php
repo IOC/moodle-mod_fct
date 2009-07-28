@@ -17,17 +17,20 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class fct_restore
-{
-    var $mod;
+require_once($CFG->dirroot . '/mod/fct//lib.php');
+
+class fct_restore {
+
     var $restore;
     var $info;
-    var $status;
+    var $userdata;
+    var $diposit;
 
-    function __construct($restore, $info) {
+    function __construct($restore, $info, $userdata) {
         $this->restore = $restore;
         $this->info = $info;
-        $this->status = true;
+        $this->userdata = $userdata;
+        $this->diposit = new fct_diposit;
     }
 
     function get_id($table, $old_id) {
@@ -35,129 +38,101 @@ class fct_restore
             return 0;
         }
         $result = backup_getid($this->restore->backup_unique_code, $table, $old_id);
-        return $result->new_id;
-    }
-
-    function get_node($name, $index=0) {
-        $name = strtoupper($name);
-        $node = $this->info['MOD']['#'][$name][$index]['#'];
-        if (is_string($node)) {
-            return backup_todb($node);
-        } else {
-            return $node;
-        }
-    }
-
-    function get_records($table, $fkeys=array()) {
-        $records = array();
-        $table_node = $this->get_node($table);
-        if (isset($table_node['RECORD'])) {
-            foreach ($table_node['RECORD'] as $record_node) {
-                $record_node = $record_node['#'];
-                $record = array();
-                foreach ($record_node as $field_name => $field_node) {
-                    $field_name = strtolower($field_name);
-                    $field_value = backup_todb($field_node['0']['#']);
-                    if (isset($fkeys[$field_name])) {
-                        $ftable = $fkeys[$field_name];
-                        $field_value = $this->get_id($ftable, $field_value);
-                    }
-                    $record[$field_name] = $field_value;
-                }
-                $records[] = (object) $record;
-            }
-        }
-        return $records;
-    }
-
-    function insert_record($table, $record) {
-        if (!$this->status) {
-            return;
-        }
-        $old_id = $record->id;
-        unset($record->id);
-        $new_id = insert_record($table, $record);
-        if ($new_id) {
-            $this->put_id($table, $old_id, $new_id);
-        } else {
-            $this->status = false;
-        }
-    }
-
-    function restore_table($table, $fkeys=array()) {
-        $records = $this->get_records($table, $fkeys);
-        foreach ($records as $record) {
-            $this->insert_record($table, $record);
-        }
+        return $result ? $result->new_id : 0;
     }
 
     function put_id($table, $old_id, $new_id) {
         backup_putid($this->restore->backup_unique_code, $table, $old_id, $new_id);
     }
 
+    function restore_objecte_activitat($json) {
+        $activitat = fct_json::deserialitzar_activitat($json);
+        $activitat->quadern = $this->get_id('fct_quadern', $activitat->quadern);
+        $id = $activitat->id;
+        $activitat->id = false;
+        $this->diposit->afegir_activitat($activitat);
+        $this->put_id('fct_activitat_pla', $id, $activitat->id);
+    }
+
+    function restore_objecte_cicle($json) {
+        $cicle = fct_json::deserialitzar_cicle($json);
+        $cicle->fct = $this->get_id('fct', $cicle->fct);
+        $id = $cicle->id;
+        $cicle->id = false;
+        $this->diposit->afegir_cicle($cicle);
+        $this->put_id('fct_cicle', $id, $cicle->id);
+    }
+
+    function restore_objecte_fct($json) {
+        $fct = fct_json::deserialitzar_fct($json);
+        $id = $fct->id;
+        $fct->id = false;
+        $fct->course = $this->restore->course_id;
+        $this->diposit->afegir_fct($fct);
+        $this->put_id('fct', $id, $fct->id);
+    }
+
+    function restore_objecte_quadern($json) {
+        $quadern = fct_json::deserialitzar_quadern($json);
+        $quadern->cicle = $this->get_id('fct_cicle', $quadern->cicle);
+        $quadern->alumne = $this->get_id('user', $quadern->alumne);
+        $quadern->tutor_centre = $this->get_id('user', $quadern->tutor_centre);
+        $quadern->tutor_empresa = $this->get_id('user', $quadern->tutor_empresa);
+        $id = $quadern->id;
+        $quadern->id = false;
+        $this->diposit->afegir_quadern($quadern);
+        $this->put_id('fct_quadern', $id, $quadern->id);
+    }
+
+    function restore_objecte_quinzena($json) {
+        $quinzena = fct_json::deserialitzar_quinzena($json);
+        $quinzena->quadern = $this->get_id('fct_quadern', $quinzena->quadern);
+        $activitats = array();
+        foreach ($quinzena->activitats as $activitat_id) {
+            $activitat_id = $this->get_id('fct_activitat_pla', $activitat_id);
+            if ($activitat_id) {
+                $activitats[] = $activitat_id;
+            }
+        }
+        $quinzena->activitats = $activitats;
+        $id = $quinzena->id;
+        $quinzena->id = false;
+        $this->diposit->afegir_quinzena($quinzena);
+        $this->put_id('fct_quinzena', $id, $quinzena->id);
+    }
+
+    function restore_objectes() {
+        $node = $this->info['MOD']['#']['OBJECTES'][0]['#'];
+        $tipus_restore = array(
+            'FCT' => 'restore_objecte_fct',
+            'CICLE' => 'restore_objecte_cicle',
+            'QUADERN' => 'restore_objecte_quadern',
+            'ACTIVITAT' => 'restore_objecte_activitat',
+            'QUINZENA' => 'restore_objecte_quinzena',
+        );
+        $tipus_userdata = array('QUADERN', 'ACTIVITAT', 'QUINZENA');
+        foreach ($tipus_restore as $tipus => $restore) {
+            if ($this->userdata or !in_array($tipus, $tipus_userdata)) {
+                foreach ($node[$tipus] as $node_objecte) {
+                    $this->$restore($node_objecte['#']);
+                }
+            }
+        }
+    }
+
 }
 
 function fct_restore_mods($mod, $restore) {
     global $CFG, $db;
-    
+
     $userdata = restore_userdata_selected($restore,'fct', $mod->id);
     $data = backup_getid($restore->backup_unique_code, $mod->modtype, $mod->id);
     if (!$data) {
         return false;
     }
 
-    $r = new fct_restore($restore, $data->info);
-    
-    $fct = (object) array(
-        'id' => $mod->id,
-        'course' => $restore->course_id,
-        'name' => $r->get_node('NAME'),
-        'intro' => $r->get_node('INTRO'),
-        'timecreated' => $r->get_node('TIMECREATED'),
-        'timemodified' => $r->get_node('TIMEMODIFIED')
-    );
-    $r->insert_record('fct', $fct);
+    $restore = new fct_restore($restore, $data->info, $userdata);
+    $restore->restore_objectes();
 
-    $r->restore_table('fct_dades_centre', array('fct' => 'fct'));
-    $r->restore_table('fct_cicle', array('fct' => 'fct'));
-    $r->restore_table('fct_activitat_cicle', array('cicle' => 'fct_cicle'));
-
-    if ($userdata) {
-        $r->restore_table('fct_dades_alumne',
-                          array('fct' => 'fct', 'alumne' => 'user'));
-        $r->restore_table('fct_qualificacio_global',
-                          array('cicle' => 'fct_cicle', 'alumne' => 'user'));
-        $r->restore_table( 'fct_quadern',
-                           array('alumne' => 'user',
-                                 'tutor_centre' => 'user',
-                                 'tutor_empresa' => 'user',
-                                 'cicle' => 'fct_cicle'));
-        $r->restore_table('fct_dades_centre_concertat',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_dades_conveni',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_conveni',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_dades_empresa',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_horari',
-                          array('conveni' => 'fct_conveni'));
-        $r->restore_table('fct_dades_relatives',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_activitat_pla',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_valoracio_actituds',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_qualificacio_quadern',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_quinzena',
-                          array('quadern' => 'fct_quadern'));
-        $r->restore_table('fct_activitat_quinzena',
-                          array('quinzena' => 'fct_quinzena',
-                                'activitat' => 'fct_activitat_pla'));
-        $r->restore_table('fct_dia_quinzena',
-                          array('quinzena' => 'fct_quinzena'));
-    }
-
-    return $r->status;
+    return true;
 }
