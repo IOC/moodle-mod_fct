@@ -859,13 +859,14 @@ class fct_db
 
     function hores_realitzades_cicle($cicle_id, $alumne, $data_final) {
         global $CFG;
-        $sql = 'SELECT SUM(qi.hores) AS hores '
+        $sql = 'SELECT c.id, SUM(qi.hores) AS hores '
             . "FROM {$CFG->prefix}fct_quadern qa "
             . "JOIN {$CFG->prefix}fct_quinzena qi ON qa.id = qi.quadern "
             . "JOIN {$CFG->prefix}fct_conveni c ON qa.id = c.quadern "
             . "WHERE qa.cicle = $cicle_id AND qa.alumne = $alumne"
-            . " AND c.data_final <= $data_final";
-        $record = get_record_sql($sql);
+            . " AND c.data_final <= $data_final"
+            . " GROUP BY c.id";
+        $record = get_record_sql($sql, true);
         return ($record and $record->hores) ? $record->hores : 0;
     }
 
