@@ -113,6 +113,9 @@ $('.fct_form_quinzena').ready(function() {
         $('#quinzena .felement').eq(2).empty().append($calendari);
     });
 
+    $('#activitats_realitzades input:disabled').not(':checked')
+        .closest('.fitem').hide();
+
     $('.frases_areatext').each(function (index, div) {
         $(div).find('li')
             .click(function () {
