@@ -43,27 +43,32 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function processar() {
-        $valors_curs = $this->valors_curs();
-        $valors_cicle = $this->valors_cicle();
-        $valors_estat = $this->valors_estat();
-
         $especificacio = new fct_especificacio_quaderns;
         $especificacio->fct = $this->fct->id;
         $especificacio->usuari = $this->usuari;
-        if ($this->curs > 0) {
-            $especificacio->data_final_min = mktime(0, 0, 0, 9, 1,
-                                                    $this->curs);
-            $especificacio->data_final_max = mktime(0, 0, 0, 9, 1,
-                                                    $this->curs + 1);
-        }
-        if ($this->cicle > 0) {
-            $especificacio->cicle = $this->cicle;
-        }
-        if ($this->estat >= 0) {
-            $especificacio->estat = $this->estat;
-        }
-        if ($this->cerca) {
-            $especificacio->cerca = $this->cerca;
+
+        $mode_selectors = ($this->usuari->es_administrador or
+                           $this->usuari->es_tutor_centre);
+
+        if ($mode_selectors) {
+            $valors_curs = $this->valors_curs();
+            $valors_cicle = $this->valors_cicle();
+            $valors_estat = $this->valors_estat();
+            if ($this->curs > 0) {
+                $especificacio->data_final_min = mktime(0, 0, 0, 9, 1,
+                                                        $this->curs);
+                $especificacio->data_final_max = mktime(0, 0, 0, 9, 1,
+                                                        $this->curs + 1);
+            }
+            if ($this->cicle > 0) {
+                $especificacio->cicle = $this->cicle;
+            }
+            if ($this->estat >= 0) {
+                $especificacio->estat = $this->estat;
+            }
+            if ($this->cerca) {
+                $especificacio->cerca = $this->cerca;
+            }
         }
 
         $this->configurar_taula();
@@ -71,13 +76,15 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->quaderns = $this->diposit->quaderns($especificacio,
                                                    $this->taula->get_sql_sort());
 
-        if (!$this->usuari->es_administrador and count($this->quaderns) == 1) {
-            $quadern = array_pop($quaderns);
+        if (!$mode_selectors and count($this->quaderns) == 1) {
+            $quadern = array_pop($this->quaderns);
             redirect(fct_url::quadern($quadern->id));
         }
 
         $this->mostrar_capcalera();
-        $this->mostrar_selectors($valors_curs, $valors_cicle, $valors_estat);
+        if ($mode_selectors) {
+            $this->mostrar_selectors($valors_curs, $valors_cicle, $valors_estat);
+        }
 
         if ($this->quaderns) {
             $this->mostrar_taula();

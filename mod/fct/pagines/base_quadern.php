@@ -37,7 +37,7 @@ class fct_pagina_base_quadern extends fct_pagina_base {
             or ($this->usuari->es_tutor_centre and
                 $this->quadern->tutor_centre == $this->usuari->id)
             or ($this->usuari->es_tutor_empresa and
-                $this->quadern->tutor_empresa == $this->usuri->id));
+                $this->quadern->tutor_empresa == $this->usuari->id));
 
         $this->titol = $this->nom_usuari($this->quadern->alumne)
             .' ('.$this->quadern->empresa->nom.')';
