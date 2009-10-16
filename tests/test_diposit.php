@@ -5,6 +5,10 @@ require_once 'mod/fct/diposit.php';
 require_once 'mod/fct/domini.php';
 require_once 'mod/fct/moodle.php';
 
+define("CONTEXT_MODULE", 28392);
+global $CFG;
+$CFG->prefix = "db_prefix_";
+
 class fct_test_diposit extends PHPUnit_Framework_TestCase {
 
     var $activitat;
