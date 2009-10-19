@@ -444,22 +444,6 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->assertEquals($nombre, $resultat);
     }
 
-    function test_nombre_quaderns__fct() {
-        global $CFG;
-
-        $nombre = 239;
-        $fct_id = 3847;
-
-        $where = "cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
-            . " WHERE fct = $fct_id)";
-        $this->moodle->expects($this->once())->method('count_records_select')
-            ->with('fct_quadern', $where)->will($this->returnValue($nombre));
-
-        $resultat = $this->diposit->nombre_quaderns($fct_id);
-
-        $this->assertEquals($nombre, $resultat);
-    }
-
     function test_nombre_quinzenes() {
         $nombre = 1832;
 

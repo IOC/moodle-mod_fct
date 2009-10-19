@@ -13,6 +13,10 @@ class fct_moodle {
         return count_records_select($table, $select);
     }
 
+    function count_records_sql($sql) {
+        return count_records_sql($sql);
+    }
+
     function delete_records($table, $field1='', $value1='',
                             $field2='', $value2='', $field3='', $value3='') {
         $rs = delete_records($table, $field1, addslashes($value1),

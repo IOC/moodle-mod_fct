@@ -143,7 +143,9 @@ function fct_check_backup_mods_instances($instance, $backup_unique_code) {
         $info[$instance->id.'1'][0] = fct_string('cicles_formatius');
         $info[$instance->id.'1'][1] = $diposit->nombre_cicles($instance->id);
         $info[$instance->id.'2'][0] = fct_string('quaderns');
-        $info[$instance->id.'2'][1] = $diposit->nombre_quaderns($instance->id);
+        $especificacio = new fct_especificacio_quaderns;
+        $especificacio->fct = $instance->id;
+        $info[$instance->id.'2'][1] = $diposit->nombre_quaderns($especificacio);
         $info[$instance->id.'3'][0] = fct_string('quinzenes');
         $info[$instance->id.'3'][1] = $diposit->nombre_quinzenes($instance->id);
     }

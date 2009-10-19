@@ -159,13 +159,14 @@ class fct_diposit {
         }
     }
 
-    function nombre_quaderns($fct_id=false) {
+    function nombre_quaderns($especificacio=false) {
         global $CFG;
 
-        if ($fct_id) {
-            $where = "cicle IN (SELECT id FROM {$CFG->prefix}fct_cicle"
-                . " WHERE fct = $fct_id)";
-            return $this->moodle->count_records_select('fct_quadern', $where);
+        if ($especificacio) {
+            $sql = 'SELECT COUNT(*)'
+                . ' FROM ' . $this->_tables_quaderns($especificacio)
+                . ' WHERE ' . $this->_select_quaderns($especificacio);
+            return $this->moodle->count_records_sql($sql);
         } else {
             return $this->moodle->count_records('fct_quadern');
         }
@@ -201,56 +202,6 @@ class fct_diposit {
 
     function quaderns($especificacio, $ordenacio=false) {
         global $CFG;
-        $usuari = $especificacio->usuari;
-        $select = array();
-        if ($especificacio->fct !== false) {
-            $select[] = 'c.fct = ' . $especificacio->fct;
-        }
-        if ($usuari !== false and !$usuari->es_administrador) {
-            $select_usuari = array('FALSE');
-            if ($usuari->es_alumne) {
-                $select_usuari[] = 'q.alumne = ' . $usuari->id;
-            }
-            if ($usuari->es_tutor_centre) {
-                $select_usuari[] = 'q.tutor_centre = ' .  $usuari->id;
-            }
-            if ($usuari->es_tutor_empresa) {
-                $select_usuari[] = 'q.tutor_empresa = ' . $usuari->id;
-            }
-            $select[] = '(' . implode(' OR ', $select_usuari) . ')';
-        }
-        if ($especificacio->data_final_min !== false) {
-            $select[] = "q.data_final >= $especificacio->data_final_min";
-        }
-        if ($especificacio->data_final_max !== false) {
-            $select[] = "q.data_final <= $especificacio->data_final_max";
-        }
-        if ($especificacio->cicle !== false) {
-            $select[] = "q.cicle = $especificacio->cicle";
-        }
-        if ($especificacio->estat !== false) {
-            $select[] = "q.estat = $especificacio->estat";
-        }
-        if ($especificacio->cerca !== false) {
-            $fields = array("CONCAT(ua.firstname, ' ', ua.lastname)",
-                            "q.nom_empresa",
-                            "CONCAT(uc.firstname, ' ', uc.lastname)",
-                            "CONCAT(ue.firstname, ' ', ue.lastname)");
-            $select_cerca = array();
-            foreach ($fields as $field) {
-                $select_cerca[] = "$field LIKE '%"
-                    . addslashes($especificacio->cerca) . "%'";
-            }
-            $select[] = '(' . implode(' OR ', $select_cerca) . ')';
-        }
-        if ($especificacio->alumne !== false) {
-            $select[] = "q.alumne = $especificacio->alumne";
-        }
-        if ($especificacio->empresa !== false) {
-            $select[] = "q.nom_empresa = '"
-                . addslashes($especificacio->empresa) . "'";
-        }
-        $where = ' WHERE ' . implode(' AND ', $select);
         $sql = "SELECT q.id AS id,"
             . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
             . " q.nom_empresa AS empresa,"
@@ -259,12 +210,8 @@ class fct_diposit {
             . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
             . " q.estat AS estat,"
             . " q.data_final AS data_final"
-            . " FROM {$CFG->prefix}fct_quadern q"
-            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
-            . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
-            . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
-            . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id"
-            . $where;
+            . ' FROM ' . $this->_tables_quaderns($especificacio)
+            . ' WHERE ' . $this->_select_quaderns($especificacio);
         if ($ordenacio) {
             $sql .= " ORDER BY $ordenacio";
         }
@@ -348,5 +295,68 @@ class fct_diposit {
             "mod/fct:tutor_empresa", $context, $userid);
 
         return $usuari;
+    }
+
+    function _select_quaderns($especificacio) {
+        $usuari = $especificacio->usuari;
+        $select = array();
+        if ($especificacio->fct !== false) {
+            $select[] = 'c.fct = ' . $especificacio->fct;
+        }
+        if ($usuari !== false and !$usuari->es_administrador) {
+            $select_usuari = array('FALSE');
+            if ($usuari->es_alumne) {
+                $select_usuari[] = 'q.alumne = ' . $usuari->id;
+            }
+            if ($usuari->es_tutor_centre) {
+                $select_usuari[] = 'q.tutor_centre = ' .  $usuari->id;
+            }
+            if ($usuari->es_tutor_empresa) {
+                $select_usuari[] = 'q.tutor_empresa = ' . $usuari->id;
+            }
+            $select[] = '(' . implode(' OR ', $select_usuari) . ')';
+        }
+        if ($especificacio->data_final_min !== false) {
+            $select[] = "q.data_final >= $especificacio->data_final_min";
+        }
+        if ($especificacio->data_final_max !== false) {
+            $select[] = "q.data_final <= $especificacio->data_final_max";
+        }
+        if ($especificacio->cicle !== false) {
+            $select[] = "q.cicle = $especificacio->cicle";
+        }
+        if ($especificacio->estat !== false) {
+            $select[] = "q.estat = $especificacio->estat";
+        }
+        if ($especificacio->cerca !== false) {
+            $fields = array("CONCAT(ua.firstname, ' ', ua.lastname)",
+                            "q.nom_empresa",
+                            "CONCAT(uc.firstname, ' ', uc.lastname)",
+                            "CONCAT(ue.firstname, ' ', ue.lastname)");
+            $select_cerca = array();
+            foreach ($fields as $field) {
+                $select_cerca[] = "$field LIKE '%"
+                    . addslashes($especificacio->cerca) . "%'";
+            }
+            $select[] = '(' . implode(' OR ', $select_cerca) . ')';
+        }
+        if ($especificacio->alumne !== false) {
+            $select[] = "q.alumne = $especificacio->alumne";
+        }
+        if ($especificacio->empresa !== false) {
+            $select[] = "q.nom_empresa = '"
+                . addslashes($especificacio->empresa) . "'";
+        }
+        return implode(' AND ', $select);
+    }
+
+    function _tables_quaderns($especificacio) {
+        global $CFG;
+        $tables = "{$CFG->prefix}fct_quadern q"
+            . " JOIN {$CFG->prefix}fct_cicle c ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}user ua ON q.alumne = ua.id"
+            . " LEFT JOIN {$CFG->prefix}user uc ON q.tutor_centre = uc.id"
+            . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id";
+        return $tables;
     }
 }
