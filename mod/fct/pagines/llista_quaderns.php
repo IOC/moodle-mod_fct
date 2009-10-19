@@ -28,6 +28,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     var $cicle;
     var $estat;
     var $cerca;
+    var $nombre;
+    var $index;
 
     function configurar() {
         parent::configurar(optional_param('fct', 0, PARAM_INT),
@@ -38,6 +40,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->cicle = optional_param('cicle', 0, PARAM_INT);
         $this->estat = optional_param('estat', 1, PARAM_INT);
         $this->cerca = optional_param('cerca', '', PARAM_TEXT);
+        $this->index = optional_param('index', 0, PARAM_INT);
 
         $this->subpestanya = 'llista_quaderns';
     }
@@ -73,13 +76,17 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
         $this->configurar_taula();
 
-        $this->quaderns = $this->diposit->quaderns($especificacio,
-                                                   $this->taula->get_sql_sort());
+        $this->nombre = $this->diposit->nombre_quaderns($especificacio);
 
-        if (!$mode_selectors and count($this->quaderns) == 1) {
-            $quadern = array_pop($this->quaderns);
+        if (!$mode_selectors and $this->nombre == 1) {
+            $quaderns = $this->diposit->quaderns($especificacio);
+            $quadern = array_pop($quaderns);
             redirect(fct_url::quadern($quadern->id));
         }
+
+        $this->quaderns = $this->diposit->quaderns($especificacio,
+                                                   $this->taula->get_sql_sort(),
+                                                   $this->index * 10, 10);
 
         $this->mostrar_capcalera();
         if ($mode_selectors) {
@@ -87,6 +94,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         }
 
         if ($this->quaderns) {
+            $this->mostrar_paginacio();
             $this->mostrar_taula();
         } else {
             echo '<p>' . fct_string('cap_quadern') . '</p>';
@@ -108,6 +116,12 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $this->taula->sortable(true, 'data_final');
         $this->taula->set_attribute('class', 'generaltable');
         $this->taula->setup();
+    }
+
+    function mostrar_paginacio() {
+        $url = $this->url();
+        print_paging_bar($this->nombre, $this->index, 10,
+                         $url->out() . '&', 'index');
     }
 
     function mostrar_taula() {
@@ -164,6 +178,16 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
                 . fct_string($selector[0]) . ':</label>' . $selector[1] . '</div>';
         }
         echo '</form>';
+    }
+
+    function url() {
+        $params = array('pagina' => 'llista_quaderns',
+                        'fct' => $this->fct->id,
+                        'curs'=> $this->curs,
+                        'cicle' => $this->cicle,
+                        'estat' => $this->estat,
+                        'cerca' => $this->cerca);
+        return new moodle_url(null, $params);
     }
 
     function valors_cicle() {

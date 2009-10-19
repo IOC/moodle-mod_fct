@@ -200,7 +200,8 @@ class fct_diposit {
         return fct_json::deserialitzar_quadern($record->objecte);
     }
 
-    function quaderns($especificacio, $ordenacio=false) {
+    function quaderns($especificacio, $ordenacio=false,
+                      $limitfrom=false, $limitnum=false) {
         global $CFG;
         $sql = "SELECT q.id AS id,"
             . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
@@ -216,7 +217,7 @@ class fct_diposit {
             $sql .= " ORDER BY $ordenacio";
         }
         $quaderns = array();
-        $records = $this->moodle->get_records_sql($sql);
+        $records = $this->moodle->get_records_sql($sql, $limitfrom, $limitnum);
         foreach ($records as $record) {
             $quaderns[] = $this->quadern($record->id);
         }
