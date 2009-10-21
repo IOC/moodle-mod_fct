@@ -313,10 +313,8 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
                           $CFG->pixpath, '/t/switch_minus.gif" /> ',
                           fct_string($this->params->frases_titol),
                           '</h4>', '<ul class="amagat">');
-            foreach (explode("\n", $this->params->frases) as $frase) {
-                if (trim($frase)) {
-                    $html[] = '<li>' . trim($frase) . '</li>';
-                }
+            foreach ($this->params->frases as $frase) {
+                $html[] = '<li>' . trim($frase) . '</li>';
             }
             $html[] = '</ul>';
             $mform->_form->addElement('static', '', '', implode('', $html));
