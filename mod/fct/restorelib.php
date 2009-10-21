@@ -114,7 +114,9 @@ function fct_restore_mods($mod, $restore) {
         'name' => $r->get_node('NAME'),
         'intro' => $r->get_node('INTRO'),
         'timecreated' => $r->get_node('TIMECREATED'),
-        'timemodified' => $r->get_node('TIMEMODIFIED')
+        'timemodified' => $r->get_node('TIMEMODIFIED'),
+        'frases_centre' => $r->get_node('FRASES_CENTRE'),
+        'frases_empresa' => $r->get_node('FRASES_EMPRESA'),
     );
     $r->insert_record('fct', $fct);
 

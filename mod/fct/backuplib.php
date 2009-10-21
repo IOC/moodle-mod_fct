@@ -169,6 +169,8 @@ function fct_backup_one_mod($bf, $preferences, $fct) {
     $backup->write_full_tag('INTRO', $fct->intro);
     $backup->write_full_tag('TIMECREATED', $fct->timecreated);
     $backup->write_full_tag('TIMEMODIFIED', $fct->timemodified);
+    $backup->write_full_tag('FRASES_CENTRE', $fct->frases_centre);
+    $backup->write_full_tag('FRASES_EMPRESA', $fct->frases_empresa);
     $backup->write_tables_fct(array('fct_dades_centre', 'fct_cicle'));
     $backup->write_table_fct('fct_activitat_cicle',
                              array('cicle' => 'fct_cicle'));
