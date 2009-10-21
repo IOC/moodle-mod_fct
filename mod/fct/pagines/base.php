@@ -204,19 +204,21 @@ class fct_pagina_base {
         print_footer($this->course);
     }
 
-    function nom_usuari($userid, $enllac=false, $correu=false) {
+    function nom_usuari($user, $enllac=false, $correu=false) {
         global $CFG;
 
-        if (!$userid) {
+        if (!$user) {
             return '';
         }
-        $user = get_record('user', 'id', $userid);
+        if (is_numeric($user)) {
+          $user = get_record('user', 'id', $user);
+        }
         if (!$user) {
             return '';
         }
         $html = $user->firstname.' '.$user->lastname;
         if ($enllac) {
-        	$html = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$userid
+            $html = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id
                 .'&amp;course='.$this->fct->course.'">'.$html.'</a>';
         }
         if ($correu) {

@@ -87,11 +87,12 @@ class fct_form_quadern extends fct_form_base {
 
         $context = get_context_instance(CONTEXT_MODULE, $pagina->cm->id);
         $records = get_users_by_capability($context, $capability,
-                                           'u.id', 'u.lastname, u.firstname',
+                                           'u.id, u.firstname, u.lastname',
+                                           'u.firstname, u.lastname',
                                            '', '', '', '', false);
         if ($records) {
-            foreach (array_keys($records) as $id) {
-                $opcions[$id] = $pagina->nom_usuari($id, true, $email);
+            foreach ($records as $id => $record) {
+                $opcions[$id] = $pagina->nom_usuari($record, true, $email);
             }
         }
 

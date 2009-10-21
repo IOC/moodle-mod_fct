@@ -26,7 +26,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
         if ($valors->alumne != $this->quadern->alumne
             or $valors->nom_empresa != $this->quadern->empresa->nom) {
             $especificacio = new fct_especificacio_quaderns;
-            $especificacio->fct = $fct->id;
+            $especificacio->fct = $this->fct->id;
             $especificacio->alumne = $valors->alumne;
             $especificacio->empresa = $valors->nom_empresa;
             if ($this->diposit->quaderns($especificacio)) {
