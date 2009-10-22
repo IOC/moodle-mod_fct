@@ -44,11 +44,15 @@ class fct_pagina_base {
     var $usuari;
 
     function __construct() {
-        $this->moodle = new fct_moodle;
-        $this->diposit = new fct_diposit($this->moodle);
-        $this->serveis = new fct_serveis($this->diposit);
-        $this->configurar();
-        $this->processar();
+        try {
+            $this->moodle = new fct_moodle;
+            $this->diposit = new fct_diposit($this->moodle);
+            $this->serveis = new fct_serveis($this->diposit);
+            $this->configurar();
+            $this->processar();
+        } catch (fct_exception $e) {
+            $this->error('pagina', $e->getMessage());
+        }
     }
 
     function afegir_navegacio($nom, $url=false) {
@@ -103,10 +107,9 @@ class fct_pagina_base {
         foreach ($accions as $accio) {
             if (optional_param($accio, 0, PARAM_BOOL)) {
                 if ($this->accio) {
-                    $this->error('accio_unica');
-                } else {
-                    $this->accio = $accio;
+                    throw new fct_exception("més d'una acció indicada");
                 }
+                $this->accio = $accio;
             }
         }
         if (!$this->accio) {
@@ -127,11 +130,10 @@ class fct_pagina_base {
         }
     }
 
-    function error($identifier, $a=null, $link='') {
-        $url = preg_replace('/^.*\/mod\/fct\//', '', me());
-        $info = print_r(data_submitted(), true);
-        $this->registrar('error ' .  $identifier, $url, $info);
-        error(fct_string('error_' . $identifier), $link);
+    function error($identifier, $info='') {
+        $query = preg_replace('/^.*\/mod\/fct\//', '', me());
+        $this->registrar('error ' .  $identifier, $query, $info);
+        error(fct_string('error_' . $identifier));
     }
 
     function icona($cami, $url, $text) {
@@ -229,15 +231,15 @@ class fct_pagina_base {
     }
 
     function processar() {
-        if ($this->accio) {
-            $func = "processar_{$this->accio}";
-            if (!method_exists($this, $func)) {
-                $this->error('processar_pagina');
-            }
-            $this->$func();
-        } else {
-            $this->error('cap_accio');
+        if (!$this->accio) {
+            throw new fct_exception("cap acció indicada");
         }
+
+        $func = "processar_{$this->accio}";
+        if (!method_exists($this, $func)) {
+            throw new fct_exception("funció d'acció inexistent");
+        }
+        $this->$func();
     }
 
     function registrar($action, $url=null, $info='') {

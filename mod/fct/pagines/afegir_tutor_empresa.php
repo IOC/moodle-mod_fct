@@ -152,7 +152,7 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
                 $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->fct->course}";
                 $this->registrar('add tutor_empresa', $url, $id);
             } else {
-                $this->error('afegir_tutor_empresa');
+                $this->error('pagina');
             }
 
             $this->mostrar_capcalera();

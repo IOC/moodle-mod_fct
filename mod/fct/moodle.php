@@ -23,7 +23,7 @@ class fct_moodle {
                              $field2, addslashes($value2),
                              $field3, addslashes($value3));
         if (!$rs) {
-            throw new Exception('delete_records');
+            throw new fct_exception('moodle: delete_records');
         }
     }
 
@@ -37,14 +37,14 @@ class fct_moodle {
 
     function get_coursemodule_from_id($modulename, $cmid) {
         if (!$cm = get_coursemodule_from_id($modulename, $cmid))  {
-            throw new Exception('get_coursemodule_from_id');
+            throw new fct_exception('moodle: get_coursemodule_from_id');
         }
         return $cm;
     }
 
     function get_coursemodule_from_instance($modulename, $instance) {
         if (!$cm = get_coursemodule_from_instance($modulename, $instance)) {
-            throw new Exception('get_coursemodule_from_instance');
+            throw new fct_exception('moodle: get_coursemodule_from_instance');
         }
         return $cm;
     }
@@ -55,7 +55,7 @@ class fct_moodle {
                            $field2, addslashes($value3),
                            $field3, addslashes($value3));
         if ($field === false) {
-            throw new Exception('get_field');
+            throw new fct_exception('moodle: get_field');
         }
         return $field;
     }
@@ -66,7 +66,7 @@ class fct_moodle {
                              $field2, addslashes($value2),
                              $field3, addslashes($value3), $fields);
         if (!$record) {
-            throw new Exception('get_record');
+            throw new fct_exception('moodle: get_record');
         }
         return $record;
     }
@@ -74,7 +74,7 @@ class fct_moodle {
     function get_record_select($table, $select='', $fields='*') {
         $record = get_record_select($table, $select, $fields);
         if (!$record) {
-            throw new Exception('get_record');
+            throw new fct_exception('moodle: get_record');
         }
         return $record;
     }
@@ -82,7 +82,7 @@ class fct_moodle {
     function get_record_sql($sql) {
         $record = get_record_sql($sql);
         if (!$record) {
-            throw new Exception('get_record_sql');
+            throw new fct_exception('moodle: get_record_sql');
         }
         return $record;
     }
@@ -112,14 +112,14 @@ class fct_moodle {
 
     function insert_record($table, $dataobject) {
         if (!$id = insert_record($table, addslashes_recursive($dataobject))) {
-            throw new Exception('insert_record');
+            throw new fct_exception('moodle: insert_record');
         }
         return $id;
     }
 
     function update_record($table, $dataobject) {
         if (!update_record($table, addslashes_recursive($dataobject))) {
-            throw new Exception('update_record');
+            throw new fct_exception('moodle: update_record');
         }
     }
 

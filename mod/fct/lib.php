@@ -17,6 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+class fct_exception extends Exception {}
+
 function fct_require() {
     global $CFG;
     foreach (func_get_args() as $fitxer) {

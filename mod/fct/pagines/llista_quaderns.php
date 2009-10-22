@@ -49,7 +49,6 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         $especificacio = new fct_especificacio_quaderns;
         $especificacio->fct = $this->fct->id;
         $especificacio->usuari = $this->usuari;
-
         $mode_selectors = ($this->usuari->es_administrador or
                            $this->usuari->es_tutor_centre);
 
