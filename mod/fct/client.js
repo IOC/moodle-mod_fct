@@ -34,7 +34,8 @@ $('.fct_form_quinzena').ready(function() {
     var calendari = function(any, periode, dies, congelat) {
         var mes = mes_periode(periode);
         var rang_dies = dies_periode(any, periode);
-        var espais = new Date(any, mes, rang_dies[0]).getDay() - 1;
+        var dia_setmana = new Date(any, mes, rang_dies[0]).getDay();
+        var espais = (dia_setmana + 6) % 7;
         var cells = [];
         var dia, i;
 
