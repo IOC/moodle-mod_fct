@@ -503,12 +503,12 @@ class fct_db
             $quinzena->any_ = $quinzena->any;
         }
         $id = insert_record('fct_quinzena', $quinzena);
-        if ($dies !== false) {
+        if ($dies) {
             if (!self::afegir_dies_quinzena($id, $dies)) {
                 return false;
             }
         }
-        if ($activitats !== false) {
+        if ($activitats) {
             if (!self::afegir_activitats_quinzena($id, $activitats)) {
                 return false;
             }
