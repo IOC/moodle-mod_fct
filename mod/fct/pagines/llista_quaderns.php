@@ -93,8 +93,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         }
 
         if ($this->quaderns) {
-            $this->mostrar_paginacio();
             $this->mostrar_taula();
+            $this->mostrar_paginacio();
         } else {
             echo '<p>' . fct_string('cap_quadern') . '</p>';
         }
