@@ -461,6 +461,11 @@ function xmldb_fct_upgrade($oldversion=0) {
         }
     }
 
+    if ($result && $oldversion < 2010030100) {
+        $table = $structure->getTable('fct_avis');
+        $result = create_table($table, false);
+    }
+
     return $result;
 }
 

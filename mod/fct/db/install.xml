@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<XMLDB PATH="mod/fct/db" VERSION="20090827" COMMENT="-" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/fct/db" VERSION="20100301" COMMENT="-"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
   <TABLES>
     <TABLE NAME="fct" COMMENT="-" NEXT="fct_cicle">
       <FIELDS>
@@ -66,7 +69,7 @@
         <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="fct_quinzena" COMMENT="-" PREVIOUS="fct_activitat">
+    <TABLE NAME="fct_quinzena" COMMENT="-" PREVIOUS="fct_activitat" NEXT="fct_avis">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" COMMENT="-" NEXT="quadern"/>
         <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="-" PREVIOUS="id" NEXT="any_"/>
@@ -79,6 +82,21 @@
         <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" COMMENT="-" PREVIOUS="primary" NEXT="quadern_any_periode"/>
         <KEY NAME="quadern_any_periode" TYPE="unique" FIELDS="quadern, any_, periode" COMMENT="-" PREVIOUS="quadern"/>
       </KEYS>
+    </TABLE>
+    <TABLE NAME="fct_avis" COMMENT="-" PREVIOUS="fct_quinzena">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="quadern"/>
+        <FIELD NAME="quadern" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="data"/>
+        <FIELD NAME="data" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="quadern" NEXT="objecte"/>
+        <FIELD NAME="objecte" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="data"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="quadern"/>
+        <KEY NAME="quadern" TYPE="foreign" FIELDS="quadern" REFTABLE="fct_quadern" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="data" UNIQUE="false" FIELDS="data"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>
