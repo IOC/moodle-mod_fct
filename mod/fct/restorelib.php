@@ -54,6 +54,15 @@ class fct_restore {
         $this->put_id('fct_activitat_pla', $id, $activitat->id);
     }
 
+    function restore_objecte_avis($json) {
+        $avis = fct_json::deserialitzar_avis($json);
+        $avis->quadern = $this->get_id('fct_quadern', $avis->quadern);
+        $id = $avis->id;
+        $avis->id = false;
+        $this->diposit->afegir_avis($avis);
+        $this->put_id('fct_avis', $id, $avis->id);
+    }
+
     function restore_objecte_cicle($json) {
         $cicle = fct_json::deserialitzar_cicle($json);
         $cicle->fct = $this->get_id('fct', $cicle->fct);
@@ -109,8 +118,9 @@ class fct_restore {
             'QUADERN' => 'restore_objecte_quadern',
             'ACTIVITAT' => 'restore_objecte_activitat',
             'QUINZENA' => 'restore_objecte_quinzena',
+            'AVIS' => 'restore_objecte_avis',
         );
-        $tipus_userdata = array('QUADERN', 'ACTIVITAT', 'QUINZENA');
+        $tipus_userdata = array('QUADERN', 'ACTIVITAT', 'QUINZENA', 'AVIS');
         foreach ($tipus_restore as $tipus => $restore) {
             if ($this->userdata or !in_array($tipus, $tipus_userdata)) {
                 foreach ($node[$tipus] as $node_objecte) {

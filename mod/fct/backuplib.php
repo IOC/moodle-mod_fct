@@ -51,6 +51,11 @@ class fct_backup
         $this->write_full_tag('ACTIVITAT', $json);
     }
 
+    function write_objecte_avis($avis) {
+        $json = fct_json::serialitzar_avis($avis);
+        $this->write_full_tag('AVIS', $json);
+    }
+
     function write_objecte_cicle($cicle) {
         $json = fct_json::serialitzar_cicle($cicle);
         $this->write_full_tag('CICLE', $json);
@@ -87,6 +92,11 @@ class fct_backup
         $quinzenes = $this->diposit->quinzenes($quadern->id);
         foreach ($quinzenes as $quinzena) {
             $this->write_objecte_quinzena($quinzena);
+        }
+
+        $avisos = $this->diposit->avisos_quadern($quadern->id);
+        foreach ($avisos as $avis) {
+            $this->write_objecte_avis($avis);
         }
     }
 
