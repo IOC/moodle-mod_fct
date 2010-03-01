@@ -29,6 +29,14 @@ class fct_activitat {
     }
 }
 
+class fct_avis {
+    var $id;
+    var $quadern;
+    var $data;
+    var $tipus;
+    var $pendent;
+}
+
 class fct_centre {
     var $nom = '';
     var $adreca = '';

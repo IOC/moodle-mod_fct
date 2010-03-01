@@ -9,6 +9,13 @@ class fct_json {
         return $activitat;
     }
 
+    function deserialitzar_avis($json) {
+        $objecte = json_decode($json, true);
+        $avis = new fct_avis;
+        fct_copy_vars($objecte, $avis);
+        return $avis;
+    }
+
     function deserialitzar_cicle($json) {
         $objecte = json_decode($json, true);
         $cicle = new fct_cicle;
@@ -53,6 +60,10 @@ class fct_json {
 
     function serialitzar_activitat($activitat) {
         return json_encode($activitat);
+    }
+
+    function serialitzar_avis($avis) {
+        return json_encode($avis);
     }
 
     function serialitzar_cicle($cicle) {

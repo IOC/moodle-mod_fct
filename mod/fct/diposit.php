@@ -39,6 +39,17 @@ class fct_diposit {
         $this->moodle->update_record('fct_activitat', $record);
     }
 
+    function afegir_avis($avis) {
+        $record = (object) array('quadern' => $avis->quadern,
+                                 'data' => $avis->data);
+        if (!$avis->id) {
+            $avis->id = $this->moodle->insert_record('fct_avis', $record);
+        }
+        $record->id = $avis->id;
+        $record->objecte = fct_json::serialitzar_cicle($avis);
+        $this->moodle->update_record('fct_avis', $record);
+    }
+
     function afegir_cicle($cicle) {
         $record = (object) array('fct' => $cicle->fct,
                                  'nom' => $cicle->nom);
@@ -104,6 +115,35 @@ class fct_diposit {
         $record->id = $quinzena->id;
         $record->objecte = fct_json::serialitzar_quinzena($quinzena);
         $this->moodle->update_record('fct_quinzena', $record);
+    }
+
+    function avis($id) {
+        $record = $this->moodle->get_record('fct_avis', 'id', $id);
+        $avis = fct_json::deserialitzar_avis($record->objecte);
+        return $avis;
+    }
+
+    function avisos_quadern($quadern_id, $limitfrom='', $limitnum='') {
+        $records = $this->moodle->get_records('fct_avis',
+                                              'quadern', $quadern_id,
+                                              'data', 'id, objecte',
+                                              $limitfrom, $limitnum);
+        return $this->avisos_records($records);
+    }
+
+    function avisos_usuari($usuari, $limitfrom='', $limitnum='') {
+        global $CFG;
+
+        $sql = "SELECT a.id, a.objecte"
+            . " FROM {$CFG->prefix}fct_cicle c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}fct_avis a ON a.quadern = q.id"
+            . " WHERE c.fct = {$usuari->fct}"
+            . " AND q.tutor_centre = {$usuari->id}"
+            . " ORDER BY a.data";
+
+        $records = $this->moodle->get_records_sql($sql, $limitfrom, $limitnum);
+        return $this->avisos_records($records);
     }
 
     function cicle($id) {
@@ -254,6 +294,11 @@ class fct_diposit {
         $activitat->id = false;
     }
 
+    function suprimir_avis($avis) {
+        $this->moodle->delete_records('fct_avis', 'id', $avis->id);
+        $avis->id = false;
+    }
+
     function suprimir_cicle($cicle) {
         $this->moodle->delete_records('fct_cicle', 'id', $cicle->id);
         $cicle->id = false;
@@ -360,4 +405,13 @@ class fct_diposit {
             . " LEFT JOIN {$CFG->prefix}user ue ON q.tutor_empresa = ue.id";
         return $tables;
     }
+
+    private function avisos_records($records) {
+        $avisos = array();
+        foreach ($records as $record) {
+            $avisos[] = fct_json::deserialitzar_avis($record->objecte);
+        }
+        return $avisos;
+    }
+
 }

@@ -12,6 +12,7 @@ $CFG->prefix = "db_prefix_";
 class fct_test_diposit extends PHPUnit_Framework_TestCase {
 
     var $activitat;
+    var $avis;
     var $cicle;
     var $cm;
     var $context;
@@ -37,6 +38,7 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->setup_quadern();
         $this->setup_activitat();
         $this->setup_quinzena();
+        $this->setup_avis();
     }
 
     function setup_activitat() {
@@ -50,6 +52,22 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
             'id' => $this->activitat->id,
             'quadern' => $this->activitat->quadern,
             'objecte' => fct_json::serialitzar_activitat($this->activitat),
+        );
+    }
+
+    function setup_avis() {
+        $this->avis = new fct_avis;
+        $this->avis->id = 8673;
+        $this->avis->quadern = $this->record_quadern->id;
+        $this->avis->data = 993484;
+        $this->avis->tipus = 'tipus';
+        $this->avis->pendent = true;
+
+        $this->record_avis = (object) array(
+            'id' => $this->avis->id,
+            'quadern' => $this->avis->quadern,
+            'data' => $this->avis->data,
+            'objecte' => fct_json::serialitzar_avis($this->avis),
         );
     }
 
@@ -242,6 +260,30 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->assertEquals($id, $this->activitat->id);
     }
 
+    function test_afegir_avis__existent() {
+        $this->moodle->expects($this->once())->method('update_record')
+            ->with('fct_avis', $this->record_avis);
+
+        $this->diposit->afegir_avis($this->avis);
+    }
+
+    function test_afegir_avis__inexistent() {
+        $id = $this->avis->id;
+        $this->avis->id = false;
+
+        $record = (object) array('quadern' => $this->avis->quadern,
+                                 'data' => $this->avis->data);
+        $this->moodle->expects($this->once())->method('insert_record')
+            ->with('fct_avis', $record)->will($this->returnValue($id));
+
+        $this->moodle->expects($this->once())->method('update_record')
+            ->with('fct_avis', $this->record_avis);
+
+        $this->diposit->afegir_avis($this->avis);
+
+        $this->assertEquals($id, $this->avis->id);
+    }
+
     function test_afegir_cicle__existent() {
         $this->moodle->expects($this->once())->method('update_record')
             ->with('fct_cicle', $this->record_cicle);
@@ -344,6 +386,63 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->diposit->afegir_quinzena($this->quinzena);
 
         $this->assertEquals($quinzena_id, $this->quinzena->id);
+    }
+
+    function test_avis() {
+        $this->moodle->expects($this->once())->method('get_record')
+            ->with('fct_avis', 'id', $this->avis->id)
+            ->will($this->returnValue($this->record_avis));
+
+        $avis = $this->diposit->avis($this->avis->id);
+
+        $this->assertEquals($this->avis, $avis);
+    }
+
+    function test_avisos_quadern() {
+        $limitfrom = 34;
+        $limitnum = 57;
+        $record = (object) array(
+            'id' => $this->avis->id,
+            'objecte' => fct_json::serialitzar_avis($this->avis),
+        );
+
+        $this->moodle->expects($this->once())->method('get_records')
+            ->with('fct_avis', 'quadern', $this->avis->quadern,
+                   'data', 'id, objecte', $limitfrom, $limitnum)
+            ->will($this->returnValue(array($record)));
+
+        $avisos = $this->diposit->avisos_quadern($this->avis->quadern,
+                                                 $limitfrom, $limitnum);
+
+        $this->assertEquals(array($this->avis), $avisos);
+    }
+
+    function test_avisos_usauris() {
+        global $CFG;
+
+        $limitfrom = 34;
+        $limitnum = 57;
+        $fct = 4246;
+        $record = (object) array(
+            'id' => $this->avis->id,
+            'objecte' => fct_json::serialitzar_avis($this->avis),
+        );
+
+
+        $sql = "SELECT a.id, a.objecte"
+            . " FROM {$CFG->prefix}fct_cicle c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}fct_avis a ON a.quadern = q.id"
+            . " WHERE c.fct = {$this->usuari->fct}"
+            . " AND q.tutor_centre = {$this->usuari->id}"
+            . " ORDER BY a.data";
+        $this->moodle->expects($this->once())->method('get_records_sql')
+            ->with($sql, $limitfrom, $limitnum)
+            ->will($this->returnValue(array($record)));
+
+        $avisos = $this->diposit->avisos_usuari($this->usuari, $limitfrom, $limitnum);
+
+        $this->assertEquals(array($this->avis), $avisos);
     }
 
     function test_cicle() {
@@ -541,6 +640,15 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->diposit->suprimir_activitat($this->activitat);
 
         $this->assertFalse($this->activitat->id);
+    }
+
+    function test_suprimir_avis() {
+        $this->moodle->expects($this->once())->method('delete_records')
+            ->with('fct_avis', 'id', $this->avis->id);
+
+        $this->diposit->suprimir_avis($this->avis);
+
+        $this->assertFalse($this->avis->id);
     }
 
     function test_suprimir_cicle() {
