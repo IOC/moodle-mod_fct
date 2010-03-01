@@ -35,6 +35,7 @@ class fct_avis {
     var $data;
     var $tipus;
     var $pendent;
+    var $quinzena;
 }
 
 class fct_centre {
@@ -237,9 +238,22 @@ class fct_resum_hores_fct {
 class fct_serveis {
 
     var $diposit;
+    var $moodle;
 
-    function __construct($diposit) {
+    function __construct($diposit, $moodle) {
         $this->diposit = $diposit;
+        $this->moodle = $moodle;
+    }
+
+    function afegir_avis($tipus, $quadern, $quinzena=false) {
+        $avis = new fct_avis;
+        $avis->quadern = $quadern;
+        $avis->data = $this->moodle->time();
+        $avis->tipus = $tipus;
+        $avis->pendent = true;
+        $avis->quinzena = $quinzena;
+
+        $this->diposit->afegir_avis($avis);
     }
 
     function crear_quadern($alumne, $cicle) {
@@ -337,6 +351,11 @@ class fct_serveis {
         $activitats = $this->diposit->activitats($quadern->id);
         foreach ($activitats as $activitat) {
             $this->diposit->suprimir_activitat($activitat);
+        }
+
+        $avisos = $this->diposit->avisos_quadern($quadern->id);
+        foreach ($avisos as $avis) {
+            $this->diposit->suprimir_avis($avis);
         }
 
         $this->diposit->suprimir_quadern($quadern);

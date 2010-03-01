@@ -11,13 +11,32 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
     function setup() {
         $this->diposit = $this->getMock('fct_diposit');
-        $this->serveis = new fct_serveis($this->diposit);
+        $this->moodle = $this->getMock('fct_moodle');
+        $this->serveis = new fct_serveis($this->diposit, $this->moodle);
+    }
+
+    function test_afegir_avis() {
+        $avis = new fct_avis;
+        $avis->tipus = 'tipus_avis';
+        $avis->quadern = 2834;
+        $avis->data = 29382;
+        $avis->pendent = true;
+        $avis->quinzena = 4802;
+
+        $this->moodle->expects($this->once())->method('time')
+            ->will($this->returnValue($avis->data));
+
+        $this->diposit->expects($this->once())
+            ->method('afegir_avis')->with($avis);
+
+        $this->serveis->afegir_avis($avis->tipus, $avis->quadern,
+                                    $avis->quinzena);
     }
 
     function test_crear_quadern() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('ultim_quadern'),
-                                        array($this->diposit));
+                                        array($this->diposit, $this->moodle));
 
         $alumne = 3821;
         $cicle = 8427;
@@ -36,7 +55,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
     function test_crear_quadern__ultim() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('ultim_quadern'),
-                                        array($this->diposit));
+                                        array($this->diposit, $this->moodle));
 
         $ultim = new fct_quadern;
         $ultim->alumne = 3821;
@@ -88,7 +107,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
     function test_resum_hores_fct() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('hores_realitzades_quadern'),
-                                        array($this->diposit));
+                                        array($this->diposit, $this->moodle));
 
         $quadern1 = new fct_quadern;
         $quadern1->id = 3840;
@@ -132,7 +151,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
     function test_suprimir_fct() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('suprimir_quadern'),
-                                        array($this->diposit));
+                                        array($this->diposit, $this->moodle));
 
         $fct = new fct;
         $fct->id = 3848;
@@ -174,6 +193,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $quadern->id = 2849;
         $activitats = array(1232, 3123, 4242);
         $quinzenes = array(3492, 1840, 0374);
+        $avisos = array(2932, 0548, 2937);
 
         $index = 0;
 
@@ -191,6 +211,14 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         foreach ($activitats as $activitat) {
             $this->diposit->expects($this->at($index++))
                 ->method('suprimir_activitat')->with($activitat);
+        }
+
+        $this->diposit->expects($this->at($index++))
+            ->method('avisos_quadern')->with($quadern->id)
+            ->will($this->returnValue($avisos));
+        foreach ($avisos as $avis) {
+            $this->diposit->expects($this->at($index++))
+                ->method('suprimir_avis')->with($avis);
         }
 
         $this->diposit->expects($this->at($index++))

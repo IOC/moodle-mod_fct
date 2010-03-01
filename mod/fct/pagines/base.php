@@ -47,7 +47,7 @@ class fct_pagina_base {
         try {
             $this->moodle = new fct_moodle;
             $this->diposit = new fct_diposit($this->moodle);
-            $this->serveis = new fct_serveis($this->diposit);
+            $this->serveis = new fct_serveis($this->diposit, $this->moodle);
             $this->configurar();
             $this->processar();
         } catch (fct_exception $e) {

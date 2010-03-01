@@ -117,6 +117,10 @@ class fct_moodle {
         return $id;
     }
 
+    function time() {
+        return time();
+    }
+
     function update_record($table, $dataobject) {
         if (!update_record($table, addslashes_recursive($dataobject))) {
             throw new fct_exception('moodle: update_record');
