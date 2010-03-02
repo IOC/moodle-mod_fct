@@ -332,13 +332,13 @@ class fct_diposit {
         $context = $this->moodle->get_context_instance(CONTEXT_MODULE, $cm->id);
 
         $usuari->es_administrador = $this->moodle->has_capability(
-            "mod/fct:admin", $context, $userid);
+            "mod/fct:admin", $context, $userid, false);
         $usuari->es_alumne = $this->moodle->has_capability(
-            "mod/fct:alumne", $context, $userid);
+            "mod/fct:alumne", $context, $userid, false);
         $usuari->es_tutor_centre = $this->moodle->has_capability(
-            "mod/fct:tutor_centre", $context, $userid);
+            "mod/fct:tutor_centre", $context, $userid, false);
         $usuari->es_tutor_empresa = $this->moodle->has_capability(
-            "mod/fct:tutor_empresa", $context, $userid);
+            "mod/fct:tutor_empresa", $context, $userid, false);
 
         return $usuari;
     }

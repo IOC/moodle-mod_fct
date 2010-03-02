@@ -709,7 +709,7 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
                       3 => 'tutor_centre', 4 => 'tutor_empresa');
         foreach ($caps as $cap) {
             $this->moodle->expects($this->at($index++))->method('has_capability')
-                ->with("mod/fct:$cap", $this->context, $this->usuari->id)
+                ->with("mod/fct:$cap", $this->context, $this->usuari->id, false)
                 ->will($this->returnValue(True));
         }
 
