@@ -43,6 +43,10 @@ class fct_url {
         return self::url('afegir_tutor_empresa', array('fct' => $fct_id));
     }
 
+    function avisos_quadern($quadern_id) {
+        return self::url('avisos_quadern', array('quadern' => $quadern_id));
+    }
+
     function cicle($id) {
         return self::url('cicle', array('id' => $id));
     }

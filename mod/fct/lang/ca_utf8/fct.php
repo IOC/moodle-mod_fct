@@ -47,6 +47,7 @@ $string['alumne'] = "Alumne/a";
 $string['anterior_data_final'] = "Anterior a la data de finalització";
 $string['any'] = "Any";
 $string['apte'] = "Apte/a";
+$string['avisos'] = 'Avisos';
 $string['baixa'] = 'Baixa';
 $string['barem_a'] = 'A. Excel·lent' ;
 $string['barem_b'] = 'B. Bona/Bé';
