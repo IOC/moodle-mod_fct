@@ -412,9 +412,11 @@ class fct_db
     function afegir_activitats_cicle_pla($quadern_id, $activitats) {
         $ok = true;
         foreach ($activitats as $id) {
-            $descripcio = get_field('fct_activitat_cicle', 'descripcio', 'id', $id);
+            $descripcio = get_field('fct_activitat_cicle', 'descripcio',
+                                    'id', $id);
             $ok = $ok && !empty($descripcio);
-            $ok = $ok && self::afegir_activitat_pla($quadern_id,$descripcio);
+            $ok = $ok && self::afegir_activitat_pla($quadern_id,
+                                                    addslashes($descripcio));
         }
         return $ok;
     }
