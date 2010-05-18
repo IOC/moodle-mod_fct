@@ -1,8 +1,8 @@
 <?php
 
 require_once 'PHPUnit/Framework.php';
-require_once 'mod/fct/json.php';
-require_once 'mod/fct/domini.php';
+require_once 'json.php';
+require_once 'domini.php';
 
 class fct_test_json extends PHPUnit_Framework_TestCase {
 

@@ -1,9 +1,9 @@
 <?php
 
 require_once 'PHPUnit/Framework.php';
-require_once 'mod/fct/diposit.php';
-require_once 'mod/fct/domini.php';
-require_once 'mod/fct/moodle.php';
+require_once 'diposit.php';
+require_once 'domini.php';
+require_once 'moodle.php';
 
 define("CONTEXT_MODULE", 28392);
 global $CFG;
