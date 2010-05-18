@@ -154,12 +154,10 @@ class fct_pagina_base {
     function mostrar_capcalera() {
         global $CFG;
 
-        $js = array('/lib/jquery/jquery-1.3.min.js',
-                    '/mod/fct/client.js');
+        require_js("{$CFG->wwwroot}/mod/fct/client.js");
 
-        foreach ($js as $path) {
-            require_js($CFG->wwwroot . $path);
-        }
+        $meta = '<script src="http://ajax.googleapis.com/ajax/libs/'
+            . 'jquery/1.4.2/jquery.min.js" type="text/javascript"></script>';
 
         $navlinks = array();
         $navlinks[] = array('name' => format_string($this->fct->name),
@@ -176,7 +174,7 @@ class fct_pagina_base {
                                            get_string('modulename', 'fct'));
 
         print_header_simple(format_string($this->fct->name), '', $navigation,
-                            '', '', true, $buttontext,
+                            '', $meta, true, $buttontext,
                             navmenu($this->course, $this->cm));
 
         print_box_start('boxaligncenter', 'paginafct');
