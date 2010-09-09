@@ -466,6 +466,28 @@ function xmldb_fct_upgrade($oldversion=0) {
         $result = create_table($table, false);
     }
 
+    if ($result && $oldversion < 2010090900) {
+        $table = $structure->getTable('fct_quadern');
+        $index = $table->getIndex('estat');
+        $field = $table->getField('estat');
+
+        $result = drop_index($table, $index, false)
+            && change_field_type($table, $field, false)
+            && add_index($table, $index, false);
+
+        $records = get_records('fct_quadern');
+        if ($records) {
+            foreach ($records as $record) {
+                $objecte = json_decode($record->objecte, true);
+                $objecte['estat'] = $objecte['estat'] ? 'obert' : 'tancat';
+                $record->objecte = json_encode($objecte);
+                $record->estat = $objecte['estat'];
+                $record = addslashes_recursive($record);
+                $result = $result && update_record('fct_quadern', $record);
+            }
+        }
+    }
+
     return $result;
 }
 

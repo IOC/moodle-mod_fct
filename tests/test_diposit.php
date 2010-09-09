@@ -118,7 +118,7 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
         $this->quadern->alumne = 3179;
         $this->quadern->tutor_centre = 7192;
         $this->quadern->tutor_empresa = 0394;
-        $this->quadern->estat = 1;
+        $this->quadern->estat = 'obert';
 
         $this->quadern->dades_alumne->adreca = 'adreça alumne';
         $this->quadern->empresa->nom = 'nom empresa';

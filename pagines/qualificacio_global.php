@@ -30,8 +30,9 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
-        $this->permis_editar = ($this->permis_admin or ($this->quadern->estat and
-                                                        $this->permis_tutor_centre));
+        $this->permis_editar = ($this->permis_admin or
+                                ($this->quadern->estat == 'obert' and
+                                 $this->permis_tutor_centre));
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }

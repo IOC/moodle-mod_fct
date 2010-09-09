@@ -38,7 +38,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
         $this->curs = optional_param('curs', -1, PARAM_INT);
         $this->cicle = optional_param('cicle', 0, PARAM_INT);
-        $this->estat = optional_param('estat', 1, PARAM_INT);
+        $this->estat = optional_param('estat', '', PARAM_RAW);
         $this->cerca = optional_param('cerca', '', PARAM_TEXT);
         $this->index = optional_param('index', 0, PARAM_INT);
 
@@ -65,7 +65,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             if ($this->cicle > 0) {
                 $especificacio->cicle = $this->cicle;
             }
-            if ($this->estat >= 0) {
+            if ($this->estat) {
                 $especificacio->estat = $this->estat;
             }
             if ($this->cerca) {
@@ -132,7 +132,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             $tutor_empresa = $q->tutor_empresa ?
                 $this->diposit->usuari($this->fct, $q->tutor_empresa)->nom_sencer() : '-';
             $cicle = $this->diposit->cicle($q->cicle)->nom;
-            $estat = ($q->estat ? 'estat_obert' : 'estat_tancat');
+            $estat = 'estat_' . $q->estat;
             $str_estat = fct_string($estat);
             $data_final = ($q->data_final() ?
                            userdate($q->data_final(), "%d/%m/%Y") : '-');
@@ -232,9 +232,9 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     }
 
     function valors_estat() {
-        $estats = array(-1 => fct_string('tots'),
-                        1 => fct_string('estat_obert'),
-                        0 => fct_string('estat_tancat'));
+        $estats = array('' => fct_string('tots'),
+                        'obert' => fct_string('estat_obert'),
+                        'tancat' => fct_string('estat_tancat'));
         return $estats;
     }
 

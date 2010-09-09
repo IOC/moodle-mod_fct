@@ -46,10 +46,11 @@ class fct_form_quadern extends fct_form_base {
         $this->element('menu', 'cicle', 'cicle_formatiu',
                        array('opcions' => $this->opcions_cicle($pagina)));
 
-        $opcions = array(1 => '<span class="estat_obert">'
-                         . fct_string('estat_obert') . '</span>',
-                         0 => '<span class="estat_tancat">'
-                         . fct_string('estat_tancat') . '</span>');
+        $opcions = array();
+        foreach (array('obert', 'tancat') as $estat) {
+            $opcions[$estat] = '<span class="estat_' . $estat . '">'
+                . fct_string("estat_$estat") . '</span>';
+        }
         $this->element('menu' , 'estat', 'estat', array('opcions' => $opcions));
 
         $this->comprovacio($pagina, 'comprovar_nom_empresa');

@@ -30,12 +30,12 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         parent::configurar($quadern_id);
 
         $this->pestanya = 'seguiment_quinzenal';
-        $this->permis_editar = ($this->permis_admin or $this->quadern->estat);
-        $this->permis_editar_centre = ($this->permis_admin or $this->quadern->estat
+        $this->permis_editar = ($this->permis_admin or $this->quadern->estat == 'obert');
+        $this->permis_editar_centre = ($this->permis_admin or $this->quadern->estat == 'obert'
                                        and $this->permis_tutor_centre);
-        $this->permis_editar_alumne = ($this->permis_admin or $this->quadern->estat and
+        $this->permis_editar_alumne = ($this->permis_admin or $this->quadern->estat == 'obert' and
                                        ($this->permis_tutor_centre or $this->permis_alumne));
-        $this->permis_editar_empresa = ($this->permis_admin or $this->quadern->estat and
+        $this->permis_editar_empresa = ($this->permis_admin or $this->quadern->estat == 'obert' and
                                         ($this->permis_tutor_centre or $this->permis_tutor_empresa));
     }
 

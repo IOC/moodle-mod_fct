@@ -498,7 +498,7 @@ class fct_form_element_menu extends fct_form_element_base_senzill {
     function definition_senzill($mform) {
         $mform->_form->addElement('select', $this->nom, $this->etiqueta,
                                   $this->params->opcions);
-        $mform->_form->setType($this->nom, PARAM_INT);
+        $mform->_form->setType($this->nom, PARAM_RAW);
     }
 
 }

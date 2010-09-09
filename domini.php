@@ -127,7 +127,7 @@ class fct_quadern {
     var $alumne;
     var $tutor_centre = 0;
     var $tutor_empresa = 0;
-    var $estat = 1;
+    var $estat = 'obert';
     var $dades_alumne;
     var $empresa;
     var $convenis;

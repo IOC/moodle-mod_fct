@@ -372,7 +372,7 @@ class fct_diposit {
             $select[] = "q.cicle = $especificacio->cicle";
         }
         if ($especificacio->estat !== false) {
-            $select[] = "q.estat = $especificacio->estat";
+            $select[] = "q.estat = '" . addslashes($especificacio->estat) . "'";
         }
         if ($especificacio->cerca !== false) {
             $fields = array("CONCAT(ua.firstname, ' ', ua.lastname)",
