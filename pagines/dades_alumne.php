@@ -79,9 +79,6 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         if ($this->form->validar()) {
             fct_copy_vars($this->form->valors(), $this->quadern->dades_alumne);
             $this->diposit->afegir_quadern($this->quadern);
-            if ($this->usuari->es_alumne) {
-                $this->serveis->afegir_avis('dades_alumne', $this->quadern->id);
-            }
             $this->registrar('update dades_alumne');
             redirect($this->url);
         }
