@@ -37,6 +37,7 @@ class fct_pagina_base {
     var $pestanyes = array();
     var $pestanya = false;
     var $subpestanya = false;
+    var $pestanyes_inactives = array();
 
     var $moodle;
     var $diposit;
@@ -188,7 +189,8 @@ class fct_pagina_base {
             if ($this->pestanyes) {
                 $active = (!empty($this->subpestanya) ?
                            array($this->subpestanya) : null);
-                print_tabs($this->pestanyes, $this->pestanya, null, $active);
+                print_tabs($this->pestanyes, $this->pestanya,
+                           $this->pestanyes_inactives, $active);
             }
         }
 
