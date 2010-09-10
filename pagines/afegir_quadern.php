@@ -25,7 +25,8 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function comprovar_nom_empresa($valors) {
         $especificacio = new fct_especificacio_quaderns;
         $especificacio->fct = $this->fct->id;
-        $especificacio->alumne = $valors->alumne;
+        $especificacio->alumne = ($this->permis_admin ? $valors->alumne
+                                  : $this->usuari->id);
         $especificacio->empresa = $valors->nom_empresa;
         if ($this->diposit->quaderns($especificacio)) {
             return array('nom_empresa' => fct_string('quadern_duplicat'));
@@ -36,7 +37,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->comprovar_permis($this->permis_admin);
+        $this->comprovar_permis($this->permis_admin or $this->permis_alumne);
         $this->url = fct_url::afegir_quadern($this->fct->id);
         $this->subpestanya = 'afegir_quadern';
     }
@@ -44,12 +45,17 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     function processar_afegir() {
         $form = new fct_form_quadern($this);
         if ($form->validar()) {
-            $quadern = $this->serveis->crear_quadern($form->valor('alumne'),
+            $alumne = ($this->permis_admin ? $form->valor('alumne')
+                       : $this->usuari->id);
+            $quadern = $this->serveis->crear_quadern($alumne,
                                                      $form->valor('cicle'));
-            $quadern->tutor_centre = $form->valor('tutor_centre');
-            $quadern->tutor_empresa = $form->valor('tutor_empresa');
+            if ($this->permis_admin) {
+                $quadern->tutor_centre = $form->valor('tutor_centre');
+                $quadern->tutor_empresa = $form->valor('tutor_empresa');
+                $quadern->estat = $form->valor('estat');
+            }
             $quadern->empresa->nom = $form->valor('nom_empresa');
-            $quadern->estat = $form->valor('estat');
+
             $this->diposit->afegir_quadern($quadern);
             $this->registrar('add quadern', fct_url::quadern($quadern->id),
                              $this->nom_usuari($quadern->alumne)

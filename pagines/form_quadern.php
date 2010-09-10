@@ -47,7 +47,7 @@ class fct_form_quadern extends fct_form_base {
                        array('opcions' => $this->opcions_cicle($pagina)));
 
         $opcions = array();
-        foreach (array('obert', 'tancat') as $estat) {
+        foreach (array('proposta', 'obert', 'tancat') as $estat) {
             $opcions[$estat] = '<span class="estat_' . $estat . '">'
                 . fct_string("estat_$estat") . '</span>';
         }
@@ -57,6 +57,10 @@ class fct_form_quadern extends fct_form_base {
 
         if ($pagina->accio == 'afegir') {
             $this->element('boto', 'afegir', 'afegeix');
+            if (!$pagina->permis_admin) {
+                $this->ocultar(array('alumne', 'tutor_centre',
+                                     'tutor_empresa', 'estat'));
+            }
         } else if ($pagina->accio == 'veure') {
             if ($pagina->permis_admin) {
                 $this->element('boto', 'editar', 'edita');

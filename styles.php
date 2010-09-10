@@ -100,6 +100,10 @@
     color: red;
 }
 
+#paginafct a.estat_proposta {
+    color: orange;
+}
+
 #paginafct .columna_accions {
     width: 2em;
 }

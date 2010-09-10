@@ -77,12 +77,6 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
         $this->nombre = $this->diposit->nombre_quaderns($especificacio);
 
-        if (!$mode_selectors and $this->nombre == 1) {
-            $quaderns = $this->diposit->quaderns($especificacio);
-            $quadern = array_pop($quaderns);
-            redirect(fct_url::quadern($quadern->id));
-        }
-
         $this->quaderns = $this->diposit->quaderns($especificacio,
                                                    $this->taula->get_sql_sort(),
                                                    $this->index * 10, 10);
@@ -97,6 +91,12 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             $this->mostrar_paginacio();
         } else {
             echo '<p>' . fct_string('cap_quadern') . '</p>';
+        }
+
+        if ($this->usuari->es_alumne) {
+            print_single_button('view.php', array('pagina' => 'afegir_quadern',
+                                                  'fct' => $this->fct->id),
+                                fct_string('afegeix_proposta_quadern'));
         }
 
         $this->mostrar_peu();
@@ -233,6 +233,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
     function valors_estat() {
         $estats = array('' => fct_string('tots'),
+                        'proposta' => fct_string('estat_proposta'),
                         'obert' => fct_string('estat_obert'),
                         'tancat' => fct_string('estat_tancat'));
         return $estats;
