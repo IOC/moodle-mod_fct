@@ -85,6 +85,16 @@ class fct_form_base {
         $this->mform->display();
     }
 
+    function ocultar($noms) {
+        if (is_array($noms)) {
+            foreach ($noms as $nom) {
+                $this->ocultar($nom);
+            }
+        } else {
+            unset($this->elements[$nom]);
+        }
+    }
+
     function validar() {
         if ($data = $this->mform->get_data()) {
             $this->data = (array) $data;
