@@ -91,7 +91,7 @@ class fct_form_base {
                 $this->ocultar($nom);
             }
         } else {
-            unset($this->elements[$nom]);
+            unset($this->elements[$noms]);
         }
     }
 
