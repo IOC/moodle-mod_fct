@@ -100,7 +100,7 @@
     color: red;
 }
 
-#paginafct a.estat_proposta {
+#paginafct a.estat_proposat {
     color: orange;
 }
 

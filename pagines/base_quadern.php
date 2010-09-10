@@ -66,7 +66,7 @@ class fct_pagina_base_quadern extends fct_pagina_base {
                 fct_url::qualificacio_global($this->quadern->id),
                 fct_string('qualificacio_global')),
         ));
-        if ($this->quadern->estat == 'proposta' and !$this->permis_admin) {
+        if ($this->quadern->estat == 'proposat' and !$this->permis_admin) {
             $this->pestanyes_inactives = array('seguiment_quinzenal',
                                                'valoracio',
                                                'qualificacio_global');

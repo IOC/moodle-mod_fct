@@ -96,7 +96,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
         if ($this->usuari->es_alumne) {
             print_single_button('view.php', array('pagina' => 'afegir_quadern',
                                                   'fct' => $this->fct->id),
-                                fct_string('afegeix_proposta_quadern'));
+                                fct_string('proposa_quadern'));
         }
 
         $this->mostrar_peu();
@@ -233,7 +233,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
     function valors_estat() {
         $estats = array('' => fct_string('tots'),
-                        'proposta' => fct_string('estat_proposta'),
+                        'proposat' => fct_string('estat_proposat'),
                         'obert' => fct_string('estat_obert'),
                         'tancat' => fct_string('estat_tancat'));
         return $estats;

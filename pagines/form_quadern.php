@@ -47,7 +47,7 @@ class fct_form_quadern extends fct_form_base {
                        array('opcions' => $this->opcions_cicle($pagina)));
 
         $opcions = array();
-        foreach (array('proposta', 'obert', 'tancat') as $estat) {
+        foreach (array('proposat', 'obert', 'tancat') as $estat) {
             $opcions[$estat] = '<span class="estat_' . $estat . '">'
                 . fct_string("estat_$estat") . '</span>';
         }

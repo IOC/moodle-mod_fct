@@ -29,7 +29,7 @@ class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
         $this->pestanya = 'pla_activitats';
         $this->permis_editar = ($this->usuari->es_administrador
                                 or (in_array($this->quadern->estat,
-                                             array('proposta', 'obert'))
+                                             array('proposat', 'obert'))
                                     and ($this->usuari->es_tutor_centre
                                          or $this->usuari->es_tutor_empresa)));
     }
