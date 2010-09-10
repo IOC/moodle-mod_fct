@@ -65,9 +65,6 @@ class fct_pagina_base_quadern extends fct_pagina_base {
             new tabobject('qualificacio_global',
                 fct_url::qualificacio_global($this->quadern->id),
                 fct_string('qualificacio_global')),
-            new tabobject('avisos',
-                fct_url::avisos_quadern($this->quadern->id),
-                fct_string('avisos')),
         ));
     }
 
