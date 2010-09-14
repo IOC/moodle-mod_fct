@@ -27,7 +27,7 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
 
     function configurar() {
         parent::configurar();
-        $this->url = fct_url::qualificacio_quadern($this->quadern->id);
+        $this->url = fct_url('qualificacio_quadern', array('quadern' => $this->quadern->id));
         $this->titol = 'qualificacio_quadern';
         $this->form = new fct_form_qualificacio($this);
         $this->subpestanya = 'qualificacio_quadern';

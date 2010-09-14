@@ -51,7 +51,7 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
 
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
-        $this->url = fct_url::frases_retroaccio($this->fct->id);
+        $this->url = fct_url('frases_retroaccio', array('fct' => $this->fct->id));
         $this->pestanya = 'frases_retroaccio';
         $this->afegir_navegacio(fct_string('frases_retroaccio'));
 

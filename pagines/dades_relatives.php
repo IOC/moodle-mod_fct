@@ -62,7 +62,7 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->url = fct_url::dades_relatives($this->quadern->id);
+        $this->url = fct_url('dades_relatives', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_relatives';
         $this->form = new fct_form_dades_relatives($this);
     }

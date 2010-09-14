@@ -38,7 +38,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
         $this->comprovar_permis($this->permis_admin or $this->permis_alumne);
-        $this->url = fct_url::afegir_quadern($this->fct->id);
+        $this->url = fct_url('afegir_quadern', array('fct' => $this->fct->id));
         $this->subpestanya = 'afegir_quadern';
     }
 
@@ -57,10 +57,11 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
             $quadern->empresa->nom = $form->valor('nom_empresa');
 
             $this->diposit->afegir_quadern($quadern);
-            $this->registrar('add quadern', fct_url::quadern($quadern->id),
+            $this->registrar('add quadern',
+                             fct_url('quadern', array('quadern' => $quadern->id)),
                              $this->nom_usuari($quadern->alumne)
                              . ' ('. $quadern->empresa->nom . ')');
-            redirect(fct_url::quadern($quadern->id));
+            redirect(fct_url('quadern', array('quadern' => $quadern->id)));
         }
 
         $this->mostrar_capcalera();
@@ -74,7 +75,7 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::llista_quaderns($this->fct->id));
+        redirect(fct_url('llista_quaderns', array('fct' => $this->fct->id)));
     }
 
     function alumne() {

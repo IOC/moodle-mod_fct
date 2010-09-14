@@ -37,17 +37,23 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
         parent::definir_pestanyes();
         $pestanyes = array(
             new tabobject('dades_centre_quadern',
-                fct_url::dades_centre_quadern($this->quadern->id), fct_string('centre_docent')),
+                          fct_url('dades_centre_quadern', array('quadern' => $this->quadern->id)),
+                          fct_string('centre_docent')),
             new tabobject('dades_alumne',
-                fct_url::dades_alumne($this->quadern->id), fct_string('alumne')),
+                          fct_url('dades_alumne', array('quadern' => $this->quadern->id)),
+                          fct_string('alumne')),
             new tabobject('dades_empresa',
-                fct_url::dades_empresa($this->quadern->id), fct_string('empresa')),
+                          fct_url('dades_empresa', array('quadern' => $this->quadern->id)),
+                          fct_string('empresa')),
             new tabobject('dades_conveni',
-                fct_url::dades_conveni($this->quadern->id), fct_string('conveni')),
+                          fct_url('dades_conveni', array('quadern' => $this->quadern->id)),
+                          fct_string('conveni')),
             new tabobject('dades_horari',
-                fct_url::dades_horari($this->quadern->id), fct_string('horari_practiques')),
+                          fct_url('dades_horari', array('quadern' => $this->quadern->id)),
+                          fct_string('horari_practiques')),
             new tabobject('dades_relatives',
-                fct_url::dades_relatives($this->quadern->id), fct_string('dades_relatives')),
+                          fct_url('dades_relatives', array('quadern' => $this->quadern->id)),
+                          fct_string('dades_relatives')),
         );
         $this->pestanyes[] = $pestanyes;
     }

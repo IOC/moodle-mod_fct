@@ -37,7 +37,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->url = fct_url::qualificacio_global($this->quadern->id);
+        $this->url = fct_url('qualificacio_global', array('quadern' => $this->quadern->id));
         $this->titol = 'qualificacio_global';
         $this->pestanya = 'qualificacio_global';
         $this->form = new fct_form_qualificacio($this);
@@ -49,7 +49,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
                                                        $this->quadern->cicle);
 
         if ($ultim_quadern->id != $this->quadern->id) {
-            $url = fct_url::qualificacio_global($ultim_quadern->id);
+            $url = fct_url('qualificacio_global', array('quadern' => $ultim_quadern->id));
             $avis = fct_string('qualificacio_global_a_ultim_quadern', $url);
             echo "<p>$avis</p>";
         } else {

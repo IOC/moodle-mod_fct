@@ -59,7 +59,7 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->url = fct_url::dades_empresa($this->quadern->id);
+        $this->url = fct_url('dades_empresa', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_empresa';
         $this->form = new fct_form_dades_empresa($this);
     }

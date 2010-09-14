@@ -40,11 +40,12 @@ class fct_pagina_editar_activitat_pla extends fct_pagina_base_pla_activitats  {
         $this->activitat = $this->diposit->activitat($id);
         parent::configurar($this->activitat->quadern);
         $this->comprovar_permis($this->permis_editar);
-        $this->url = fct_url::editar_activitat_pla($this->activitat->id);
+        $this->url = fct_url('editar_activitat_pla',
+                             array('activitat' => $this->activitat->id));
     }
 
     function processar_cancellar() {
-        redirect(fct_url::pla_activitats($this->quadern->id));
+        redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
     }
 
     function processar_editar() {
@@ -53,9 +54,9 @@ class fct_pagina_editar_activitat_pla extends fct_pagina_base_pla_activitats  {
             $this->activitat->descripcio = $form->valor('descripcio');
             $this->diposit->afegir_activitat($this->activitat);
             $this->registrar('update activitat_pla',
-                             fct_url::pla_activitats($this->quadern->id),
+                             fct_url('pla_activitats', array('quadern' => $this->quadern->id)),
                              $this->activitat->descripcio);
-            redirect(fct_url::pla_activitats($this->quadern->id));
+            redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
         }
         $this->mostrar_capcalera();
         $form->valor('descripcio', $this->activitat->descripcio);

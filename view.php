@@ -28,7 +28,7 @@ if ($installed_version != $module->version) {
 require_once($CFG->dirroot . '/mod/fct/lib.php');
 
 $pagina = optional_param('pagina', 'llista_quaderns', PARAM_ALPHAEXT);
-fct_require('url.php' , "pagines/$pagina.php");
+fct_require("pagines/$pagina.php");
 $class = "fct_pagina_$pagina";
 if (!class_exists($class)) {
     print_error('error_pagina', 'fct');

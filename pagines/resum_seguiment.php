@@ -61,7 +61,7 @@ class fct_pagina_resum_seguiment extends fct_pagina_base_seguiment {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->url = fct_url::resum_seguiment($this->quadern->id);
+        $this->url = fct_url('resum_seguiment', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'resum_seguiment';
     }
 

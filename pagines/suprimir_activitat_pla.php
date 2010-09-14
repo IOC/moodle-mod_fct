@@ -28,7 +28,7 @@ class fct_pagina_suprimir_activitat_pla extends fct_pagina_base_pla_activitats  
         $id = required_param('activitat', PARAM_INT);
         $this->activitat = $this->diposit->activitat($id);
         parent::configurar($this->activitat->quadern);
-        $this->url = fct_url::suprimir_activitat_pla($this->activitat->id);
+        $this->url = fct_url('suprimir_activitat_pla', array('activitat' => $this->activitat->id));
         $this->comprovar_permis($this->permis_editar);
     }
 
@@ -36,16 +36,16 @@ class fct_pagina_suprimir_activitat_pla extends fct_pagina_base_pla_activitats  
         $this->comprovar_sessio();
         $this->diposit->suprimir_activitat($this->activitat);
         $this->registrar('delete activitat_pla',
-                         fct_url::pla_activitats($this->quadern->id),
+                         fct_url('pla_activitats', array('quadern' => $this->quadern->id)),
                          $this->activitat->descripcio);
-        redirect(fct_url::pla_activitats($this->quadern->id));
+        redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
     }
 
     function processar_suprimir() {
         $this->mostrar_capcalera();
         notice_yesno(fct_string('segur_suprimir_activitat')
             . '</p><p>' . $this->activitat->descripcio,
-            $this->url, fct_url::pla_activitats($this->quadern->id),
+            $this->url, fct_url('pla_activitats', array('quadern' => $this->quadern->id)),
             array('confirmar' => 1, 'sesskey' => sesskey()));
         $this->mostrar_peu();
     }

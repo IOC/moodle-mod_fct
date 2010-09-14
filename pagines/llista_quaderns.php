@@ -34,7 +34,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     function configurar() {
         parent::configurar(optional_param('fct', 0, PARAM_INT),
             optional_param('id', 0, PARAM_INT));
-        $this->url = fct_url::llista_quaderns($this->fct->id);
+        $this->url = fct_url('llista_quaderns', array('fct' => $this->fct->id));
 
         $this->curs = optional_param('curs', -1, PARAM_INT);
         $this->cicle = optional_param('cicle', 0, PARAM_INT);
@@ -125,7 +125,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
     function mostrar_taula() {
         foreach ($this->quaderns as $q) {
-            $url = fct_url::quadern($q->id);
+            $url = fct_url('quadern', array('quadern' => $q->id));
             $alumne = $this->diposit->usuari($this->fct, $q->alumne)->nom_sencer();
             $tutor_centre = $q->tutor_centre ?
                 $this->diposit->usuari($this->fct, $q->tutor_centre)->nom_sencer() : '-';

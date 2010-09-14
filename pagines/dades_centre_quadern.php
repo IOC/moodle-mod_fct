@@ -26,7 +26,7 @@ class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->url = fct_url::dades_centre_quadern($this->quadern->id);
+        $this->url = fct_url('dades_centre_quadern', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_centre_quadern';
     }
 

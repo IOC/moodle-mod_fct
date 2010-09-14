@@ -52,7 +52,7 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->final = required_param('final', PARAM_BOOL);
-        $this->url = fct_url::valoracio_actituds($this->quadern->id, $this->final);
+        $this->url = fct_url('valoracio_actituds', array('quadern' => $this->quadern->id, 'final' => $this->final));
         $this->titol = ($this->final ? 'valoracio_final_actituds'
                         : 'valoracio_parcial_actituds');
         $this->subpestanya = ($this->final ? 'valoracio_actituds_final'

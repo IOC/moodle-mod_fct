@@ -95,7 +95,7 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->url = fct_url::dades_conveni($this->quadern->id);
+        $this->url = fct_url('dades_conveni', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_conveni';
         $this->form = new fct_form_dades_conveni($this);
     }

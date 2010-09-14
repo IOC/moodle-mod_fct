@@ -58,7 +58,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
             $this->comprovar_permis($this->permis_editar);
         }
 
-        $this->url = fct_url::dades_alumne($this->quadern->id);
+        $this->url = fct_url('dades_alumne', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_alumne';
         $this->form = new fct_form_dades_alumne($this);
     }

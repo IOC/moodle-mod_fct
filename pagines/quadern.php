@@ -45,7 +45,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
             $this->comprovar_permis($this->permis_admin);
         }
 
-        $this->url = fct_url::quadern($this->quadern->id);
+        $this->url = fct_url('quadern', array('quadern' => $this->quadern->id));
         $this->pestanya = 'quadern';
         $this->form = new fct_form_quadern($this);
     }
@@ -65,7 +65,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
     function processar_confirmar() {
         $this->comprovar_sessio();
         $this->serveis->suprimir_quadern($this->quadern);
-        redirect(fct_url::llista_quaderns($this->fct->id));
+        redirect(fct_url('llista_quaderns', array('fct' => $this->fct->id)));
     }
 
     function processar_desar() {
@@ -74,7 +74,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
             $this->quadern->empresa->nom = $this->form->valor('nom_empresa');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update quadern');
-            redirect(fct_url::quadern($this->quadern->id));
+            redirect(fct_url('quadern', array('quadern' => $this->quadern->id)));
         }
         $this->mostrar();
     }
@@ -86,7 +86,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
     function processar_suprimir() {
         $this->mostrar_capcalera();
         notice_yesno(fct_string('segur_suprimir_quadern', $this->titol),
-            $this->url, fct_url::quadern($this->quadern->id),
+            $this->url, fct_url('quadern', array('quadern' => $this->quadern->id)),
             array('confirmar' => 1, 'sesskey' => sesskey()));
         $this->mostrar_peu();
     }

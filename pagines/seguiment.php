@@ -24,7 +24,7 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->url = fct_url::seguiment($this->quadern->id);
+        $this->url = fct_url('seguiment', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'quinzenes';
     }
 
@@ -45,7 +45,7 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
            echo '<p>' . fct_string('cap_quinzena') . '</p>';
         } else {
             foreach ($quinzenes as $quinzena) {
-                $url = fct_url::quinzena($quinzena->id);
+                $url = fct_url('quinzena', array('quinzena' => $quinzena->id));
                 $any = '<a href="'.$url.'">'.$quinzena->any.'</a>';
                 $periode = '<a href="'.$url.'">'.self::nom_periode($quinzena->periode).'</a>';
                 $dies = '<a href="'.$url.'">'.count($quinzena->dies).'</a>';

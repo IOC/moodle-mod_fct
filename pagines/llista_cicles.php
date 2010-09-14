@@ -24,7 +24,7 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
 
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->url = fct_url::llista_cicles($this->fct->id);
+        $this->url = fct_url('llista_cicles', array('fct' => $this->fct->id));
         $this->subpestanya = 'llista_cicles';
     }
 
@@ -43,7 +43,7 @@ class fct_pagina_llista_cicles extends fct_pagina_base_cicles {
            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
         } else {
             foreach ($cicles as $cicle) {
-                $taula->add_data(array('<a href="' . fct_url::cicle($cicle->id)
+                $taula->add_data(array('<a href="' . fct_url('cicle', array('cicle' => $cicle->id))
                                        .'">' . $cicle->nom . '</a>'));
             }
             $taula->print_html();

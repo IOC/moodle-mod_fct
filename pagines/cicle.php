@@ -37,9 +37,9 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     function configurar() {
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar',
                                       'suprimir', 'confirmar'), 'veure');
-        $this->cicle = $this->diposit->cicle(required_param('id', PARAM_INT));
+        $this->cicle = $this->diposit->cicle(required_param('cicle', PARAM_INT));
         parent::configurar($this->cicle->fct);
-        $this->url = fct_url::cicle($this->cicle->id);
+        $this->url = fct_url('cicle', array('cicle' => $this->cicle->id));
         $this->form = new fct_form_cicle($this);
     }
 
@@ -53,7 +53,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::cicle($this->cicle->id));
+        redirect(fct_url('cicle', array('cicle' => $this->cicle->id)));
     }
 
     function processar_confirmar() {
@@ -61,10 +61,10 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
         if ($this->cicle->n_quaderns == 0) {
             $this->diposit->suprimir_cicle($this->cicle);
             $this->registrar('delete cicle',
-                             fct_url::llista_cicles($this->fct->id),
+                             fct_url('llista_cicles', array('fct' => $this->fct->id)),
                              $this->cicle->nom);
         }
-        redirect(fct_url::llista_cicles($this->fct->id));
+        redirect(fct_url('llista_cicles', array('cicle' => $this->fct->id)));
     }
 
     function processar_desar() {
@@ -74,9 +74,9 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
                 $this->form->valor('activitats'));
             $this->diposit->afegir_cicle($this->cicle);
             $this->registrar('update cicle',
-                             fct_url::cicle($this->cicle->id),
+                             fct_url('cicle', array('cicle' => $this->cicle->id)),
                              $this->cicle->nom);
-            redirect(fct_url::cicle($this->cicle->id));
+            redirect(fct_url('cicle', array('cicle' => $this->cicle->id)));
         }
 
         $this->mostrar();
@@ -96,7 +96,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
             echo "<p>$missatge</p>";
         } else {
             notice_yesno(fct_string('segur_suprimir_cicle_formatiu', $this->cicle->nom),
-                         $this->url, fct_url::cicle($this->cicle->id),
+                         $this->url, fct_url('cicle', array('cicle' => $this->cicle->id)),
                          array('confirmar' => 1, 'sesskey' => sesskey()));
         }
 

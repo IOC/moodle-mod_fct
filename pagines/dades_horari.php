@@ -74,7 +74,7 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }
-        $this->url = fct_url::dades_horari($this->quadern->id);
+        $this->url = fct_url('dades_horari', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'dades_horari';
         $this->form = new fct_form_element_afegir_franja_horari($this);
     }

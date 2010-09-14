@@ -31,7 +31,7 @@ class fct_pagina_dades_centre extends fct_pagina_base {
         $this->comprovar_permis($this->usuari->es_administrador);
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
-        $this->url = fct_url::dades_centre($this->fct->id);
+        $this->url = fct_url('dades_centre', array('fct' => $this->fct->id));
         $this->pestanya = 'dades_centre';
         $this->afegir_navegacio(fct_string('dades_centre'));
 

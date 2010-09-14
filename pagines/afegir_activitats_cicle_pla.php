@@ -41,7 +41,7 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('seleccionar', 'afegir', 'cancellar'),
                                 'seleccionar');
-        $this->url = fct_url::afegir_activitats_cicle_pla($this->quadern->id);
+        $this->url = fct_url('afegir_activitats_cicle_pla', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'afegir_activitats_cicle_pla';
     }
 
@@ -66,8 +66,8 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
                 $this->diposit->afegir_activitat($activitat);
             }
             $this->registrar('add activitats_cicle_pla',
-                             fct_url::pla_activitats($this->quadern->id));
-            redirect(fct_url::pla_activitats($this->quadern->id));
+                             fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
+            redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
         }
     }
 
@@ -77,7 +77,7 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
     }
 
     function processar_cancellar() {
-        redirect(fct_url::pla_activitats($this->quadern->id));
+        redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
     }
 
 }

@@ -32,7 +32,7 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->url = fct_url::afegir_cicle($this->fct->id);
+        $this->url = fct_url('afegir_cicle', array('fct' => $this->fct->id));
         $this->subpestanya = 'afegir_cicle';
     }
 
@@ -45,9 +45,10 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
             $cicle->nom = $form->valor('nom');
             $cicle->activitats = fct_linies_text($form->valor('activitats'));
             $this->diposit->afegir_cicle($cicle);
-            $this->registrar('add cicle', fct_url::cicle($cicle->id),
+            $this->registrar('add cicle',
+                             fct_url('cicle', array('cicle' => $cicle->id)),
                              $cicle->nom);
-            redirect(fct_url::cicle($cicle->id));
+            redirect(fct_url('cicle', array('cicle' => $cicle->id)));
         }
 
         $this->mostrar_capcalera();
@@ -56,7 +57,7 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::llista_cicles($this->fct->id));
+        redirect(fct_url('llista_cicles', array('fct' => $this->fct->id)));
     }
 
 }

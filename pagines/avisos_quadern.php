@@ -10,7 +10,7 @@ class fct_pagina_avisos_quadern extends fct_pagina_base_quadern {
 
         $this->comprovar_permis($this->permis_tutor_centre);
 
-        $this->url = fct_url::avisos_quadern($this->quadern->id);
+        $this->url = fct_url('avisos_quadern', array('quadern' => $this->quadern->id));
         $this->pestanya = 'avisos';
     }
 

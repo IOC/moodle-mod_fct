@@ -40,17 +40,17 @@ class fct_pagina_base_valoracio extends fct_pagina_base_quadern {
         parent::definir_pestanyes();
         $this->pestanyes[] = array(
             new tabobject('valoracio_actituds_parcial',
-                fct_url::valoracio_actituds($this->quadern->id, 0),
-                fct_string('valoracio_parcial_actituds')),
+                          fct_url('valoracio_actituds', array('quadern' => $this->quadern->id, 'final' => 0)),
+                          fct_string('valoracio_parcial_actituds')),
             new tabobject('valoracio_actituds_final',
-                fct_url::valoracio_actituds($this->quadern->id, 1),
-                fct_string('valoracio_final_actituds')),
+                          fct_url('valoracio_actituds', array('quadern' => $this->quadern->id, 'final' => 1)),
+                          fct_string('valoracio_final_actituds')),
             new tabobject('valoracio_activitats',
-                fct_url::valoracio_activitats($this->quadern->id),
-                fct_string('valoracio_activitats')),
+                          fct_url('valoracio_activitats', array('quadern' => $this->quadern->id)),
+                          fct_string('valoracio_activitats')),
             new tabobject('qualificacio_quadern',
-                fct_url::qualificacio_quadern($this->quadern->id),
-                fct_string('qualificacio_quadern')),
+                          fct_url('qualificacio_quadern', array('quadern' => $this->quadern->id)),
+                          fct_string('qualificacio_quadern')),
         );
     }
 

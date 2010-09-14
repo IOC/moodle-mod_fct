@@ -34,7 +34,7 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->comprovar_permis($this->permis_editar);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
-        $this->url = fct_url::afegir_activitat_pla($this->quadern->id);
+        $this->url = fct_url('afegir_activitat_pla', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'afegir_activitat_pla';
     }
 
@@ -46,9 +46,9 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
             $activitat->descripcio = $form->valor('descripcio');
             $this->diposit->afegir_activitat($activitat);
             $this->registrar('add activitat_pla',
-                             fct_url::pla_activitats($this->quadern->id),
+                             fct_url('pla_activitats', array('quadern' => $this->quadern->id)),
                              $activitat->descripcio);
-            redirect(fct_url::pla_activitats($this->quadern->id));
+            redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
         }
         $this->mostrar_capcalera();
         $form->mostrar();
@@ -56,7 +56,7 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::pla_activitats($this->quadern->id));
+        redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
     }
 
 }

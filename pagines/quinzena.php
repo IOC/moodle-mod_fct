@@ -60,7 +60,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         $this->activitats = $this->diposit->activitats($this->quadern->id);
 
         $this->titol = self::nom_periode($this->quinzena->periode).' '.$this->quinzena->any;
-        $this->url = fct_url::quinzena($this->quinzena->id);
+        $this->url = fct_url('quinzena', array('quinzena' => $this->quinzena->id));
 
         $this->form = new fct_form_quinzena($this);
     }
@@ -90,7 +90,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
         $this->comprovar_sessio();
         $this->diposit->suprimir_quinzena($this->quinzena);
         $this->registrar('delete quinzena', null, $this->titol);
-        redirect(fct_url::seguiment($this->quadern->id));
+        redirect(fct_url('seguiment', array('quadern' => $this->quadern->id)));
     }
 
     function processar_desar() {

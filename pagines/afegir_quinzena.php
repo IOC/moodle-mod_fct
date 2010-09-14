@@ -39,7 +39,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->comprovar_permis($this->permis_editar_alumne);
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
-        $this->url = fct_url::afegir_quinzena($this->quadern->id);
+        $this->url = fct_url('afegir_quinzena', array('quadern' => $this->quadern->id));
         $this->subpestanya = 'afegir_quinzena';
         $this->activitats = $this->diposit->activitats($this->quadern->id);
     }
@@ -65,10 +65,11 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
                                                   $form->valor('any'));
             $quinzena->activitats = $form->valor('activitats_realitzades');
             $this->diposit->afegir_quinzena($quinzena);
-            $this->registrar('add quinzena', fct_url::quinzena($quinzena->id),
+            $this->registrar('add quinzena',
+                             fct_url('quinzena', array('quinzena' => $quinzena->id)),
                              $this->nom_periode($quinzena->periode,
                                                 $quinzena->any));
-            redirect(fct_url::quinzena($quinzena->id));
+            redirect(fct_url('quinzena', array('quinzena' => $quinzena->id)));
         }
 
         list($any, $periode) = $this->quinzena_actual();
@@ -88,7 +89,7 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
     }
 
     function processar_cancellar() {
-        redirect(fct_url::seguiment($this->quadern->id));
+        redirect(fct_url('seguiment', array('quadern' => $this->quadern->id)));
     }
 }
 

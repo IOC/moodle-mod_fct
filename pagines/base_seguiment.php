@@ -42,14 +42,18 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
     function definir_pestanyes() {
         parent::definir_pestanyes();
         $pestanyes = array(
-            new tabobject('quinzenes', fct_url::seguiment($this->quadern->id), fct_string('quinzenes')),
+            new tabobject('quinzenes',
+                          fct_url('seguiment', array('quadern' => $this->quadern->id)),
+                          fct_string('quinzenes')),
         );
         if ($this->permis_editar_alumne) {
             $pestanyes[] = new tabobject('afegir_quinzena',
-                fct_url::afegir_quinzena($this->quadern->id), fct_string('afegeix_quinzena'));
+                                         fct_url('afegir_quinzena', array('quadern' => $this->quadern->id)),
+                                         fct_string('afegeix_quinzena'));
         }
         $pestanyes[] = new tabobject('resum_seguiment',
-            fct_url::resum_seguiment($this->quadern->id), fct_string('resum_seguiment'));
+                                     fct_url('resum_seguiment', array('quadern' => $this->quadern->id)),
+                                     fct_string('resum_seguiment'));
         $this->pestanyes[] = $pestanyes;
     }
 
