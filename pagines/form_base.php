@@ -391,6 +391,52 @@ class fct_form_element_estatic extends fct_form_element_base {
     }
 }
 
+class fct_form_element_hora extends fct_form_element_base {
+
+    function definition($mform) {
+        $elements = array();
+        $elements[] =& $mform->_form->createElement('select', 'hora', '',
+                                                    $this->opcions_hora());
+        $mform->_form->setType("{$this->nom}[hora]", PARAM_INT);
+        $elements[] =& $mform->_form->createElement('select', 'minuts', '',
+                                                    $this->opcions_minuts());
+        $mform->_form->setType("{$this->nom}[minuts]", PARAM_INT);
+        $mform->_form->addGroup($elements, $this->nom,
+                                $this->etiqueta . ':', ':');
+        if ($this->congelat) {
+            $mform->_form->hardFreeze($this->nom);
+        }
+    }
+
+    function get_data(&$data) {
+        $hora = ((float) $data[$this->nom]['hora'] +
+                 (float) $data[$this->nom]['minuts'] / 60);
+        return max(0, min(23.75, $hora));
+    }
+
+    function opcions_hora() {
+        $opcions = array();
+        for ($hora = 0; $hora < 24; $hora++) {
+            $opcions[$hora] = sprintf("%02d", $hora);
+        }
+        return $opcions;
+    }
+
+    function opcions_minuts() {
+        $opcions = array();
+        for ($minuts = 0; $minuts < 60; $minuts += 15) {
+            $opcions[$minuts] = sprintf("%02d", $minuts);
+        }
+        return $opcions;
+    }
+
+    function set_data(&$data, $valor) {
+        $data[$this->nom]['hora'] = floor($valor);
+        $data[$this->nom]['minuts'] = round(($valor - floor($valor)) * 4) * 15;
+    }
+
+}
+
 class fct_form_element_hores extends fct_form_element_base {
 
     function definition($mform) {
