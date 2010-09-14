@@ -19,6 +19,10 @@
 
 class fct_exception extends Exception {}
 
+function fct_param($nom) {
+    return optional_param($nom, null, PARAM_RAW);
+}
+
 function fct_require() {
     global $CFG;
     foreach (func_get_args() as $fitxer) {
@@ -31,6 +35,14 @@ function fct_string($identifier, $a=null) {
         $a = (object) $a;
     }
     return get_string($identifier, 'fct', $a);
+}
+
+function fct_url($pagina, $params) {
+    $url = 'view.php?pagina=' . urlencode($pagina);
+    foreach ($params as $nom => $valor) {
+        $url .= "&$nom=" . urlencode($valor);
+    }
+    return $url;
 }
 
 fct_require('moodle.php', 'domini.php', 'diposit.php', 'json.php');
