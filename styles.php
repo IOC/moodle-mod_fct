@@ -171,3 +171,15 @@
 .amagat {
     display: none;
 }
+
+#contingutfct h2 {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+    margin: 0.5em;
+}
+
+.fct_form_element_afegir_franja_horari {
+    width: 40%;
+    margin-top: 2em;
+}
