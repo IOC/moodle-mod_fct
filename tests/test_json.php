@@ -57,7 +57,8 @@ class fct_test_json extends PHPUnit_Framework_TestCase {
         $quadern->dades_alumne->adreca = "adreça alumne";
         $quadern->empresa->nom = "nom empresa";
         $conveni = new fct_conveni;
-        $conveni->horari->dilluns = "horari";
+        $franja = new fct_franja_horari("dilluns", 9.5, 13.5);
+        $conveni->afegir_franja_horari($franja);
         $quadern->afegir_conveni($conveni);
         $quadern->valoracio_parcial[3] = 4;
         $quadern->qualificacio->apte = 1;

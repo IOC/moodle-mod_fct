@@ -74,8 +74,23 @@ class fct_conveni {
                                    (int) $date['mday'], (int) $date['year']);
         $this->data_final = mktime(0, 0, 0, (int) $date['mon'],
                                    (int) $date['mday'], $date['year'] + 1);
-        $this->horari = new fct_horari;
+        $this->horari = array();
     }
+
+    function afegir_franja_horari($franja) {
+        if (array_search($franja, $this->horari) === false) {
+            $this->horari[] = $franja;
+            usort($this->horari, array('fct_franja_horari', 'cmp'));
+        }
+    }
+
+    function suprimir_franja_horari($franja) {
+        $index = array_search($franja, $this->horari);
+        if ($index !== false) {
+            unset($this->horari[$index]);
+        }
+    }
+
 }
 
 class fct_dades_alumne {
@@ -111,15 +126,52 @@ class fct_especificacio_quaderns {
     var $empresa = false;
 }
 
-class fct_horari {
-    var $dilluns = '';
-    var $dimarts = '';
-    var $dimecres = '';
-    var $dijous = '';
-    var $divendres = '';
-    var $dissabte = '';
-    var $diumenge = '';
+
+class fct_franja_horari {
+    var $dia;
+    var $hora_inici;
+    var $hora_final;
+
+    function __construct($dia, $hora_inici, $hora_final) {
+        $this->dia = $dia;
+        $this->hora_inici = $hora_inici;
+        $this->hora_final = $hora_final;
+    }
+
+    static function cmp($a, $b) {
+        $ordre_dia = array('dilluns', 'dimarts', 'dimecres', 'dijous',
+                           'divendres', 'dissabte', 'diumenge');
+        $cmp_dia = (array_search($a->dia, $ordre_dia) -
+                    array_search($b->dia, $ordre_dia));
+        if ($cmp_dia != 0) {
+            return $cmp_dia;
+        }
+        if ($a->hora_inici != $b->hora_inici) {
+            return $a->hora_inici - $b->hora_inici;
+        }
+        return $a->hora_final - $b->hora_final;
+    }
+
+    function text_hora_final() {
+        return self::text_hora($this->hora_final);
+    }
+
+    function text_hora_inici() {
+        return self::text_hora($this->hora_inici);
+    }
+
+    static function text_hora($hora) {
+        $minuts = round(($hora - floor($hora)) * 60);
+        return sprintf("%02d:%02d", floor($hora), $minuts);
+    }
+
+    function hores() {
+        return ($this->hora_inici <= $this->hora_final ?
+                $this->hora_final - $this->hora_inici :
+                $this->hora_final - $this->hora_inici + 24);
+    }
 }
+
 
 class fct_quadern {
     var $id;
@@ -183,6 +235,10 @@ class fct_quadern {
         if (isset($this->convenis[$conveni->uuid])) {
             unset($this->convenis[$conveni->uuid]);
         }
+    }
+
+    function ultim_conveni() {
+        return end($this->convenis);
     }
 }
 

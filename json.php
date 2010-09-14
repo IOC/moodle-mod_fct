@@ -40,7 +40,12 @@ class fct_json {
         foreach ($objecte['convenis'] as $objecte_conveni) {
             $conveni = new fct_conveni;
             fct_copy_vars($objecte_conveni, $conveni, false, array('horari'));
-            fct_copy_vars($objecte_conveni['horari'], $conveni->horari);
+            foreach ($objecte_conveni['horari'] as $objecte_franja) {
+                $franja = new fct_franja_horari($objecte_franja['dia'],
+                                                $objecte_franja['hora_inici'],
+                                                $objecte_franja['hora_final']);
+                $conveni->afegir_franja_horari($franja);
+            }
             $quadern->afegir_conveni($conveni);
         }
         fct_copy_vars($objecte['dades_alumne'], $quadern->dades_alumne);

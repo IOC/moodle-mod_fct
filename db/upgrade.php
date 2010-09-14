@@ -488,7 +488,43 @@ function xmldb_fct_upgrade($oldversion=0) {
         }
     }
 
+    if ($result && $oldversion < 2010091301) {
+        $expr_hora = "(\d{1,2})(?:[\.,:;'´h](\d{1,2}))?";
+        $expr_franja = "{$expr_hora}\D+{$expr_hora}";
+        $expr_dia = "\D*{$expr_franja}(?:\D+{$expr_franja})?\D*";
+
+        $records = get_records('fct_quadern');
+        if ($records) {
+            foreach ($records as $record) {
+                $quadern = json_decode($record->objecte, true);
+                foreach ($quadern['convenis'] as $index => $conveni) {
+                    $horari = array();
+                    foreach ($conveni['horari'] as $dia => $text) {
+                        if (preg_match("/^{$expr_dia}$/", $text, $m)) {
+                            if (isset($m[1])) {
+                                $inici = (float) $m[1] + (isset($m[2]) ? (float) $m[2] : 0.0) / 60;
+                                $final = (float) $m[3] + (isset($m[4]) ? (float) $m[4] : 0.0) / 60;
+                                $horari[] = array('dia' => $dia,
+                                                  'hora_inici' => $inici,
+                                                  'hora_final' => $final);
+                            }
+                            if (isset($m[5])) {
+                                $inici = (float) $m[5] + (isset($m[6]) ? (float) $m[6] : 0.0) / 60;
+                                $final = (float) $m[7] + (isset($m[8]) ? (float) $m[8] : 0.0) / 60;
+                                $horari[] = array('dia' => $dia,
+                                                  'hora_inici' => $inici,
+                                                  'hora_final' => $final);
+                            }
+                        }
+                    }
+                    $quadern['convenis'][$index]['horari'] = $horari;
+                }
+                $record->objecte = json_encode($quadern);
+                $record = addslashes_recursive($record);
+                $result = $result && update_record('fct_quadern', $record);
+            }
+        }
+    }
+
     return $result;
 }
-
-?>

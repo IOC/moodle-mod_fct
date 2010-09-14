@@ -128,7 +128,8 @@ class fct_test_diposit extends PHPUnit_Framework_TestCase {
 
         $conveni = new fct_conveni;
         $conveni->data_final = 8342791;
-        $conveni->horari->dilluns = 'dl';
+        $franja = new fct_franja_horari("dilluns", 9.5, 13.5);
+        $conveni->afegir_franja_horari($franja);
         $this->quadern->afegir_conveni($conveni);
 
         $this->record_quadern = (object) array(
