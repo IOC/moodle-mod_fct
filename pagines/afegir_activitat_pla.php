@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_pla_activitats.php',
-            'pagines/form_activitat.php');
+fct_require('pagines/base_pla_activitats', 'pagines/form_activitat');
 
 class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
 

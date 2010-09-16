@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_base.php');
+fct_require('pagines/base_dades_quadern', 'pagines/form_base');
 
 class fct_form_element_conveni extends fct_form_element_base_grup {
 

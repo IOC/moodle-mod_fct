@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_dades_centre.php');
+fct_require('pagines/base_dades_quadern', 'pagines/form_dades_centre');
 
 class fct_pagina_dades_centre_quadern extends fct_pagina_base_dades_quadern {
 

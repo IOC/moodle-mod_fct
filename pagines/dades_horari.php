@@ -18,8 +18,7 @@
 */
 
 require_once($CFG->libdir . '/tablelib.php');
-fct_require('pagines/base_dades_quadern.php',
-            'pagines/form_base.php');
+fct_require('pagines/base_dades_quadern', 'pagines/form_base');
 
 class fct_form_element_afegir_franja_horari extends fct_form_base {
 

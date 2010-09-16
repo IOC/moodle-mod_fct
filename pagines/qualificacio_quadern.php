@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_valoracio.php',
-            'pagines/form_qualificacio.php');
+fct_require('pagines/base_valoracio', 'pagines/form_qualificacio');
 
 class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
 

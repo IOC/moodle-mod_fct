@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_valoracio.php',
-            'pagines/form_base.php');
+fct_require('pagines/base_valoracio', 'pagines/form_base');
 
 class fct_form_valoracio_activitats extends fct_form_base {
 

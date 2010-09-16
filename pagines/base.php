@@ -17,7 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('domini.php', 'diposit.php');
+fct_require('diposit', 'domini', 'json', 'moodle');
 
 class fct_pagina_base {
 

@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_quadern.php',
-            'pagines/form_quadern.php');
+fct_require('pagines/base_quadern', 'pagines/form_quadern');
 
 class fct_pagina_quadern extends fct_pagina_base_quadern {
 

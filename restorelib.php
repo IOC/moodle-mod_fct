@@ -18,6 +18,7 @@
 */
 
 require_once($CFG->dirroot . '/mod/fct//lib.php');
+fct_require('diposit', 'json');
 
 class fct_restore {
 

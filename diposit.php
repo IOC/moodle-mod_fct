@@ -5,7 +5,7 @@ class fct_diposit {
     var $moodle;
 
     function __construct($moodle=false) {
-        $this->moodle = $moodle ? $moodle : new fct_moodle;
+        $this->moodle = $moodle;
     }
 
     function activitat($id) {

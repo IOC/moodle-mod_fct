@@ -18,7 +18,7 @@
 */
 
 require_once($CFG->libdir . '/tablelib.php');
-fct_require('pagines/base_quaderns.php');
+fct_require('pagines/base_quaderns');
 
 class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 

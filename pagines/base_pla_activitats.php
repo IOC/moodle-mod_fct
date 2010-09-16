@@ -17,7 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_quadern.php');
+fct_require('pagines/base_quadern');
 
 class fct_pagina_base_pla_activitats extends fct_pagina_base_quadern {
 

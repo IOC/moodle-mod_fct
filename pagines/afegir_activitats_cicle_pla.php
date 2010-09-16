@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_pla_activitats.php',
-            'pagines/form_base.php');
+fct_require('pagines/base_pla_activitats', 'pagines/form_base');
 
 class fct_form_activitats_cicle_pla extends fct_form_base {
 

@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base.php',
-            'pagines/form_base.php');
+fct_require('pagines/base', 'pagines/form_base');
 
 class fct_form_frases_retroaccio extends fct_form_base {
 

@@ -1,6 +1,6 @@
 <?php
 
-fct_require('pagines/base_dades_quadern.php');
+fct_require('pagines/base_dades_quadern');
 
 class fct_pagina_avisos_quadern extends fct_pagina_base_quadern {
 

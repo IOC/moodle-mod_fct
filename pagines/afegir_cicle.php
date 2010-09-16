@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_cicles.php',
-            'pagines/form_cicle.php');
+fct_require('pagines/base_cicles', 'pagines/form_cicle');
 
 class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
 

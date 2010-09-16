@@ -18,6 +18,7 @@
 */
 
 require_once($CFG->dirroot . '/mod/fct//lib.php');
+fct_require('diposit', 'domini', 'json');
 
 class fct_backup
 {

@@ -26,7 +26,7 @@ function fct_param($nom) {
 function fct_require() {
     global $CFG;
     foreach (func_get_args() as $fitxer) {
-        require_once($CFG->dirroot . '/mod/fct/' . $fitxer);
+        require_once("{$CFG->dirroot}/mod/fct/{$fitxer}.php");
     }
 }
 
@@ -45,9 +45,8 @@ function fct_url($pagina, $params) {
     return $url;
 }
 
-fct_require('moodle.php', 'domini.php', 'diposit.php', 'json.php');
-
 function fct_add_instance($data) {
+    fct_require('diposit', 'domini', 'json');
     $fct = new fct;
     $fct->course = (int) $data->course;
     $fct->name = stripslashes($data->name);
@@ -60,6 +59,7 @@ function fct_add_instance($data) {
 }
 
 function fct_update_instance($data) {
+    fct_require('diposit', 'json');
     $diposit = new fct_diposit;
     $fct = $diposit->fct($data->instance);
     $fct->name = stripslashes($data->name);
@@ -70,6 +70,7 @@ function fct_update_instance($data) {
 }
 
 function fct_delete_instance($id) {
+    fct_require('diposit', 'domini', 'json');
     $diposit = new fct_diposit;
     $serveis = new fct_serveis($diposit);
     $fct = $diposit->fct($id);

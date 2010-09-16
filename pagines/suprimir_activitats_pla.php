@@ -17,7 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_pla_activitats.php');
+fct_require('pagines/base_pla_activitats');
 
 class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats  {
 

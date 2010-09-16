@@ -17,8 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_seguiment.php',
-            'pagines/form_quinzena.php');
+fct_require('pagines/base_seguiment', 'pagines/form_quinzena');
 
 class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
 
