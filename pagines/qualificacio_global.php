@@ -65,8 +65,10 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(),
-                          $this->quadern->qualificacio_global);
+            $this->quadern->qualificacio_global->apte = $this->form->valor('apte');
+            $this->quadern->qualificacio_global->nota = $this->form->valor('nota');
+            $this->quadern->qualificacio_global->data = $this->form->valor('data');
+            $this->quadern->qualificacio_global->observacions = $this->form->valor('observacions');
             $this->diposit->afegir_quadern($this->quadern);
             $barem = $this->form->barem_valoracio();
             $this->registrar('update qualificacio_global', null,

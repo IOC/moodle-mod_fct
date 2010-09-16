@@ -87,8 +87,9 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(), $this->quadern,
-                          array('hores_credit', 'exempcio', 'hores_anteriors'));
+            $this->quadern->hores_credit = $this->form->valor('hores_credit');
+            $this->quadern->exempcio = $this->form->valor('exempcio');
+            $this->quadern->hores_anteriors = $this->form->valor('hores_anteriors');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update dades_relatives');
             redirect($this->url);

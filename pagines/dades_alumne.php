@@ -77,7 +77,13 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(), $this->quadern->dades_alumne);
+            $this->quadern->dades_alumne->adreca = $this->form->valor('adreca');
+            $this->quadern->dades_alumne->codi_postal = $this->form->valor('codi_postal');
+            $this->quadern->dades_alumne->poblacio = $this->form->valor('poblacio');
+            $this->quadern->dades_alumne->telefon = $this->form->valor('telefon');
+            $this->quadern->dades_alumne->dni = $this->form->valor('dni');
+            $this->quadern->dades_alumne->email = $this->form->valor('email');
+            $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('targeta_sanitaria');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update dades_alumne');
             redirect($this->url);

@@ -78,7 +78,13 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(), $this->quadern->empresa);
+            $this->quadern->empresa->adreca = $this->form->valor('adreca');
+            $this->quadern->empresa->poblacio = $this->form->valor('poblacio');
+            $this->quadern->empresa->codi_postal = $this->form->valor('codi_postal');
+            $this->quadern->empresa->telefon = $this->form->valor('telefon');
+            $this->quadern->empresa->fax = $this->form->valor('fax');
+            $this->quadern->empresa->email = $this->form->valor('email');
+            $this->quadern->empresa->nif = $this->form->valor('nif');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update dades_empresa');
             redirect($this->url);

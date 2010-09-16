@@ -46,7 +46,10 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(), $this->quadern->qualificacio);
+            $this->quadern->qualificacio->apte = $this->form->valor('apte');
+            $this->quadern->qualificacio->nota = $this->form->valor('nota');
+            $this->quadern->qualificacio->data = $this->form->valor('data');
+            $this->quadern->qualificacio->observacions = $this->form->valor('observacions');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update qualificacio_quadern');
             redirect($this->url);

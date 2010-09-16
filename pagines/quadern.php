@@ -70,7 +70,11 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            fct_copy_vars($this->form->valors(), $this->quadern);
+            $this->quadern->alumne = $this->form->valor('alumne');
+            $this->quadern->tutor_centre = $this->form->valor('tutor_centre');
+            $this->quadern->tutor_empresa = $this->form->valor('tutor_empresa');
+            $this->quadern->cicle = $this->form->valor('cicle');
+            $this->quadern->estat = $this->form->valor('estat');
             $this->quadern->empresa->nom = $this->form->valor('nom_empresa');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update quadern');
