@@ -264,15 +264,25 @@ function xmldb_fct_upgrade($oldversion=0) {
             $records = get_records('fct_quinzena');
             $records = $records ? $records : array();
             foreach ($records as $record) {
-                $quinzena = new fct_quinzena;
-                fct_copy_vars($record, $quinzena);
-                $quinzena->any = $record->any_;
+                $objecte = (object) array(
+                    'id' => $record->id,
+                    'quadern' => $record->quadern,
+                    'any' => $record->any_,
+                    'periode' => $record->periode,
+                    'hores' => $record->hores,
+                    'dies' => array(),
+                    'activitats' => array(),
+                    'valoracions' => $record->valoracions,
+                    'observacions_alumne' => $record->observacions_alumne,
+                    'observacions_centre' => $record->observacions_centre,
+                    'observacions_empresa' => $record->observacions_empresa,
+                );
 
                 $records_dies = get_records('fct_dia_quinzena',
                                             'quinzena', $record->id);
                 if ($records_dies) {
                     foreach ($records_dies as $record_dia) {
-                        $quinzena->dies[] = $record_dia->dia;
+                        $objecte->dies[] = $record_dia->dia;
                     }
                 }
 
@@ -280,11 +290,11 @@ function xmldb_fct_upgrade($oldversion=0) {
                                                   'quinzena', $record->id);
                 if ($records_activitats) {
                     foreach ($records_activitats as $record_activitat) {
-                        $quinzena->activitats[] = $record_activitat->activitat;
+                        $objecte->activitats[] = $record_activitat->activitat;
                     }
                 }
 
-                $record->objecte = fct_json::serialitzar_quinzena($quinzena);
+                $record->objecte = json_encode($objecte);
                 update_record('fct_quinzena', addslashes_recursive($record));
             }
         }
@@ -312,9 +322,13 @@ function xmldb_fct_upgrade($oldversion=0) {
             $records = get_records('fct_activitat');
             $records = $records ? $records : array();
             foreach ($records as $record) {
-                $activitat = new fct_activitat;
-                fct_copy_vars($record, $activitat);
-                $record->objecte = fct_json::serialitzar_activitat($activitat);
+                $objecte = (object) array(
+                    'id' => $record->id,
+                    'quadern' => $record->quadern,
+                    'descripcio' => $record->descripcio,
+                    'nota' => $record->nota,
+                );
+                $record->objecte = json_encode($objecte);
                 update_record('fct_activitat', addslashes_recursive($record));
             }
 
@@ -334,72 +348,120 @@ function xmldb_fct_upgrade($oldversion=0) {
             $records_quaderns = get_records('fct_quadern');
             $records_quaderns = $records_quaderns ? $records_quaderns : array();
             foreach ($records_quaderns as $record_quadern) {
-                $quadern = new fct_quadern;
-                fct_copy_vars($record_quadern, $quadern);
+                $objecte = (object) array(
+                    'id' => $record_quadern->id,
+                    'cicle' => $record_quadern->cicle,
+                    'alumne' => $record_quadern->alumne,
+                    'tutor_centre' => $record_quadern->tutor_centre,
+                    'tutor_empresa' => $record_quadern->tutor_empresa,
+                    'estat' => $record_quadern->estat,
+                );
 
                 $record = get_record('fct_dades_empresa',
-                                     'quadern', $quadern->id);
-                fct_copy_vars($record, $quadern->empresa);
-                $quadern->empresa->nom = $record_quadern->nom_empresa;
+                                     'quadern', $objecte->id);
+                $objecte->empresa = (object) array(
+                    'nom' => $record_quadern->nom_empresa,
+                    'adreca' => $record->adreca,
+                    'poblacio' => $record->poblacio,
+                    'codi_postal' => $record->codi_postal,
+                    'telefon' => $record->telefon,
+                    'fax' => $record->fax,
+                    'email' => $record->email,
+                    'nif' => $record->nif,
+                );
 
-                $record = get_record('fct_dades_relatives',
-                                     'quadern', $quadern->id);
-                fct_copy_vars($record, $quadern,
-                              array('hores_credit', 'exempcio',
-                                    'hores_anteriors'));
+                $record = get_record('fct_dades_relatives', 'quadern', $objecte->id);
+                $objecte->hores_credit = $record->hores_credit;
+                $objecte->exempcio = $record->exempcio;
+                $objecte->hores_anteriors = $record->hores_anteriors;
 
-                $record = get_record('fct_dades_conveni',
-                                     'quadern', $quadern->id);
-                fct_copy_vars($record, $quadern,
-                              array('prorrogues', 'hores_practiques'));
+                $record = get_record('fct_dades_conveni', 'quadern', $objecte->id);
+                $objecte->prorrogues = $record->prorrogues;
+                $objecte->hores_practiques = $record->hores_practiques;
 
-                $record = get_record('fct_qualificacio_quadern',
-                                     'quadern', $quadern->id);
-                fct_copy_vars($record, $quadern->qualificacio);
-                $quadern->qualificacio->apte = $record->qualificacio;
+                $record = get_record('fct_qualificacio_quadern', 'quadern', $objecte->id);
+                $objecte->qualificacio->apte = $record->qualificacio;
+                $objecte->qualificacio->nota = $record->nota;
+                $objecte->qualificacio->data = $record->data;
+                $objecte->qualificacio->observacions = $record->observacions;
 
-                $records = get_records('fct_conveni', 'quadern',
-                                       $quadern->id, 'data_inici');
+                $records = get_records('fct_conveni', 'quadern', $objecte->id, 'data_inici');
+                $record_quadern->data_final = 0;
                 if ($records) {
                     foreach ($records as $record) {
-                        $conveni = new fct_conveni;
-                        fct_copy_vars($record, $conveni);
+                        $conveni = (object) array(
+                            'uuid' => fct_uuid(),
+                            'codi' => $record->codi,
+                            'data_inici' => $record->data_inici,
+                            'data_final' => $record->data_final,
+                        );
+                        $record_quadern->data_final = max($record_quadern->data_final,
+                                                          $record->data_final);
                         $record = get_record('fct_horari','conveni', $record->id);
-                        fct_copy_vars($record, $conveni->horari);
-                        $quadern->convenis[] = $conveni;
+                        $conveni->horari = (object) array(
+                            'dilluns' => $record->dilluns,
+                            'dimarts' => $record->dimarts,
+                            'dimecres' => $record->dimecres,
+                            'dijous' => $record->dijous,
+                            'divendres' => $record->divendres,
+                            'dissabte' => $record->dissabte,
+                            'diumenge' => $record->diumenge,
+                        );
+                        $objecte->convenis[] = $conveni;
                     }
                 }
 
-                $records = get_records('fct_valoracio_actituds',
-                                       'quadern', $quadern->id, 'actitud');
+                $records = get_records('fct_valoracio_actituds', 'quadern', $objecte->id, 'actitud');
+                $objecte->valoracio_parcial = array();
+                $objecte->valoracio_final = array();
                 if ($records) {
                     foreach ($records as $record) {
                         if ($record->final) {
-                            $quadern->valoracio_final[$record->actitud] = $record->nota;
+                            $objecte->valoracio_final[$record->actitud] = $record->nota;
                         } else {
-                            $quadern->valoracio_parcial[$record->actitud] = $record->nota;
+                            $objecte->valoracio_parcial[$record->actitud] = $record->nota;
                         }
                     }
                 }
 
-                $fct_id = get_field('fct_cicle', 'fct', 'id', $quadern->cicle);
-                $where = "fct = {$fct_id} AND alumne = {$quadern->alumne}";
+                $fct_id = get_field('fct_cicle', 'fct', 'id', $objecte->cicle);
+                $where = "fct = {$fct_id} AND alumne = {$objecte->alumne}";
                 $records = get_records_select('fct_dades_alumne', $where);
                 if ($records) {
                     $record = array_pop($records);
-                    fct_copy_vars($record, $quadern->dades_alumne);
+                    $objecte->dades_alumne->adreca = $record->adreca;
+                    $objecte->dades_alumne->poblacio = $record->poblacio;
+                    $objecte->dades_alumne->codi_postal = $record->codi_postal;
+                    $objecte->dades_alumne->telefon = $record->telefon;
+                    $objecte->dades_alumne->email = $record->email;
+                    $objecte->dades_alumne->dni = $record->dni;
+                    $objecte->dades_alumne->targeta_sanitaria = $record->targeta_sanitaria;
+                } else {
+                    $objecte->dades_alumne->adreca = '';
+                    $objecte->dades_alumne->poblacio = '';
+                    $objecte->dades_alumne->codi_postal = '';
+                    $objecte->dades_alumne->telefon = '';
+                    $objecte->dades_alumne->email = '';
+                    $objecte->dades_alumne->dni = '';
+                    $objecte->dades_alumne->targeta_sanitaria = '';
                 }
 
-                $where = "cicle = {$quadern->cicle} AND alumne = {$quadern->alumne}";
+                $where = "cicle = {$objecte->cicle} AND alumne = {$objecte->alumne}";
                 $records = get_records_select('fct_qualificacio_global', $where);
                 if ($records) {
                     $record = array_pop($records);
-                    fct_copy_vars($record, $quadern->qualificacio_global);
-                    $quadern->qualificacio_global->apte = $record->qualificacio;
+                    $objecte->qualificacio_global->apte = $record->qualificacio;
+                    $objecte->qualificacio_global->nota = $record->nota;
+                    $objecte->qualificacio_global->data = $record->data;
+                    $objecte->qualificacio_global->observacions = $record->observacions;
+                } else {
+                    $objecte->qualificacio_global->apte = 0;
+                    $objecte->qualificacio_global->nota = 0;
+                    $objecte->qualificacio_global->data = 0;
+                    $objecte->qualificacio_global->observacions = '';
                 }
 
-                $record_quadern->data_final = $quadern->data_final();
-                $record_quadern->objecte = fct_json::serialitzar_quadern($quadern);
+                $record_quadern->objecte = json_encode($objecte);
                 update_record('fct_quadern', addslashes_recursive($record_quadern));
             }
         }
@@ -422,14 +484,19 @@ function xmldb_fct_upgrade($oldversion=0) {
             $records = get_records('fct_cicle');
             $records = $records ? $records : array();
             foreach ($records as $record) {
-                $cicle = new fct_cicle;
-                fct_copy_vars($record, $cicle);
-                $cicle->n_quaderns = count_records('fct_quadern', 'cicle', $record->id);
+                $objecte = (object) array(
+                    'id' => $record->id,
+                    'fct' => $record->fct,
+                    'nom' => $record->nom,
+                    'activitats' => array(),
+                    'n_quaderns' => count_records('fct_quadern', 'cicle', $record->id),
+                );
+                $objecte->activitats = array();
                 $activitats = get_records('fct_activitat_cicle', 'cicle', $record->id, 'descripcio');
                 foreach ($activitats as $activitat) {
-                    $cicle->activitats[] = $activitat->descripcio;
+                    $objecte->activitats[] = $activitat->descripcio;
                 }
-                $record->objecte = fct_json::serialitzar_cicle($cicle);
+                $record->objecte = json_encode($objecte);
                 update_record('fct_cicle', addslashes_recursive($record));
             }
 
@@ -445,13 +512,27 @@ function xmldb_fct_upgrade($oldversion=0) {
             $records = get_records('fct');
             $records = $records ? $records : array();
             foreach ($records as $record) {
-                $fct = new fct;
-                fct_copy_vars($record, $fct);
-                $fct->frases_centre = fct_linies_text($record->frases_centre);
-                $fct->frases_empresa = fct_linies_text($record->frases_empresa);
+                $objecte = (object) array(
+                    'id' => $record->id,
+                    'course' => $record->course,
+                    'name' => $record->name,
+                    'intro' => $record->intro,
+                    'timecreated' => $record->timecreated,
+                    'timemodified' => $record->timemodified,
+                    'frases_centre' => fct_linies_text($record->frases_centre),
+                    'frases_empresa' => fct_linies_text($record->frases_empresa),
+                );
                 $record_centre = get_record('fct_dades_centre', 'fct', $record->id);
-                fct_copy_vars($record_centre, $fct->centre);
-                $record->objecte = fct_json::serialitzar_fct($fct);
+                $objecte->centre = (object) array(
+                    'nom' => $record_centre->nom,
+                    'adreca' => $record_centre->adreca,
+                    'codi_postal' => $record_centre->codi_postal,
+                    'poblacio' => $record_centre->poblacio,
+                    'telefon' => $record_centre->telefon,
+                    'fax' => $record_centre->fax,
+                    'email' => $record_centre->email,
+                );
+                $record->objecte = json_encode($objecte);
                 update_record('fct', addslashes_recursive($record));
             }
 
