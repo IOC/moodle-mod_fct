@@ -444,17 +444,6 @@ class fct_usuari {
     }
 }
 
-function fct_copy_vars($source, $dest, $include=false, $exclude=array()) {
-    if (!$include) {
-        $include = array_keys((array) $dest);
-    }
-    foreach ($source as $key => $value) {
-        if (in_array($key, $include) and !in_array($key, $exclude)) {
-            $dest->$key = $value;
-        }
-    }
-}
-
 function fct_linies_text($text) {
     $linies = array();
     foreach (explode("\n", $text) as $linia) {
