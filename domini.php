@@ -112,6 +112,16 @@ class fct_empresa {
     var $fax = '';
     var $email = '';
     var $nif = '';
+    var $codi_agrupacio = '';
+    var $sic = '';
+    var $nom_responsable = '';
+    var $cognoms_responsable = '';
+    var $dni_responsable = '';
+    var $carrec_responsable = '';
+    var $nom_tutor = '';
+    var $cognoms_tutor = '';
+    var $dni_tutor = '';
+    var $email_tutor = '';
 }
 
 class fct_especificacio_quaderns {
