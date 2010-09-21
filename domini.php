@@ -84,6 +84,16 @@ class fct_conveni {
         }
     }
 
+    function hores_dia($dia) {
+        $hores = 0.0;
+        foreach ($this->horari as $franja) {
+            if ($franja->dia == $dia) {
+                $hores += $franja->hores();
+            }
+        }
+        return $hores;
+    }
+
     function suprimir_franja_horari($franja) {
         $index = array_search($franja, $this->horari);
         if ($index !== false) {
@@ -104,6 +114,33 @@ class fct_dades_alumne {
     var $targeta_sanitaria = '';
     var $procedencia = '';
 }
+
+class fct_data {
+
+    var $dia;
+    var $mes;
+    var $any;
+
+    function __construct($dia, $mes, $any) {
+        $this->dia = $dia;
+        $this->mes = $mes;
+        $this->any = $any;
+    }
+
+    function dia_setmana() {
+        $dow = array('diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous',
+                     'divendres', 'dissabte');
+        $jd = cal_to_jd(CAL_GREGORIAN, $this->mes, $this->dia, $this->any);
+        return $jd > 0 ? $dow[jddayofweek($jd)] : false;
+    }
+
+    function valida() {
+        $jd = cal_to_jd(CAL_GREGORIAN, $this->mes, $this->dia, $this->any);
+        return ($jd > 0 and $this->dia <=
+                cal_days_in_month(CAL_GREGORIAN, $this->mes, $this->any));
+    }
+}
+
 
 class fct_empresa {
     var $nom;
@@ -371,6 +408,16 @@ class fct_serveis {
         $quinzenes = $this->diposit->quinzenes($quadern->id);
         foreach ($quinzenes as $quinzena) {
             $hores += $quinzena->hores;
+        }
+        return $hores;
+    }
+
+    function maxim_hores_quinzena($quadern, $any, $periode, $dies) {
+        $conveni = $quadern->ultim_conveni();
+        $hores = 0.0;
+        foreach ($dies as $dia) {
+            $data = new fct_data($dia, floor(($periode + 1) / 2), $any);
+            $hores += $conveni->hores_dia($data->dia_setmana());
         }
         return $hores;
     }

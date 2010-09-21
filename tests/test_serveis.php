@@ -104,6 +104,19 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $this->assertEquals($quinzena1->hores + $quinzena2->hores, $hores);
     }
 
+    function test_maxim_hores_quinzena() {
+        $conveni = new fct_conveni;
+        foreach (array('dilluns', 'dimarts', 'dimecres', 'dijous') as $dia) {
+            $conveni->afegir_franja_horari(new fct_franja_horari($dia, 9, 13));
+        }
+        $quadern = new fct_quadern;
+        $quadern->afegir_conveni($conveni);
+
+        $hores = $this->serveis->maxim_hores_quinzena($quadern, 2010, 1, array(4, 5, 6));
+
+        $this->assertEquals(12, $hores);
+    }
+
     function test_resum_hores_fct() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('hores_realitzades_quadern'),
