@@ -1,3 +1,10 @@
+1.6 (2010-09-21)
+   * Pla d'activitats editable pel tutor d'empresa.
+   * Hores de quinzena amb precisió de quarts.
+   * Múltiples convenis per quadern.
+   * Frases predefinides de retroacció.
+   * Correcciṕ de diversos errors.
+
 1.5 (2009-03-10)
    * Pàgina d'exportació de la llista d'empreses.
    * Petites millores visuals i de navegació.
