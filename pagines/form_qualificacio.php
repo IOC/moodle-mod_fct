@@ -27,7 +27,7 @@ class fct_form_qualificacio extends fct_form_base {
                        array('opcions' => $this->barem_qualificacio()));
         $this->element('menu', 'nota', false,
                        array('opcions' => $this->barem_valoracio()));
-        $this->element('data', 'data', 'data');
+        $this->element('data', 'data', 'data', array('opcional' => true));
         $this->element('areatext', 'observacions', 'observacions');
 
         if ($pagina->accio == 'veure') {

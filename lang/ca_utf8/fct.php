@@ -84,6 +84,7 @@ $string['dades_relatives'] = "Dades relatives a FCT";
 $string['data'] = "Data";
 $string['data_final'] = "Data de finalització";
 $string['data_inici'] = "Data d'inici";
+$string['data_no_valida'] = "La data no és vàlida";
 $string['de'] = "De";
 $string['desa'] = "Desa";
 $string['descripcio'] = "Descripció";

@@ -362,18 +362,64 @@ class fct_form_element_capcalera extends fct_form_element_base {
 class fct_form_element_data extends fct_form_element_base_senzill {
 
     function definition_senzill($mform) {
-        $mform->_form->addElement('date_selector', $this->nom, $this->etiqueta,
-                                  array('startyear' => 2000, 'optional' => false), null, '/');
+        $dies = array();
+        $mesos = array();
+        $anys = array();
+        if (!empty($this->params->opcional)) {
+            $dies[0] = '';
+            $mesos[0] = '';
+            $anys[0] = '';
+        }
 
+        for ($dia = 1; $dia <= 31; $dia++) {
+            $dies[$dia] = sprintf("%02d", $dia);
+        }
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $mesos[$mes] = strftime('%B', mktime(0, 0, 0, $mes, 1, 2000));
+        }
+        for ($any = 1900; $any <= 2020; $any++) {
+            $anys[$any] = "$any";
+        }
+
+        if ($this->congelat) {
+            $mform->_form->addElement('static', $this->nom, $this->etiqueta);
+        } else {
+            $elements = array();
+            $elements[] = &$mform->_form->createElement('select', 'dia', '', $dies);
+            $elements[] = &$mform->_form->createElement('select', 'mes', '', $mesos);
+            $elements[] = &$mform->_form->createElement('select', 'any', '', $anys);
+            $mform->_form->addGroup($elements, $this->nom, $this->etiqueta . ':', ' / ');
+            $mform->_form->addRule($this->nom, fct_string('data_no_valida'),
+                                   'callback', array($this, 'validar'));
+            $mform->_form->setDefault($this->nom, array('dia' => (int) date('d'),
+                                                        'mes' => (int) date('m'),
+                                                        'any' => (int) date('Y')));
+        }
     }
 
     function get_data(&$data) {
-        $valor = $data[$this->nom];
-        if (is_array($valor)) {
-            $valor = mktime(0, 0, 0, $valor['month'],
-                            $valor['day'], $valor['year']);
+        $dia = $data[$this->nom]['dia'];
+        $mes = $data[$this->nom]['mes'];
+        $any = $data[$this->nom]['any'];
+        return ($dia and $mes and $any) ? mktime(0, 0, 0, $mes, $dia, $any) : 0;
+    }
+
+    function set_data(&$data, $valor) {
+        if ($this->congelat) {
+            $data[$this->nom] = $valor ? strftime('%d / %B / %Y', $valor) : '-';
+        } else {
+            $data[$this->nom]['dia'] = $valor ? (int) date('d', $valor) : 0;
+            $data[$this->nom]['mes'] = $valor ? (int) date('m', $valor) : 0;
+            $data[$this->nom]['any'] = $valor ? (int) date('Y', $valor) : 0;
         }
-        return $valor;
+    }
+
+    function validar($data) {
+        $dia = (int) $data['dia'];
+        $mes = (int) $data['mes'];
+        $any = (int) $data['any'];
+        return ((!empty($this->params->opcional) or ($dia and $mes and $any)) and
+                mktime(0, 0, 0, $mes, $dia, $any) !== false);
     }
 }
 
