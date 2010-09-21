@@ -4,7 +4,7 @@
  * Definició de la versió del mòdul.
  *
  * @author Albert Gasset Romo
- * @version 1.5
+ * @version 1.6
  * @package fct
  **/
 
