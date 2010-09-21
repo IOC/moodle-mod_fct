@@ -24,14 +24,18 @@ class fct_form_dades_alumne extends fct_form_base {
     function configurar($pagina) {
         $this->element('capcalera', 'dades_alumne', 'alumne');
         $this->element('estatic', 'nom', 'nom');
+        $this->element('text', 'dni', 'dni', array('size' => 16));
+        $this->element('data', 'data_naixement', 'data_naixement',
+                       array('opcional' => true));
         $this->element('text', 'adreca', 'adreca');
         $this->element('text', 'codi_postal', 'codi_postal',
                        array('size' => 8));
         $this->element('text', 'poblacio', 'poblacio');
         $this->element('text', 'telefon', 'telefon');
-        $this->element('text', 'dni', 'dni', array('size' => 16));
         $this->element('text', 'email', 'email');
         $this->element('text', 'targeta_sanitaria', 'targeta_sanitaria');
+        $this->element('menu', 'procedencia', 'procedencia',
+                       array('opcions' => $this->opcions_procedencia()));
 
         if ($pagina->accio == 'veure') {
             if ($pagina->permis_editar) {
@@ -42,6 +46,13 @@ class fct_form_dades_alumne extends fct_form_base {
             $this->element('boto', 'desar', 'desa');
             $this->element('boto', 'cancellar');
         }
+    }
+
+    function opcions_procedencia() {
+        return array('' => '',
+                     'batxillerat' => fct_string('batxillerat'),
+                     'curs_acces' => fct_string('curs_acces'),
+                     'cicles' => fct_string('cicles'));
     }
 }
 
@@ -76,13 +87,15 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
+            $this->quadern->dades_alumne->dni = $this->form->valor('dni');
+            $this->quadern->dades_alumne->data_naixement = $this->form->valor('data_naixement');
             $this->quadern->dades_alumne->adreca = $this->form->valor('adreca');
             $this->quadern->dades_alumne->codi_postal = $this->form->valor('codi_postal');
             $this->quadern->dades_alumne->poblacio = $this->form->valor('poblacio');
             $this->quadern->dades_alumne->telefon = $this->form->valor('telefon');
-            $this->quadern->dades_alumne->dni = $this->form->valor('dni');
             $this->quadern->dades_alumne->email = $this->form->valor('email');
             $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('targeta_sanitaria');
+            $this->quadern->dades_alumne->procedencia = $this->form->valor('procedencia');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update dades_alumne');
             redirect($this->url);

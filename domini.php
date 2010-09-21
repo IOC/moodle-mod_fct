@@ -94,13 +94,15 @@ class fct_conveni {
 }
 
 class fct_dades_alumne {
+    var $dni = '';
+    var $data_naixement = 0;
     var $adreca = '';
     var $poblacio = '';
     var $codi_postal = '';
     var $telefon = '';
     var $email = '';
-    var $dni = '';
     var $targeta_sanitaria = '';
+    var $procedencia = '';
 }
 
 class fct_empresa {
