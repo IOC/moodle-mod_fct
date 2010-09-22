@@ -1,3 +1,10 @@
+2.0 (2010-09-22)
+   * Noves dades d'alumne i empresa
+   * Els alumnes poden fer propostes de quadern
+   * Horari de pràctiques estrictes i comprovació d'hores
+   * Altres millores i correccions menors.
+   * Nou disseny intern del mòdul.
+
 1.6 (2010-09-21)
    * Pla d'activitats editable pel tutor d'empresa.
    * Hores de quinzena amb precisió de quarts.
