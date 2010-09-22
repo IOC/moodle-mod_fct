@@ -143,6 +143,7 @@ $string['hores_practiques_pendents'] = "Hores de pràctiques pendents";
 $string['hores_practiques_realitzades'] = "Hores de pràctiques realitzades";
 $string['hores_realitzades'] = "Hores realitzades";
 $string['hores_realitzades_detall'] = '$a->realitzades<br/>($a->practiques de pràctiques + $a->exempcio d\'exempció + $a->anteriors d\'anteriors)';
+$string['hores_superior_horari'] = "El nombre d'hores és superior a l'indicat a l'horari";
 $string['informacio'] = "Informació";
 $string['llista_empreses'] = "Llista d'empreses";
 $string['minuts'] = 'minuts';

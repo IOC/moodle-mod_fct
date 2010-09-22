@@ -37,6 +37,11 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
                              'periode' => fct_string('quinzena_duplicada'));
             }
         }
+        $max_hores = $this->serveis->maxim_hores_quinzena(
+            $this->quadern, $valors->any, $valors->periode, $valors->dies);
+        if ($valors->hores > $max_hores) {
+            return array('hores' => fct_string('hores_superior_horari'));
+        }
         return true;
     }
 
