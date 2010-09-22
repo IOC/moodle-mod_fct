@@ -18,6 +18,7 @@
 */
 
 require_once($CFG->dirroot . '/mod/fct/lib.php');
+fct_require('domini');
 
 function xmldb_fct_upgrade($oldversion=0) {
     global $CFG;
