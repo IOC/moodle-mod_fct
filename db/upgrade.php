@@ -520,8 +520,8 @@ function xmldb_fct_upgrade($oldversion=0) {
                     'intro' => $record->intro,
                     'timecreated' => $record->timecreated,
                     'timemodified' => $record->timemodified,
-                    'frases_centre' => fct_linies_text($record->frases_centre),
-                    'frases_empresa' => fct_linies_text($record->frases_empresa),
+                    'frases_centre' => explode("\n", trim($record->frases_centre)),
+                    'frases_empresa' => explode("\n", trim($record->frases_empresa)),
                 );
                 $record_centre = get_record('fct_dades_centre', 'fct', $record->id);
                 $objecte->centre = (object) array(

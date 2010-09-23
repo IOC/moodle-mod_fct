@@ -332,6 +332,23 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
     }
 }
 
+class fct_form_element_areatext_linies extends fct_form_element_areatext {
+
+    function get_data(&$data) {
+        $valor = array();
+        foreach (explode("\n", $data[$this->nom]) as $linia) {
+            if (trim($linia)) {
+                $valor[] = trim($linia);
+            }
+        }
+        return $valor;
+    }
+
+    function set_data(&$data, $valor) {
+        $data[$this->nom] = implode("\n", $valor);
+    }
+}
+
 class fct_form_element_boto extends fct_form_element_base {
 
     function definition($mform) {

@@ -26,7 +26,7 @@ class fct_form_cicle extends fct_form_base {
                        $pagina->accio == 'afegir' ? 'nou_cicle_formatiu' : '');
         $this->element('text', 'nom', 'nom',
                        array('size' => 48, 'required' => true));
-        $this->element('areatext', 'activitats', 'activitats',
+        $this->element('areatext_linies', 'activitats', 'activitats',
                        array('cols' => 60, 'rows' => 20));
 
         $this->comprovacio($pagina, 'comprovar_nom');

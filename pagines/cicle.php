@@ -44,8 +44,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
 
     function mostrar() {
         $this->form->valor('nom', $this->cicle->nom);
-        $this->form->valor('activitats',
-                           implode("\n", $this->cicle->activitats));
+        $this->form->valor('activitats', $this->cicle->activitats);
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -69,8 +68,7 @@ class fct_pagina_cicle extends fct_pagina_base_cicles {
     function processar_desar() {
         if ($this->form->validar()) {
             $this->cicle->nom = $this->form->valor('nom');
-            $this->cicle->activitats = fct_linies_text(
-                $this->form->valor('activitats'));
+            $this->cicle->activitats = $this->form->valor('activitats');
             $this->diposit->afegir_cicle($this->cicle);
             $this->registrar('update cicle',
                              fct_url('cicle', array('cicle' => $this->cicle->id)),

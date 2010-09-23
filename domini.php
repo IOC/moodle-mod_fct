@@ -520,16 +520,6 @@ class fct_usuari {
     }
 }
 
-function fct_linies_text($text) {
-    $linies = array();
-    foreach (explode("\n", $text) as $linia) {
-        if (trim($linia)) {
-            $linies[] = trim($linia);
-        }
-    }
-    return $linies;
-}
-
 function fct_uuid() {
     $octets = array();
     for ($n = 0; $n < 16; $n++) {

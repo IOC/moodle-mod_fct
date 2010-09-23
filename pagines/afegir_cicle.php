@@ -42,7 +42,7 @@ class fct_pagina_afegir_cicle extends fct_pagina_base_cicles {
             $cicle = new fct_cicle;
             $cicle->fct = $this->fct->id;
             $cicle->nom = $form->valor('nom');
-            $cicle->activitats = fct_linies_text($form->valor('activitats'));
+            $cicle->activitats = $form->valor('activitats');
             $this->diposit->afegir_cicle($cicle);
             $this->registrar('add cicle',
                              fct_url('cicle', array('cicle' => $cicle->id)),
