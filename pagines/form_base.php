@@ -311,24 +311,6 @@ class fct_form_element_areatext extends fct_form_element_base_senzill {
             $mform->_form->addRule($this->nom, get_string('required'),
                                    'required', null, 'client');
         }
-
-        if (!empty($this->params->frases)
-            and !empty($this->params->frases_titol)
-            and !$this->congelat) {
-            $html = array('<div id="id_', $this->nom, '_frases"',
-                          ' class="frases_areatext amagat">', '<h4>',
-                          '<img src="', $CFG->pixpath,
-                          '/t/switch_plus.gif" /> ',
-                          '<img class="amagat" src="',
-                          $CFG->pixpath, '/t/switch_minus.gif" /> ',
-                          fct_string($this->params->frases_titol),
-                          '</h4>', '<ul class="amagat">');
-            foreach ($this->params->frases as $frase) {
-                $html[] = '<li>' . trim($frase) . '</li>';
-            }
-            $html[] = '</ul>';
-            $mform->_form->addElement('static', '', '', implode('', $html));
-        }
     }
 }
 

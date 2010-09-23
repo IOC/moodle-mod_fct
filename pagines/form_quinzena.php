@@ -19,6 +19,33 @@
 
 fct_require('pagines/form_base');
 
+class fct_form_element_areatext_frases extends fct_form_element_areatext {
+
+    function definition_senzill($mform) {
+        parent::definition_senzill($mform);
+
+        global $CFG;
+
+        if (!empty($this->params->frases)
+            and !empty($this->params->titol)
+            and !$this->congelat) {
+            $html = array('<div id="id_', $this->nom, '_frases"',
+                          ' class="frases_areatext amagat">', '<h4>',
+                          '<img src="', $CFG->pixpath,
+                          '/t/switch_plus.gif" /> ',
+                          '<img class="amagat" src="',
+                          $CFG->pixpath, '/t/switch_minus.gif" /> ',
+                          fct_string($this->params->titol),
+                          '</h4>', '<ul class="amagat">');
+            foreach ($this->params->frases as $frase) {
+                $html[] = '<li>' . trim($frase) . '</li>';
+            }
+            $html[] = '</ul>';
+            $mform->_form->addElement('static', '', '', implode('', $html));
+        }
+    }
+}
+
 class fct_form_quinzena extends fct_form_base {
 
     function configurar($pagina) {
@@ -50,13 +77,12 @@ class fct_form_quinzena extends fct_form_base {
 
         if ($pagina->accio != 'afegir' or $pagina->permis_editar_centre) {
             $this->element('capcalera', 'retroaccio', 'retroaccio');
-            $this->element('areatext' , 'observacions_centre', 'tutor_centre',
+            $this->element('areatext_frases' , 'observacions_centre', 'tutor_centre',
                            array('frases' => $pagina->fct->frases_centre,
-                                 'frases_titol' => 'frases_retroaccio'));
-            $this->element('areatext' , 'observacions_empresa',
-                           'tutor_empresa',
+                                 'titol' => 'frases_retroaccio'));
+            $this->element('areatext_frases' , 'observacions_empresa', 'tutor_empresa',
                            array('frases' => $pagina->fct->frases_empresa,
-                           'frases_titol' => 'frases_retroaccio'));
+                                 'titol' => 'frases_retroaccio'));
         }
 
         if ($pagina->accio == 'veure' or !$pagina->permis_editar_alumne) {
