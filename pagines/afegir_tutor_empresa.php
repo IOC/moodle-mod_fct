@@ -119,7 +119,7 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
     function configurar() {
         $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->comprovar_permis($this->permis_admin);
+        $this->comprovar_permis($this->usuari->es_administrador);
         $this->url = fct_url('afegir_tutor_empresa', array('fct' => $this->fct->id));
         $this->pestanya = 'afegir_tutor_empresa';
         $this->afegir_navegacio(fct_string('afegeix_tutor_empresa'), $this->url);

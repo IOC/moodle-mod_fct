@@ -46,7 +46,7 @@ class fct_pagina_frases_retroaccio extends fct_pagina_base {
 
     function configurar() {
         parent::configurar(required_param('fct', PARAM_INT));
-        $this->comprovar_permis($this->permis_admin);
+        $this->comprovar_permis($this->usuari->es_administrador);
 
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 

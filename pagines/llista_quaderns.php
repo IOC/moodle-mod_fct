@@ -201,13 +201,6 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     function valors_curs() {
         $cursos = array(0 => fct_string('tots'));
 
-        $params = (object) array(
-            'usuari' => $this->usuari->id,
-            'permis_admin' => $this->usuari->es_administrador,
-            'permis_alumne' => $this->usuari->es_alumne,
-            'permis_tutor_centre' => $this->usuari->es_tutor_centre,
-            'permis_tutor_empresa' => $this->usuari->es_tutor_empresa,
-        );
         list($min, $max) =
             $this->diposit->min_max_data_final_quaderns($this->fct->id);
 

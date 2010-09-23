@@ -25,7 +25,7 @@ class fct_pagina_avisos_quadern extends fct_pagina_base_quadern {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->configurar_accio(array('veure', 'suprimir'), 'veure');
 
-        $this->comprovar_permis($this->permis_tutor_centre);
+        $this->comprovar_permis($this->usuari->es_tutor_centre);
 
         $this->url = fct_url('avisos_quadern', array('quadern' => $this->quadern->id));
         $this->pestanya = 'avisos';

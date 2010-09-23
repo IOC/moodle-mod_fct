@@ -57,12 +57,12 @@ class fct_form_quadern extends fct_form_base {
 
         if ($pagina->accio == 'afegir') {
             $this->element('boto', 'afegir', 'afegeix');
-            if (!$pagina->permis_admin) {
+            if (!$pagina->usuari->es_administrador) {
                 $this->ocultar(array('alumne', 'tutor_centre',
                                      'tutor_empresa', 'estat'));
             }
         } else if ($pagina->accio == 'veure') {
-            if ($pagina->permis_admin) {
+            if ($pagina->usuari->es_administrador) {
                 $this->element('boto', 'editar', 'edita');
                 $this->element('boto', 'suprimir', 'suprimeix');
             }

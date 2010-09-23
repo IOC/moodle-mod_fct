@@ -41,7 +41,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
             'cancellar', 'suprimir', 'confirmar'), 'veure');
 
         if ($this->accio != 'veure') {
-            $this->comprovar_permis($this->permis_admin);
+            $this->comprovar_permis($this->usuari->es_administrador);
         }
 
         $this->url = fct_url('quadern', array('quadern' => $this->quadern->id));

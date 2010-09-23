@@ -26,10 +26,6 @@ class fct_pagina_base {
     var $course;
     var $fct;
     var $param = array();
-    var $permis_admin;
-    var $permis_alumne;
-    var $permis_tutor_centre;
-    var $permis_tutor_empresa;
     var $url;
 
     var $capcalera_mostrada = false;
@@ -91,11 +87,6 @@ class fct_pagina_base {
 
         require_course_login($this->course, true, $this->cm);
 
-        $this->permis_admin = $this->usuari->es_administrador;
-        $this->permis_alumne = $this->usuari->es_alumne;
-        $this->permis_tutor_centre = $this->usuari->es_tutor_centre;
-        $this->permis_tutor_empresa = $this->usuari->es_tutor_empresa;
-
         if (!$this->usuari->es_administrador
             and! $this->usuari->es_alumne
             and !$this->usuari->es_tutor_centre
@@ -119,7 +110,7 @@ class fct_pagina_base {
     }
 
     function definir_pestanyes() {
-        if ($this->permis_admin) {
+        if ($this->usuari->es_administrador) {
             $this->pestanyes = array(array(
                 new tabobject('quaderns',
                               fct_url('llista_quaderns', array('fct' => $this->fct->id)),

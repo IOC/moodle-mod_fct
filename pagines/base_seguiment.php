@@ -30,13 +30,19 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
         parent::configurar($quadern_id);
 
         $this->pestanya = 'seguiment_quinzenal';
-        $this->permis_editar = ($this->permis_admin or $this->quadern->estat == 'obert');
-        $this->permis_editar_centre = ($this->permis_admin or $this->quadern->estat == 'obert'
-                                       and $this->permis_tutor_centre);
-        $this->permis_editar_alumne = ($this->permis_admin or $this->quadern->estat == 'obert' and
-                                       ($this->permis_tutor_centre or $this->permis_alumne));
-        $this->permis_editar_empresa = ($this->permis_admin or $this->quadern->estat == 'obert' and
-                                        ($this->permis_tutor_centre or $this->permis_tutor_empresa));
+        $this->permis_editar = ($this->usuari->es_administrador or
+                                $this->quadern->estat == 'obert');
+        $this->permis_editar_centre = ($this->usuari->es_administrador or
+                                       ($this->quadern->estat == 'obert' and
+                                        $this->usuari->es_tutor_centre));
+        $this->permis_editar_alumne = ($this->usuari->es_administrador or
+                                       ($this->quadern->estat == 'obert' and
+                                        ($this->usuari->es_tutor_centre or
+                                         $this->usuari->es_alumne)));
+        $this->permis_editar_empresa = ($this->usuari->es_administrador or
+                                        ($this->quadern->estat == 'obert' and
+                                         ($this->usuari->es_tutor_centre or
+                                          $this->usuari->es_tutor_empresa)));
     }
 
     function definir_pestanyes() {
