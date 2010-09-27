@@ -41,9 +41,12 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
             'cancellar', 'suprimir', 'confirmar'), 'veure');
 
         if ($this->accio != 'veure') {
+            $this->comprovar_permis($this->usuari->es_administrador or
+                                    $this->usuari->es_tutor_centre);
+        }
+        if (in_array($this->accio, array('suprimir', 'confirmar'))) {
             $this->comprovar_permis($this->usuari->es_administrador);
         }
-
         $this->url = fct_url('quadern', array('quadern' => $this->quadern->id));
         $this->pestanya = 'quadern';
         $this->form = new fct_form_quadern($this);
@@ -69,12 +72,14 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function processar_desar() {
         if ($this->form->validar()) {
-            $this->quadern->alumne = $this->form->valor('alumne');
-            $this->quadern->tutor_centre = $this->form->valor('tutor_centre');
-            $this->quadern->tutor_empresa = $this->form->valor('tutor_empresa');
-            $this->quadern->cicle = $this->form->valor('cicle');
+            if ($this->usuari->es_administrador) {
+                $this->quadern->alumne = $this->form->valor('alumne');
+                $this->quadern->tutor_centre = $this->form->valor('tutor_centre');
+                $this->quadern->tutor_empresa = $this->form->valor('tutor_empresa');
+                $this->quadern->cicle = $this->form->valor('cicle');
+                $this->quadern->empresa->nom = $this->form->valor('nom_empresa');
+            }
             $this->quadern->estat = $this->form->valor('estat');
-            $this->quadern->empresa->nom = $this->form->valor('nom_empresa');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update quadern');
             redirect(fct_url('quadern', array('quadern' => $this->quadern->id)));

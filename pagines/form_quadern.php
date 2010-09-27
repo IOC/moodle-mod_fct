@@ -46,14 +46,12 @@ class fct_form_quadern extends fct_form_base {
         $this->element('menu', 'cicle', 'cicle_formatiu',
                        array('opcions' => $this->opcions_cicle($pagina)));
 
-        $opcions = array();
-        foreach (array('proposat', 'obert', 'tancat') as $estat) {
-            $opcions[$estat] = '<span class="estat_' . $estat . '">'
-                . fct_string("estat_$estat") . '</span>';
-        }
-        $this->element('menu' , 'estat', 'estat', array('opcions' => $opcions));
+        $this->element('menu' , 'estat', 'estat',
+                       array('opcions' => $this->opcions_estat($pagina)));
 
-        $this->comprovacio($pagina, 'comprovar_nom_empresa');
+        if ($pagina->usuari->es_administrador or $pagina->usuari->es_alumne) {
+            $this->comprovacio($pagina, 'comprovar_nom_empresa');
+        }
 
         if ($pagina->accio == 'afegir') {
             $this->element('boto', 'afegir', 'afegeix');
@@ -61,12 +59,19 @@ class fct_form_quadern extends fct_form_base {
                 $this->ocultar(array('alumne', 'tutor_empresa', 'estat'));
             }
         } else if ($pagina->accio == 'veure') {
-            if ($pagina->usuari->es_administrador) {
+            if ($pagina->usuari->es_administrador or
+                $pagina->usuari->es_tutor_centre) {
                 $this->element('boto', 'editar', 'edita');
+            }
+            if ($pagina->usuari->es_administrador) {
                 $this->element('boto', 'suprimir', 'suprimeix');
             }
             $this->congelar();
         } else {
+            if (!$pagina->usuari->es_administrador) {
+                $this->congelar(array('alumne', 'nom_empresa', 'tutor_centre',
+                                     'tutor_empresa', 'cicle'));
+            }
             $this->element('boto', 'desar', 'desa');
             $this->element('boto', 'cancellar');
         }
@@ -77,6 +82,19 @@ class fct_form_quadern extends fct_form_base {
         $cicles = $pagina->diposit->cicles($pagina->fct->id);
         foreach ($cicles as $cicle) {
             $opcions[$cicle->id] = $cicle->nom;
+        }
+        return $opcions;
+    }
+
+    function opcions_estat($pagina) {
+        $estats = array('proposat', 'obert');
+        if ($pagina->usuari->es_administrador) {
+            $estats[] = 'tancat';
+        }
+        $opcions = array();
+        foreach ($estats as $estat) {
+            $opcions[$estat] = '<span class="estat_' . $estat . '">'
+                . fct_string("estat_$estat") . '</span>';
         }
         return $opcions;
     }
