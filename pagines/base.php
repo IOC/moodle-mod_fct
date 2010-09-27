@@ -181,7 +181,7 @@ class fct_pagina_base {
                             '', $meta, true, $buttontext,
                             navmenu($this->course, $this->cm));
 
-        print_box_start('boxaligncenter', 'paginafct');
+        print_box_start('boxaligncenter', 'fct');
 
         if (!empty($this->fct->intro)) {
             print_box(format_text($this->fct->intro), 'generalbox', 'intro');
@@ -197,7 +197,7 @@ class fct_pagina_base {
             }
         }
 
-        print_box_start(false, 'contingutfct');
+        print_box_start('contingut');
         $this->capcalera_mostrada = true;
     }
 

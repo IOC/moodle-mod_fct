@@ -33,7 +33,7 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
 
         $taula = new flexible_table('fct_activitats');
         $taula->define_columns(array('descripcio', 'accions'));
-        $taula->column_class('accions', 'columna_accions');
+        $taula->column_class('accions', 'accions');
         $taula->define_headers(array(fct_string('descripcio'), ""));
         $taula->set_attribute('class', 'generaltable');
         $taula->setup();

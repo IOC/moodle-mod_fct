@@ -1,0 +1,169 @@
+/* General */
+
+#fct {
+    padding: 0.5em;
+}
+
+#fct .amagat {
+    display: none;
+}
+
+#fct .contingut {
+    padding: 2.5em 1.5em 1.5em 1.5em;
+    margin-left: 2px;
+    background-color: #fafaf8;
+}
+
+#fct .contingut p {
+    text-align: center;
+}
+
+#fct .contingut h2 {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+    margin: 0.5em;
+}
+
+#fct a.estat_obert {
+    color: green;
+}
+
+#fct a.estat_tancat {
+    color: red;
+}
+
+#fct a.estat_proposat {
+    color: orange;
+}
+
+/* Pestanyes */
+
+#fct .tabtree .tabrow0 {
+    margin: 0 auto;
+    padding-bottom: 0;
+}
+
+#fct .tabtree .tabrow1 {
+    margin: 0;
+}
+
+#fct .tabtree ul.tabrow1 li.active {
+    font-weight: bold;
+}
+
+/* Taules */
+
+#fct .contingut table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#fct .contingut th {
+    text-align: left;
+    padding: 0.1em 1em;
+}
+
+#fct .contingut td {
+    text-align: left;
+    padding: 0.2em 1em;
+}
+
+#fct .contingut td.accions {
+    width: 30px;
+}
+
+/* Formularis */
+
+#fct form a.boto { 
+    margin: 10px;
+}
+
+#fct #valoracio_actituds .fitemtitle,
+#fct #activitats .fitemtitle {
+    width: 70%;
+    text-align: left;
+}
+
+#fct #valoracio_actituds .felement,
+#fct #activitats .felement {
+    width: 20%;
+}
+
+#fct #activitats_realitzades .fitemtitle,
+#fct #activitats_cicle .fitemtitle,
+#fct #llista_empreses .fitemtitle,
+#fct #cicle_formatiu .fitemtitle {
+    width: 10%;
+    text-align: left;
+}
+
+#fct #activitats_realitzades .felement,
+#fct #activitats_cicle .felement,
+#fct #llista_empreses .felement,
+#fct #cicle_formatiu .felement {
+    width: 80%;
+}
+
+#fct form.fct_form_element_afegir_franja_horari {
+    width: 40%;
+    margin-top: 2em;
+}
+
+#fct form .frases_areatext h4 {
+    margin: 0 0;
+    cursor: pointer;
+}
+
+#fct form .frases_areatext ul {
+    margin: 5px 0;
+    list-style-type: none;
+}
+
+#fct form .frases_areatext li:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#fct #calendari_dies {
+    font-size: 0.8em;
+    margin: 5px 0;
+}
+
+#fct #calendari_dies td, #calendari_dies th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    width: 2em;
+}
+
+/* Llista de quaderns */
+
+#fct_quaderns td, #fct_seguiment td {
+    padding: 0;
+}
+
+#fct_quaderns tr:hover, #fct_seguiment tr:hover {
+    background: #dddddd;
+}
+
+#fct_quaderns td a, #fct_seguiment td a  {
+    display: block;
+    padding: 2px 14px;
+}
+
+#fct_quaderns td a:hover, #fct_seguiment td a:hover {
+    text-decoration: none;
+}
+
+#fct .selectors_quaderns {
+    margin-bottom: 1em;
+}
+
+#fct .selectors_quaderns div  {
+    display: inline;
+    margin-right: 20px;
+}
+
+#fct .selectors_quaderns div label {
+    margin-right: 5px;
+}

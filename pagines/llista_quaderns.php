@@ -169,7 +169,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
                   . '" onchange="this.form.submit()" />'),
         );
 
-        echo '<form id="selectors_quaderns" action="view.php" method="get">'
+        echo '<form class="selectors_quaderns" action="view.php" method="get">'
             . '<input type="hidden" name="pagina" value="llista_quaderns"/>'
             . '<input type="hidden" name="fct" value="' . $this->fct->id . '"/>';
         foreach ($selectors as $selector) {

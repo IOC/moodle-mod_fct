@@ -86,7 +86,7 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
                 $taula = new flexible_table('fct_activitats');
                 $taula->define_columns(array('dia', 'hora_inici',
                                              'hora_final', 'accions'));
-                $taula->column_class('accions', 'columna_accions');
+                $taula->column_class('accions', 'accions');
                 $taula->define_headers(array(fct_string('dia'),
                                              fct_string('de'),
                                              fct_string('a'), ""));

@@ -340,7 +340,7 @@ class fct_form_element_boto extends fct_form_element_base {
             $boto = $form->createElement('cancel', $this->nom);
         } elseif ($this->congelat) {
             $url = new moodle_url($mform->url, array($this->nom => 1));
-            $html = '<a class="botoenllac" href="' . $url->out() . '">'
+            $html = '<a class="boto" href="' . $url->out() . '">'
                 . $this->etiqueta . '</a>';
             $boto = $form->createElement('static', $this->nom, '', $html);
         } else {
@@ -354,7 +354,7 @@ class fct_form_element_boto extends fct_form_element_base {
 class fct_form_element_capcalera extends fct_form_element_base {
 
     function definition($mform) {
-        $mform->_form->addElement('header', $this->nom, $this->etiqueta);
+        $mform->_form->addElement('header', null, $this->etiqueta);
     }
 }
 
