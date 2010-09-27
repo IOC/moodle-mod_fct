@@ -58,8 +58,7 @@ class fct_form_quadern extends fct_form_base {
         if ($pagina->accio == 'afegir') {
             $this->element('boto', 'afegir', 'afegeix');
             if (!$pagina->usuari->es_administrador) {
-                $this->ocultar(array('alumne', 'tutor_centre',
-                                     'tutor_empresa', 'estat'));
+                $this->ocultar(array('alumne', 'tutor_empresa', 'estat'));
             }
         } else if ($pagina->accio == 'veure') {
             if ($pagina->usuari->es_administrador) {

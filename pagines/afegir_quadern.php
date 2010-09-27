@@ -50,11 +50,11 @@ class fct_pagina_afegir_quadern extends fct_pagina_base_quaderns {
             $quadern = $this->serveis->crear_quadern($alumne,
                                                      $form->valor('cicle'));
             if ($this->usuari->es_administrador) {
-                $quadern->tutor_centre = $form->valor('tutor_centre');
                 $quadern->tutor_empresa = $form->valor('tutor_empresa');
                 $quadern->estat = $form->valor('estat');
             }
             $quadern->empresa->nom = $form->valor('nom_empresa');
+            $quadern->tutor_centre = $form->valor('tutor_centre');
 
             $this->diposit->afegir_quadern($quadern);
             $this->registrar('add quadern',
