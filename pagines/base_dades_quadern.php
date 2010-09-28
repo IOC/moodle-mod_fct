@@ -55,6 +55,11 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
                           fct_url('dades_relatives', array('quadern' => $this->quadern->id)),
                           fct_string('dades_relatives')),
         );
+        if ($this->usuari->es_administrador or $this->usuari->es_tutor_centre) {
+            $pestanyes[] = new tabobject('imprimir_dades_quadern',
+                                         fct_url('imprimir_dades_quadern', array('quadern' => $this->quadern->id)),
+                                         fct_string('versio_impressio'));
+        }
         $this->pestanyes[] = $pestanyes;
     }
 }

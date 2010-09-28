@@ -1,0 +1,28 @@
+body {
+    padding: 0 2em;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+h3 {
+    font-size: 1em
+}
+
+table th {
+    text-align: left;
+}
+
+table td, th {
+    padding: 0.1em 1em;
+}
+
+table, p {
+    margin-left: 1em;
+    margin-bottom: 1em;
+}

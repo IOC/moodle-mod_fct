@@ -213,4 +213,4 @@ $string['valoracio_final_actituds'] = "Valoració final de les actituds";
 $string['valoracio_parcial_actituds'] = "Valoració parcial de les actituds";
 $string['valoracions'] = 'Valoracions';
 $string['valoracions_observacions'] = "Valoracions i observacions";
-
+$string['versio_impressio'] = 'Versió per a impressió';
