@@ -59,6 +59,7 @@ class fct_pagina_imprimir_dades_quadern extends fct_pagina_base_quadern {
                   'poblacio' => $this->quadern->dades_alumne->poblacio,
                   'telefon' => $this->quadern->dades_alumne->telefon,
                   'email' => $this->quadern->dades_alumne->email,
+                  'inss' => $this->quadern->dades_alumne->inss,
                   'targeta_sanitaria' => $this->quadern->dades_alumne->targeta_sanitaria,
                   'procedencia' => $procedencia ? fct_string($procedencia) : '')
         );

@@ -128,6 +128,7 @@ class fct_dades_alumne {
     var $codi_postal = '';
     var $telefon = '';
     var $email = '';
+    var $inss = '';
     var $targeta_sanitaria = '';
     var $procedencia = '';
 }

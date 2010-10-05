@@ -33,6 +33,7 @@ class fct_form_dades_alumne extends fct_form_base {
         $this->element('text', 'poblacio', 'poblacio');
         $this->element('text', 'telefon', 'telefon');
         $this->element('text', 'email', 'email');
+        $this->element('text', 'inss', 'inss');
         $this->element('text', 'targeta_sanitaria', 'targeta_sanitaria');
         $this->element('menu', 'procedencia', 'procedencia',
                        array('opcions' => $this->opcions_procedencia()));
@@ -94,6 +95,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
             $this->quadern->dades_alumne->poblacio = $this->form->valor('poblacio');
             $this->quadern->dades_alumne->telefon = $this->form->valor('telefon');
             $this->quadern->dades_alumne->email = $this->form->valor('email');
+            $this->quadern->dades_alumne->inss = $this->form->valor('inss');
             $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('targeta_sanitaria');
             $this->quadern->dades_alumne->procedencia = $this->form->valor('procedencia');
             $this->diposit->afegir_quadern($this->quadern);
