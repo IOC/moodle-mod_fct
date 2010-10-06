@@ -434,7 +434,7 @@ class fct_serveis {
         $conveni = $quadern->ultim_conveni();
         $hores = 0.0;
         foreach ($dies as $dia) {
-            $data = new fct_data($dia, floor(($periode + 1) / 2), $any);
+            $data = new fct_data($dia, floor($periode / 2) + 1, $any);
             $hores += $conveni->hores_dia($data->dia_setmana());
         }
         return $hores;

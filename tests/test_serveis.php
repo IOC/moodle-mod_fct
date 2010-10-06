@@ -129,7 +129,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $quadern = new fct_quadern;
         $quadern->afegir_conveni($conveni);
 
-        $hores = $this->serveis->maxim_hores_quinzena($quadern, 2010, 1, array(4, 5, 6));
+        $hores = $this->serveis->maxim_hores_quinzena($quadern, 2010, 0, array(4, 5, 6));
 
         $this->assertEquals(12, $hores);
     }
