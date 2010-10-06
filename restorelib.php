@@ -123,7 +123,8 @@ class fct_restore {
         );
         $tipus_userdata = array('QUADERN', 'ACTIVITAT', 'QUINZENA', 'AVIS');
         foreach ($tipus_restore as $tipus => $restore) {
-            if ($this->userdata or !in_array($tipus, $tipus_userdata)) {
+            if (isset($node[$tipus]) and ($this->userdata or
+                                          !in_array($tipus, $tipus_userdata))) {
                 foreach ($node[$tipus] as $node_objecte) {
                     $this->$restore($node_objecte['#']);
                 }
