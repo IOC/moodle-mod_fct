@@ -18,7 +18,7 @@
 */
 
 require_once($CFG->dirroot . '/mod/fct//lib.php');
-fct_require('diposit', 'domini', 'json');
+fct_require('diposit', 'domini', 'json', 'moodle');
 
 class fct_backup
 {
@@ -31,7 +31,7 @@ class fct_backup
         $this->bf = $bf;
         $this->level = $level;
         $this->userdata = $userdata;
-        $this->diposit = new fct_diposit;
+        $this->diposit = new fct_diposit(new fct_moodle);
     }
 
     function write($text) {
@@ -132,7 +132,7 @@ function fct_check_backup_mods($course, $user_data=false, $backup_unique_code, $
         $info[0][0] = get_string('modulenameplural', 'fct');
         $info[0][1] = count_records('fct', 'course', $course);
         if ($user_data) {
-            $diposit = new fct_diposit;
+            $diposit = new fct_diposit(new fct_moodle);
             $info[1][0] = fct_string('cicles_formatius');
             $info[1][1] = $diposit->nombre_cicles();
             $info[2][0] = fct_string('quaderns');
@@ -150,7 +150,7 @@ function fct_check_backup_mods_instances($instance, $backup_unique_code) {
     $info[$instance->id.'0'][0] = '<b>'.$instance->name.'</b>';
     $info[$instance->id.'0'][1] = '';
     if ($instance->userdata) {
-        $diposit = new fct_diposit;
+        $diposit = new fct_diposit(new fct_moodle);
         $info[$instance->id.'1'][0] = fct_string('cicles_formatius');
         $info[$instance->id.'1'][1] = $diposit->nombre_cicles($instance->id);
         $info[$instance->id.'2'][0] = fct_string('quaderns');

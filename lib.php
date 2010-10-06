@@ -46,21 +46,21 @@ function fct_url($pagina, $params) {
 }
 
 function fct_add_instance($data) {
-    fct_require('diposit', 'domini', 'json');
+    fct_require('diposit', 'domini', 'json', 'moodle');
     $fct = new fct;
     $fct->course = (int) $data->course;
     $fct->name = stripslashes($data->name);
     $fct->intro = stripslashes($data->intro);
     $fct->timecreated = time();
     $fct->timemodified = time();
-    $diposit = new fct_diposit;
+    $diposit = new fct_diposit(new fct_moodle);
     $diposit->afegir_fct($fct);
     return $fct->id;
 }
 
 function fct_update_instance($data) {
-    fct_require('diposit', 'json');
-    $diposit = new fct_diposit;
+    fct_require('diposit', 'json', 'moodle');
+    $diposit = new fct_diposit(new fct_moodle);
     $fct = $diposit->fct($data->instance);
     $fct->name = stripslashes($data->name);
     $fct->intro = stripslashes($data->intro);
@@ -70,8 +70,8 @@ function fct_update_instance($data) {
 }
 
 function fct_delete_instance($id) {
-    fct_require('diposit', 'domini', 'json');
-    $diposit = new fct_diposit;
+    fct_require('diposit', 'domini', 'json', 'moodle');
+    $diposit = new fct_diposit(new fct_moodle);
     $serveis = new fct_serveis($diposit);
     $fct = $diposit->fct($id);
     $serveis->suprimir_fct($fct);

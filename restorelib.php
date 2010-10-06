@@ -18,7 +18,7 @@
 */
 
 require_once($CFG->dirroot . '/mod/fct//lib.php');
-fct_require('diposit', 'json');
+fct_require('diposit', 'domini', 'json', 'moodle');
 
 class fct_restore {
 
@@ -31,7 +31,7 @@ class fct_restore {
         $this->restore = $restore;
         $this->info = $info;
         $this->userdata = $userdata;
-        $this->diposit = new fct_diposit;
+        $this->diposit = new fct_diposit(new fct_moodle);
     }
 
     function get_id($table, $old_id) {
