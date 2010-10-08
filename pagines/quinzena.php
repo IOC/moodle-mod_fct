@@ -108,7 +108,7 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
                 $this->quinzena->dies = $this->filtrar_dies($this->form->valor('dies'),
                                                             $this->form->valor('periode'),
                                                             $this->form->valor('any'));
-                $this->activitats = $this->form->valor('activitats_realitzades');
+                $this->quinzena->activitats = $this->form->valor('activitats_realitzades');
             }
             if ($this->permis_editar_centre) {
                 $this->quinzena->observacions_centre = $this->form->valor('observacions_centre');
