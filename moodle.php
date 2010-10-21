@@ -19,6 +19,14 @@
 
 class fct_moodle {
 
+    function assign_role($userid, $courseid, $role) {
+        $roleid = get_field('role', 'id', 'shortname', addslashes($role));
+        $context = get_context_instance(CONTEXT_COURSE, $courseid);
+        if (!$roleid or !role_assign($roleid, $userid, 0, $context->id, time())) {
+            throw new fct_exception('moodle: assign_role');
+        }
+    }
+
     function count_records($table, $field1='', $value1='',
                            $field2='', $value2='', $field3='', $value3='') {
         return count_records($table, $field1, addslashes($value1),
@@ -32,6 +40,31 @@ class fct_moodle {
 
     function count_records_sql($sql) {
         return count_records_sql($sql);
+    }
+
+    function create_user($username, $email, $firstname, $lastname) {
+        global $CFG;
+        $user = (object) array(
+            'username' => $username,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+            'auth' => 'manual',
+            'confirmed' => 1,
+            'emailstop' => 0,
+            'lang' => current_language(),
+            'mnethostid' => $CFG->mnet_localhost_id,
+            'secret' => random_string(15),
+            'timemodified' => time(),
+        );
+        if ($id = insert_record('user', addslashes_recursive($user))) {
+            $user = get_record('user', 'id', $id);
+            events_trigger('user_created', $user);
+            setnew_password_and_mail($user);
+            return $id;
+        } else {
+            throw new fct_exception('moodle: create_user');
+        }
     }
 
     function delete_records($table, $field1='', $value1='',

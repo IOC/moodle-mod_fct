@@ -42,49 +42,6 @@ class fct_form_tutor_empresa extends fct_form_base {
 
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
-    function afegir_tutor_empresa($courseid, $dni, $contrasenya,
-                                  $nom, $cognoms, $email) {
-        global $USER;
-
-        $roleid = get_field('role', 'id', 'shortname', 'tutorempresa');
-        if (!$roleid) {
-            return false;
-        }
-
-        $record = array('username' => addslashes(strtolower($dni)),
-                        'password' => hash_internal_user_password($contrasenya),
-                        'firstname' => addslashes($nom),
-                        'lastname' => addslashes($cognoms),
-                        'email' => addslashes($email),
-                        'auth' => 'manual',
-                        'confirmed' => 1,
-                        'deleted' => 0,
-                        'mnethostid' => 1,
-                        'country'  => 'CT',
-                        'lang' => 'ca_utf8',
-                        'maildigest' => 1,
-                        'autosubscribe' => 0,
-                        'ajax' => 0,
-                        'timemodified' => time());
-        $id = insert_record('user', (object) $record);
-        if (!$id) {
-            return false;
-        }
-
-        $context = get_context_instance(CONTEXT_COURSE, $courseid);
-        $record = array('roleid' => $roleid,
-                        'userid' => $id,
-                        'contextid' => $context->id,
-                        'timestart' => time(),
-                        'timemodified' => time(),
-                        'modifierid' => $USER->id,
-                        'enrol' => 'manual');
-        insert_record('role_assignments', (object) $record);
-
-        return $id;
-    }
-
-
     function comprovar_dni($data) {
         $dni = addslashes(trim($data->dni));
         if (!preg_match('/^[0-9]{8}[a-zA-Z]$/', $dni)) {
@@ -117,7 +74,6 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
     }
 
     function configurar() {
-        $this->configurar_accio(array('afegir', 'cancellar'), 'afegir');
         parent::configurar(required_param('fct', PARAM_INT));
         $this->comprovar_permis($this->usuari->es_administrador);
         $this->url = fct_url('afegir_tutor_empresa', array('fct' => $this->fct->id));
@@ -125,42 +81,25 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         $this->afegir_navegacio(fct_string('afegeix_tutor_empresa'), $this->url);
     }
 
-    function generar_contrasenya() {
-        $contrasenya = '';
-        for ($i = 0; $i < 4; $i++) {
-            $contrasenya .= chr(rand(ord('A'), ord('Z')));
-        }
-        for ($i = 0; $i < 2; $i++) {
-            $contrasenya .= rand(0, 9);
-        }
-        return $contrasenya;
-    }
+    function processar() {
+        global $CFG;
 
-    function processar_afegir() {
         $form = new fct_form_tutor_empresa($this);
         if ($form->validar()) {
-            $dni = strtolower($form->valor('dni'));
-            $contrasenya = $this->generar_contrasenya();
-            $id = $this->afegir_tutor_empresa($this->fct->course,
-                                              $dni, $contrasenya,
-                                              $form->valor('nom'),
-                                              $form->valor('cognoms'),
-                                              $form->valor('email'));
-            if ($id) {
-                global $CFG;
-                $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->fct->course}";
-                $this->registrar('add tutor_empresa', $url, $id);
-            } else {
-                $this->error('pagina');
-            }
+            $username = strtolower($form->valor('dni'));
+            $id = $this->moodle->create_user($username,
+                                             $form->valor('email'),
+                                             trim($form->valor('nom')),
+                                             trim($form->valor('cognoms')));
+            $this->moodle->assign_role($id, $this->fct->course, 'tutorempresa');
+            $url = "{$CFG->wwwroot}/user/view.php?id=$id&course={$this->fct->course}";
+            $this->registrar('add tutor_empresa', $url, $id);
 
             $this->mostrar_capcalera();
-            echo '<dl><dt>' . fct_string('tutor_de_empresa')
-                . '</dt><dd>' . $form->valor('nom') . ' '
-                . $form->valor('cognoms') . '</dd><dt>'
-                . fct_string('nom_usuari') . "</dt><dd>$dni</dd><dt>"
-                . fct_string('contrasenya') . "</dt><dd>$contrasenya</dd>";
-            $this->mostrar_peu();            
+            $nom = $form->valor('nom') . ' ' . $form->valor('cognoms');
+            echo '<p>' . fct_string('afegit_tutor_empresa', $nom) . '</p>';
+            print_continue($this->url);
+            $this->mostrar_peu();
             return;
         }
 
@@ -168,10 +107,4 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         $form->mostrar();
         $this->mostrar_peu();
     }
-
-    function processar_cancellar() {
-        redirect(fct_url('llista_quaderns', array('fct' => $this->fct->id)));
-    }
-
 }
-

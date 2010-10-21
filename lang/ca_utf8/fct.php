@@ -44,6 +44,7 @@ $string['afegeix_cicle_formatiu'] = "Afegeix un cicle formatiu";
 $string['afegeix_quadern'] = "Afegeix un quadern";
 $string['afegeix_quinzena'] = "Afegeix una quinzena";
 $string['afegeix_tutor_empresa'] = "Afegeix un tutor d'empresa";
+$string['afegit_tutor_empresa'] = 'S\'ha afegit el tutor d\'empresa <strong>$a</strong>.';
 $string['alumne'] = "Alumne/a";
 $string['anterior_data_final'] = "Anterior a la data de finalització";
 $string['any'] = "Any";
