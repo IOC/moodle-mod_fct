@@ -84,6 +84,17 @@ class fct_pagina_imprimir_dades_quadern extends fct_pagina_base_quadern {
         );
     }
 
+    function mostrar_dades_quadern() {
+        $this->mostrar_camps(
+            array('alumne' => $this->nom_usuari($this->quadern->alumne),
+                  'empresa' => $this->quadern->empresa->nom,
+                  'tutor_centre' => $this->nom_usuari($this->quadern->tutor_centre),
+                  'tutor_empresa' => $this->nom_usuari($this->quadern->tutor_empresa),
+                  'cicle_formatiu' => $this->cicle->nom,
+                  'estat' => fct_string("estat_{$this->quadern->estat}"))
+        );
+    }
+
     function mostrar_dades_empresa() {
         $this->mostrar_titol(fct_string('empresa'));
         $this->mostrar_camps(
@@ -164,7 +175,8 @@ class fct_pagina_imprimir_dades_quadern extends fct_pagina_base_quadern {
     }
 
     function processar() {
-        $this->mostrar_capcalera(fct_string('dades_generals'));
+        $this->mostrar_capcalera(fct_string('quadern'));
+        $this->mostrar_dades_quadern();
         $this->mostrar_dades_alumne();
         $this->mostrar_dades_empresa();
         $this->mostrar_dades_conveni();
