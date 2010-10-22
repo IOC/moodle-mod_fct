@@ -47,6 +47,14 @@ class fct_form_dades_empresa extends fct_form_base {
         $this->element('text', 'dni_tutor', 'dni', array('size' => 16));
         $this->element('text', 'email_tutor', 'email');
 
+        $this->element('capcalera', 'lloc_practiques', 'lloc_practiques');
+        $this->element('text', 'nom_lloc_practiques', 'nom');
+        $this->element('text', 'adreca_lloc_practiques', 'adreca');
+        $this->element('text', 'codi_postal_lloc_practiques', 'codi_postal');
+        $this->element('text', 'poblacio_lloc_practiques', 'poblacio');
+        $this->element('text', 'telefon_lloc_practiques', 'telefon');
+
+
         if ($pagina->accio == 'veure') {
             if ($pagina->permis_editar) {
                 $this->element('boto', 'editar', 'edita');
@@ -108,6 +116,11 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
             $this->quadern->empresa->cognoms_tutor = $this->form->valor('cognoms_tutor');
             $this->quadern->empresa->dni_tutor = $this->form->valor('dni_tutor');
             $this->quadern->empresa->email_tutor = $this->form->valor('email_tutor');
+            $this->quadern->empresa->nom_lloc_practiques = $this->form->valor('nom_lloc_practiques');
+            $this->quadern->empresa->adreca_lloc_practiques = $this->form->valor('adreca_lloc_practiques');
+            $this->quadern->empresa->poblacio_lloc_practiques = $this->form->valor('poblacio_lloc_practiques');
+            $this->quadern->empresa->codi_postal_lloc_practiques = $this->form->valor('codi_postal_lloc_practiques');
+            $this->quadern->empresa->telefon_lloc_practiques = $this->form->valor('telefon_lloc_practiques');
             $this->diposit->afegir_quadern($this->quadern);
             $this->registrar('update dades_empresa');
             redirect($this->url);

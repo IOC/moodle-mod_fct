@@ -125,6 +125,15 @@ class fct_pagina_imprimir_dades_quadern extends fct_pagina_base_quadern {
                   'dni' => $this->quadern->empresa->dni_tutor,
                   'email' => $this->quadern->empresa->email_tutor)
         );
+
+        $this->mostrar_subtitol(fct_string('lloc_practiques'));
+        $this->mostrar_camps(
+            array('nom' => $this->quadern->empresa->nom_lloc_practiques,
+                  'adreca' => $this->quadern->empresa->adreca_lloc_practiques,
+                  'codi_postal' => $this->quadern->empresa->codi_postal_lloc_practiques,
+                  'poblacio' => $this->quadern->empresa->poblacio_lloc_practiques,
+                  'telefon' => $this->quadern->empresa->telefon_lloc_practiques)
+        );
     }
 
     function mostrar_dades_horari() {

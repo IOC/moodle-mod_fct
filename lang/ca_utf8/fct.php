@@ -150,6 +150,7 @@ $string['hores_superior_horari'] = "El nombre d'hores és superior a l'indicat a
 $string['informacio'] = "Informació";
 $string['inss'] = "Codi d'afiliació a la seguretat social (INSS)";
 $string['llista_empreses'] = "Llista d'empreses";
+$string['lloc_practiques'] = 'Lloc on es realitzaran les pràctiques';
 $string['minuts'] = 'minuts';
 $string['mode_manteniment'] = 'No es pot utilitzar temporalment el Quadern d\'FCT perquè s\'estan realitzant tasques de manteniment.';
 $string['modulename'] = "FCT";

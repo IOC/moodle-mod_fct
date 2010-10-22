@@ -179,6 +179,11 @@ class fct_empresa {
     var $cognoms_tutor = '';
     var $dni_tutor = '';
     var $email_tutor = '';
+    var $nom_lloc_practiques = '';
+    var $adreca_lloc_practiques = '';
+    var $poblacio_lloc_practiques = '';
+    var $codi_postal_lloc_practiques = '';
+    var $telefon_lloc_practiques = '';
 }
 
 class fct_especificacio_quaderns {
