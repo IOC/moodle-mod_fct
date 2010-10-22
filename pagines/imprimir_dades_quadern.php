@@ -76,11 +76,12 @@ class fct_pagina_imprimir_dades_quadern extends fct_pagina_base_quadern {
         }
 
         $hores = $this->serveis->hores_realitzades_quadern($this->quadern);
+        $hores_pendents = max(0, $this->quadern->hores_practiques - $hores);
         $this->mostrar_camps(
             array('prorrogues' => $this->quadern->prorrogues,
                   'hores_practiques' => $this->quadern->hores_practiques,
                   'hores_realitzades' => $hores,
-                  'hores_pendents' => $this->quadern->hores_practiques - (float) $hores)
+                  'hores_pendents' => $hores_pendents)
         );
     }
 

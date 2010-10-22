@@ -101,12 +101,12 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
 
     function mostrar() {
         $hores = $this->serveis->hores_realitzades_quadern($this->quadern);
+        $hores_pendents = max(0, $this->quadern->hores_practiques - $hores);
         $this->form->valor('prorrogues', $this->quadern->prorrogues);
         $this->form->valor('hores_practiques',
                            $this->quadern->hores_practiques);
         $this->form->valor('hores_realitzades', $hores);
-        $this->form->valor('hores_pendents',
-                           $this->quadern->hores_practiques - (float) $hores);
+        $this->form->valor('hores_pendents', $hores_pendents);
         foreach ($this->quadern->convenis as $conveni) {
             $this->form->valor('conveni_' .  $conveni->uuid, $conveni);
         }
