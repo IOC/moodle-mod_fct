@@ -53,7 +53,9 @@ class fct_form_dades_alumne extends fct_form_base {
         return array('' => '',
                      'batxillerat' => fct_string('batxillerat'),
                      'curs_acces' => fct_string('curs_acces'),
-                     'cicles' => fct_string('cicles'));
+                     'cicles' => fct_string('cicles'),
+                     'eso' => fct_string('eso'),
+                     'ges' => fct_string('ges'));
     }
 }
 
