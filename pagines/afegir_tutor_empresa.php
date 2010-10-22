@@ -43,8 +43,8 @@ class fct_form_tutor_empresa extends fct_form_base {
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
     function comprovar_dni($data) {
-        $dni = addslashes(trim($data->dni));
-        if (!preg_match('/^[0-9]{8}[a-zA-Z]$/', $dni)) {
+        $dni = strtolower(trim($data->dni));
+        if (!preg_match('/^[0-9]{8}[a-z]$/', $dni)) {
             return array('dni' => fct_string('dni_no_valid'));
         }
         if (record_exists('user', 'username', $dni)) {
@@ -86,9 +86,9 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
         $form = new fct_form_tutor_empresa($this);
         if ($form->validar()) {
-            $username = strtolower($form->valor('dni'));
+            $username = trim(strtolower($form->valor('dni')));
             $id = $this->moodle->create_user($username,
-                                             $form->valor('email'),
+                                             trim($form->valor('email')),
                                              trim($form->valor('nom')),
                                              trim($form->valor('cognoms')));
             $this->moodle->assign_role($id, $this->fct->course, 'tutorempresa');
