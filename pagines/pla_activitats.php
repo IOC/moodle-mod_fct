@@ -46,8 +46,8 @@ class fct_pagina_pla_activitats extends fct_pagina_base_pla_activitats {
             foreach ($activitats as $activitat) {
                 $accions = '';
                 if ($this->permis_editar) {
-                    $url_editar = fct_url('editar_activitat_pla', array('fct' => $activitat->id));
-                    $url_suprimir = fct_url('suprimir_activitat_pla', array('fct' => $activitat->id));
+                    $url_editar = fct_url('editar_activitat_pla', array('activitat' => $activitat->id));
+                    $url_suprimir = fct_url('suprimir_activitat_pla', array('activitat' => $activitat->id));
                     $icona_editar = $this->icona_editar($url_editar, fct_string('edita_activitat'));
                     $icona_suprimir = $this->icona_suprimir($url_suprimir, fct_string('suprimeix_activitat'));
                     $accions = "$icona_editar $icona_suprimir";
