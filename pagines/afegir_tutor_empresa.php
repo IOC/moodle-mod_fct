@@ -29,8 +29,8 @@ class fct_form_tutor_empresa extends fct_form_base {
                        array('size' => 48, 'required' => true));
         $this->element('text', 'cognoms', 'cognoms',
                        array('size' => 48, 'required' => true));
-
-        $this->element('text', 'email', 'email', array('size' => 48));
+        $this->element('text', 'email', 'email',
+                       array('size' => 48, 'required' => true));
 
         $this->comprovacio($pagina, 'comprovar_dni');
         $this->comprovacio($pagina, 'comprovar_nom');
@@ -55,7 +55,7 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
     function comprovar_email($valors) {
         $email = addslashes(trim($valors->email));
-        if (!empty($email) and !validate_email($email)) {
+        if (!$email or !validate_email($email)) {
             return array('email' => get_string('invalidemail'));
         }
         return true;
