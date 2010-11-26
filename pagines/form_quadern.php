@@ -93,8 +93,11 @@ class fct_form_quadern extends fct_form_base {
         }
         $opcions = array();
         foreach ($estats as $estat) {
-            $opcions[$estat] = '<span class="estat_' . $estat . '">'
-                . fct_string("estat_$estat") . '</span>';
+            $opcions[$estat] = fct_string("estat_$estat");
+            if ($pagina->accio == 'veure') {
+                $opcions[$estat] = ('<span class="estat_' . $estat . '">'
+                                    . $opcions[$estat] . '</span>');
+            }
         }
         return $opcions;
     }
@@ -105,8 +108,7 @@ class fct_form_quadern extends fct_form_base {
             $opcions[0] = '';
         }
 
-        $email = ($pagina->accio == 'vuere');
-
+        $enllac = ($pagina->accio == 'veure');
         $context = get_context_instance(CONTEXT_MODULE, $pagina->cm->id);
         $records = get_users_by_capability($context, $capability,
                                            'u.id, u.firstname, u.lastname',
@@ -114,12 +116,12 @@ class fct_form_quadern extends fct_form_base {
                                            '', '', '', '', false);
         if ($records) {
             foreach ($records as $id => $record) {
-                $opcions[$id] = $pagina->nom_usuari($record, true, $email);
+                $opcions[$id] = $pagina->nom_usuari($record, $enllac);
             }
         }
 
         if ($usuari) {
-            $opcions[$usuari] = $pagina->nom_usuari($usuari, true, $email);
+            $opcions[$usuari] = $pagina->nom_usuari($usuari, $enllac);
         }
 
         return $opcions;
