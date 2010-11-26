@@ -81,12 +81,10 @@ class fct_pagina_base {
         }
 
         $this->fct = $this->diposit->fct($this->cm->instance);
-        $this->usuari = $this->diposit->usuari($this->fct, $USER->id);
-
         $this->course = get_record('course', 'id', $this->fct->course);
-
         require_course_login($this->course, true, $this->cm);
 
+        $this->usuari = $this->diposit->usuari($this->fct, $USER->id);
         if (!$this->usuari->es_administrador
             and! $this->usuari->es_alumne
             and !$this->usuari->es_tutor_centre
