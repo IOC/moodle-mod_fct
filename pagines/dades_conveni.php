@@ -149,6 +149,9 @@ class fct_pagina_dades_conveni extends fct_pagina_base_dades_quadern {
             }
 
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'dades_conveni');
+            }
             $this->registrar('update dades_conveni');
             redirect($this->url);
         }

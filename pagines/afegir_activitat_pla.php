@@ -44,6 +44,9 @@ class fct_pagina_afegir_activitat_pla extends fct_pagina_base_pla_activitats {
             $activitat->quadern = $this->quadern->id;
             $activitat->descripcio = $form->valor('descripcio');
             $this->diposit->afegir_activitat($activitat);
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'pla_activitats');
+            }
             $this->registrar('add activitat_pla',
                              fct_url('pla_activitats', array('quadern' => $this->quadern->id)),
                              $activitat->descripcio);

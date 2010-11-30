@@ -90,6 +90,9 @@ class fct_pagina_dades_relatives extends fct_pagina_base_dades_quadern {
             $this->quadern->exempcio = $this->form->valor('exempcio');
             $this->quadern->hores_anteriors = $this->form->valor('hores_anteriors');
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'dades_relatives');
+            }
             $this->registrar('update dades_relatives');
             redirect($this->url);
         }

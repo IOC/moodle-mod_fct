@@ -84,6 +84,11 @@ class fct_pagina_valoracio_actituds extends fct_pagina_base_valoracio {
                     $this->form->valor('valoracio_actituds');
             }
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $tipus = ($this->final ? 'valoracio_actituds_final'
+                          : 'valoracio_actituds_parcial');
+                $this->serveis->registrar_avis($this->quadern, $tipus);
+            }
             $this->registrar('update valoracio_actituds', null,
                              $this->final ? 'final' : 'parcial');
             redirect($this->url);

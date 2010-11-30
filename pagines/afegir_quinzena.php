@@ -69,6 +69,9 @@ class fct_pagina_afegir_quinzena extends fct_pagina_base_seguiment {
                                                   $form->valor('any'));
             $quinzena->activitats = $form->valor('activitats_realitzades');
             $this->diposit->afegir_quinzena($quinzena);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'quinzena_afegida', $quinzena->id);
+            }
             $this->registrar('add quinzena',
                              fct_url('quinzena', array('quinzena' => $quinzena->id)),
                              $this->nom_periode($quinzena->periode,

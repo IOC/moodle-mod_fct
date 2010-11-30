@@ -122,6 +122,9 @@ class fct_pagina_dades_empresa extends fct_pagina_base_dades_quadern {
             $this->quadern->empresa->codi_postal_lloc_practiques = $this->form->valor('codi_postal_lloc_practiques');
             $this->quadern->empresa->telefon_lloc_practiques = $this->form->valor('telefon_lloc_practiques');
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'dades_empresa');
+            }
             $this->registrar('update dades_empresa');
             redirect($this->url);
         }

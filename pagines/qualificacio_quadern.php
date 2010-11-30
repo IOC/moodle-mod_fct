@@ -50,6 +50,9 @@ class fct_pagina_qualificacio_quadern extends fct_pagina_base_valoracio {
             $this->quadern->qualificacio->data = $this->form->valor('data');
             $this->quadern->qualificacio->observacions = $this->form->valor('observacions');
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern,'qualificacio_quadern');
+            }
             $this->registrar('update qualificacio_quadern');
             redirect($this->url);
         }

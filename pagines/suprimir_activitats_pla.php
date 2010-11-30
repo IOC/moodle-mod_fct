@@ -35,6 +35,9 @@ class fct_pagina_suprimir_activitats_pla extends fct_pagina_base_pla_activitats 
         foreach ($activitats as $activitat) {
             $this->diposit->suprimir_activitat($activitat);
         }
+        if ($this->quadern->tutor_empresa == $this->usuari->id) {
+            $this->serveis->registrar_avis($this->quadern, 'pla_activitats');
+        }
         $this->registrar('delete activitats_pla',
                          fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
         redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));

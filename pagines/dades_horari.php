@@ -130,6 +130,9 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
             if ($conveni) {
                 $conveni->afegir_franja_horari($franja);
                 $this->diposit->afegir_quadern($this->quadern);
+                if ($this->quadern->alumne == $this->usuari->id) {
+                    $this->serveis->registrar_avis($this->quadern, 'dades_horari');
+                }
                 $this->registrar('update dades_horari');
             }
             redirect($this->url);
@@ -146,6 +149,9 @@ class fct_pagina_dades_horari extends fct_pagina_base_dades_quadern {
                                             fct_param('hora_final'));
             $conveni->suprimir_franja_horari($franja);
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'dades_horari');
+            }
             $this->registrar('update dades_horari');
         }
         redirect($this->url);

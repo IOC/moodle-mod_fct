@@ -66,6 +66,9 @@ class fct_pagina_afegir_activitats_cicle_pla extends fct_pagina_base_pla_activit
             }
             $this->registrar('add activitats_cicle_pla',
                              fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'pla_activitats');
+            }
             redirect(fct_url('pla_activitats', array('quadern' => $this->quadern->id)));
         }
     }

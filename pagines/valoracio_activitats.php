@@ -82,6 +82,9 @@ class fct_pagina_valoracio_activitats extends fct_pagina_base_valoracio {
                     $this->diposit->afegir_activitat($activitat);
                 }
             }
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'valoracio_activitats');
+            }
             $this->registrar('update valoracio_activitats');
             redirect($this->url);
         }

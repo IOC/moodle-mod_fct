@@ -92,7 +92,11 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
 
     function processar_confirmar() {
         $this->comprovar_sessio();
-        $this->diposit->suprimir_quinzena($this->quinzena);
+        $this->serveis->suprimir_quinzena($this->quinzena);
+        if ($this->quadern->alumne == $this->usuari->id) {
+            $this->serveis->registrar_avis($this->quadern, 'quinzena_suprimida',
+                                           $this->quinzena->id);
+        }
         $this->registrar('delete quinzena', null, $this->titol);
         redirect(fct_url('seguiment', array('quadern' => $this->quadern->id)));
     }
@@ -118,6 +122,14 @@ class fct_pagina_quinzena extends fct_pagina_base_seguiment {
             }
 
             $this->diposit->afegir_quinzena($this->quinzena);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'quinzena_alumne',
+                                               $this->quinzena->id);
+            }
+            if ($this->quadern->tutor_empresa == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'quinzena_empresa',
+                                               $this->quinzena->id);
+            }
             $this->registrar('update quinzena', null, $this->titol);
             redirect($this->url);
         }

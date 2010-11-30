@@ -101,6 +101,9 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
             $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('targeta_sanitaria');
             $this->quadern->dades_alumne->procedencia = $this->form->valor('procedencia');
             $this->diposit->afegir_quadern($this->quadern);
+            if ($this->quadern->alumne == $this->usuari->id) {
+                $this->serveis->registrar_avis($this->quadern, 'dades_alumne');
+            }
             $this->registrar('update dades_alumne');
             redirect($this->url);
         }
