@@ -27,8 +27,8 @@ class fct_pagina_base_quaderns extends fct_pagina_base {
     }
 
     function definir_pestanyes() {
+        parent::definir_pestanyes();
         if ($this->usuari->es_administrador) {
-            parent::definir_pestanyes();
             $pestanyes = array(
                 new tabobject('llista_quaderns',
                               fct_url('llista_quaderns', array('fct' => $this->fct->id)),

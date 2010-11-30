@@ -17,25 +17,22 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-fct_require('pagines/base_dades_quadern');
+fct_require('pagines/base_quadern');
 
-class fct_pagina_avisos_quadern extends fct_pagina_base_quadern {
+class fct_pagina_suprimir_avis extends fct_pagina_base_quadern {
+
+    var $avis;
 
     function configurar() {
-        parent::configurar(required_param('quadern', PARAM_INT));
-        $this->configurar_accio(array('veure', 'suprimir'), 'veure');
-
-        $this->comprovar_permis($this->usuari->es_tutor_centre);
-
-        $this->url = fct_url('avisos_quadern', array('quadern' => $this->quadern->id));
-        $this->pestanya = 'avisos';
+        $id = required_param('avis', PARAM_INT);
+        $this->avis = $this->diposit->avis($id);
+        parent::configurar($this->avis->quadern);
+        $this->comprovar_permis($this->usuari->es_tutor_centre and
+                                $this->quadern->tutor_centre == $this->usuari->id);
     }
 
-    function processar_veure() {
-        $this->mostrar_capcalera();
-        print_object($this->diposit->avisos_quadern($this->quadern->id));
-        $this->mostrar_peu();
-        $this->registrar('view avisos_quadern');
+    function processar() {
+        $this->diposit->suprimir_avis($this->avis);
+        redirect(fct_url('avisos', array('fct' => $this->fct->id)));
     }
 }
-

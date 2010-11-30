@@ -102,18 +102,6 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
                                $this->dies_periode($periode, $any));
     }
 
-    static function nom_mes($mes) {
-        $time = mktime(0, 0, 0, $mes+1, 1, 2000);
-        return strftime('%B', $time);
-    }
-
-    static function nom_periode($periode, $any=2001) {
-        $mes = floor((int) $periode / 2);
-        $dies = ($periode % 2 == 0) ? '1-15' :
-            '16-' . cal_days_in_month(CAL_GREGORIAN, $mes + 1, $any);
-        return $dies . ' ' . self::nom_mes($mes);
-    }
-
     static function nom_trimestre($trimestre) {
         return fct_string('trimestre_' . ($trimestre + 1));
     }

@@ -108,11 +108,20 @@ class fct_pagina_base {
     }
 
     function definir_pestanyes() {
+        $pestanyes = array();
+        if ($this->usuari->es_tutor_centre or $this->usuari->es_administrador) {
+            $pestanyes[] = new tabobject('quaderns',
+                                         fct_url('llista_quaderns', array('fct' => $this->fct->id)),
+                                         fct_string('quaderns'));
+
+        }
+        if ($this->usuari->es_tutor_centre) {
+            $pestanyes[] = new tabobject('avisos',
+                                         fct_url('avisos', array('fct' => $this->fct->id)),
+                                         fct_string('avisos'));
+        }
         if ($this->usuari->es_administrador) {
-            $this->pestanyes = array(array(
-                new tabobject('quaderns',
-                              fct_url('llista_quaderns', array('fct' => $this->fct->id)),
-                              fct_string('quaderns')),
+            $pestanyes_admin = array(
                 new tabobject('cicles',
                               fct_url('llista_cicles', array('fct' => $this->fct->id)),
                               fct_string('cicles_formatius')),
@@ -128,8 +137,10 @@ class fct_pagina_base {
                 new tabobject('afegir_tutor_empresa',
                               fct_url('afegir_tutor_empresa', array('fct' => $this->fct->id)),
                               fct_string('afegeix_tutor_empresa')),
-            ));
+            );
+            $pestanyes = array_merge($pestanyes, $pestanyes_admin);
         }
+        $this->pestanyes = array($pestanyes);
     }
 
     function error($identifier, $info='') {
@@ -207,6 +218,18 @@ class fct_pagina_base {
         print_footer($this->course);
     }
 
+    static function nom_mes($mes) {
+        $time = mktime(0, 0, 0, $mes+1, 1, 2000);
+        return strftime('%B', $time);
+    }
+
+    static function nom_periode($periode, $any=2001) {
+        $mes = floor((int) $periode / 2);
+        $dies = ($periode % 2 == 0) ? '1-15' :
+            '16-' . cal_days_in_month(CAL_GREGORIAN, $mes + 1, $any);
+        return $dies . ' ' . self::nom_mes($mes);
+    }
+
     function nom_usuari($user, $enllac=false, $correu=false) {
         global $CFG;
 
@@ -244,10 +267,9 @@ class fct_pagina_base {
     }
 
     function registrar($action, $url=null, $info='') {
-        if (is_null($url)) {
-            $url = $this->url;
-        }
-        add_to_log($this->fct->course, 'fct', $action, $url, $info,
-                   $this->cm->id);
+        $url = is_null($url) ? $url : $this->url;
+        $course = $this->fct ? $this->fct->course : 0;
+        $cm = $this->cm ? $this->cm->id : 0;
+        add_to_log($course, 'fct', $action, $url, $info, $cm);
     }
 }
