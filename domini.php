@@ -51,7 +51,6 @@ class fct_avis {
     var $quadern;
     var $data;
     var $tipus;
-    var $pendent;
     var $quinzena;
 }
 
@@ -373,17 +372,6 @@ class fct_serveis {
         $this->moodle = $moodle;
     }
 
-    function afegir_avis($tipus, $quadern, $quinzena=false) {
-        $avis = new fct_avis;
-        $avis->quadern = $quadern;
-        $avis->data = $this->moodle->time();
-        $avis->tipus = $tipus;
-        $avis->pendent = true;
-        $avis->quinzena = $quinzena;
-
-        $this->diposit->afegir_avis($avis);
-    }
-
     function crear_quadern($alumne, $cicle) {
         $quadern = new fct_quadern;
         $quadern->alumne = $alumne;
@@ -445,6 +433,23 @@ class fct_serveis {
         return $hores;
     }
 
+    function registrar_avis($quadern, $tipus, $quinzena=false) {
+        $avisos = $this->diposit->avisos_quadern($quadern->id);
+        foreach ($avisos as $avis) {
+            if ($avis->tipus == $tipus and $avis->quinzena == $quinzena) {
+                $avis->data = $this->moodle->time();
+                $this->diposit->afegir_avis($avis);
+                return;
+            }
+        }
+        $avis = new fct_avis;
+        $avis->quadern = $quadern->id;
+        $avis->data = $this->moodle->time();
+        $avis->tipus = $tipus;
+        $avis->quinzena = $quinzena;
+        $this->diposit->afegir_avis($avis);
+    }
+
     function resum_hores_fct($quadern) {
         $hores_practiques = 0;
 
@@ -481,6 +486,11 @@ class fct_serveis {
     }
 
     function suprimir_quadern($quadern) {
+        $avisos = $this->diposit->avisos_quadern($quadern->id);
+        foreach ($avisos as $avis) {
+            $this->diposit->suprimir_avis($avis);
+        }
+
         $quinzenes = $this->diposit->quinzenes($quadern->id);
         foreach ($quinzenes as $quinzena) {
             $this->diposit->suprimir_quinzena($quinzena);
@@ -491,12 +501,17 @@ class fct_serveis {
             $this->diposit->suprimir_activitat($activitat);
         }
 
-        $avisos = $this->diposit->avisos_quadern($quadern->id);
-        foreach ($avisos as $avis) {
-            $this->diposit->suprimir_avis($avis);
-        }
-
         $this->diposit->suprimir_quadern($quadern);
+    }
+
+    function suprimir_quinzena($quinzena) {
+        $avisos = $this->diposit->avisos_quadern($quinzena->quadern);
+        foreach ($avisos as $avis) {
+            if ($avis->quinzena == $quinzena->id) {
+                $this->diposit->suprimir_avis($avis);
+            }
+        }
+        $this->diposit->suprimir_quinzena($quinzena);
     }
 
     function ultim_quadern($alumne, $cicle) {

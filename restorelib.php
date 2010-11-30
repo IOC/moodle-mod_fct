@@ -58,6 +58,7 @@ class fct_restore {
     function restore_objecte_avis($json) {
         $avis = fct_json::deserialitzar_avis($json);
         $avis->quadern = $this->get_id('fct_quadern', $avis->quadern);
+        $avis->quinzena = $this->get_id('fct_quinzena', $avis->quinzena);
         $id = $avis->id;
         $avis->id = false;
         $this->diposit->afegir_avis($avis);

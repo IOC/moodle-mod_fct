@@ -32,24 +32,6 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $this->serveis = new fct_serveis($this->diposit, $this->moodle);
     }
 
-    function test_afegir_avis() {
-        $avis = new fct_avis;
-        $avis->tipus = 'tipus_avis';
-        $avis->quadern = 2834;
-        $avis->data = 29382;
-        $avis->pendent = true;
-        $avis->quinzena = 4802;
-
-        $this->moodle->expects($this->once())->method('time')
-            ->will($this->returnValue($avis->data));
-
-        $this->diposit->expects($this->once())
-            ->method('afegir_avis')->with($avis);
-
-        $this->serveis->afegir_avis($avis->tipus, $avis->quadern,
-                                    $avis->quinzena);
-    }
-
     function test_crear_quadern() {
         $this->serveis = $this->getMock('fct_serveis',
                                         array('ultim_quadern'),
@@ -132,6 +114,59 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $hores = $this->serveis->maxim_hores_quinzena($quadern, 2010, 0, array(4, 5, 6));
 
         $this->assertEquals(12, $hores);
+    }
+
+
+    function test_registrar_avis__existent() {
+        $quadern = new fct_quadern;
+        $quadern->id = 2834;
+        $quadern->alumne = 8921;
+
+        $avis = new fct_avis;
+        $avis->id = 4241;
+        $avis->tipus = 'tipus_avis';
+        $avis->quadern = $quadern->id;
+        $avis->data = 29382;
+        $avis->quinzena = 2374;
+
+        $nou_avis = clone($avis);
+        $nou_avis->data = 96241;
+
+        $this->moodle->expects($this->any())->method('time')
+            ->will($this->returnValue($nou_avis->data));
+
+        $this->diposit->expects($this->any())
+            ->method('avisos_quadern')->with($quadern->id)
+            ->will($this->returnValue(array($avis)));
+
+        $this->diposit->expects($this->once())
+            ->method('afegir_avis')->with($nou_avis);
+
+        $this->serveis->registrar_avis($quadern, $avis->tipus, $avis->quinzena);
+    }
+
+    function test_registrar_avis__inexistent() {
+        $quadern = new fct_quadern;
+        $quadern->id = 2834;
+        $quadern->alumne = 8921;
+
+        $avis = new fct_avis;
+        $avis->tipus = 'tipus_avis';
+        $avis->quadern = $quadern->id;
+        $avis->data = 29382;
+        $avis->quinzena = 2374;
+
+        $this->moodle->expects($this->any())->method('time')
+            ->will($this->returnValue($avis->data));
+
+        $this->diposit->expects($this->any())
+            ->method('avisos_quadern')->with($quadern->id)
+            ->will($this->returnValue(array(new fct_avis)));
+
+        $this->diposit->expects($this->once())
+            ->method('afegir_avis')->with($avis);
+
+        $this->serveis->registrar_avis($quadern, $avis->tipus, $avis->quinzena);
     }
 
     function test_resum_hores_fct() {
@@ -228,6 +263,14 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $index = 0;
 
         $this->diposit->expects($this->at($index++))
+            ->method('avisos_quadern')->with($quadern->id)
+            ->will($this->returnValue($avisos));
+        foreach ($avisos as $avis) {
+            $this->diposit->expects($this->at($index++))
+                ->method('suprimir_avis')->with($avis);
+        }
+
+        $this->diposit->expects($this->at($index++))
             ->method('quinzenes')->with($quadern->id)
             ->will($this->returnValue($quinzenes));
         foreach ($quinzenes as $quinzena) {
@@ -244,17 +287,32 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         }
 
         $this->diposit->expects($this->at($index++))
-            ->method('avisos_quadern')->with($quadern->id)
-            ->will($this->returnValue($avisos));
-        foreach ($avisos as $avis) {
-            $this->diposit->expects($this->at($index++))
-                ->method('suprimir_avis')->with($avis);
-        }
-
-        $this->diposit->expects($this->at($index++))
             ->method('suprimir_quadern')->with($quadern);
 
         $this->serveis->suprimir_quadern($quadern);
+    }
+
+    function test_suprimir_quinzena() {
+        $quinzena = new fct_quinzena;
+        $quinzena->id = 2849;
+        $avis1 = new fct_avis;
+        $avis1->id = 5124;
+        $avis1->quinzena = $quinzena->id;
+        $avis2 = new fct_avis;
+        $avis2->id = 8824;
+        $avis2->quinzena = 9268;
+
+        $this->diposit->expects($this->any())
+            ->method('avisos_quadern')->with($quinzena->quadern)
+            ->will($this->returnValue(array($avis1, $avis2)));
+
+        $this->diposit->expects($this->once())
+            ->method('suprimir_avis')->with($avis1);
+
+        $this->diposit->expects($this->once())
+            ->method('suprimir_quinzena')->with($quinzena);
+
+        $this->serveis->suprimir_quinzena($quinzena);
     }
 
     function test_ultim_quadern() {

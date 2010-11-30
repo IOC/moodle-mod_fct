@@ -140,15 +140,7 @@ class fct_diposit {
         return $avis;
     }
 
-    function avisos_quadern($quadern_id, $limitfrom='', $limitnum='') {
-        $records = $this->moodle->get_records('fct_avis',
-                                              'quadern', $quadern_id,
-                                              'data', 'id, objecte',
-                                              $limitfrom, $limitnum);
-        return $this->avisos_records($records);
-    }
-
-    function avisos_usuari($usuari, $limitfrom='', $limitnum='') {
+    function avisos($usuari, $limitfrom='', $limitnum='') {
         global $CFG;
 
         $sql = "SELECT a.id, a.objecte"
@@ -157,9 +149,15 @@ class fct_diposit {
             . " JOIN {$CFG->prefix}fct_avis a ON a.quadern = q.id"
             . " WHERE c.fct = {$usuari->fct}"
             . " AND q.tutor_centre = {$usuari->id}"
-            . " ORDER BY a.data";
+            . " ORDER BY a.data DESC";
 
         $records = $this->moodle->get_records_sql($sql, $limitfrom, $limitnum);
+        return $this->avisos_records($records);
+    }
+
+    function avisos_quadern($quadern_id) {
+        $records = $this->moodle->get_records('fct_avis', 'quadern', $quadern_id,
+                                              'data', 'id, objecte');
         return $this->avisos_records($records);
     }
 
@@ -206,6 +204,19 @@ class fct_diposit {
         $record = $this->moodle->get_record_sql($sql);
 
         return array($record->min_data_final, $record->max_data_final);
+    }
+
+    function nombre_avisos($usuari) {
+        global $CFG;
+
+        $sql = "SELECT COUNT(*)"
+            . " FROM {$CFG->prefix}fct_cicle c"
+            . " JOIN {$CFG->prefix}fct_quadern q ON q.cicle = c.id"
+            . " JOIN {$CFG->prefix}fct_avis a ON a.quadern = q.id"
+            . " WHERE c.fct = {$usuari->fct}"
+            . " AND q.tutor_centre = {$usuari->id}";
+
+        return $this->moodle->count_records_sql($sql);
     }
 
     function nombre_cicles($fct_id=false) {
