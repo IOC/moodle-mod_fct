@@ -106,6 +106,8 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
     function test_maxim_hores_quinzena() {
         $conveni = new fct_conveni;
+        $conveni->data_inici = 0;
+        $conveni->data_final = mktime(0, 0, 0, 1, 15, 2010);
         foreach (array('dilluns', 'dimarts', 'dimecres', 'dijous') as $dia) {
             $conveni->afegir_franja_horari(new fct_franja_horari($dia, 9, 13));
         }
