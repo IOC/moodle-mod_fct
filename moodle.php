@@ -67,6 +67,23 @@ class fct_moodle {
         }
     }
 
+    function delete_dir($courseid, $path) {
+        global $CFG;
+        require_once("{$CFG->dirroot}/lib/filelib.php");
+        $fullpath = "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/$path";
+        if (is_dir($fullpath)) {
+            fulldelete($fullpath);
+        }
+    }
+
+    function delete_file($courseid, $path) {
+        global $CFG;
+        $base = "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/";
+        foreach (glob("$base$path~*") as $fullpath) {
+            unlink($fullpath);
+        }
+    }
+
     function delete_records($table, $field1='', $value1='',
                             $field2='', $value2='', $field3='', $value3='') {
         $rs = delete_records($table, $field1, addslashes($value1),
@@ -79,6 +96,15 @@ class fct_moodle {
 
     function delete_records_select($table, $select='') {
         delete_records_select($table, $select);
+    }
+
+    function file_url($courseid, $path) {
+        global $CFG;
+        $base = "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/";
+        foreach (glob("$base$path~*") as $fullpath) {
+            return ("{$CFG->wwwroot}/file.php/$courseid/moddata/fct/" .
+                    substr($fullpath, strlen($base)));
+        }
     }
 
     function get_context_instance($contextlevel, $instance=0) {
@@ -177,4 +203,11 @@ class fct_moodle {
         }
     }
 
+    function upload_file($tmp_path, $courseid, $path) {
+        global $CFG;
+        $this->delete_file($courseid, $path);
+        $hash = md5_file($tmp_path);
+        make_upload_directory("$courseid/{$CFG->moddata}/fct/" . dirname($path));
+        move_uploaded_file($tmp_path, "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/$path~$hash");
+    }
 }
