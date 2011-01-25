@@ -22,28 +22,40 @@ fct_require('diposit', 'domini', 'json', 'moodle');
 
 class fct_restore {
 
-    var $restore;
-    var $info;
-    var $userdata;
-    var $diposit;
-
-    function __construct($restore, $info, $userdata) {
-        $this->restore = $restore;
+    function __construct($info, $user_data, $course_id, $unique_code) {
         $this->info = $info;
-        $this->userdata = $userdata;
+        $this->course_id = $course_id;
+        $this->user_data = $user_data;
+        $this->unique_code = $unique_code;
         $this->diposit = new fct_diposit(new fct_moodle);
+    }
+
+    function check($status) {
+        if (!$status) {
+            throw new fct_exception("restore error");
+        }
+    }
+
+    function copy_files($old_dir, $new_dir) {
+        global $CFG;
+        $backup_dir = "{$CFG->dataroot}/temp/backup/{$this->unique_code}/moddata/fct/$old_dir";
+        if (is_dir($backup_dir)) {
+            $dir = "{$this->course_id}/{$CFG->moddata}/fct/$new_dir";
+            $this->check(make_upload_directory($dir));
+            $this->check(backup_copy_file($backup_dir, "{$CFG->dataroot}/$dir"));
+        }
     }
 
     function get_id($table, $old_id) {
         if ($old_id == 0) {
             return 0;
         }
-        $result = backup_getid($this->restore->backup_unique_code, $table, $old_id);
+        $result = backup_getid($this->unique_code, $table, $old_id);
         return $result ? $result->new_id : 0;
     }
 
     function put_id($table, $old_id, $new_id) {
-        backup_putid($this->restore->backup_unique_code, $table, $old_id, $new_id);
+        backup_putid($this->unique_code, $table, $old_id, $new_id);
     }
 
     function restore_objecte_activitat($json) {
@@ -78,7 +90,7 @@ class fct_restore {
         $fct = fct_json::deserialitzar_fct($json);
         $id = $fct->id;
         $fct->id = false;
-        $fct->course = $this->restore->course_id;
+        $fct->course = $this->course_id;
         $this->diposit->afegir_fct($fct);
         $this->put_id('fct', $id, $fct->id);
     }
@@ -91,8 +103,11 @@ class fct_restore {
         $quadern->tutor_empresa = $this->get_id('user', $quadern->tutor_empresa);
         $id = $quadern->id;
         $quadern->id = false;
+
         $this->diposit->afegir_quadern($quadern);
         $this->put_id('fct_quadern', $id, $quadern->id);
+
+        $this->copy_files("quadern-$id", "quadern-{$quadern->id}");
     }
 
     function restore_objecte_quinzena($json) {
@@ -112,7 +127,7 @@ class fct_restore {
         $this->put_id('fct_quinzena', $id, $quinzena->id);
     }
 
-    function restore_objectes() {
+    function run() {
         $node = $this->info['MOD']['#']['OBJECTES'][0]['#'];
         $tipus_restore = array(
             'FCT' => 'restore_objecte_fct',
@@ -122,30 +137,34 @@ class fct_restore {
             'QUINZENA' => 'restore_objecte_quinzena',
             'AVIS' => 'restore_objecte_avis',
         );
-        $tipus_userdata = array('QUADERN', 'ACTIVITAT', 'QUINZENA', 'AVIS');
+        $tipus_user_data = array('QUADERN', 'ACTIVITAT', 'QUINZENA', 'AVIS');
         foreach ($tipus_restore as $tipus => $restore) {
-            if (isset($node[$tipus]) and ($this->userdata or
-                                          !in_array($tipus, $tipus_userdata))) {
+            if (isset($node[$tipus]) and ($this->user_data or
+                                          !in_array($tipus, $tipus_user_data))) {
                 foreach ($node[$tipus] as $node_objecte) {
                     $this->$restore($node_objecte['#']);
                 }
             }
         }
     }
-
 }
 
 function fct_restore_mods($mod, $restore) {
     global $CFG, $db;
 
-    $userdata = restore_userdata_selected($restore,'fct', $mod->id);
     $data = backup_getid($restore->backup_unique_code, $mod->modtype, $mod->id);
     if (!$data) {
         return false;
     }
 
-    $restore = new fct_restore($restore, $data->info, $userdata);
-    $restore->restore_objectes();
+    $user_data = restore_userdata_selected($restore,'fct', $mod->id);
+    $restore = new fct_restore($data->info, $user_data, $restore->course_id,
+                               $restore->backup_unique_code);
+    try {
+        $restore->run();
+    } catch (fct_exception $e) {
+        return false;
+    }
 
     return true;
 }

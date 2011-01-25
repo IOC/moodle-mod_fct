@@ -20,18 +20,49 @@
 require_once($CFG->dirroot . '/mod/fct//lib.php');
 fct_require('diposit', 'domini', 'json', 'moodle');
 
-class fct_backup
-{
-    var $bf;
-    var $level;
-    var $userdata;
-    var $diposit;
+class fct_backup {
 
-    function __construct($bf, $level, $userdata) {
+    function __construct($fct_id, $user_data, $course_id, $unique_code, $bf) {
+        $this->fct_id = $fct_id;
+        $this->user_data = $user_data;
+        $this->course_id = $course_id;
+        $this->unique_code = $unique_code;
         $this->bf = $bf;
-        $this->level = $level;
-        $this->userdata = $userdata;
+        $this->level = 3;
         $this->diposit = new fct_diposit(new fct_moodle);
+    }
+
+    function check($status) {
+        if (!$status) {
+            throw fct_exception("backup error");
+        }
+    }
+
+    function run() {
+        $version = get_field('modules', 'version' , 'name', 'fct');
+        $fct = $this->diposit->fct($this->fct_id);
+
+        $this->write_start_tag('MOD');
+        $this->write_full_tag('ID', $fct->id);
+        $this->write_full_tag('MODTYPE', 'fct');
+        $this->write_full_tag('VERSION', $version);
+        $this->write_start_tag('OBJECTES');
+        $this->write_objecte_fct($fct);
+        $this->write_end_tag('OBJECTES');
+        $this->write_end_tag('MOD');
+    }
+
+    function copy_files($path) {
+        global $CFG;
+
+        $this->check(check_and_create_moddata_dir($this->unique_code));
+        $backup_dir = "{$CFG->dataroot}/temp/backup/{$this->unique_code}/moddata/fct";
+        $this->check(check_dir_exists($backup_dir, true));
+
+        $dir = "{$CFG->dataroot}/{$this->course_id}/{$CFG->moddata}/fct/$path";
+        if (is_dir($dir)) {
+            $this->check(backup_copy_file($dir, "$backup_dir/$path"));
+        }
     }
 
     function write($text) {
@@ -61,7 +92,7 @@ class fct_backup
         $json = fct_json::serialitzar_cicle($cicle);
         $this->write_full_tag('CICLE', $json);
 
-        if ($this->userdata) {
+        if ($this->user_data) {
             $especificacio = new fct_especificacio_quaderns;
             $especificacio->cicle = $cicle->id;
             $quaderns = $this->diposit->quaderns($especificacio);
@@ -72,6 +103,8 @@ class fct_backup
     }
 
     function write_objecte_fct($fct) {
+        global $CFG;
+
         $json = fct_json::serialitzar_fct($fct);
         $this->write_full_tag('FCT', $json);
 
@@ -99,18 +132,13 @@ class fct_backup
         foreach ($avisos as $avis) {
             $this->write_objecte_avis($avis);
         }
+
+        $this->copy_files("quadern-{$quadern->id}");
     }
 
     function write_objecte_quinzena($quinzena) {
         $json = fct_json::serialitzar_quinzena($quinzena);
         $this->write_full_tag('QUINZENA', $json);
-    }
-
-    function write_objectes($fct_id) {
-        $this->write_start_tag('OBJECTES');
-        $fct = $this->diposit->fct($fct_id);
-        $this->write_objecte_fct($fct);
-        $this->write_end_tag('OBJECTES');
     }
 
     function write_start_tag($name) {
@@ -166,30 +194,31 @@ function fct_check_backup_mods_instances($instance, $backup_unique_code) {
 
 function fct_backup_mods($bf, $preferences) {
     $status = true;
-    $fcts = get_records ('fct', 'course', $preferences->backup_course,'id');
-    if ($fcts) {
-        foreach ($fcts as $fct) {
-            if (backup_mod_selected($preferences, 'fct', $fct->id)) {
-                $status = fct_backup_one_mod($bf, $preferences, $fct);
-            }
+
+    $fcts = get_records('fct', 'course', $preferences->backup_course, 'id');
+    $fcts = is_array($fcts) ? $fcts : array();
+
+    foreach ($fcts as $fct) {
+        if (backup_mod_selected($preferences, 'fct', $fct->id)) {
+            $status = $status && fct_backup_one_mod($bf, $preferences, $fct);
         }
     }
+
     return $status;
 }
 
 function fct_backup_one_mod($bf, $preferences, $fct) {
     $fct_id = is_numeric($fct) ? $fct : $fct->id;
-    $userdata = backup_userdata_selected($preferences,'fct', $fct_id);
-    $status = true;
+    $user_data = backup_userdata_selected($preferences,'fct', $fct_id);
 
-    $backup = new fct_backup($bf, 3, $userdata);
-    $backup->write_start_tag('MOD');
-    $backup->write_full_tag('ID', $fct_id);
-    $backup->write_full_tag('MODTYPE', 'fct');
-    $backup->write_full_tag('VERSION',
-                            get_field('modules', 'version' , 'name', 'fct'));
-    $backup->write_objectes($fct_id);
-    $backup->write_end_tag('MOD');
+    $backup = new fct_backup($fct_id, $user_data, $preferences->backup_course,
+                             $preferences->backup_unique_code, $bf);
 
-    return $status;
+    try {
+        $backup->run();
+    } catch (fct_exception $e) {
+        return false;
+    }
+
+    return true;
 }
