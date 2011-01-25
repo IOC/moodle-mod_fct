@@ -148,10 +148,15 @@ class fct_form_moodle extends moodleform {
     var $url;
 
     function __construct($class, $url, $elements, $comprovacions) {
+        global $COURSE;
+
         $this->url = $url;
         $this->elements = $elements;
         $this->comprovacions = $comprovacions;
+
         parent::__construct($url, null, 'post', '', array('class' => $class));
+
+        $this->set_upload_manager(new upload_manager('', false, false, $COURSE, true, 0));
     }
 
     function definition() {
@@ -422,6 +427,27 @@ class fct_form_element_data extends fct_form_element_base_senzill {
     }
 }
 
+class fct_form_element_fitxer extends fct_form_element_base {
+
+    function definition($mform) {
+        $mform->_form->addElement('file', $this->nom, $this->etiqueta);
+        $mform->_form->addRule($this->nom, fct_string('tipus_fitxer_no_valid'),
+                               'callback', array($this, 'validar'));
+    }
+
+    function get_data(&$data) {
+        global $_FILES;
+        return empty($_FILES[$this->nom]) ? null : $_FILES[$this->nom]['tmp_name'];
+    }
+
+    function validar($data) {
+        global $_FILES;
+        $types = (is_array($this->params->mimetype) ?
+                  $this->params->mimetype : array($this->params->mimetype));
+        return empty($_FILES[$this->nom]) or in_array($_FILES[$this->nom]['type'], $types);
+    }
+}
+
 class fct_form_element_estatic extends fct_form_element_base {
 
     function definition($mform) {
@@ -429,6 +455,11 @@ class fct_form_element_estatic extends fct_form_element_base {
             $this->etiqueta .= ':';
         }
         $mform->_form->addElement('static', $this->nom, $this->etiqueta);
+    }
+
+
+    function get_data(&$data) {
+        return null;
     }
 
     function set_data(&$data, $valor) {
@@ -526,6 +557,15 @@ class fct_form_element_hores extends fct_form_element_base {
         }
     }
 
+}
+
+class fct_form_element_imatge extends fct_form_element_estatic {
+
+    function set_data(&$data, $valor) {
+        if ($valor) {
+            $data[$this->nom] = '<img alt="' . s($this->etiqueta) . '" src="' . s($valor) . '"/>';
+        }
+    }
 }
 
 class fct_form_element_llista extends fct_form_element_base {
