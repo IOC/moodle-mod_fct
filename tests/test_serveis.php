@@ -20,6 +20,7 @@
 require_once 'PHPUnit/Framework.php';
 require_once 'diposit.php';
 require_once 'domini.php';
+require_once 'moodle.php';
 
 class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
@@ -259,6 +260,10 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $activitats = array(1232, 3123, 4242);
         $quinzenes = array(3492, 1840, 0374);
         $avisos = array(2932, 0548, 2937);
+        $cicle = new fct_cicle;
+        $cicle->fct = 5971;
+        $fct = new fct;
+        $fct->course = 8914;
 
         $index = 0;
 
@@ -285,6 +290,15 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
             $this->diposit->expects($this->at($index++))
                 ->method('suprimir_activitat')->with($activitat);
         }
+
+        $this->diposit->expects($this->at($index++))
+            ->method('cicle')->with($quadern->cicle)
+            ->will($this->returnValue($cicle));
+        $this->diposit->expects($this->at($index++))
+            ->method('fct')->with($cicle->fct)
+            ->will($this->returnValue($fct));
+        $this->moodle->expects($this->once())
+            ->method('delete_dir')->with($fct->course, "quadern-{$quadern->id}");
 
         $this->diposit->expects($this->at($index++))
             ->method('suprimir_quadern')->with($quadern);

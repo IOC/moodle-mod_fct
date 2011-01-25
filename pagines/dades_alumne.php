@@ -33,10 +33,27 @@ class fct_form_dades_alumne extends fct_form_base {
         $this->element('text', 'poblacio', 'poblacio');
         $this->element('text', 'telefon', 'telefon');
         $this->element('text', 'email', 'email');
-        $this->element('text', 'inss', 'inss');
-        $this->element('text', 'targeta_sanitaria', 'targeta_sanitaria');
+
         $this->element('menu', 'procedencia', 'procedencia',
                        array('opcions' => $this->opcions_procedencia()));
+
+        $this->element('capcalera', 'targeta_sanitaria', 'targeta_sanitaria');
+        $this->element('text', 'codi_targeta_sanitaria', 'codi');
+        $this->element('imatge', 'imatge_targeta_sanitaria', 'imatge_targeta');
+        if ($pagina->accio != 'veure') {
+            $this->element('fitxer', 'fitxer_targeta_sanitaria', 'nova_imatge',
+                           array('mimetype' => array('image/jpeg', 'image/png')));
+            $this->element('opcio', 'suprimir_targeta_sanitaria', 'suprimeix_imatge');
+        }
+
+        $this->element('capcalera', 'inss', 'inss');
+        $this->element('text', 'codi_inss', 'codi');
+        $this->element('imatge', 'imatge_inss', 'imatge_targeta');
+        if ($pagina->accio != 'veure') {
+            $this->element('fitxer', 'fitxer_inss', 'nova_imatge',
+                           array('mimetype' => array('image/jpeg', 'image/png')));
+            $this->element('opcio', 'suprimir_inss', 'suprimeix_imatge');
+        }
 
         if ($pagina->accio == 'veure') {
             if ($pagina->permis_editar) {
@@ -67,7 +84,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
-        if ($this->accio != 'veure') {
+        if ($this->accio != 'imatge_catsalut') {
             $this->comprovar_permis($this->permis_editar);
         }
 
@@ -76,9 +93,19 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $this->form = new fct_form_dades_alumne($this);
     }
 
+    function desar_imatge($tmp_path, $nom) {
+        $this->redimensionar_imatge($tmp_path, 500, 500);
+        $this->moodle->upload_file($tmp_path, $this->fct->course,
+                                   "quadern-{$this->quadern->id}/$nom.jpg");
+    }
+
     function mostrar() {
-        $this->form->valor('nom', $this->nom_usuari($this->quadern->alumne, true));
         $this->form->valors($this->quadern->dades_alumne);
+        $this->form->valor('nom', $this->nom_usuari($this->quadern->alumne, true));
+        $this->form->valor('codi_targeta_sanitaria', $this->quadern->dades_alumne->targeta_sanitaria);
+        $this->form->valor('imatge_targeta_sanitaria', $this->url_imatge('catsalut'));
+        $this->form->valor('codi_inss', $this->quadern->dades_alumne->inss);
+        $this->form->valor('imatge_inss', $this->url_imatge('inss'));
         $this->mostrar_capcalera();
         $this->form->mostrar();
         $this->mostrar_peu();
@@ -97,9 +124,20 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
             $this->quadern->dades_alumne->poblacio = $this->form->valor('poblacio');
             $this->quadern->dades_alumne->telefon = $this->form->valor('telefon');
             $this->quadern->dades_alumne->email = $this->form->valor('email');
-            $this->quadern->dades_alumne->inss = $this->form->valor('inss');
-            $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('targeta_sanitaria');
             $this->quadern->dades_alumne->procedencia = $this->form->valor('procedencia');
+            $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('codi_targeta_sanitaria');
+            if ($this->form->valor('suprimir_targeta_sanitaria')) {
+                $this->suprimir_imatge('catsalut');
+            } else if ($path = $this->form->valor('fitxer_targeta_sanitaria')) {
+                $this->desar_imatge($path, 'catsalut');
+            }
+            $this->quadern->dades_alumne->inss = $this->form->valor('codi_inss');
+            if ($this->form->valor('suprimir_inss')) {
+                $this->suprimir_imatge('inss');
+            } else if ($path = $this->form->valor('fitxer_inss')) {
+                $this->desar_imatge($path, 'inss');
+            }
+
             $this->diposit->afegir_quadern($this->quadern);
             if ($this->quadern->alumne == $this->usuari->id) {
                 $this->serveis->registrar_avis($this->quadern, 'dades_alumne');
@@ -118,5 +156,42 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $this->mostrar();
         $this->registrar('view dades_alumne');
     }
-}
 
+    function redimensionar_imatge($path, $max_width, $max_height) {
+        $mimetype = mime_content_type($path);
+        if ($mimetype == 'image/jpeg') {
+            $image = imagecreatefromjpeg($path);
+        } elseif ($mimetype == 'image/png') {
+            $image = imagecreatefrompng($path);
+        } elseif ($mimetype == 'image/gif') {
+            $image = imagecreatefromgif($path);
+        } else {
+            return false;
+        }
+
+        if (imagesx($image) > $max_width) {
+            $width = $max_width;
+            $height = imagesy($image) * $max_width / imagesx($image);
+        }
+        if (imagesy($image) > $max_height) {
+            $height = $max_height;
+            $width = imagesx($image) * $max_height / imagesy($image);
+        }
+
+        $resized = imagecreatetruecolor($width, $height);
+        imagecopyresampled($resized, $image, 0, 0, 0, 0, $width, $height, imagesx($image), imagesy($image));
+        imagedestroy($image);
+        imagejpeg($resized, $path, 85);
+        imagedestroy($resized);
+    }
+
+    function suprimir_imatge($nom) {
+        $this->moodle->delete_file($this->fct->course,
+                                   "quadern-{$this->quadern->id}/$nom.jpg");
+    }
+
+    function url_imatge($nom) {
+        return $this->moodle->file_url($this->fct->course,
+                                       "quadern-{$this->quadern->id}/$nom.jpg");
+    }
+}

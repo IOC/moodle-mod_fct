@@ -72,7 +72,7 @@ function fct_update_instance($data) {
 function fct_delete_instance($id) {
     fct_require('diposit', 'domini', 'json', 'moodle');
     $diposit = new fct_diposit(new fct_moodle);
-    $serveis = new fct_serveis($diposit);
+    $serveis = new fct_serveis($diposit, new fct_moodle);
     $fct = $diposit->fct($id);
     $serveis->suprimir_fct($fct);
     return true;
