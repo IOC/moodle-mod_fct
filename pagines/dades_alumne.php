@@ -22,6 +22,8 @@ fct_require('pagines/base_dades_quadern', 'pagines/form_base');
 class fct_form_dades_alumne extends fct_form_base {
 
     function configurar($pagina) {
+        $mimetype = array('image/jpeg', 'image/pjpeg', 'image/png');
+
         $this->element('capcalera', 'dades_alumne', 'alumne');
         $this->element('estatic', 'nom', 'nom');
         $this->element('text', 'dni', 'dni', array('size' => 16));
@@ -42,7 +44,7 @@ class fct_form_dades_alumne extends fct_form_base {
         $this->element('imatge', 'imatge_targeta_sanitaria', 'imatge_targeta');
         if ($pagina->accio != 'veure') {
             $this->element('fitxer', 'fitxer_targeta_sanitaria', 'nova_imatge',
-                           array('mimetype' => array('image/jpeg', 'image/png')));
+                           array('mimetype' => $mimetype));
             $this->element('opcio', 'suprimir_targeta_sanitaria', 'suprimeix_imatge');
         }
 
@@ -51,7 +53,7 @@ class fct_form_dades_alumne extends fct_form_base {
         $this->element('imatge', 'imatge_inss', 'imatge_targeta');
         if ($pagina->accio != 'veure') {
             $this->element('fitxer', 'fitxer_inss', 'nova_imatge',
-                           array('mimetype' => array('image/jpeg', 'image/png')));
+                           array('mimetype' => $mimetype));
             $this->element('opcio', 'suprimir_inss', 'suprimeix_imatge');
         }
 
@@ -159,7 +161,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
     }
 
     function redimensionar_imatge($file, $max_width, $max_height) {
-        if ($file['type'] == 'image/jpeg') {
+        if ($file['type'] == 'image/jpeg' or $file['type'] == 'image/pjpeg') {
             $image = imagecreatefromjpeg($file['tmp_name']);
         } elseif ($file['type'] == 'image/png') {
             $image = imagecreatefrompng($file['tmp_name']);
