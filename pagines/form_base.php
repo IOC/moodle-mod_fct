@@ -437,7 +437,7 @@ class fct_form_element_fitxer extends fct_form_element_base {
 
     function get_data(&$data) {
         global $_FILES;
-        return empty($_FILES[$this->nom]) ? null : $_FILES[$this->nom]['tmp_name'];
+        return empty($_FILES[$this->nom]) ? null : $_FILES[$this->nom];
     }
 
     function validar($data) {

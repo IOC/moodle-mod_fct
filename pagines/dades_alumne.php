@@ -93,10 +93,11 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $this->form = new fct_form_dades_alumne($this);
     }
 
-    function desar_imatge($tmp_path, $nom) {
-        $this->redimensionar_imatge($tmp_path, 500, 500);
-        $this->moodle->upload_file($tmp_path, $this->fct->course,
-                                   "quadern-{$this->quadern->id}/$nom.jpg");
+    function desar_imatge($file, $nom) {
+        if ($this->redimensionar_imatge($file, 500, 500)) {
+            $this->moodle->upload_file($file['tmp_name'], $this->fct->course,
+                                       "quadern-{$this->quadern->id}/$nom.jpg");
+        }
     }
 
     function mostrar() {
@@ -128,14 +129,14 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
             $this->quadern->dades_alumne->targeta_sanitaria = $this->form->valor('codi_targeta_sanitaria');
             if ($this->form->valor('suprimir_targeta_sanitaria')) {
                 $this->suprimir_imatge('catsalut');
-            } else if ($path = $this->form->valor('fitxer_targeta_sanitaria')) {
-                $this->desar_imatge($path, 'catsalut');
+            } else if ($file = $this->form->valor('fitxer_targeta_sanitaria')) {
+                $this->desar_imatge($file, 'catsalut');
             }
             $this->quadern->dades_alumne->inss = $this->form->valor('codi_inss');
             if ($this->form->valor('suprimir_inss')) {
                 $this->suprimir_imatge('inss');
-            } else if ($path = $this->form->valor('fitxer_inss')) {
-                $this->desar_imatge($path, 'inss');
+            } else if ($file = $this->form->valor('fitxer_inss')) {
+                $this->desar_imatge($file, 'inss');
             }
 
             $this->diposit->afegir_quadern($this->quadern);
@@ -157,15 +158,18 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $this->registrar('view dades_alumne');
     }
 
-    function redimensionar_imatge($path, $max_width, $max_height) {
-        $mimetype = mime_content_type($path);
-        if ($mimetype == 'image/jpeg') {
-            $image = imagecreatefromjpeg($path);
-        } elseif ($mimetype == 'image/png') {
-            $image = imagecreatefrompng($path);
-        } elseif ($mimetype == 'image/gif') {
-            $image = imagecreatefromgif($path);
+    function redimensionar_imatge($file, $max_width, $max_height) {
+        if ($file['type'] == 'image/jpeg') {
+            $image = imagecreatefromjpeg($file['tmp_name']);
+        } elseif ($file['type'] == 'image/png') {
+            $image = imagecreatefrompng($file['tmp_name']);
+        } elseif ($file['type'] == 'image/gif') {
+            $image = imagecreatefromgif($file['tmp_name']);
         } else {
+            return false;
+        }
+
+        if ($image === false) {
             return false;
         }
 
@@ -181,8 +185,10 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         $resized = imagecreatetruecolor($width, $height);
         imagecopyresampled($resized, $image, 0, 0, 0, 0, $width, $height, imagesx($image), imagesy($image));
         imagedestroy($image);
-        imagejpeg($resized, $path, 85);
+        imagejpeg($resized, $file['tmp_name'], 85);
         imagedestroy($resized);
+
+        return true;
     }
 
     function suprimir_imatge($nom) {
