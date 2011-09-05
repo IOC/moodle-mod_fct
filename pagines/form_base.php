@@ -1,7 +1,7 @@
 <?php
 /* Quadern virtual d'FCT
 
-   Copyright © 2008,2009,2010  Institut Obert de Catalunya
+   Copyright © 2008,2009,2010,2011  Institut Obert de Catalunya
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -607,13 +607,17 @@ class fct_form_element_llista extends fct_form_element_base {
 
 class fct_form_element_llista_menu extends fct_form_element_base {
 
+    function _name($id) {
+        return $this->nom . '_' . md5($id);
+    }
+
     function definition($mform) {
         $mform->_form->addElement('header', $this->nom, $this->etiqueta);
         foreach ($this->params->elements as $id => $etiqueta) {
-            $mform->_form->addElement('select', "{$this->nom}_$id",
+            $mform->_form->addElement('select', $this->_name($id),
                                       $etiqueta, $this->params->opcions);
             if ($this->congelat) {
-                $mform->_form->hardFreeze("{$this->nom}_$id");
+                $mform->_form->hardFreeze($this->_name($id));
             }
         }
     }
@@ -621,14 +625,14 @@ class fct_form_element_llista_menu extends fct_form_element_base {
     function get_data(&$data) {
         $valor = array();
         foreach (array_keys($this->params->elements) as $id)  {
-            $valor[$id] = $data["{$this->nom}_$id"];
+            $valor[$id] = $data[$this->_name($id)];
         }
         return $valor;
     }
 
     function set_data(&$data, $valor) {
         foreach (array_keys($this->params->elements) as $id) {
-            $data["{$this->nom}_$id"] = isset($valor[$id]) ?
+            $data[$this->_name($id)] = isset($valor[$id]) ?
                 $valor[$id] : false;
         }
     }
