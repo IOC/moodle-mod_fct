@@ -112,6 +112,8 @@ class fct_pagina_avisos extends fct_pagina_base {
             return fct_url('valoracio_actituds', array('quadern' => $avis->quadern, 'final' => '0'));
         case 'valoracio_activitats':
             return fct_url('valoracio_activitats', array('quadern' => $avis->quadern));
+        case 'valoracio_resultats':
+            return fct_url('valoracio_resultats', array('quadern' => $avis->quadern));
         }
     }
 

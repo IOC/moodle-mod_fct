@@ -1,7 +1,7 @@
 <?php
 /* Quadern virtual d'FCT
 
-   Copyright © 2009,2010  Institut Obert de Catalunya
+   Copyright © 2009,2010,2011  Institut Obert de Catalunya
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -302,6 +302,7 @@ class fct_quadern {
     var $prorrogues = '';
     var $valoracio_parcial;
     var $valoracio_final;
+    var $valoracio_resultats;
     var $qualificacio;
     var $qualificacio_global;
 
@@ -311,6 +312,7 @@ class fct_quadern {
         $this->convenis = array();
         $this->valoracio_parcial = array();
         $this->valoracio_final = array();
+        $this->valoracio_resultats = array();
         $this->qualificacio = new fct_qualificacio;
         $this->qualificacio_global = new fct_qualificacio;
     }

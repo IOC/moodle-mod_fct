@@ -80,13 +80,15 @@
 }
 
 #fct #valoracio_actituds .fitemtitle,
-#fct #activitats .fitemtitle {
+#fct #activitats .fitemtitle,
+#fct #valoracio_resultats .fitemtitle {
     width: 70%;
     text-align: left;
 }
 
 #fct #valoracio_actituds .felement,
-#fct #activitats .felement {
+#fct #activitats .felement,
+#fct #valoracio_resultats .felement {
     width: 20%;
 }
 
