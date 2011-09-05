@@ -1,7 +1,7 @@
 <?php
 /* Quadern virtual d'FCT
 
-   Copyright © 2008,2009,2010  Institut Obert de Catalunya
+   Copyright © 2008,2009,2010,2011  Institut Obert de Catalunya
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -67,9 +67,9 @@ $string['avis_valoracio_actituds_parcial'] = "El tutor d'empresa ha editat la va
 $string['avis_valoracio_activitats'] = "El tutor d'empresa ha editat la valoració de les activitats";
 $string['avisos'] = 'Avisos';
 $string['baixa'] = 'Baixa';
-$string['barem_a'] = 'A. Excel·lent' ;
-$string['barem_b'] = 'B. Bona/Bé';
-$string['barem_c'] = 'C. Normal';
+$string['barem_a'] = 'A. Molt bona' ;
+$string['barem_b'] = 'B. Bona';
+$string['barem_c'] = 'C. Suficient';
 $string['barem_d'] = 'D. Passiva';
 $string['barem_e'] = 'E. Negativa';
 $string['batxillerat'] = 'Batxillerat';
