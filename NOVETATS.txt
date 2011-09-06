@@ -1,3 +1,15 @@
+2.1 (2011-09-06)
+   * Limita el nombre d'hores de pràctiques de les quinzenes.
+   * Els alumnes poden triar el tutor de centre en proposar un quadern.
+   * Versió per a impressió de les dades generals del quadern.
+   * Nous camps als quaderns: procedència, lloc de pràctiques,
+     codi INSS, targeta INSS, targeta CatSalut.
+   * Els nous tutors d'empresa reben les dades d'accés per correu.
+   * Sistema d'avisos de les modificacions fetes als quaderns.
+   * Nou barem per a les valoracions i qualificacions.
+   * Nova pàgina de valoració dels resultats d'aprenentage.
+   * Correcció de diversos errors.
+
 2.0 (2010-09-22)
    * Noves dades d'alumne i empresa
    * Els alumnes poden fer propostes de quadern
