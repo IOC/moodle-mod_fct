@@ -20,11 +20,6 @@
 require_once('../../config.php');
 
 require_once($CFG->dirroot . '/mod/fct/version.php');
-$installed_version = get_field('modules', 'version', 'name', 'fct');
-if ($installed_version != $module->version) {
-    print_error('mode_manteniment', 'fct');
-}
-
 require_once($CFG->dirroot . '/mod/fct/lib.php');
 
 $pagina = optional_param('pagina', 'llista_quaderns', PARAM_ALPHAEXT);
