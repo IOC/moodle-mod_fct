@@ -101,9 +101,9 @@ class fct_moodle {
     function file_url($courseid, $path) {
         global $CFG;
         $base = "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/";
-        foreach (glob("$base$path~*") as $fullpath) {
+        if ($fullpaths = glob("$base$path~*")) {
             return ("{$CFG->wwwroot}/file.php/$courseid/moddata/fct/" .
-                    substr($fullpath, strlen($base)));
+                    substr($fullpaths[0], strlen($base)));
         }
     }
 
