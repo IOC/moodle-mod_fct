@@ -34,7 +34,7 @@ class mod_fct_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('htmleditor', 'intro', 'Introducció');
-        $mform->setType('intro', PARAM_CLEANHTML);
+        $mform->setType('intro', PARAM_CLEAN);
         $mform->setHelpButton('intro', array('writing', 'questions', 'richtext'), false, 'editorhelpbutton');
 
         $this->standard_coursemodule_elements(false);
