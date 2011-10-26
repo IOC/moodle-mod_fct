@@ -59,7 +59,7 @@ function fct_add_instance($data) {
 }
 
 function fct_update_instance($data) {
-    fct_require('diposit', 'json', 'moodle');
+    fct_require('diposit', 'domini', 'json', 'moodle');
     $diposit = new fct_diposit(new fct_moodle);
     $fct = $diposit->fct($data->instance);
     $fct->name = stripslashes($data->name);
