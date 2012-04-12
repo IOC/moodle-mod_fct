@@ -86,7 +86,7 @@ class fct_pagina_dades_alumne extends fct_pagina_base_dades_quadern {
         parent::configurar(required_param('quadern', PARAM_INT));
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
 
-        if ($this->accio != 'imatge_catsalut') {
+        if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }
 
