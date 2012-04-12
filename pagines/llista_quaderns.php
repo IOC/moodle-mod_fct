@@ -36,7 +36,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             optional_param('id', 0, PARAM_INT));
         $this->url = fct_url('llista_quaderns', array('fct' => $this->fct->id));
 
-        $this->curs = optional_param('curs', -1, PARAM_INT);
+        $this->curs = optional_param('curs', 0, PARAM_INT);
         $this->cicle = optional_param('cicle', 0, PARAM_INT);
         $this->estat = optional_param('estat', '', PARAM_RAW);
         $this->cerca = optional_param('cerca', '', PARAM_TEXT);
@@ -57,10 +57,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
             $valors_cicle = $this->valors_cicle();
             $valors_estat = $this->valors_estat();
             if ($this->curs > 0) {
-                $especificacio->data_final_min = mktime(0, 0, 0, 9, 1,
-                                                        $this->curs);
-                $especificacio->data_final_max = mktime(0, 0, 0, 9, 1,
-                                                        $this->curs + 1);
+                $especificacio->data_final_min = mktime(0, 0, 0, 9, 1, $this->curs);
+                $especificacio->data_final_max = mktime(0, 0, 0, 9, 1, $this->curs + 1);
             }
             if ($this->cicle > 0) {
                 $especificacio->cicle = $this->cicle;
@@ -201,8 +199,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
     function valors_curs() {
         $cursos = array(0 => fct_string('tots'));
 
-        list($min, $max) =
-            $this->diposit->min_max_data_final_quaderns($this->fct->id);
+        list($min, $max) = $this->diposit->min_max_data_final_quaderns($this->fct->id);
 
         if (!$min or !$max) {
             $this->curs = false;
@@ -211,12 +208,8 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
 
         $min = getdate($min);
         $max = getdate($max);
-        $any_min = ($min['mon'] >= 9 ? $min['year']  : $min['year'] - 1);
-        $any_max = ($max['mon'] >= 9 ? $max['year']  : $max['year'] - 1);
-
-        if ($this->curs < 0) {
-            $this->curs = $any_max;
-        }
+        $any_min = ($min['mon'] >= 9 ? $min['year'] : $min['year'] - 1);
+        $any_max = ($max['mon'] >= 9 ? $max['year'] : $max['year'] - 1);
 
         for ($curs = $any_max; $curs >= $any_min;  $curs--) {
             $cursos[$curs] = $curs . '-' . ($curs + 1);
