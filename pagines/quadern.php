@@ -42,7 +42,7 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->usuari->es_administrador or
-                                    $this->usuari->es_tutor_centre);
+                                    $this->es_tutor_centre());
         }
         if (in_array($this->accio, array('suprimir', 'confirmar'))) {
             $this->comprovar_permis($this->usuari->es_administrador);

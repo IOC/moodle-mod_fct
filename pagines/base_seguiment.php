@@ -34,15 +34,15 @@ class fct_pagina_base_seguiment extends fct_pagina_base_quadern {
                                 $this->quadern->estat == 'obert');
         $this->permis_editar_centre = ($this->usuari->es_administrador or
                                        ($this->quadern->estat == 'obert' and
-                                        $this->usuari->es_tutor_centre));
+                                        $this->es_tutor_centre()));
         $this->permis_editar_alumne = ($this->usuari->es_administrador or
                                        ($this->quadern->estat == 'obert' and
-                                        ($this->usuari->es_tutor_centre or
-                                         $this->usuari->es_alumne)));
+                                        ($this->es_tutor_centre() or
+                                         $this->es_alumne())));
         $this->permis_editar_empresa = ($this->usuari->es_administrador or
                                         ($this->quadern->estat == 'obert' and
-                                         ($this->usuari->es_tutor_centre or
-                                          $this->usuari->es_tutor_empresa)));
+                                         ($this->es_tutor_centre() or
+                                          $this->es_tutor_empresa())));
     }
 
     function definir_pestanyes() {

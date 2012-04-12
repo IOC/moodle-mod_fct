@@ -49,9 +49,7 @@ class fct_form_quadern extends fct_form_base {
         $this->element('menu' , 'estat', 'estat',
                        array('opcions' => $this->opcions_estat($pagina)));
 
-        if ($pagina->usuari->es_administrador or $pagina->usuari->es_alumne) {
-            $this->comprovacio($pagina, 'comprovar_nom_empresa');
-        }
+        $this->comprovacio($pagina, 'comprovar_nom_empresa');
 
         if ($pagina->accio == 'afegir') {
             $this->element('boto', 'afegir', 'afegeix');
@@ -59,8 +57,7 @@ class fct_form_quadern extends fct_form_base {
                 $this->ocultar(array('alumne', 'tutor_empresa', 'estat'));
             }
         } else if ($pagina->accio == 'veure') {
-            if ($pagina->usuari->es_administrador or
-                $pagina->usuari->es_tutor_centre) {
+            if ($pagina->usuari->es_administrador or $pagina->es_tutor_centre()) {
                 $this->element('boto', 'editar', 'edita');
             }
             if ($pagina->usuari->es_administrador) {

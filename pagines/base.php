@@ -86,7 +86,7 @@ class fct_pagina_base {
 
         $this->usuari = $this->diposit->usuari($this->fct, $USER->id);
         if (!$this->usuari->es_administrador
-            and! $this->usuari->es_alumne
+            and !$this->usuari->es_alumne
             and !$this->usuari->es_tutor_centre
             and !$this->usuari->es_tutor_empresa) {
             $this->error('permis_activitat');

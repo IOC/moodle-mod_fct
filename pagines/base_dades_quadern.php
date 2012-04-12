@@ -26,11 +26,9 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
     function configurar($quadern_id) {
         parent::configurar($quadern_id);
         $this->pestanya = 'dades_generals';
-        $this->permis_editar = ($this->usuari->es_administrador
-                                or in_array($this->quadern->estat,
-                                            array('proposat', 'obert'))
-                                and ($this->usuari->es_tutor_centre
-                                     or $this->usuari->es_alumne));
+        $this->permis_editar = ($this->usuari->es_administrador or
+                                in_array($this->quadern->estat, array('proposat', 'obert')) and
+                                ($this->es_tutor_centre() or $this->es_alumne()));
     }
 
     function definir_pestanyes() {
@@ -55,7 +53,7 @@ class fct_pagina_base_dades_quadern extends fct_pagina_base_quadern {
                           fct_url('dades_relatives', array('quadern' => $this->quadern->id)),
                           fct_string('dades_relatives')),
         );
-        if ($this->usuari->es_administrador or $this->usuari->es_tutor_centre) {
+        if ($this->usuari->es_administrador or $this->es_tutor_centre()) {
             $pestanyes[] = new tabobject('imprimir_dades_quadern',
                                          fct_url('imprimir_dades_quadern', array('quadern' => $this->quadern->id)),
                                          fct_string('versio_impressio'));

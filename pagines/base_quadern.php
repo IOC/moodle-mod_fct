@@ -32,12 +32,9 @@ class fct_pagina_base_quadern extends fct_pagina_base {
         parent::configurar($this->cicle->fct);
 
         $this->comprovar_permis($this->usuari->es_administrador
-            or ($this->usuari->es_alumne and
-                $this->quadern->alumne == $this->usuari->id)
-            or ($this->usuari->es_tutor_centre and
-                $this->quadern->tutor_centre == $this->usuari->id)
-            or ($this->usuari->es_tutor_empresa and
-                $this->quadern->tutor_empresa == $this->usuari->id));
+            or ($this->usuari->es_alumne and $this->es_alumne())
+            or ($this->usuari->es_tutor_centre and $this->es_tutor_centre())
+            or ($this->usuari->es_tutor_empresa and $this->es_tutor_empresa()));
 
         $this->titol = $this->nom_usuari($this->quadern->alumne)
             .' ('.$this->quadern->empresa->nom.')';
@@ -85,5 +82,16 @@ class fct_pagina_base_quadern extends fct_pagina_base {
         return $this->quadern->tutor_empresa;
     }
 
+    function es_alumne() {
+        return $this->usuari->id == $this->quadern->alumne;
+    }
+
+    function es_tutor_centre() {
+        return $this->usuari->id == $this->quadern->tutor_centre;
+    }
+
+    function es_tutor_empresa() {
+        return $this->usuari->id == $this->quadern->tutor_empresa;
+    }
 }
 

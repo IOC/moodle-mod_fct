@@ -28,9 +28,8 @@ class fct_pagina_base_valoracio extends fct_pagina_base_quadern {
         $this->configurar_accio(array('veure', 'editar', 'desar', 'cancellar'), 'veure');
         $this->pestanya = 'valoracio';
         $this->permis_editar = ($this->usuari->es_administrador or
-                                ($this->quadern->estat == 'obert'
-                                 and ($this->usuari->es_tutor_centre
-                                      or $this->usuari->es_tutor_empresa)));
+                                ($this->quadern->estat == 'obert' and
+                                 ($this->es_tutor_centre() or $this->es_tutor_empresa())));
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }

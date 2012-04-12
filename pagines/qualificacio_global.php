@@ -31,7 +31,7 @@ class fct_pagina_qualificacio_global extends fct_pagina_base_quadern {
 
         $this->permis_editar = ($this->usuari->es_administrador or
                                 ($this->quadern->estat == 'obert' and
-                                 $this->usuari->es_tutor_centre));
+                                 $this->es_tutor_centre()));
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->permis_editar);
         }

@@ -27,8 +27,7 @@ class fct_pagina_suprimir_avis extends fct_pagina_base_quadern {
         $id = required_param('avis', PARAM_INT);
         $this->avis = $this->diposit->avis($id);
         parent::configurar($this->avis->quadern);
-        $this->comprovar_permis($this->usuari->es_tutor_centre and
-                                $this->quadern->tutor_centre == $this->usuari->id);
+        $this->comprovar_permis($this->es_tutor_centre());
     }
 
     function processar() {
