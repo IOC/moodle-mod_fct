@@ -512,8 +512,8 @@ class fct_serveis {
         $especificacio->data_final_max = $quadern->data_final();
 
         $quaderns = $this->diposit->quaderns($especificacio);
-        foreach ($quaderns as $quadern) {
-            $hores_practiques += $this->hores_realitzades_quadern($quadern);
+        foreach ($quaderns as $q) {
+            $hores_practiques += $this->hores_realitzades_quadern($q);
         }
 
         return new fct_resum_hores_fct($quadern->hores_credit,
