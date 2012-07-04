@@ -110,7 +110,7 @@ class fct_pagina_llista_quaderns extends fct_pagina_base_quaderns {
                           'estat', 'data_final');
         $this->taula->define_columns($columnes);
         $this->taula->define_headers(array_map('fct_string', $columnes));
-        $this->taula->sortable(true, 'data_final');
+        $this->taula->sortable(true, 'data_final', SORT_DESC);
         $this->taula->set_attribute('class', 'generaltable');
         $this->taula->setup();
     }
