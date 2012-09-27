@@ -17,13 +17,14 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'PHPUnit/Framework.php';
 require_once 'diposit.php';
 require_once 'domini.php';
 require_once 'moodle.php';
 
 define("CONTEXT_MODULE", 28392);
+
 global $CFG;
+$CFG = new stdClass;
 $CFG->prefix = "db_prefix_";
 
 class fct_test_diposit extends PHPUnit_Framework_TestCase {

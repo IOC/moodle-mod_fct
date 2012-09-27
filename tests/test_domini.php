@@ -17,7 +17,6 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'PHPUnit/Framework.php';
 require_once 'domini.php';
 
 class fct_test_domini extends PHPUnit_Framework_TestCase {

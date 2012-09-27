@@ -17,7 +17,6 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'PHPUnit/Framework.php';
 require_once 'diposit.php';
 require_once 'domini.php';
 require_once 'moodle.php';
@@ -46,7 +45,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
         $quadern = $this->serveis->crear_quadern($alumne, $cicle);
 
-        $this->assertType('fct_quadern', $quadern);
+        $this->assertInstanceOf('fct_quadern', $quadern);
         $this->assertEquals($alumne, $quadern->alumne);
         $this->assertEquals($cicle, $quadern->cicle);
         $this->assertEquals(1, count($quadern->convenis));
@@ -74,7 +73,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
         $quadern = $this->serveis->crear_quadern($ultim->alumne,
                                                  $ultim->cicle);
 
-        $this->assertType('fct_quadern', $quadern);
+        $this->assertInstanceOf('fct_quadern', $quadern);
         $this->assertEquals(1, count($quadern->convenis));
         $this->assertEquals($ultim->alumne, $quadern->alumne);
         $this->assertEquals($ultim->cicle, $quadern->cicle);
@@ -333,7 +332,7 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
     function test_ultim_quadern() {
         $quadern1 = new fct_quadern;
-        $quadern->id = 3837;
+        $quadern1->id = 3837;
         $quadern2 = new fct_quadern;
         $quadern2->id = 3381;
 
@@ -350,5 +349,4 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals($quadern2, $ultim_quadern);
     }
-
 }

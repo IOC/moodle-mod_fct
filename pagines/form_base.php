@@ -376,7 +376,7 @@ class fct_form_element_data extends fct_form_element_base_senzill {
         }
 
         for ($dia = 1; $dia <= 31; $dia++) {
-            $dies[$dia] = sprintf("%02d", $dia);
+            $dies[$dia] = (string) $dia;
         }
         for ($mes = 1; $mes <= 12; $mes++) {
             $mesos[$mes] = strftime('%B', mktime(0, 0, 0, $mes, 1, 2000));
@@ -410,7 +410,7 @@ class fct_form_element_data extends fct_form_element_base_senzill {
 
     function set_data(&$data, $valor) {
         if ($this->congelat) {
-            $data[$this->nom] = $valor ? strftime('%d / %B / %Y', $valor) : '-';
+            $data[$this->nom] = $valor ? strftime('%e / %B / %Y', $valor) : '-';
         } else {
             $data[$this->nom]['dia'] = $valor ? (int) date('d', $valor) : 0;
             $data[$this->nom]['mes'] = $valor ? (int) date('m', $valor) : 0;
@@ -493,7 +493,7 @@ class fct_form_element_hora extends fct_form_element_base {
     function opcions_hora() {
         $opcions = array();
         for ($hora = 0; $hora < 24; $hora++) {
-            $opcions[$hora] = sprintf("%02d", $hora);
+            $opcions[$hora] = (string) $hora;
         }
         return $opcions;
     }
