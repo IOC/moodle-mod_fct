@@ -109,6 +109,7 @@ $string['data_final'] = "Data de finalització";
 $string['data_inici'] = "Data d'inici";
 $string['data_naixement'] = "Data naixement";
 $string['data_no_valida'] = "La data no és vàlida";
+$string['data_prevista_valoracio_parcial'] = 'Data prevista per a la valoració parcial: <strong>$a</strong>';
 $string['de'] = "De";
 $string['desa'] = "Desa";
 $string['descripcio'] = "Descripció";

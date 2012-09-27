@@ -86,6 +86,22 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
                             $quadern->qualificacio_global);
     }
 
+    function test_data_prevista_valoracio_parcial() {
+        $conveni1 = new fct_conveni;
+        $conveni1->data_inici = mktime(0, 0, 0, 10, 15, 2012);
+        $conveni1->data_final = mktime(0, 0, 0, 11, 15, 2012);
+        $conveni2 = new fct_conveni;
+        $conveni2->data_inici = mktime(0, 0, 0, 12, 15, 2012);
+        $conveni2->data_final = mktime(0, 0, 0, 1, 15, 2013);
+        $quadern = new fct_quadern;
+        $quadern->afegir_conveni($conveni1);
+        $quadern->afegir_conveni($conveni2);
+
+        $data = $this->serveis->data_prevista_valoracio_parcial($quadern);
+
+        $this->assertEquals('14-11-2012', strftime('%d-%m-%Y', $data));
+    }
+
     function test_hores_realitzades_quadern() {
         $quadern = new fct_quadern;
         $quadern->id = 3394;

@@ -443,6 +443,13 @@ class fct_serveis {
         return $quadern;
     }
 
+    function data_prevista_valoracio_parcial($quadern) {
+        $date = new DateTime();
+        $date->setTimestamp($quadern->data_inici());
+        $date->add(new DateInterval('P30D'));
+        return $date->getTimestamp();
+    }
+
     function empreses($cicles) {
         $empreses = array();
         if ($cicles) {

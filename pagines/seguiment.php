@@ -55,6 +55,10 @@ class fct_pagina_seguiment extends fct_pagina_base_seguiment {
             $taula->print_html();
         }
 
+        $data = strftime('%e / %B / %Y',
+                         $this->serveis->data_prevista_valoracio_parcial($this->quadern));
+        echo '<p>' . fct_string('data_prevista_valoracio_parcial', $data) . '</p>';
+
         $this->mostrar_peu();
 
         $this->registrar('view seguiment');
