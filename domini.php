@@ -444,10 +444,12 @@ class fct_serveis {
     }
 
     function data_prevista_valoracio_parcial($quadern) {
-        $date = new DateTime();
-        $date->setTimestamp($quadern->data_inici());
-        $date->add(new DateInterval('P30D'));
-        return $date->getTimestamp();
+        $conveni = $quadern->ultim_conveni();
+        $inici = DateTime::createFromFormat('U', $conveni->data_inici);
+        $final = DateTime::createFromFormat('U', $conveni->data_final);
+        $dies = (int) ($inici->diff($final)->format('%a') / 2);
+        $interval = new DateInterval("P{$dies}D");
+        return $inici->add($interval)->getTimestamp();
     }
 
     function empreses($cicles) {
