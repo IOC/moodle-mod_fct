@@ -43,11 +43,13 @@ class fct_form_tutor_empresa extends fct_form_base {
 class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
 
     function comprovar_dni($data) {
+        global $CFG;
         $dni = strtolower(trim($data->dni));
         if (!preg_match('/^[0-9]{8}[a-z]$/', $dni)) {
             return array('dni' => fct_string('dni_no_valid'));
         }
-        if (record_exists('user', 'username', $dni)) {
+        if (record_exists('user', 'username', $dni, 'deleted', 0,
+                          'mnethostid', $CFG->mnet_localhost_id)) {
             return array('dni' => fct_string('dni_existent'));
         }
         return true;
@@ -62,10 +64,12 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
     }
 
     function comprovar_nom($valors) {
+        global $CFG;
         $nom = addslashes(trim($valors->nom));
         $cognoms = addslashes(trim($valors->cognoms));
-        $count = count_records_select('user',
-                     "firstname LIKE '$nom' AND lastname LIKE '$cognoms'");
+        $select = ("deleted = 0 AND mnethostid = {$CFG->mnet_localhost_id}" .
+                   "firstname LIKE '$nom' AND lastname LIKE '$cognoms'");
+        $count = count_records_select('user', $select);
         if ($count > 0) {
             return array('nom' => fct_string('usuari_duplicat'),
                          'cognoms' => fct_string('usuari_duplicat'));
