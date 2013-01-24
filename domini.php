@@ -522,7 +522,9 @@ class fct_serveis {
 
         $quaderns = $this->diposit->quaderns($especificacio);
         foreach ($quaderns as $q) {
-            $hores_practiques += $this->hores_realitzades_quadern($q);
+            if ($q->qualificacio->apte != 2) {
+                $hores_practiques += $this->hores_realitzades_quadern($q);
+            }
         }
 
         return new fct_resum_hores_fct($quadern->hores_credit,

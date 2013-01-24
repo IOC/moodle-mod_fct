@@ -205,26 +205,27 @@ class fct_test_serveis extends PHPUnit_Framework_TestCase {
 
         $quadern2 = new fct_quadern;
         $quadern2->id = 9038;
+        $quadern2->qualificacio->apte = 2;
 
-        $quaderns = array($quadern1, $quadern2);
-        $hores_quadern = array(65, 103);
+        $quadern3 = new fct_quadern;
+        $quadern3->id = 7524;
 
         $this->diposit->expects($this->once())
             ->method('quaderns')->with($especificacio)
-            ->will($this->returnValue($quaderns));
+            ->will($this->returnValue(array($quadern1, $quadern2, $quadern3)));
 
-        $hores_quaderns = 0;
-        foreach ($quaderns as $index => $quadern) {
-            $hores_quaderns += $hores_quadern[$index];
-            $this->serveis->expects($this->at($index))
-                ->method('hores_realitzades_quadern')->with($quadern)
-                ->will($this->returnValue($hores_quadern[$index]));
-        }
+        $this->serveis->expects($this->at(0))
+            ->method('hores_realitzades_quadern')->with($quadern1)
+            ->will($this->returnValue(65));
+
+        $this->serveis->expects($this->at(1))
+            ->method('hores_realitzades_quadern')->with($quadern3)
+            ->will($this->returnValue(103));
 
         $resum = new fct_resum_hores_fct($quadern1->hores_credit,
                                          $quadern1->hores_anteriors,
                                          $quadern1->exempcio,
-                                         $hores_quaderns);
+                                         65 + 103);
 
         $resultat = $this->serveis->resum_hores_fct($quadern1);
 
