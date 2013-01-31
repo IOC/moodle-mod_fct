@@ -1,7 +1,7 @@
 <?php
 /* Quadern virtual d'FCT
 
-   Copyright © 2008,2009,2010  Institut Obert de Catalunya
+   Copyright © 2008-2013  Institut Obert de Catalunya
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,8 +37,9 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->configurar_accio(array('veure', 'editar', 'desar',
-            'cancellar', 'suprimir', 'confirmar'), 'veure');
+        $this->configurar_accio(array('veure', 'exportar', 'editar', 'desar',
+                                      'cancellar', 'suprimir', 'confirmar'),
+                                'veure');
 
         if ($this->accio != 'veure') {
             $this->comprovar_permis($this->usuari->es_administrador or
@@ -91,6 +92,36 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
         $this->mostrar();
     }
 
+    function processar_exportar() {
+        global $CFG, $USER;
+
+        require_once("$CFG->dirroot/mod/fct/export/lib.php");
+        require_once("$CFG->dirroot/lib/filelib.php");
+
+        $export = new fct_export();
+        $doc = $export->quadern_latex($this->quadern->id);
+
+        $tmpdir = "$CFG->dataroot/temp/fct/$USER->id";
+
+        remove_dir($tmpdir);
+        mkdir($tmpdir, $CFG->directorypermissions, true);
+        file_put_contents("$tmpdir/quadern.ltx", $doc);
+        copy("$CFG->dirroot/mod/fct/export/logo.pdf", "$tmpdir/logo.pdf");
+        chdir($tmpdir);
+
+        $args = '--interaction=nonstopmode --fmt=pdflatex quadern.ltx';
+        exec("$CFG->filter_tex_pathlatex $args");
+        exec("$CFG->filter_tex_pathlatex $args");
+
+        if (!file_exists("$tmpdir/quadern.pdf")) {
+            $this->error('exportacio');
+        }
+
+        send_file("$tmpdir/quadern.pdf", 'quadern.pdf', 0, 0, false, true, 'application/pdf');
+
+        remove_dir($tmpdir);
+    }
+
     function processar_suprimir() {
         $this->mostrar_capcalera();
         notice_yesno(fct_string('segur_suprimir_quadern', $this->titol),
@@ -104,4 +135,3 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
         $this->registrar('view quadern');
     }
 }
-

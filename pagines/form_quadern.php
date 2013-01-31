@@ -1,7 +1,7 @@
 <?php
 /* Quadern virtual d'FCT
 
-   Copyright © 2008,2009,2010  Institut Obert de Catalunya
+   Copyright © 2008-2013  Institut Obert de Catalunya
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ class fct_form_quadern extends fct_form_base {
                 $this->ocultar(array('alumne', 'tutor_empresa', 'estat'));
             }
         } else if ($pagina->accio == 'veure') {
+            $this->element('boto', 'exportar', 'exporta_pdf');
             if ($pagina->usuari->es_administrador or $pagina->es_tutor_centre()) {
                 $this->element('boto', 'editar', 'edita');
             }
