@@ -37,11 +37,11 @@ class fct_pagina_quadern extends fct_pagina_base_quadern {
 
     function configurar() {
         parent::configurar(required_param('quadern', PARAM_INT));
-        $this->configurar_accio(array('veure', 'exportar', 'editar', 'desar',
-                                      'cancellar', 'suprimir', 'confirmar'),
-                                'veure');
+        $accions = array('veure', 'exportar', 'editar', 'desar',
+                         'cancellar', 'suprimir', 'confirmar');
+        $this->configurar_accio($accions,'veure');
 
-        if ($this->accio != 'veure') {
+        if (!in_array($this->accio, array('veure', 'exportar'))) {
             $this->comprovar_permis($this->usuari->es_administrador or
                                     $this->es_tutor_centre());
         }
