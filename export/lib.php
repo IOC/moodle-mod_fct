@@ -62,9 +62,10 @@ class fct_export {
             'fct' => $fct,
             'cicle' => $cicle,
             'hores_realitzades' => $hores_realitzades,
-            'hores_pendents' => max(0, $quadern->hores_practiques - $hores_realitzades),
+            'hores_practiques_pendents' => max(0, $quadern->hores_practiques - $hores_realitzades),
             'hores_realitzades_detall' => fct_string('hores_realitzades_detall', $resum_hores),
             'hores_anteriors' => $resum_hores->anteriors,
+            'hores_pendents' => $resum_hores->pendents,
         ));
 
         return $doc;
@@ -98,9 +99,10 @@ class fct_export {
                 trim($quadern->empresa->telefon_lloc_practiques)
             ),
             'hores_realitzades' => $hores_realitzades,
-            'hores_pendents' => max(0, $quadern->hores_practiques - $hores_realitzades),
+            'hores_practiques_pendents' => max(0, $quadern->hores_practiques - $hores_realitzades),
             'hores_realitzades_detall' => fct_string('hores_realitzades_detall', $resum_hores),
             'hores_anteriors' => $resum_hores->anteriors,
+            'hores_pendents' => $resum_hores->pendents,
             'ultim_quadern' => ($ultim_quadern->id == $id),
         ));
 
