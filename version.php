@@ -8,6 +8,10 @@
  * @package fct
  **/
 
+if (!isset($module)) {
+    $module = new object;
+}
+
 // Versió del mòdul en format AAAAMMDDXX (XX és incremental)
 $module->version = 2011090600;
 
