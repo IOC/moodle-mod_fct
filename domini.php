@@ -452,29 +452,6 @@ class fct_serveis {
         return $inici->add($interval)->getTimestamp();
     }
 
-    function empreses($cicles) {
-        $empreses = array();
-        if ($cicles) {
-            foreach ($cicles as $cicle) {
-                $noms = $this->diposit->noms_empreses($cicle);
-                foreach ($noms as $nom) {
-                    if (!isset($empreses[$nom])) {
-                        $especificacio = new fct_especificacio_quaderns;
-                        $especificacio->cicle = $cicle;
-                        $especificacio->empresa = $nom;
-                        $quaderns = $this->diposit->quaderns($especificacio,
-                                                             'data_final');
-                        if ($quaderns)  {
-                            $quadern = array_pop($quaderns);
-                            $empreses[$nom] = $quadern->empresa;
-                        }
-                    }
-                }
-            }
-        }
-        return $empreses;
-    }
-
     function hores_realitzades_quadern($quadern) {
         $hores = 0;
         $quinzenes = $this->diposit->quinzenes($quadern->id);

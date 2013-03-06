@@ -253,16 +253,6 @@ class fct_diposit {
         }
     }
 
-    function noms_empreses($cicle) {
-        $noms = array();
-        $records = $this->moodle->get_records('fct_quadern', 'cicle', $cicle,
-                                              'nom_empresa', 'DISTINCT nom_empresa');
-        foreach ($records as $record) {
-            $noms[] = $record->nom_empresa;
-        }
-        return $noms;
-    }
-
     function quadern($id) {
         $record = $this->moodle->get_record('fct_quadern', 'id', $id);
         return fct_json::deserialitzar_quadern($record->objecte);

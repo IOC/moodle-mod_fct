@@ -54,66 +54,100 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
     }
 
     function processar() {
-        if ($this->cicles) {
-            $form = new fct_form_llista_empreses($this);
-            if ($form->validar()) {
-                $empreses = $this->serveis->empreses($form->valor('cicles'));
-                $this->registrar('view baixa_empreses', $this->url);
-                $this->enviar($empreses, $form->valor('format'));
+        if (!$this->cicles) {
+            $this->mostrar_capcalera();
+            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
+            $this->mostrar_peu();
+            return;
+        }
+
+        $form = new fct_form_llista_empreses($this);
+        if ($form->validar()) {
+            $quaderns = array();
+            foreach ($form->valor('cicles') as $cicle) {
+                $especificacio = new fct_especificacio_quaderns;
+                $especificacio->cicle = $cicle;
+                foreach ($this->diposit->quaderns($especificacio) as $quadern) {
+                    $quaderns[] = $quadern;
+                }
             }
+            $this->registrar('view baixa_empreses', $this->url);
+            $this->enviar($quaderns, $form->valor('format'));
         }
 
         $this->mostrar_capcalera();
-        if ($this->cicles) {
-            $form->mostrar();
-        } else {
-            echo '<p>' . fct_string('cap_cicle_formatiu') . '</p>';
-        }
+        $form->mostrar();
         $this->mostrar_peu();
         $this->registrar('view llista_empreses', $this->url);
     }
 
-    function enviar($empreses, $format) {
-        $camps = array('nom', 'adreca', 'poblacio', 'codi_postal',
-                       'telefon', 'fax', 'email', 'nif');
-        $linies = array(array_map('fct_string', $camps));
-        foreach ($empreses as $empresa) {
-            $linia = array();
-            foreach ($camps as $camp) {
-                $linia[] = $empresa->$camp;
-            }
-            $linies[] = $linia;
+    function enviar($quaderns, $format) {
+        $camps = array(
+            'nom',
+            'adreca',
+            'poblacio',
+            'codi_postal',
+            'telefon',
+            'fax',
+            'email',
+            'nif',
+            'cicle_formatiu',
+            'tutor_empresa',
+            'tutor_centre',
+            'estat',
+            'data_inici',
+            'data_final',
+        );
+        $files = array(array_map('fct_string', $camps));
+
+        foreach ($quaderns as $q) {
+            $files[] = array(
+                $q->empresa->nom,
+                $q->empresa->adreca,
+                $q->empresa->poblacio,
+                $q->empresa->codi_postal,
+                $q->empresa->telefon,
+                $q->empresa->fax,
+                $q->empresa->email,
+                $q->empresa->nif,
+                $this->cicles[$q->cicle]->nom,
+                $this->nom_usuari($q->tutor_empresa),
+                $this->nom_usuari($q->tutor_centre),
+                fct_string('estat_' . $q->estat),
+                $q->data_inici() ? userdate($q->data_final(), "%d/%m/%Y") : '-',
+                $q->data_final() ? userdate($q->data_final(), "%d/%m/%Y") : '-',
+            );
         }
 
         if ($format == self::FORMAT_EXCEL) {
-            $this->enviar_excel($linies);
+            $this->enviar_excel($files);
         } elseif ($format == self::FORMAT_CSV) {
-            $this->enviar_csv($linies);
+            $this->enviar_csv($files);
         }
 
         die;
     }
 
-    function enviar_excel($linies) {
+    function enviar_excel($files) {
         global $CFG;
         require_once("{$CFG->dirroot}/lib/excellib.class.php");
         $workbook = new MoodleExcelWorkbook('-');
         $workbook->send(fct_string('llista_empreses') . '.xls');
         $worksheet = $workbook->add_worksheet(fct_string('llista_empreses'));
-        foreach ($linies as $fila => $linia) {
-            foreach ($linia as $columna => $camp) {
+        foreach ($files as $fila => $columnes) {
+            foreach ($columnes as $columna => $camp) {
                 $worksheet->write_string($fila, $columna, $camp);
             }
         }
         $workbook->close();
     }
 
-    function enviar_csv($linies) {
+    function enviar_csv($files) {
         global $CFG;
         require_once("{$CFG->dirroot}/lib/filelib.php");
         $csv = array();
-        foreach ($linies as $linia) {
-            foreach ($linia as $camp) {
+        foreach ($files as $columnes) {
+            foreach ($columnes as $camp) {
                 $csv[] = '"' . addslashes($camp) .'",';
             }
             $csv[] = "\n";
