@@ -287,14 +287,14 @@ class fct_diposit {
         return fct_json::deserialitzar_quinzena($record->objecte);
     }
 
-    function quinzenes($quadern_id, $any=false, $periode=false) {
+    function quinzenes($quadern_id, $any=null, $periode=null) {
         $quinzenes = array();
 
         $where = 'quadern = ' . $quadern_id;
-        if ($any) {
+        if ($any !== null) {
             $where .= ' AND any_ = ' . $any;
         }
-        if ($periode) {
+        if ($periode !== null) {
             $where .= ' AND periode = ' . $periode;
         }
 
