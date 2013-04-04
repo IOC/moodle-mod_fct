@@ -82,6 +82,11 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
     }
 
     function enviar($quaderns, $format) {
+        $cicles = array();
+        foreach ($this->cicles as $cicle) {
+            $cicles[$cicle->id] = $cicle->nom;
+        }
+
         $camps = array(
             'nom',
             'adreca',
@@ -110,7 +115,7 @@ class fct_pagina_llista_empreses extends fct_pagina_base {
                 $q->empresa->fax,
                 $q->empresa->email,
                 $q->empresa->nif,
-                $this->cicles[$q->cicle]->nom,
+                $cicles[$q->cicle],
                 $this->nom_usuari($q->tutor_empresa),
                 $this->nom_usuari($q->tutor_centre),
                 fct_string('estat_' . $q->estat),
