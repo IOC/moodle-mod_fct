@@ -81,6 +81,10 @@ class fct_export {
         $fct = $this->diposit->fct($cicle->fct);
         $activitats = $this->diposit->activitats($id);
         $quinzenes = $this->diposit->quinzenes($id);
+        $ids_activitats = array_map(function($a) { return $a->id; }, $activitats);
+        foreach ($quinzenes as $q) {
+            $q->activitats = array_intersect($q->activitats, $ids_activitats);
+        }
         $hores_realitzades = $this->serveis->hores_realitzades_quadern($quadern);
         $ultim_quadern = $this->serveis->ultim_quadern($quadern->alumne, $quadern->cicle);
         $resum_hores = $this->serveis->resum_hores_fct($quadern);
@@ -142,7 +146,7 @@ class fct_export {
             return fct_string('actitud_' . ($value + 1));
         case 'activitat':
             $activitat = $this->diposit->activitat($value);
-            return $activitat ? $activitat->descripcio : '';
+            return $activitat->descripcio;
         case 'count':
             return count($value);
         case 'data':
