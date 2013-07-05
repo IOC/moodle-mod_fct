@@ -46,91 +46,100 @@ class fct_diposit {
     }
 
     function afegir_activitat($activitat) {
-        $record = (object) array('quadern' => $activitat->quadern);
+        $record = new stdClass;
+        $record->quadern = $activitat->quadern;
+
         if (!$activitat->id) {
-            $activitat->id = $this->moodle->insert_record('fct_activitat',
-                                                          $record);
+            $activitat->id = $this->moodle->insert_record('fct_activitat', clone($record));
         }
+
         $record->id = $activitat->id;
         $record->objecte = fct_json::serialitzar_activitat($activitat);
+
         $this->moodle->update_record('fct_activitat', $record);
     }
 
     function afegir_avis($avis) {
-        $record = (object) array('quadern' => $avis->quadern,
-                                 'data' => $avis->data);
+        $record = new stdClass;
+        $record->quadern = $avis->quadern;
+        $record->data = $avis->data;
+
         if (!$avis->id) {
-            $avis->id = $this->moodle->insert_record('fct_avis', $record);
+            $avis->id = $this->moodle->insert_record('fct_avis', clone($record));
         }
+
         $record->id = $avis->id;
         $record->objecte = fct_json::serialitzar_cicle($avis);
+
         $this->moodle->update_record('fct_avis', $record);
     }
 
     function afegir_cicle($cicle) {
-        $record = (object) array('fct' => $cicle->fct,
-                                 'nom' => $cicle->nom);
+        $record = new stdClass;
+        $record->fct = $cicle->fct;
+        $record->nom = $cicle->nom;
+
         if (!$cicle->id) {
-            $cicle->id = $this->moodle->insert_record('fct_cicle', $record);
+            $cicle->id = $this->moodle->insert_record('fct_cicle', clone($record));
         }
 
         $record->id = $cicle->id;
         $record->objecte = fct_json::serialitzar_cicle($cicle);
+
         $this->moodle->update_record('fct_cicle', $record);
     }
 
     function afegir_fct($fct) {
-        $record = (object) array(
-            'course' => $fct->course,
-            'name' => $fct->name,
-            'intro' => $fct->intro,
-            'timecreated' => $fct->timecreated,
-            'timemodified' => $fct->timemodified,
-        );
+        $record = new stdClass;
+        $record->course = $fct->course;
+        $record->name = $fct->name;
+        $record->intro = $fct->intro;
+        $record->timecreated = $fct->timecreated;
+        $record->timemodified = $fct->timemodified;
 
         if (!$fct->id) {
-            $fct->id = $this->moodle->insert_record('fct', $record);
+            $fct->id = $this->moodle->insert_record('fct', clone($record));
         }
 
         $record->id = $fct->id;
         $record->objecte = fct_json::serialitzar_fct($fct);
+
         $this->moodle->update_record('fct', $record);
     }
 
     function afegir_quadern($quadern) {
-        $record = (object) array(
-            'alumne' => $quadern->alumne,
-            'tutor_centre' => $quadern->tutor_centre,
-            'tutor_empresa' => $quadern->tutor_empresa,
-            'nom_empresa' => $quadern->empresa->nom,
-            'cicle' => $quadern->cicle,
-            'estat' => $quadern->estat,
-            'data_final' => $quadern->data_final(),
-        );
+        $record = new stdClass;
+        $record->alumne = $quadern->alumne;
+        $record->tutor_centre = $quadern->tutor_centre;
+        $record->tutor_empresa = $quadern->tutor_empresa;
+        $record->nom_empresa = $quadern->empresa->nom;
+        $record->cicle = $quadern->cicle;
+        $record->estat = $quadern->estat;
+        $record->data_final = $quadern->data_final();
 
         if (!$quadern->id) {
-            $quadern->id = $this->moodle->insert_record('fct_quadern',
-                                                        $record);
+            $quadern->id = $this->moodle->insert_record('fct_quadern', clone($record));
         }
+
         $record->id = $quadern->id;
         $record->objecte = fct_json::serialitzar_quadern($quadern);
+
         $this->moodle->update_record('fct_quadern', $record);
     }
 
     function afegir_quinzena($quinzena) {
-        $record = (object) array(
-            'quadern' => $quinzena->quadern,
-            'any_' => $quinzena->any,
-            'periode' => $quinzena->periode,
-        );
+        $record = new stdClass;
+        $record->quadern = $quinzena->quadern;
+        $record->any_ = $quinzena->any;
+        $record->periode = $quinzena->periode;
 
         if (!$quinzena->id) {
-            $quinzena->id = $this->moodle->insert_record('fct_quinzena',
-                                                         $record);
+            $quinzena->id = $this->moodle->insert_record('fct_quinzena', clone($record));
         }
 
         $record->id = $quinzena->id;
         $record->objecte = fct_json::serialitzar_quinzena($quinzena);
+
         $this->moodle->update_record('fct_quinzena', $record);
     }
 

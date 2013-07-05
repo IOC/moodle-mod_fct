@@ -17,6 +17,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once 'json.php';
 require_once 'diposit.php';
 require_once 'domini.php';
 require_once 'moodle.php';
