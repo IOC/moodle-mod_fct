@@ -17,6 +17,7 @@
 \usepackage[gen]{eurosym}%Euro currency symbol
 \usepackage{graphicx}
 \usepackage{verbatim}
+\usepackage{parcolumns}
 
 % Fonts size
 \renewcommand{\tiny}{\fontsize{6}{7.2}\selectfont}
@@ -268,24 +269,26 @@
 \end{itemize}
 
 \subsection{##valoracions-observacions}
-\begin{longtable}{lp{.8\textwidth}}
-\endfirsthead
-\endhead
-\endfoot
-\endlastfoot
-\textbf{##valoracions:} & @@value:valoracions \\
-\textbf{##observacions:} & @@value:observacions-alumne
-\end{longtable}
+\begin{parcolumns}[nofirstindent=true, colwidths={2=0.8\textwidth}]{2}
+\colchunk{\textbf{##valoracions:}}
+\colchunk{@@value:valoracions}
+\colplacechunks
+\vspace{1em}
+\colchunk{\textbf{##observacions:}}
+\colchunk{@@value:observacions-alumne}
+\colplacechunks
+\end{parcolumns}
 
 \subsection{##retroaccio}
-\begin{longtable}{lp{.8\textwidth}}
-\endfirsthead
-\endhead
-\endfoot
-\endlastfoot
-\textbf{##tutor-centre:} & @@value:observacions-centre \\
-\textbf{##tutor-empresa:} & @@value:observacions-empresa
-\end{longtable}
+\begin{parcolumns}[nofirstindent=true, colwidths={2=0.8\textwidth}]{2}
+\colchunk{\textbf{##tutor-centre:}}
+\colchunk{@@value:observacions-centre}
+\colplacechunks
+\vspace{1em}
+\colchunk{\textbf{##tutor-empresa:}}
+\colchunk{@@value:observacions-empresa}
+\colplacechunks
+\end{parcolumns}
 
 {{ endloop quinzenes }}
 
