@@ -78,6 +78,12 @@ class fct_form_quadern extends fct_form_base {
     function opcions_cicle($pagina) {
         $opcions = array();
         $cicles = $pagina->diposit->cicles($pagina->fct->id);
+        if ($pagina->subpestanya == 'afegir_quadern') {
+            $filter = function($value) {
+                return !preg_match('/logse/i', $value->nom);
+            };
+            $cicles = array_filter($cicles, $filter);
+        }
         foreach ($cicles as $cicle) {
             $opcions[$cicle->id] = $cicle->nom;
         }
