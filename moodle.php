@@ -49,7 +49,7 @@ class fct_moodle {
             'firstname' => $firstname,
             'lastname' => $lastname,
             'email' => $email,
-            'auth' => 'manual',
+            'auth' => $CFG->local_secretaria_auth,
             'confirmed' => 1,
             'emailstop' => 0,
             'lang' => current_language(),
@@ -57,13 +57,26 @@ class fct_moodle {
             'secret' => random_string(15),
             'timemodified' => time(),
         );
-        if ($id = insert_record('user', addslashes_recursive($user))) {
-            $user = get_record('user', 'id', $id);
-            events_trigger('user_created', $user);
-            setnew_password_and_mail($user);
-            return $id;
+        $params = array(
+            'properties' => array (
+                'username' => $username,
+                'password' => $this->generate_valid_password(),
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'email' => $email,
+            )
+        );
+        if ($this->call_moodle2($params)) {
+            if ($id = insert_record('user', addslashes_recursive($user))) {
+                $user = get_record('user', 'id', $id);
+                events_trigger('user_created', $user);
+                $this->mail_user($user, $params['properties']['password']);
+                return $id;
+            } else {
+                throw new fct_exception('moodle: create_user');
+            }
         } else {
-            throw new fct_exception('moodle: create_user');
+            throw new fct_exception('moodle2: create_user');
         }
     }
 
@@ -209,5 +222,86 @@ class fct_moodle {
         $hash = md5_file($tmp_path);
         make_upload_directory("$courseid/{$CFG->moddata}/fct/" . dirname($path));
         move_uploaded_file($tmp_path, "{$CFG->dataroot}/$courseid/{$CFG->moddata}/fct/$path~$hash");
+    }
+
+    private function generate_valid_password() {
+        $letters = 'abcdefghijklmnopqrstvwxyz';
+        $length = strlen($letters) - 1;
+        $pass = $letters[mt_rand(0, $length)];
+        $pass .= mt_rand(0, 9);
+        $pass .= strtoupper($letters[mt_rand(0, $length)]);
+        $pass .= $letters[mt_rand(0, $length)];
+        $pass .= mt_rand(0, 9);
+        $pass .= mt_rand(0, 1) ? mt_rand(0, 9) : $letters[mt_rand(0, $length)];
+        $pass .= $letters[mt_rand(0, $length)];
+        $pass .= mt_rand(0, 9);
+        $pass .= $letters[mt_rand(0, $length)];
+        $pass .= strtoupper($letters[mt_rand(0, $length)]);
+        $pass = mt_rand(0, 1) ? strrev($pass) : $pass;
+        return $pass;
+    }
+
+    private function mail_user($user, $newpassword) {
+
+        global $CFG;
+
+        $site  = get_site();
+
+        $supportuser = generate_email_supportuser();
+
+        $a = new object();
+        $a->firstname   = fullname($user, true);
+        $a->sitename    = format_string($site->fullname);
+        $a->username    = $user->username;
+        $a->newpassword = $newpassword;
+        $a->link        = $CFG->wwwroot .'/login/';
+        $a->signoff     = generate_email_signoff();
+
+        $message = get_string('newusernewpasswordtext', '', $a);
+
+        $subject  = format_string($site->fullname) .': '. get_string('newusernewpasswordsubj');
+        return email_to_user($user, $supportuser, $subject, $message);
+    }
+
+    private function call_moodle2($params) {
+        global $CFG;
+
+        $url = "{$CFG->local_webservice_campus2_url}/webservice/rest/server.php"
+            . "?wstoken={$CFG->local_webservice_campus2_token}&wsfunction=secretaria_create_user"
+            . "&moodlewsrestformat=json";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->format_params($params));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3600);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close($ch);
+        $response = json_decode($response, true);
+        if (isset($response['exception'])) {
+            throw new fct_exception($response['message']);
+        }
+        if ($error) {
+            throw new fct_exception($error);
+        }
+
+        return true;
+    }
+
+    private function format_params(array $params, $prefix='') {
+        $result = array();
+        foreach ($params as $key => $value) {
+            $key = $prefix ? $prefix.'['.urlencode($key).']' : urlencode($key);
+            if (is_array($value)) {
+                $result[] = $this->format_params($value, $key);
+            } else if (is_bool($value)) {
+                $result[] = $key.'='.((int) $value);
+            } else {
+                $result[] = $key.'='.urlencode($value);
+            }
+        }
+        return implode('&', $result);
     }
 }
