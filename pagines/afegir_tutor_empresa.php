@@ -68,7 +68,7 @@ class fct_pagina_afegir_tutor_empresa extends fct_pagina_base {
         $nom = addslashes(trim($valors->nom));
         $cognoms = addslashes(trim($valors->cognoms));
         $select = ("deleted = 0 AND mnethostid = {$CFG->mnet_localhost_id}" .
-                   "firstname LIKE '$nom' AND lastname LIKE '$cognoms'");
+                   " AND firstname LIKE '$nom' AND lastname LIKE '$cognoms'");
         $count = count_records_select('user', $select);
         if ($count > 0) {
             return array('nom' => fct_string('usuari_duplicat'),
