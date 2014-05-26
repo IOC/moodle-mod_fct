@@ -1,0 +1,150 @@
+<?php
+
+require_once('fct_base.php');
+require_once('fct_quadern_base.php');
+require_once('fct_quadern_quinzena.php');
+
+class fct_avisos extends fct_base{
+
+    public $id;
+    public $fct;
+    public $quadern;
+    public $data;
+    public $tipus;
+    public $quinzena_alumne;
+    public $quinzena;
+    public $objecte;
+
+    protected static $table = 'fct_avis';
+    protected $record_keys = array('id', 'quadern', 'data', 'objecte');
+    protected $objecte_keys = array('id', 'quadern', 'data', 'tipus', 'quinzena_alumne', 'quinzena');
+
+    protected $editform = 'fct_avis_edit_form.php';
+
+    public function tabs($id, $type = 'view') {
+
+        $row = parent::tabs_general($id);
+
+        $tab['row'] = $row;
+        $tab['currentab'] = 'avisos';
+        $tab['inactivetabs'] = array();
+
+        return $tab;
+    }
+
+    public function view($id = false, $index, $searchparams) {
+        global $PAGE, $USER, $OUTPUT;
+
+        if (!$id) {
+
+            $output = $PAGE->get_renderer('mod_fct', 'avisos');
+
+            $avisos = self::get_records($this->fct, $USER->id, false, null);
+
+            $baseurl = new moodle_url('/mod/fct/view.php', array('id'=>$PAGE->cm->id, 'page'=>'avisos'));
+
+            echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+            $table = $output->avisos_table($avisos['records']);
+            echo $table;
+            echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+
+        }
+    }
+
+    public static function get_records($fctid, $userid = null, $searchparams = false, $index = null) {
+        global $DB;
+
+        $where = " FROM {fct_cicle} c"
+                . " JOIN {fct_quadern} q ON q.cicle = c.id"
+                . " JOIN {fct_avis} a ON a.quadern = q.id"
+                . " WHERE c.fct = $fctid"
+                . " AND q.tutor_centre = $userid"
+                . " ORDER BY a.data DESC";
+
+        $sql = "SELECT a.id, a.objecte" . $where;
+        $countsql = "SELECT count(1)"  . $where;
+
+        $records = $DB->get_records_sql($sql, null,  $index, PAGENUM);
+        $totalrecords = $DB->count_records_sql($countsql);
+
+        $avisos = array();
+        foreach ($records as $record) {
+            $avisos[] = new fct_avisos($record);
+        }
+        return array('records' => $avisos, 'totalrecords' => $totalrecords);
+    }
+
+    public function delete() {
+        global $DB;
+
+        $DB->delete_records('fct_avis', array('id' => $this->id));
+
+    }
+
+    public function delete_message() {
+        return get_string('segur_suprimir_avisos', 'fct');
+    }
+    public function quadern() {
+        if (!isset($this->quadern)) {
+            print_error('noquadern');
+        }
+
+        $quadern = new fct_quadern_base((int)$this->quadern);
+
+        return $quadern;
+    }
+
+    public function titol_avis() {
+        switch ($this->tipus) {
+            case 'quinzena_afegida':
+            case 'quinzena_alumne':
+            case 'quinzena_empresa':
+            case 'quinzena_tutor':
+                $quinzena = new fct_quadern_quinzena((int)$this->quinzena);
+                return get_string('avis_' . $this->tipus, 'fct', $quinzena->nom_periode($quinzena->periode) . " {$quinzena->any}");
+        default:
+            return get_string('avis_' . $this->tipus, 'fct');
+        }
+    }
+
+    public static function registrar_avis($quadernid, $tipus, $quinzena=false) {
+        global $DB;
+
+        $records = $DB->get_records('fct_avis', array('quadern' => $quadernid), '',
+                                              'id');
+
+        foreach ($records as $record) {
+                $avis = new fct_avisos((int)$record->id);
+            if ($avis->tipus == $tipus and $avis->quinzena == $quinzena) {
+                $avis->data = time();
+                $avis->update();
+                return;
+            }
+        }
+
+        $data = new stdClass();
+        $data->quadern = $quadernid;
+        $data->data = time();
+        $data->tipus = $tipus;
+        $data->quinzena = $quinzena;
+        $data->objecte = '';
+
+        $avis = new fct_avisos();
+        $avis->insert($data);
+
+    }
+
+    public function checkpermissions($type = 'view') {
+
+        if (!isset($this->fct)) {
+            print_error('nofct');
+        }
+
+        if (!$this->usuari->es_tutor_centre){
+                print_error('nopermisions');
+        }
+    }
+
+    public function prepare_form_data($data){}
+
+}

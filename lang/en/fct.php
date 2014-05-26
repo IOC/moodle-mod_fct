@@ -289,3 +289,5 @@ $string['valoracio_resultats'] = "Valoració dels resultats d'aprenentatge (LOE)
 $string['valoracions'] = 'Valoracions';
 $string['valoracions_observacions'] = "Valoracions i observacions";
 $string['versio_impressio'] = 'Versió per a impressió';
+
+$string['pluginadministration'] = 'FCT';

@@ -1,0 +1,191 @@
+<?php
+
+require_once('form/quadern_horari_edit_form.php');
+require_once('fct_quadern_base.php');
+require_once('fct_base.php');
+require_once('fct_cicle.php');
+
+define('DILLUNS', '0');
+define('DIMARTS', '1');
+define('DIMECRES', '2');
+define('DIJOUS', '3');
+define('DIVENDRES', '4');
+define('DISSABTE', '5');
+define('DIUMENGE', '6');
+
+class fct_quadern_horari extends fct_quadern_base {
+
+
+    protected static $dataobject = 'convenis';
+
+    protected $editform = 'fct_quadern_horari_edit_form';
+
+    public $convenis;
+
+    protected static $dataobjectkeys = array();
+
+    protected $dies = array(DILLUNS => 'Dilluns',
+                            DIMARTS => 'Dimarts',
+                            DIMECRES => 'Dimecres',
+                            DIJOUS => 'Dijous',
+                            DIVENDRES => 'Divendres',
+                            DISSABTE => 'Dissabte',
+                            DIUMENGE => 'Diumenge');
+
+
+    public function tabs($id, $type = 'view') {
+
+        $tab = parent::tabs_quadern($id, $this->id);
+        $subtree = parent::subtree($id, $this->id);
+
+        $row = $tab['row'];
+        $row['quadern_dades']->subtree = $subtree;
+        $tab['row'] = $row;
+        $tab['currentab'] = 'quadern_horari';
+
+        return $tab;
+    }
+
+    public function view() {
+        global $PAGE;
+
+        $output = $PAGE->get_renderer('mod_fct', 'quadern_horari');
+        $output->view($this);
+
+        return true;
+
+    }
+
+    public function delete($params) {
+
+        $uuid = $params->uuid;
+
+        if (!$conveni = $this->convenis->$uuid) {
+            print_error('notvaliduuid');
+        }
+        if (isset($conveni->horari)) {
+            foreach ($conveni->horari as $key=>$value) {
+                $horari = $value;
+                if ($horari->dia == $params->dia && $horari->hora_inici == $params->hora_inici && $horari->hora_final == $params->hora_final){
+                    unset($this->convenis->$uuid->horari[$key]);
+                }
+            }
+        }
+        $this->update();
+        die;
+    }
+
+    public function delete_message() {
+        return get_string('segur_suprimir_franja', 'fct');
+    }
+
+    public function get_convenis() {
+
+        if (isset($this->convenis)) {
+            $arrayconvenis = (array)$this->convenis;
+
+            $convenis = array();
+
+            foreach ($arrayconvenis as $arrayconveni) {
+                $conveni = new stdClass;
+                foreach ((array)$arrayconveni as $key => $value) {
+                    $conveni->$key = $value;
+                }
+                $convenis[] = $conveni;
+            }
+            return $convenis;
+        } else {
+            return false;
+        }
+    }
+
+    public static function validation($data) {
+    }
+
+    public function set_data($data) {
+
+        $conveni = $data->conveni;
+
+        $data->convenis = $this->convenis;
+
+        $hora_inici = $data->hourfrom . '.' . $data->minutfrom;
+        $hora_final = $data->hourto . '.' . $data->minutto;
+
+        $data->convenis->$conveni->horari[] = array('dia' => $this->dies[$data->dies],
+                                                  'hora_inici' => $hora_inici,
+                                                  'hora_final' => $hora_final);
+
+
+        self::$dataobjectkeys = $this->get_uuids();
+
+        parent::set_data($data);
+    }
+
+    private function get_uuids() {
+
+        if (isset($this->convenis)) {
+            $uuids = array();
+            foreach ((array)$this->convenis as $conveni) {
+                $uuids[] = $conveni->uuid;
+            }
+
+            return $uuids;
+
+        } else {
+            return false;
+        }
+    }
+
+
+    private function uuid() {
+
+        $octets = array();
+
+        for ($n = 0; $n < 16; $n++) {
+            $octets[] = mt_rand(0, 255);
+        }
+
+        $octets[8] = ($octets[8] | 0x80) & 0xbf; // variant ISO/IEC 11578:1996
+        $octets[6] = ($octets[6] & 0x0f) | 0x40; // version 4 (random)
+
+        return sprintf('%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x'
+                       .'-%02x%02x%02x%02x%02x%02x',
+                       $octets[0], $octets[1], $octets[2], $octets[3],
+                       $octets[4], $octets[5], $octets[6], $octets[7],
+                       $octets[8], $octets[9], $octets[10], $octets[11],
+                       $octets[12], $octets[13], $octets[14], $octets[15]);
+
+    }
+
+    public function prepare_form_data($data) {
+
+        $convenisarray = (array)$data->convenis;
+
+        foreach ($convenisarray as $conveni) {
+            $convenis[$conveni->uuid] = $conveni->codi;
+        }
+
+        $data->convenis = $convenis;
+        $data->dies = $this->dies;
+
+        parent::prepare_form_data($data);
+
+    }
+
+
+    protected function prepare_form_select($objects, $selectkey, $selectvalue, $selected = false) {
+        $select = array();
+
+        if (!$selected) {
+            $select[0] = '';
+        }
+
+        foreach ($objects as $object) {
+            $select[$object->$selectkey] = $object->$selectvalue;
+        }
+
+        return $select;
+
+    }
+
+}

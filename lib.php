@@ -24,8 +24,7 @@
  */
 
 function fct_add_instance($data) {
-    global $DB;
-    //fct_require('diposit', 'domini', 'json', 'moodle');
+    fct_require('diposit', 'domini', 'json');
     $fct = new stdClass;
     $fct->course = $data->course;
     $fct->name = $data->name;
@@ -33,29 +32,58 @@ function fct_add_instance($data) {
     $fct->timecreated = time();
     $fct->timemodified = time();
     $fct->objecte = 'a';
-    //$diposit = new fct_diposit(new fct_moodle);
-    //$diposit->afegir_fct($fct);
-    $fct->id = $DB->insert_record('fct', $fct);
+    $diposit = new fct_diposit();
+    $diposit->afegir_fct($fct);
 
     return $fct->id;
 }
 
 function fct_update_instance($data) {
-   // fct_require('diposit', 'domini', 'json', 'moodle');
-   // $diposit = new fct_diposit(new fct_moodle);
-    //$fct = $diposit->fct($data->instance);
-    //$fct->name = $data->name;
-    //$fct->intro = $data->intro;
-    //$fct->timemodified = time();
-    //$diposit->afegir_fct($fct);
+    fct_require('diposit', 'domini', 'json');
+
+    $diposit = new fct_diposit();
+    $fct = $diposit->fct($data->instance);
+    $fct->name = stripslashes($data->name);
+    $fct->intro = stripslashes($data->intro);
+    $fct->timemodified = time();
+    $diposit->afegir_fct($fct);
+
     return true;
 }
 
 function fct_delete_instance($id) {
-    //fct_require('diposit', 'domini', 'json', 'moodle');
-    //$diposit = new fct_diposit(new fct_moodle);
-    //$serveis = new fct_serveis($diposit, new fct_moodle);
-    //$fct = $diposit->fct($id);
-    //$serveis->suprimir_fct($fct);
+    fct_require('diposit', 'domini', 'json');
+
+    $diposit = new fct_diposit();
+    $serveis = new fct_serveis($diposit);
+    $fct = $diposit->fct($id);
+    $serveis->suprimir_fct($fct);
+
     return true;
+}
+
+function fct_string($identifier, $a=null) {
+    if (is_array($a)) {
+        $a = (object) $a;
+    }
+    return get_string($identifier, 'fct', $a);
+}
+
+function fct_require() {
+    global $CFG;
+    foreach (func_get_args() as $fitxer) {
+        if (substr($fitxer, 0, 7) === 'pagines') {
+            require_once("{$CFG->dirroot}/mod/fct/{$fitxer}.php");
+        } else {
+            require_once("{$CFG->dirroot}/mod/fct/classes/{$fitxer}.php");
+        }
+    }
+}
+
+function fct_url($pagina, $params) {
+    $url = 'view.php?pagina=' . urlencode($pagina);
+    foreach ($params as $nom => $valor) {
+        $url .= "&$nom=" . urlencode($valor);
+    }
+    return $url;
 }
