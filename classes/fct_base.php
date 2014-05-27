@@ -27,8 +27,8 @@ define('OBERT', 'obert');
 define('TANCAT', 'tancat');
 define('PROPOSAT', 'proposat');
 
-require_once('classes/fct_usuari.php');
-require_once('classes/fct_quadern_base.php');
+require_once('fct_usuari.php');
+require_once('fct_quadern_base.php');
 
 abstract class fct_base {
 
@@ -214,7 +214,7 @@ abstract class fct_base {
 
         if ($data->id = $DB->insert_record(static::$table, $record)) {
           self::__construct($data);
-          if (!isset($objecte) || !$objecte) {
+          if (!isset($this->objecte_keys)) {
             return true;
           }
           $this->create_object();

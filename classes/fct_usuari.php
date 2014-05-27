@@ -45,18 +45,18 @@ class fct_usuari {
         $this->cognoms = $record->lastname;
         $this->email = $record->email;
 
-        $cm = get_coursemodule_from_instance('fct', $fctid);
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        if ($cm = get_coursemodule_from_instance('fct', $fctid)) {
+            $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-        $this->es_administrador = has_capability(
-            "mod/fct:admin", $context, $userid, false);
-        $this->es_alumne = has_capability(
-            "mod/fct:alumne", $context, $userid, false);
-        $this->es_tutor_centre = has_capability(
-            "mod/fct:tutor_centre", $context, $userid, false);
-        $this->es_tutor_empresa = has_capability(
-            "mod/fct:tutor_empresa", $context, $userid, false);
-
+            $this->es_administrador = has_capability(
+                "mod/fct:admin", $context, $userid, false);
+            $this->es_alumne = has_capability(
+                "mod/fct:alumne", $context, $userid, false);
+            $this->es_tutor_centre = has_capability(
+                "mod/fct:tutor_centre", $context, $userid, false);
+            $this->es_tutor_empresa = has_capability(
+                "mod/fct:tutor_empresa", $context, $userid, false);
+        }
     }
 
 }

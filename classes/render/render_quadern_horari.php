@@ -45,7 +45,7 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
                 $output .= html_writer::end_div();
 
                 if (isset($conveni->horari)) {
-                    $output .= $this->horari_table($conveni, $quadern->quadern);
+                    $output .= $this->horari_table($conveni, $quadern->id);
                 }
             }
         }

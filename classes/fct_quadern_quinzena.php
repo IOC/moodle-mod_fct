@@ -41,7 +41,7 @@ class fct_quadern_quinzena extends fct_base {
     public $_any_;
     public $any;
     public $periode;
-    public $objecte;
+    public $objecte = true;
     public $dies;
     public $activitats;
     public $valoracions;
@@ -82,7 +82,7 @@ class fct_quadern_quinzena extends fct_base {
 
 
     public function __construct($record = null) {
-        global $DB;
+        global $DB, $USER;
 
         parent::__construct($record);
 
@@ -91,6 +91,11 @@ class fct_quadern_quinzena extends fct_base {
                 $fctrecord = $DB->get_record('fct_cicle', array('id' => $cicle->cicle), 'fct');
                 $this->fct = $fctrecord->fct;
             }
+        }
+
+        if (!isset($this->usuari)) {
+                $userid = $USER->id;
+                $this->usuari = new fct_usuari($this->fct, $userid);
         }
 
     }
@@ -118,7 +123,6 @@ class fct_quadern_quinzena extends fct_base {
         global $DB;
 
         $records = new stdClass;
-
 
         $params = array();
         if ($quadern) {
@@ -176,7 +180,7 @@ class fct_quadern_quinzena extends fct_base {
             print_error('noidgiven');
         }
 
-        $quadern = new fct_quadern($this->quadern);
+        $quadern = new fct_quadern_base((int)$this->quadern);
 
         if ($quadern->alumne == $USER->id) {
             fct_avisos::registrar_avis($this->quadern, 'quinzena_suprimida', $this->id);

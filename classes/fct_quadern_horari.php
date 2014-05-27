@@ -28,13 +28,13 @@ require_once('fct_quadern_base.php');
 require_once('fct_base.php');
 require_once('fct_cicle.php');
 
-define('DILLUNS', '0');
-define('DIMARTS', '1');
-define('DIMECRES', '2');
-define('DIJOUS', '3');
-define('DIVENDRES', '4');
-define('DISSABTE', '5');
-define('DIUMENGE', '6');
+define('DILLUNS', 'Dilluns');
+define('DIMARTS', 'Dimarts');
+define('DIMECRES', 'Dimecres');
+define('DIJOUS', 'Dijous');
+define('DIVENDRES', 'Divendres');
+define('DISSABTE', 'Dissabte');
+define('DIUMENGE', 'Diumenge');
 
 class fct_quadern_horari extends fct_quadern_base {
 
@@ -47,13 +47,13 @@ class fct_quadern_horari extends fct_quadern_base {
 
     protected static $dataobjectkeys = array();
 
-    protected $dies = array(DILLUNS => 'Dilluns',
-                            DIMARTS => 'Dimarts',
-                            DIMECRES => 'Dimecres',
-                            DIJOUS => 'Dijous',
-                            DIVENDRES => 'Divendres',
-                            DISSABTE => 'Dissabte',
-                            DIUMENGE => 'Diumenge');
+    protected $dies = array(DILLUNS => 'dilluns',
+                            DIMARTS => 'dimarts',
+                            DIMECRES => 'dimecres',
+                            DIJOUS => 'dijous',
+                            DIVENDRES => 'divendres',
+                            DISSABTE => 'dissabte',
+                            DIUMENGE => 'diumenge');
 
 
     public function tabs($id, $type = 'view') {
@@ -94,8 +94,9 @@ class fct_quadern_horari extends fct_quadern_base {
                 }
             }
         }
+        $this->create_object();
         $this->update();
-        die;
+        return true;
     }
 
     public function delete_message() {
