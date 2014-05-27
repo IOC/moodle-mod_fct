@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * FCT mod quadern base class.
+ * FCT quadern class.
  *
  * @package    mod
  * @subpackage fct

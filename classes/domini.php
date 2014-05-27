@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Fct related classes
+ * FCT domini class.
  *
  * @package    mod
  * @subpackage fct

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Main fct class
+ * Diposit fct class
  *
  * @package    mod
  * @subpackage fct

@@ -66,6 +66,7 @@ class fct_quadern_qualificacio_edit_form extends moodleform {
 
     public function validation($data, $files) {
         $errors = array();
+        $class = $this->class;
         $errors = $class::validation($data);
         return $errors;
     }
