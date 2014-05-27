@@ -55,7 +55,7 @@ if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
     print_error('course module is incorrect');
 }
 
-global $USER;
+global $USER, $DB;
 
 if ($subpage) {
     $class = 'fct_'.$subpage;
@@ -98,6 +98,13 @@ $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_title(format_string($fct->name));
 $PAGE->set_heading(format_string($fct->name));
+
+if ($quadern) {
+    if ($alumne = $DB->get_record('user', array('id' => $class->alumne))) {
+        $PAGE->navbar->add(fullname($alumne));
+  }
+}
+
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->jquery();
 $PAGE->requires->css('/mod/fct/styles.css');

@@ -124,7 +124,7 @@ class fct_quadern_base extends fct_base {
              return $this->$dataobject->$name;
 
         }
-         return false;
+        return false;
     }
 
     public function set_data($data) {

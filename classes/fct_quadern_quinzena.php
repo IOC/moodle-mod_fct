@@ -88,8 +88,11 @@ class fct_quadern_quinzena extends fct_base {
 
         if (is_int($record) && !isset($this->fct)) {
             if ($cicle = $DB->get_record('fct_quadern', array('id' => $this->quadern), 'cicle')) {
-                $fctrecord = $DB->get_record('fct_cicle', array('id' => $cicle->cicle), 'fct');
-                $this->fct = $fctrecord->fct;
+                if ($fctrecord = $DB->get_record('fct_cicle', array('id' => $cicle->cicle), 'fct')) {
+                    $this->fct = $fctrecord->fct;
+                } else {
+                    print_error('nofct');
+                }
             }
         }
 
@@ -97,7 +100,6 @@ class fct_quadern_quinzena extends fct_base {
                 $userid = $USER->id;
                 $this->usuari = new fct_usuari($this->fct, $userid);
         }
-
     }
 
     public function view($id = false) {

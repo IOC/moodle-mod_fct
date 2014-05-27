@@ -131,6 +131,21 @@ abstract class fct_base {
         return true;
     }
 
+    public function __get($name) {
+
+        if (property_exists(get_class($this), $name)) {
+          return $this->$name;
+        }
+        if ($name == 'alumne') {
+           if (isset($this->quadern)) {
+            if ($quadern = new fct_quadern_base((int)$this->quadern)) {
+              return $quadern->alumne;
+            }
+          }
+        }
+        return false;
+      }
+
     /**
      * Get all records from class table associated to a fct instance.
      *

@@ -65,6 +65,25 @@ if ($subpage) {
 
 require_once('classes/'.$class.'.php');
 
+if (!$id && $quadern && ($page != 'quadern_activitat' && $page != 'quadern_quinzena')) {
+    $id = $quadern;
+}
+
+$record = new stdClass;
+$record->fct = $fct->id;
+if ($quadern) {
+  $record->quadern = $quadern;
+}
+
+if ($id) {
+    $class = new $class($id);
+    $class->valoracio = $valoracio;
+} else {
+    $class = new $class($record);
+}
+
+$class->checkpermissions('edit');
+
 $context = context_module::instance($cm->id);
 $url = new moodle_url('/mod/fct/edit.php', array('id' => $cmid, 'id' => $id, 'page' => $page, 'subpage' => $subpage, 'quadern' => $quadern));
 $returnurl = new moodle_url('view.php', array('id' => $cmid,
@@ -88,24 +107,11 @@ $PAGE->requires->jquery();
 $PAGE->requires->js('/mod/fct/client.js');
 $PAGE->requires->css('/mod/fct/styles.css');
 
-if (!$id && $quadern && ($page != 'quadern_activitat' && $page != 'quadern_quinzena')) {
-    $id = $quadern;
-}
-
-$record = new stdClass;
-$record->fct = $fct->id;
 if ($quadern) {
-  $record->quadern = $quadern;
+    if ($alumne = $DB->get_record('user', array('id' => $class->alumne))) {
+        $PAGE->navbar->add(fullname($alumne));
+  }
 }
-
-if ($id) {
-    $class = new $class($id);
-    $class->valoracio = $valoracio;
-} else {
-    $class = new $class($record);
-}
-
-$class->checkpermissions('edit');
 
 if ($delete &&  ($id || $uuid || $deleteall)) {
     $PAGE->url->param('delete', 1);
