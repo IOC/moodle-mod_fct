@@ -43,7 +43,6 @@ require_once('classes/render/render_avisos.php');
 class mod_fct_renderer extends plugin_renderer_base {
 
 	public function print_tabs($tab) {
-    echo $this->tabtree($tab['row'], $tab['currentab'], $tab['inactivetabs']);
-  }
-
+        echo $this->tabtree($tab['row'], $tab['currentab'], $tab['inactivetabs']);
+    }
 }
