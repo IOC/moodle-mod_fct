@@ -43,7 +43,7 @@ $curs = optional_param('searchcurs', false, PARAM_INT);
 $cicle = optional_param('searchcicle', false, PARAM_INT);
 $estat = optional_param('searchestat', false, PARAM_RAW);
 $cerca = optional_param('cerca', false, PARAM_RAW);
-$qualificacio = optional_param('qualificacio', false, PARAM_RAW);
+$qualificaciotype = optional_param('qualificaciotype', false, PARAM_RAW);
 
 if (!$cm = get_coursemodule_from_id('fct', $id)) {
     print_error('Course Module ID was incorrect');
@@ -76,8 +76,8 @@ if ($valoracio) {
     $record->valoracio = $valoracio;
 }
 
-if ($qualificacio) {
-    $record->typequalificacio = $qualificacio;
+if ($qualificaciotype) {
+    $record->qualificaciotype = $qualificaciotype;
 }
 
 $class = new $class($record);

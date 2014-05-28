@@ -78,7 +78,7 @@ class fct_quadern_base extends fct_base {
 
     protected static $dataobjectkeys = array();
 
-    public function __construct($record = null){
+    public function __construct($record = null) {
         global $DB, $USER;
 
         if (isset($record->fct)) {
@@ -87,7 +87,7 @@ class fct_quadern_base extends fct_base {
 
         if (isset($record->quadern)) {
             parent::__construct((int)$record->quadern);
-        } else{
+        } else {
             parent::__construct($record);
         }
 
@@ -122,7 +122,6 @@ class fct_quadern_base extends fct_base {
 
         if (array_key_exists($name, array_flip($dataobjectkeys))) {
              return $this->$dataobject->$name;
-
         }
         return false;
     }

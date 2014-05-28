@@ -31,7 +31,7 @@ require_once('fct_cicle.php');
 class fct_quadern_qualificacio extends fct_quadern_base {
 
 
-    public $typequalificacio = 'parcial';
+    public $qualificaciotype = 'parcial';
     protected static $dataobject = 'qualificacio';
 
     protected $editform = 'fct_quadern_qualificacio_edit_form';
@@ -41,13 +41,13 @@ class fct_quadern_qualificacio extends fct_quadern_base {
                                              'data',
                                              'observacions');
 
-     public function tabs($id, $type = 'view') {
+    public function tabs($id, $type = 'view') {
 
         $tab = parent::tabs_quadern($id, $this->id);
 
         $subtree = array();
 
-        if ($this->typequalificacio == 'parcial') {
+        if ($this->qualificaciotype == 'parcial') {
             $subtree[] = new tabobject('valoracio_parcial_actituds',
                                   new moodle_url('view.php', array('id' => $id, 'quadern' => $this->id, 'page' => 'quadern_valoracio', 'valoracio' => 'parcial')),
                                   get_string('valoracio_parcial_actituds', 'fct'));
@@ -65,7 +65,7 @@ class fct_quadern_qualificacio extends fct_quadern_base {
                                   get_string('valoracio_activitats', 'fct'));
 
             $subtree[] = new tabobject('qualificacio_quadern',
-                                  new moodle_url('view.php', array('id' => $id, 'quadern' => $this->id, 'page' => 'quadern_valoracio', 'subpage'=> 'quadern_qualificacio')),
+                                  new moodle_url('view.php', array('id' => $id, 'quadern' => $this->id, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_qualificacio')),
                                   get_string('qualificacio_quadern', 'fct'));
 
             $row = $tab['row'];
@@ -80,10 +80,14 @@ class fct_quadern_qualificacio extends fct_quadern_base {
     }
 
     public function __construct($record = null) {
-        if (isset($record->typequalificacio) && $record->typequalificacio == 'global') {
+        if (isset($record->qualificaciotype) && $record->qualificaciotype == 'global') {
             self::$dataobject = 'qualificacio_global';
+            parent::__construct($record);
+            $this->qualificaciotype = 'global';
+        } else {
+            parent::__construct($record);
         }
-        parent::__construct($record);
+
     }
 
     public function view() {
@@ -114,14 +118,11 @@ class fct_quadern_qualificacio extends fct_quadern_base {
         );
     }
 
-    public function qualificacions(){
+    public function qualificacions() {
         return array(
             0 => '-',
             1 => get_string('apte', 'fct'),
             2 => get_string('noapte', 'fct')
         );
     }
-
-
-
 }

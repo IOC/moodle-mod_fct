@@ -40,6 +40,7 @@ $deleteall = optional_param('deleteall', false, PARAM_BOOL);
 $confirm   = optional_param('confirm', 0, PARAM_BOOL);
 $quadern = optional_param('quadern', false, PARAM_INT);
 $valoracio = optional_param('valoracio', false, PARAM_RAW);
+$qualificaciotype = optional_param('qualificaciotype', 'parcial', PARAM_RAW);
 $uuid = optional_param('uuid', false, PARAM_RAW);
 $dia = optional_param('dia', false, PARAM_RAW);
 $hora_inici = optional_param('hora_inici', false, PARAM_RAW);
@@ -76,9 +77,13 @@ if ($quadern) {
     $record->quadern = $quadern;
 }
 
+if ($qualificaciotype) {
+    $record->qualificaciotype = $qualificaciotype;
+}
 if ($id) {
-    $class = new $class($id);
-    $class->valoracio = $valoracio;
+    $record->id = $id;
+    $class = new $class($record);
+    $class->typequalificaciotype = $qualificaciotype;
 } else {
     $class = new $class($record);
 }
@@ -95,6 +100,7 @@ if (isset($class->returnurl)) {
                                                 'subpage' => $subpage,
                                                 'quadern' => $quadern,
                                                 'valoracio' => $valoracio,
+                                                'qualificaciotype' => $qualificaciotype,
                                                 'uuid' => $uuid,
                                                 'dia' => $dia,
                                                 'hora_inici' => $hora_inici,
@@ -115,7 +121,7 @@ $PAGE->requires->css('/mod/fct/styles.css');
 if ($quadern) {
     if ($alumne = $DB->get_record('user', array('id' => $class->alumne))) {
         $PAGE->navbar->add(fullname($alumne));
-  }
+    }
 }
 
 if ($delete &&  ($id || $uuid || $deleteall)) {
@@ -123,27 +129,27 @@ if ($delete &&  ($id || $uuid || $deleteall)) {
 
     if ($confirm and confirm_sesskey()) {
         if ($uuid) {
-          $params = new stdClass;
-          $params->uuid = $uuid;
-          $params->dia = $dia;
-          $params->hora_inici = $hora_inici;
-          $params->hora_final = $hora_final;
+            $params = new stdClass;
+            $params->uuid = $uuid;
+            $params->dia = $dia;
+            $params->hora_inici = $hora_inici;
+            $params->hora_final = $hora_final;
         } else {
-          $params = false;
+            $params = false;
         }
         if ($deleteall) {
-          $class->deleteall($fct->id, $quadern);
+            $class->deleteall($fct->id, $quadern);
         }
 
         if (!$class->delete($params)) {
-          $nodeletemessage = $class->no_delete_message();
-          echo $OUTPUT->header();
-          echo $OUTPUT->heading($strheading);
-          echo $OUTPUT->box($nodeletemessage, 'generalbox', 'notice');
-          echo $OUTPUT->continue_button($returnurl);
-          echo $OUTPUT->footer();
-          die;
-          }
+              $nodeletemessage = $class->no_delete_message();
+              echo $OUTPUT->header();
+              echo $OUTPUT->heading($strheading);
+              echo $OUTPUT->box($nodeletemessage, 'generalbox', 'notice');
+              echo $OUTPUT->continue_button($returnurl);
+              echo $OUTPUT->footer();
+              die;
+        }
         redirect($returnurl);
     }
 
@@ -173,9 +179,10 @@ $data = new stdClass;
 $data->cmid = $cmid;
 $data->page = $page;
 $data->fct = $fct->id;
+$data->qualificaciotype = $qualificaciotype;
 
 if ($quadern) {
-  $data->quadern = $quadern;
+    $data->quadern = $quadern;
 }
 
 $data->subpage = $subpage;

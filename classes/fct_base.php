@@ -346,7 +346,7 @@ abstract class fct_base {
                               get_string('valoracio', 'fct'));
 
         $row['quadern_qualificacio'] = new tabobject('quadern_qualificacio',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page' => 'quadern_qualificacio', 'qualificacio' => 'global')),
+                              new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page' => 'quadern_qualificacio', 'qualificaciotype' => 'global')),
                               get_string('qualificacio_global', 'fct'));
 
         $tab['row'] = $row;

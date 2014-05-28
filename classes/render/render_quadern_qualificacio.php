@@ -32,8 +32,11 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $quadern->qualificaciotype == 'global' ? $qualificacio = 'qualificacio_global' : $qualificacio = 'qualificacio';
+
         $qualificacions = $quadern->qualificacions();
         $barems = $quadern->barem_valoracio();
+
         if ($quadern->apte) {
             $apte = $qualificacions[$quadern->apte];
         } else {
@@ -57,8 +60,8 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('data', 'fct').':', array('class' => 'datatitle'));
 
-        if (isset($quadern->data)) {
-            $output .= html_writer::tag('span', userdate($quadern->data, get_string('strftimedate')), array('class' => 'datacontent'));
+        if (isset($quadern->qualificacio->data)) {
+            $output .= html_writer::tag('span', userdate($quadern->qualificacio->data, get_string('strftimedate')), array('class' => 'datacontent'));
         }
         $output .= html_writer::end_div();
 
@@ -68,12 +71,15 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-        $link = new moodle_url('./edit.php', array('cmid'=>$cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_qualificacio'));
+
+        $link = new moodle_url('./edit.php', array('cmid' => $cm->id,
+                                'quadern' => $quadern->id,
+                                'page' => 'quadern_valoracio',
+                                'subpage' => 'quadern_qualificacio',
+                                'qualificaciotype' => $quadern->qualificaciotype));
+
         $output .= html_writer::link($link, get_string('edit'));
 
-
         echo $output;
-
     }
-
 }
