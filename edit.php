@@ -58,9 +58,9 @@ if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
 global $USER;
 
 if ($subpage) {
-  $class = 'fct_'.$subpage;
+    $class = 'fct_'.$subpage;
 } else {
-  $class = 'fct_'.$page;
+    $class = 'fct_'.$page;
 }
 
 require_once('classes/'.$class.'.php');
@@ -71,8 +71,9 @@ if (!$id && $quadern && ($page != 'quadern_activitat' && $page != 'quadern_quinz
 
 $record = new stdClass;
 $record->fct = $fct->id;
+
 if ($quadern) {
-  $record->quadern = $quadern;
+    $record->quadern = $quadern;
 }
 
 if ($id) {
@@ -86,15 +87,19 @@ $class->checkpermissions('edit');
 
 $context = context_module::instance($cm->id);
 $url = new moodle_url('/mod/fct/edit.php', array('id' => $cmid, 'id' => $id, 'page' => $page, 'subpage' => $subpage, 'quadern' => $quadern));
-$returnurl = new moodle_url('view.php', array('id' => $cmid,
-                                              'page' => $page,
-                                              'subpage' => $subpage,
-                                              'quadern' => $quadern,
-                                              'valoracio' => $valoracio,
-                                              'uuid' => $uuid,
-                                              'dia' => $dia,
-                                              'hora_inici' => $hora_inici,
-                                              'hora_final' => $hora_final));
+if (isset($class->returnurl)) {
+    $returnurl = $class->returnurl;
+} else {
+    $returnurl = new moodle_url('view.php', array('id' => $cmid,
+                                                'page' => $page,
+                                                'subpage' => $subpage,
+                                                'quadern' => $quadern,
+                                                'valoracio' => $valoracio,
+                                                'uuid' => $uuid,
+                                                'dia' => $dia,
+                                                'hora_inici' => $hora_inici,
+                                                'hora_final' => $hora_final));
+}
 
 $PAGE->set_cm($cm, $course, $fct);
 $PAGE->set_context($context);

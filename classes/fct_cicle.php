@@ -132,12 +132,11 @@ class fct_cicle extends fct_base{
             $errors = array('nom' => 'nombre duplicado');
         }
 
-    return $errors;
+        return $errors;
 
     }
 
     public function checkpermissions($type = 'view') {
-
         if (!$this->usuari->es_administrador) {
             print_error('nopermisions');
         }

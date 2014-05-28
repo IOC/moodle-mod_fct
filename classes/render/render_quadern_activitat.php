@@ -58,13 +58,17 @@ class mod_fct_quadern_activitat_renderer extends plugin_renderer_base {
 
         $line[] = $activitat->descripcio;
 
-        $editlink = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'id' => $activitat->id, 'page' => 'quadern_activitat'));
+        $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $activitat->id, 'page' => 'quadern_activitat', 'quadern' => $activitat->quadern));
         $editicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
 
         $buttons[] = html_writer::link($editlink, $editicon);
 
-        $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $activitat->id,'page' => 'quadern_activitat', 'delete' => 1));
+        $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
+                                                         'id' => $activitat->id,
+                                                         'page' => 'quadern_activitat',
+                                                         'quadern' => $activitat->quadern,
+                                                         'delete' => 1));
         $deleteicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
         $buttons[] = html_writer::link($deletelink, $deleteicon);

@@ -43,6 +43,23 @@ class fct_quadern_activitat extends fct_base {
     protected $objecte_keys = array('id', 'quadern', 'descripcio', 'nota');
     protected $editform = 'fct_quadern_activitat_edit_form';
 
+    public function __construct($record) {
+        global $DB, $USER;
+
+        parent::__construct($record);
+
+        if (!isset($this->fct)) {
+            if ($record = $DB->get_record('fct_quadern', array('id' => $this->quadern))) {
+                if ($record = $DB->get_record('fct_cicle', array('id' => $record->cicle))) {
+                    $this->fct = $record->fct;
+                    $this->usuari = new fct_usuari($this->fct, $USER->id);
+                }
+            } else {
+                print_error('nofct');
+            }
+        }
+    }
+
     public function tabs($id, $type = 'view') {
 
         $tab = parent::tabs_quadern($id, $this->quadern);
@@ -52,24 +69,24 @@ class fct_quadern_activitat extends fct_base {
             $subtree = array();
 
             $subtree[] = new tabobject('activitatllist', new moodle_url('/mod/fct/view.php',
-                                            array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat')),
+                                            array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat')),
                                             get_string('activitat', 'fct'));
 
             $subtree[] = new tabobject('afegeix_activitat', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat',)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat')),
                                             get_string('afegeix_activitat', 'fct'));
 
             $subtree[] = new tabobject('afegeix_activitats_cicle', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat', 'subpage' => 'quadern_activitat_cicles')),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat', 'subpage' => 'quadern_activitat_cicles')),
                                             get_string('afegeix_activitats_cicle', 'fct'));
 
             $subtree[] = new tabobject('suprimeix_activitats', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat', 'delete' => true, 'deleteall' => true)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat', 'delete' => true, 'deleteall' => true)),
                                             get_string('suprimeix_activitats', 'fct'));
 
             $row['quadern_activitat']->subtree = $subtree;
             $tab['row'] = $row;
-            $tab['currentab'] = $type == 'view'?'activitatllist':'afegeix_activitat';
+            $tab['currentab'] = $type == 'view' ? 'activitatllist' : 'afegeix_activitat';
         } else {
             $tab['currentab'] = 'quadern_activitat';
         }
@@ -117,7 +134,6 @@ class fct_quadern_activitat extends fct_base {
         foreach ($activitatsrecords as $activitat) {
             $activitats[] = new fct_quadern_activitat((int)$activitat->id);
         }
-
         return $activitats;
     }
 
@@ -129,7 +145,7 @@ class fct_quadern_activitat extends fct_base {
     }
 
     public function delete_message($deleteall = false) {
-        return $deleteall?get_string('segur_suprimir_activitats', 'fct'):get_string('segur_suprimir_activitat', 'fct');
+        return $deleteall ? get_string('segur_suprimir_activitats', 'fct') : get_string('segur_suprimir_activitat', 'fct');
     }
 
     public function checkpermissions($type = 'view') {
@@ -157,19 +173,18 @@ class fct_quadern_activitat extends fct_base {
 
         $quadern = new fct_quadern_base($record);
 
-        $permis_editar = ($this->usuari->es_administrador or
+        $permiseditar = ($this->usuari->es_administrador or
                                 (in_array($quadern->estat, array('proposat', 'obert')) and
                                  ($quadern->es_tutor_centre() or $quadern->es_tutor_empresa())));
 
-        return $permis_editar;
+        return $permiseditar;
     }
 
 
     public function prepare_form_data($data) {
-
     }
-    public static function validation($data) {
 
+    public static function validation($data) {
     }
 
 

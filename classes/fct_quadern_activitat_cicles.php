@@ -39,36 +39,51 @@ class fct_quadern_activitat_cicles extends fct_base {
     public $descripcio;
     public $nota;
     public $objecte;
-
+    public $returnurl;
 
     protected static $table = 'fct_activitat';
     protected $record_keys = array('id', 'quadern', 'objecte');
     protected $objecte_keys = array('id', 'quadern', 'descripcio', 'nota');
     protected $editform = 'fct_quadern_activitat_cicles_edit_form';
 
+    public function __construct($record) {
+        if (isset($record)) {
+            parent::__construct($record);
+        }
+
+        if (isset($this->fct)) {
+            $cm = get_coursemodule_from_instance('fct', $this->fct);
+            $this->returnurl = new moodle_url('view.php', array('id' => $cm->id,
+                                              'page' => 'quadern_activitat',
+                                              'quadern' => $this->quadern));
+        }
+    }
+
     public function tabs($id, $type = 'view') {
 
-        $row = parent::tabs_quadern($id, $this->quadern);
+        $tab = parent::tabs_quadern($id, $this->quadern);
 
         $subtree = array();
 
         $subtree[] = new tabobject('activitatllist', new moodle_url('/mod/fct/view.php',
-                                            array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat')),
+                                            array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat')),
                                             get_string('activitat', 'fct'));
 
         $subtree[] = new tabobject('afegeix_activitat', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat',)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat')),
                                             get_string('afegeix_activitat', 'fct'));
 
         $subtree[] = new tabobject('afegeix_activitats_cicle', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat', 'subpage' => 'quadern_activitat_cicles')),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat', 'subpage' => 'quadern_activitat_cicles')),
                                             get_string('afegeix_activitats_cicle', 'fct'));
 
         $subtree[] = new tabobject('suprimeix_activitats', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_activitat', 'delete' => true, 'deleteall' => true)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_activitat', 'delete' => true, 'deleteall' => true)),
                                             get_string('suprimeix_activitats', 'fct'));
 
+        $row = $tab['row'];
         $row['quadern_activitat']->subtree = $subtree;
+        $tab['row'] = $row;
         $tab['currentab'] = 'afegeix_activitats_cicle';
         $tab['row'] = $row;
 
@@ -85,7 +100,6 @@ class fct_quadern_activitat_cicles extends fct_base {
         } else {
             return false;
         }
-
     }
 
     public function set_data($data) {
@@ -108,18 +122,18 @@ class fct_quadern_activitat_cicles extends fct_base {
         $activitieskeys = array_flip($activitieskeys);
 
         if ($activitascicle = $this->get_cicle_activitats($data->quadern)) {
-                $activitats = array_intersect_key($activitascicle, $activitieskeys);
-                 if (!empty($activitats)) {
-                    foreach ($activitats as $activitat) {
-                        $data->descripcio = $activitat;
-                        parent::insert($data);
-                    }
-                 }
-                 $quadern = new fct_quadern($data->quadern);
-
-                if ($quadern->tutor_empresa == $USER->id) {
-                    fct_avisos::registrar_avis($this->quadern, 'pla_activitats');
+            $activitats = array_intersect_key($activitascicle, $activitieskeys);
+            if (!empty($activitats)) {
+                foreach ($activitats as $activitat) {
+                    $data->descripcio = $activitat;
+                    parent::insert($data);
                 }
+            }
+             $quadern = new fct_quadern_base($data->quadern);
+
+            if ($quadern->tutor_empresa == $USER->id) {
+                fct_avisos::registrar_avis($this->quadern, 'pla_activitats');
+            }
         } else {
             return;
         }
@@ -149,7 +163,7 @@ class fct_quadern_activitat_cicles extends fct_base {
         }
     }
 
-    public function validation($data) {
+    public static function validation($data) {
     }
 
 

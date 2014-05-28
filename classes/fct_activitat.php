@@ -27,10 +27,6 @@ require_once('form/quadern_edit_form.php');
 require_once('fct_base.php');
 require_once('fct_cicle.php');
 
-define('OBERT', 'obert');
-define('TANCAT', 'tancat');
-define('PROPOSAT', 'proposat');
-
 class fct_activitat extends fct_base{
 
     public $id;
@@ -59,7 +55,7 @@ class fct_activitat extends fct_base{
         }
     }
 
-    public static function get_records($fctid, $userid = null, $searchparams = false, $pagenumber) {
+    public static function get_records($fctid, $userid = null, $searchparams = false, $pagenumber = false) {
         global $DB;
 
         $records = new stdClass;
@@ -133,7 +129,7 @@ class fct_activitat extends fct_base{
 
     }
 
-    public function validation($data) {}
+    public static function validation($data) {}
 
 
 }

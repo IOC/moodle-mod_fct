@@ -44,7 +44,7 @@ class fct_cicle_edit_form extends moodleform {
         $mform->addRule('nom', null, 'required');
         $mform->setType('nom', PARAM_TEXT);
 
-        $attributes= array('cols' => 60, 'rows' => 20);
+        $attributes = array('cols' => 60, 'rows' => 20);
         $mform->addElement('textarea', 'activitats', get_string("activitats", "mod_fct"), $attributes);
         $mform->setType('activitats ', PARAM_TEXT);
 
@@ -77,5 +77,13 @@ class fct_cicle_edit_form extends moodleform {
             $data->activitats = implode("\n" , $data->activitats);
         }
         parent::set_data($data);
+    }
+
+    public function get_data() {
+        $data = parent::get_data();
+        if (isset($data->activitats)) {
+            $data->activitats = explode("\n", $data->activitats);
+        }
+        return $data;
     }
 }
