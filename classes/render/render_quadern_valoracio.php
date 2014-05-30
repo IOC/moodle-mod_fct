@@ -43,11 +43,7 @@ class mod_fct_quadern_valoracio_renderer extends plugin_renderer_base {
         foreach ($elements as $key => $value) {
 
             if (isset($valoracions) && !empty($valoracions)) {
-                if (is_array($valoracions)) {
-                    $barem = $barems[$valoracions[$key]];
-                } else {
-                    $barem = $barems[$valoracions->$key];
-                }
+                $barem = is_array($valoracions) ? $barems[$valoracions[$key]] : $barems[$valoracions->$key];
             }
 
             $output .= html_writer::start_tag('div', array('class' => 'fitem'));
@@ -58,7 +54,7 @@ class mod_fct_quadern_valoracio_renderer extends plugin_renderer_base {
 
 
         $cm = get_coursemodule_from_instance('fct', $valoracio->fct);
-        $link = new moodle_url('./edit.php', array('cmid'=>$cm->id, 'quadern' => $valoracio->quadern, 'page' => 'quadern_valoracio', 'valoracio' => $valoracio->valoracio));
+        $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $valoracio->id, 'page' => 'quadern_valoracio', 'valoracio' => $valoracio->valoracio));
         $output .= html_writer::link($link, get_string('edit'));
         $output .= html_writer::end_tag('div');
 

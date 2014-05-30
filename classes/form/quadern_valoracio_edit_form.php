@@ -37,13 +37,11 @@ class fct_quadern_valoracio_edit_form extends moodleform {
 
         $mform = $this->_form;
         $data = $this->_customdata['data'];
-        $valoracio = new $this->class;
-        $barem = $valoracio->barem_valoracio();
 
         foreach ($data->valoracions as $key => $value) {
             $linearray = array();
             $linearray[] = &$mform->createElement('static','valoracio_'.md5($key), '',$value);
-            $linearray[] = &$mform->createElement('select', 'barem_'.md5($key),'', $barem);
+            $linearray[] = &$mform->createElement('select', 'barem_'.md5($key),'', $data->barem);
             $mform->addGroup($linearray, 'line_'.$key, '', array(' '), false);
         }
 
@@ -71,7 +69,7 @@ class fct_quadern_valoracio_edit_form extends moodleform {
 
     public function validation($data, $files) {
         $errors = array();
-        $clas = $this->class;
+        $class = $this->class;
         $errors = $class::validation($data);
         return $errors;
     }

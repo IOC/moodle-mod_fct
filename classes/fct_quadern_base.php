@@ -73,7 +73,7 @@ class fct_quadern_base extends fct_base {
 
     public static $estats = array(
                              OBERT => 'Obert',
-                             TANCAT =>  'Tancat',
+                             TANCAT => 'Tancat',
                              PROPOSAT => 'Proposat');
 
     protected static $dataobjectkeys = array();
@@ -94,7 +94,9 @@ class fct_quadern_base extends fct_base {
         if (!isset($this->fct)) {
             if ($record = $DB->get_record('fct_cicle', array('id' => $this->cicle), 'fct')) {
                 $this->fct = $record->fct;
-                $this->usuari = new fct_usuari($this->fct, $USER->id);
+                if ($USER->id) {
+                    $this->usuari = new fct_usuari($this->fct, $USER->id);
+                }
             } else {
                 print_error('nofct');
             }
@@ -151,9 +153,11 @@ class fct_quadern_base extends fct_base {
 
     public function data_inici() {
         $data = false;
-        foreach ($this->convenis as $conveni) {
-            if (!$data or $conveni->data_inici < $data) {
-                $data = $conveni->data_inici;
+        if (isset($this->convenis)) {
+            foreach ($this->convenis as $conveni) {
+                if (!$data or $conveni->data_inici < $data) {
+                    $data = $conveni->data_inici;
+                }
             }
         }
         return $data;
@@ -161,9 +165,11 @@ class fct_quadern_base extends fct_base {
 
     public function data_final() {
         $data = false;
-        foreach ($this->convenis as $conveni) {
-            if (!$data or $conveni->data_final > $data) {
-                $data = $conveni->data_final;
+        if (isset($this->convenis)) {
+            foreach ($this->convenis as $conveni) {
+                if (!$data or $conveni->data_final > $data) {
+                    $data = $conveni->data_final;
+                }
             }
         }
         return $data;
@@ -196,7 +202,7 @@ class fct_quadern_base extends fct_base {
     }
 
     public function nom_mes($mes) {
-        $time = mktime(0, 0, 0, $mes+1, 1, 2000);
+        $time = mktime(0, 0, 0, $mes + 1, 1, 2000);
         return strftime('%B', $time);
     }
 
@@ -254,36 +260,33 @@ class fct_quadern_base extends fct_base {
         $subtree = array();
 
         $subtree[] = new tabobject('quadern_centre', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades')),
                                 get_string('centre_docent', 'fct'));
 
         $subtree[] = new tabobject('quadern_alumne', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades', 'subpage' => 'quadern_alumne')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_alumne')),
                                 get_string('alumne', 'fct'));
 
         $subtree[] = new tabobject('quadern_empresa', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades', 'subpage' => 'quadern_empresa')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_empresa')),
                                 get_string('empresa', 'fct'));
 
         $subtree[] = new tabobject('quadern_conveni', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades', 'subpage' => 'quadern_conveni')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_conveni')),
                                 get_string('conveni', 'fct'));
 
         $subtree[] = new tabobject('quadern_horari', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades', 'subpage' => 'quadern_horari')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_horari')),
                                 get_string('horari_practiques', 'fct'));
 
         $subtree[] = new tabobject('quadern_dades_relatives', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page'=> 'quadern_dades', 'subpage' => 'quadern_dades_relatives')),
+                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_dades_relatives')),
                                 get_string('dades_relatives', 'fct'));
 
         return $subtree;
     }
 
     public function ultim_conveni() {
-        return end($this->convenis);
+        return isset($this->convenis) ? end($this->convenis) : false;
     }
-
-
-
 }

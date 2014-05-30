@@ -27,7 +27,7 @@ require_once('fct_base.php');
 require_once('fct_cicle.php');
 require_once('fct_quadern_activitat.php');
 
-class fct_quadern_valoracio_activitat extends fct_base{
+class fct_quadern_valoracio_activitat extends fct_base {
 
     public $id;
     public $fct;

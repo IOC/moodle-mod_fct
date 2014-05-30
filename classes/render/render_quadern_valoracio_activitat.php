@@ -34,6 +34,7 @@ class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base 
        $output = '';
 
        $barems = $this->barem_valoracio();
+        print_object($barems);
 
         // $barem = $barems[0];
         $output .= html_writer::start_tag('div', array('class' => 'fcontainer clearfix'));
@@ -48,7 +49,7 @@ class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base 
                 } else {
                     $barem = $barems[$valoracions->$key];
                 }
-            }*/
+            }*/ print_object($activitat);
 
             $output .= html_writer::start_tag('div', array('class' => 'fitem'));
             $output .= html_writer::tag('div', $activitat->descripcio, array('class' => 'fitemtitle'));
@@ -57,7 +58,7 @@ class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base 
         }
 
 
-        $link = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'page' => 'quadern_valoracio_activitat'));
+        $link = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'page' => 'quadern_valoracio_activitat', 'quadern' => $activitat->quadern));
         $output .= html_writer::link($link, get_string('edit'));
         $output .= html_writer::end_tag('div');
 

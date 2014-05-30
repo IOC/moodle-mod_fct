@@ -125,6 +125,7 @@ class fct_cicle extends fct_base{
         global $DB;
 
         $errors = array();
+
         if ($data['id']) {
             return $errors;
         }

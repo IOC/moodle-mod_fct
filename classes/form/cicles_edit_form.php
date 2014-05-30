@@ -39,7 +39,7 @@ class fct_cicle_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-        $attributes = array('size' => 48, 'required' => true);
+        $attributes = array('size' => 48);
         $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'), $attributes);
         $mform->addRule('nom', null, 'required');
         $mform->setType('nom', PARAM_TEXT);

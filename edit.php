@@ -80,6 +80,10 @@ if ($quadern) {
 if ($qualificaciotype) {
     $record->qualificaciotype = $qualificaciotype;
 }
+
+if ($valoracio) {
+    $record->valoracio = $valoracio;
+}
 if ($id) {
     $record->id = $id;
     $class = new $class($record);
@@ -180,6 +184,7 @@ $data->cmid = $cmid;
 $data->page = $page;
 $data->fct = $fct->id;
 $data->qualificaciotype = $qualificaciotype;
+$data->valoracio = $valoracio;
 
 if ($quadern) {
     $data->quadern = $quadern;

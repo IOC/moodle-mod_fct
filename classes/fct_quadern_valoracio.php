@@ -60,12 +60,12 @@ class fct_quadern_valoracio extends fct_quadern_base {
                               get_string('valoracio_activitats', 'fct'));
 
         $subtree[] = new tabobject('qualificacio_quadern',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->id, 'page' => 'quadern_valoracio', 'subpage'=> 'quadern_qualificacio')),
+                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->id, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_qualificacio')),
                               get_string('qualificacio_quadern', 'fct'));
 
         $row = $tab['row'];
         $row['quadern_valoracio']->subtree = $subtree;
-        $tab['currentab'] = ($this->valoracio == 'parcial')?'valoracio_parcial_actituds':($this->valoracio == 'final'?'valoracio_final_actituds':'valoracio_resultats');
+        $tab['currentab'] = ($this->valoracio == 'parcial') ? 'valoracio_parcial_actituds' : ($this->valoracio == 'final' ? 'valoracio_final_actituds' : 'valoracio_resultats');
         $tab['row'] = $row;
 
         return $tab;
@@ -73,7 +73,7 @@ class fct_quadern_valoracio extends fct_quadern_base {
 
     public function __construct($record) {
         parent::__construct($record);
-        $this->valoracio = $record->valoracio;
+        $this->valoracio = isset($record->valoracio) ? $record->valoracio : '';
     }
 
     public function view() {
@@ -91,6 +91,11 @@ class fct_quadern_valoracio extends fct_quadern_base {
         return true;
 
     }
+
+    public function prepare_form_data($data) {
+        $data->barem = $this->barem_valoracio();
+    }
+
 
     public function barem_valoracio() {
         return array(
@@ -161,5 +166,4 @@ class fct_quadern_valoracio extends fct_quadern_base {
 
         return $objectdata;
     }
-
 }

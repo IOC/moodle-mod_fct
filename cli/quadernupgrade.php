@@ -24,31 +24,39 @@ define('CLI_SCRIPT', true);
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->libdir.'/clilib.php');
-require_once('lib.php');
 require_once($CFG->dirroot . '/mod/fct/lib.php');
-require_once('classes/fct_quadern_base.php');
+require_once($CFG->dirroot . '/mod/fct/classes/fct_quadern_base.php');
 
 global $DB;
 
 $quadernstemp = $DB->get_records('fct_quadern_temp', array());
-
 $quadernscount = 0;
+
 foreach ($quadernstemp as $quaderntemp) {
     $quadern = new fct_quadern_base((int)$quaderntemp->id);
 
-    if ($userid = $DB->get_record('user', array('username' => $quaderntemp->alumne))) {
-        $quadern->alumne = $userid;
+    if (isset($quaderntemp->alumne)) {
+        $recordalumne = $DB->get_record('user', array('username' => $quaderntemp->alumne));
+        $quadern->alumne = $recordalumne->id;
     }
-    if ($userid = $DB->get_record('user', array('username' => $quaderntemp->tutor_centre))) {
-            $quadern->tutor_centre = $userid;
+
+    if (isset($quaderntemp->tutor_centre) && !empty($quaderntemp->tutor_centre)) {
+        $recordtutor_centre = $DB->get_record('user', array('username' => $quaderntemp->tutor_centre));
+        $quadern->tutor_centre = $recordtutor_centre->id;
     }
-    if ($userid = $DB->get_record('user', array('username' => $quaderntemp->tutor_empresa))) {
-        $quadern->tutor_empresa = $userid;
+
+    if (isset($quaderntemp->tutor_empresa) && !empty($quaderntemp->tutor_empresa)) {
+        $recordtutor_empresa = $DB->get_record('user', array('username' => $quaderntemp->tutor_empresa));
+        $quadern->tutor_empresa = $recordtutor_empresa->id;
     }
+
     $quadern->create_object();
     $quadern->update();
     $quadernscount++;
+    if ($quadernscount % 10 == 0) {
+        echo "Se han actualizado " .  $quadernscount . " quaderns de " . count($quadernstemp) . "\n";
+    }
  }
 
- echo "Se han actualizado $quadernscount quaderns";
+ echo "Se han actualizado" .  $quadernscount . "quaderns";
 

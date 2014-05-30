@@ -115,8 +115,9 @@ class fct_quadern_quinzena extends fct_base {
             } else {
                 echo $output->notification(get_string('cap_quinzena', 'fct'));
                 $quadern = new fct_quadern_base((int)$this->quadern);
-                $dataprevista = userdate($this->data_prevista_valoracio_parcial($quadern), get_string('strftimedate'));
-                echo $output->notification(get_string('data_prevista_valoracio_parcial', 'fct', format_string($dataprevista)));
+                if ($dataprevista = $this->data_prevista_valoracio_parcial($quadern)) {
+                    echo $output->notification(get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate'))));
+                }
             }
         }
     }
@@ -368,12 +369,13 @@ class fct_quadern_quinzena extends fct_base {
     }
 
     private function data_prevista_valoracio_parcial($quadern) {
-        $conveni = $quadern->ultim_conveni();
-        $inici = DateTime::createFromFormat('U', $conveni->data_inici);
-        $final = DateTime::createFromFormat('U', $conveni->data_final);
-        $dies = (int) ($inici->diff($final)->format('%a') / 2);
-        $interval = new DateInterval("P{$dies}D");
-
-        return $inici->add($interval)->getTimestamp();
+        if ($conveni = $quadern->ultim_conveni()) {
+            $inici = DateTime::createFromFormat('U', $conveni->data_inici);
+            $final = DateTime::createFromFormat('U', $conveni->data_final);
+            $dies = (int) ($inici->diff($final)->format('%a') / 2);
+            $interval = new DateInterval("P{$dies}D");
+            return $inici->add($interval)->getTimestamp();
+        }
+        return false;
     }
 }

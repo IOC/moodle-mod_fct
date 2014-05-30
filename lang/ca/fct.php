@@ -26,7 +26,7 @@
 $string['a'] = "A";
 $string['actitud_1'] = "1. Assistència (nombre de faltes).";
 $string['actitud_2'] = "2. Puntualitat.";
-$string['actitud_3'] = "3. Responsabilitat en l'execució de les tasques assignades.";
+$string['actitud_3'] = "3. Responsabilitat en l'    ecució de les tasques assignades.";
 $string['actitud_4'] = "4. Mètode en el desenvolupament de les tasques.";
 $string['actitud_5'] = "5. Ordre, pulcritud i conservació de materials, equips, eines, aparells i altres estris que utilitzi en la seva activitat.";
 $string['actitud_6'] = "6. Integració en el treball de grup.";
@@ -159,6 +159,8 @@ $string['fctintro'] = 'Introducció';
 $string['fct:tutor_centre'] = "Tutor de centre de l'FCT";
 $string['fct:tutor_empresa'] = "Tutor d'empresa de l'FCT";
 $string['format'] = "Format";
+$string['format_csv'] = 'CSV';
+$string['format_excel'] = 'Excel';
 $string['franja_no_valida'] = 'Franja no vàlida';
 $string['frases_retroaccio'] = "Frases de retroacció";
 $string['general'] = 'General';

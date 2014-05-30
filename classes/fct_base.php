@@ -307,12 +307,16 @@ abstract class fct_base {
                                   new moodle_url('view.php', array('id' => $id, 'page' => 'frases_retroaccio')),
                                   get_string('frases_retroaccio', 'fct'));
 
+            $row_admin['llista_empreses'] = new tabobject('llista_empreses',
+                                  new moodle_url('edit.php', array('cmid' => $id, 'page' => 'llista_empreses')),
+                                  get_string('llista_empreses', 'fct'));
+
             $row_admin['tutor'] = new tabobject('tutor',
                                   new moodle_url('edit.php', array('cmid' => $id, 'page' => 'tutor')),
                                   get_string('afegeix_tutor_empresa', 'fct'));
 
             $row = array_merge($row, $row_admin);
-          }
+        }
 
           $tab['row'] = $row;
           $tab['inactivetabs'] = array();
