@@ -33,39 +33,41 @@ class mod_fct_centre_renderer extends plugin_renderer_base {
 
         $output = '';
 
-        $output .= html_writer::start_div('name_centre');
-        $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->nom) ? $centre->nom : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('dadescentre');
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->nom) ? $centre->nom : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('adress_centre');
-        $output .= html_writer::tag('span', get_string('adreca', 'fct').':');
-        $output .= html_writer::tag('span', isset($centre->adreca) ? $centre->adreca : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('adreca', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->adreca) ? $centre->adreca : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('codi_centre');
-        $output .= html_writer::tag('span', get_string('codi_postal', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->codi_postal) ? $centre->codi_postal : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('codi_postal', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->codi_postal) ? $centre->codi_postal : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('poblacio_centre');
-        $output .= html_writer::tag('span', get_string('poblacio', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->poblacio) ? $centre->poblacio : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('poblacio', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->poblacio) ? $centre->poblacio : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('telefon_centre');
-        $output .= html_writer::tag('span', get_string('telefon', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->telefon) ? $centre->telefon : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('telefon', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->telefon) ? $centre->telefon : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('fax_centre');
-        $output .= html_writer::tag('span', get_string('fax', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->fax) ? $centre->fax : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('fax', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->fax) ? $centre->fax : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('email_centre');
-        $output .= html_writer::tag('span', get_string('email', 'fct').':', array('class' => 'titlecentre'));
-        $output .= html_writer::tag('span', isset($centre->email) ? $centre->email : '', array('class' => 'contentcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('email', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', isset($centre->email) ? $centre->email : '', array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         if ($edit) {
@@ -73,6 +75,9 @@ class mod_fct_centre_renderer extends plugin_renderer_base {
             $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'dades_centre'));
             $output .= html_writer::link($editlink, get_string('edit'));
         }
+
+        $output .= html_writer::end_div();
+
 
         return $output;
     }
