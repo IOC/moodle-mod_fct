@@ -40,7 +40,7 @@ $capabilities = array(
     'mod/fct:admin' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         )
@@ -49,7 +49,7 @@ $capabilities = array(
     'mod/fct:alumne' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'student' => CAP_ALLOW,
         )
     ),
@@ -57,7 +57,7 @@ $capabilities = array(
     'mod/fct:tutor_centre' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
+        'archetypes' => array(
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
         )
@@ -66,9 +66,6 @@ $capabilities = array(
     'mod/fct:tutor_empresa' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'legacy' => array(
-            'tutorempresa' => CAP_ALLOW,
-        )
     ),
 
 );
