@@ -277,8 +277,8 @@ class fct_diposit {
         $cm = get_coursemodule_from_instance('fct', $fct->id);
         $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-        $usuari->es_administrador = has_capability(
-            "mod/fct:admin", $context, $userid);
+        $usuari->es_administrador = (has_capability("mod/fct:admin", $context, $userid)
+            or has_capability("moodle/site:config", $context, $userid));
         $usuari->es_alumne = has_capability(
             "mod/fct:alumne", $context, $userid);
         $usuari->es_tutor_centre = has_capability(

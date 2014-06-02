@@ -48,8 +48,8 @@ class fct_usuari {
         if ($cm = get_coursemodule_from_instance('fct', $fctid)) {
             $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-            $this->es_administrador = has_capability(
-                "mod/fct:admin", $context, $userid, false);
+            $this->es_administrador = (has_capability("mod/fct:admin", $context, $userid, false)
+                or has_capability("moodle/site:config", $context, $userid));
             $this->es_alumne = has_capability(
                 "mod/fct:alumne", $context, $userid, false);
             $this->es_tutor_centre = has_capability(
