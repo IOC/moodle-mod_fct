@@ -55,7 +55,7 @@ abstract class fct_base {
       */
      protected $editform = '';
 
-     protected $objecte = false;
+     protected $objecte = '';
 
      protected $usuari;
      protected $fct;
@@ -229,7 +229,7 @@ abstract class fct_base {
 
         if ($data->id = $DB->insert_record(static::$table, $record)) {
             self::__construct($data);
-            if (!isset($this->objecte_keys) || !$this->objecte) {
+            if (!isset($this->objecte_keys) || empty($this->objecte_keys)) {
                 return true;
             }
             $this->create_object();
