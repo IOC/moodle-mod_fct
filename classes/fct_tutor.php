@@ -35,12 +35,22 @@ class fct_tutor extends fct_base {
     protected static $table = 'user';
     protected $record_keys = array('username', 'firstname', 'lastname', 'email', 'auth', 'confirmed', 'emailstop', 'lang', 'mnethostid', 'secret', 'timemodified');
     protected $propierties_keys = array('id');
+    public $returnurl;
 
     public function tabs($id, $type = 'view') {
         $tab = parent::tabs_general($id);
         $tab['currentab'] = 'tutor';
 
         return $tab;
+    }
+
+    public function __construct($record) {
+        parent::__construct($record);
+        if (!isset($this->fct)) {
+            print_error('nofct');
+        }
+        $cm = get_coursemodule_from_instance('fct', $this->fct);
+        $this->returnurl = new moodle_url('/mod/fct/view.php', array('id' => $cm->id));
     }
 
     private function prepare_data_after_update($data) {
@@ -62,19 +72,17 @@ class fct_tutor extends fct_base {
 
     private function prepare_data_before_update($data) {
         global $DB;
-
         $user = $DB->get_record('user', array('id' => $this->id));
         events_trigger('user_created', $user);
         setnew_password_and_mail($user);
 
         $cm = get_coursemodule_from_id('fct', $data->cmid);
-        $roleid = $DB->get_field('role', 'id', array('shortname' => 'tutor_empresa'));
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'tutorempresa'));
         $context = get_context_instance(CONTEXT_COURSE, $cm->course);
         $plugin = enrol_get_plugin('manual');
         $conditions = array('enrol' => 'manual', 'courseid' => $cm->course);
         $enrol = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);
         $plugin->enrol_user($enrol, $user->id, $roleid, 0, 0, null, false);
-
     }
 
     public function insert($data) {
@@ -114,7 +122,7 @@ class fct_tutor extends fct_base {
         $validletters = strtolower("TRWAGMYFPDXBNJZSQVHLCKE");
         $correctletter = substr($validletters, $mod, 1);
 
-        if($correctletter!=$letter) {
+        if ($correctletter != $letter) {
             return array('dni' => "Letra incorrecta.");
         }
         return true;
@@ -127,7 +135,8 @@ class fct_tutor extends fct_base {
         }
     }
 
-    public function prepare_form_data($data){}
+    public function prepare_form_data($data) {
+    }
 
 
 }

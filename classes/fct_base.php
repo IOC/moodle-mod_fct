@@ -36,12 +36,12 @@ abstract class fct_base {
       * Dabatase columns array.
       * @var array
       */
-     protected $record_keys = array();
+    protected $record_keys = array();
      /**
       * Keys of serialized data.
       * @var array
       */
-     protected $objecte_keys = array();
+    protected $objecte_keys = array();
 
      /**
       * Associated database table.
@@ -85,26 +85,26 @@ abstract class fct_base {
                 $objectdata = json_decode($data->objecte);
             }
             if (isset($objectdata)) {
-              foreach ($objectdata as $key => $value) {
+                foreach ($objectdata as $key => $value) {
 
-                  if (property_exists(get_class($this), $key)) {
-                      $this->$key = $value;
-                  }
+                    if (property_exists(get_class($this), $key)) {
+                        $this->$key = $value;
+                    }
 
-                  if (is_object($value)) {
-                      $valuearray = (array)$value;
+                    if (is_object($value)) {
+                        $valuearray = (array)$value;
 
-                      foreach ($valuearray as $key => $value) {
-                          if (property_exists(get_class($this), $key)) {
-                              $this->$key = $value;
-                          }
-                      }
-                  }
-              }
+                        foreach ($valuearray as $key => $value) {
+                            if (property_exists(get_class($this), $key)) {
+                                $this->$key = $value;
+                            }
+                        }
+                    }
+                }
             }
 
             if (isset($this->fct)) {
-              $this->usuari = new fct_usuari($this->fct, $USER->id);
+                $this->usuari = new fct_usuari($this->fct, $USER->id);
             }
 
             return true;
@@ -134,17 +134,17 @@ abstract class fct_base {
     public function __get($name) {
 
         if (property_exists(get_class($this), $name)) {
-          return $this->$name;
+            return $this->$name;
         }
         if ($name == 'alumne') {
-           if (isset($this->quadern)) {
-            if ($quadern = new fct_quadern_base((int)$this->quadern)) {
-              return $quadern->alumne;
+            if (isset($this->quadern)) {
+                if ($quadern = new fct_quadern_base((int)$this->quadern)) {
+                    return $quadern->alumne;
+                }
             }
-          }
         }
         return false;
-      }
+    }
 
     /**
      * Get all records from class table associated to a fct instance.
@@ -228,13 +228,13 @@ abstract class fct_base {
         $record = array_intersect_key((array)$data, array_flip($this->record_keys));
 
         if ($data->id = $DB->insert_record(static::$table, $record)) {
-          self::__construct($data);
-          if (!isset($this->objecte_keys)) {
+            self::__construct($data);
+            if (!isset($this->objecte_keys) || !$this->objecte) {
+                return true;
+            }
+            $this->create_object();
+            $this->update();
             return true;
-          }
-          $this->create_object();
-          $this->update();
-          return true;
         }
 
         return false;
@@ -282,13 +282,13 @@ abstract class fct_base {
 
         $row = array();
         $row['quaderns'] = new tabobject('quaderns',
-                                     new moodle_url('view.php', array('id' => $id, 'page'=>'quadern')),
+                                     new moodle_url('view.php', array('id' => $id, 'page' => 'quadern')),
                                      get_string('quaderns', 'mod_fct'));
 
         if ($this->usuari->es_tutor_centre) {
 
             $row['aviso'] = new tabobject('avisos',
-                                         new moodle_url('view.php', array('id' => $id, 'page'=>'avisos')),
+                                         new moodle_url('view.php', array('id' => $id, 'page' => 'avisos')),
                                          get_string('avisos', 'mod_fct'));
 
         }
@@ -329,13 +329,12 @@ abstract class fct_base {
         $row = array();
 
         $row['quadern_main'] = new tabobject('quadern_main',
-                                     new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page'=>'quadern_main')),
+                                     new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page' => 'quadern_main')),
                                      get_string('quadern', 'mod_fct'));
 
         $row['quadern_dades'] = new tabobject('quadern_dades',
-                                     new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page'=>'quadern_dades')),
+                                     new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page' => 'quadern_dades')),
                                      get_string('dades_generals', 'mod_fct'));
-
 
         $row['quadern_activitat'] = new tabobject('quadern_activitat',
                                     new moodle_url('view.php', array('id' => $id, 'quadern' => $quadernid, 'page' => 'quadern_activitat')),
@@ -360,20 +359,19 @@ abstract class fct_base {
     }
 
     private function tabs_inactive_quadern($id, $quadernid) {
-      $quadern = new fct_quadern_base((int)$quadernid);
+        $quadern = new fct_quadern_base((int)$quadernid);
 
-      $inactivetabs = array();
-      if ($quadern->estat == 'proposat' and !$this->usuari->es_administrador) {
-        $inactivetabs = array('quadern_quinzena', 'quadern_valoracio', 'quadern_qualificacio');
-      }
+        $inactivetabs = array();
+        if ($quadern->estat == 'proposat' and !$this->usuari->es_administrador) {
+            $inactivetabs = array('quadern_quinzena', 'quadern_valoracio', 'quadern_qualificacio');
+        }
 
-      return $inactivetabs;
+        return $inactivetabs;
     }
 
-    public static function validation($data){
-      return array();
+    public static function validation($data) {
+        return array();
     }
 
     abstract public function prepare_form_data($data);
-
 }
