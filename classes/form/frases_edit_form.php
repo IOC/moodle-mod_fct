@@ -34,8 +34,8 @@ class fct_frases_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-        $data->frases_centre = implode($data->frases_centre, "\n");
-        $data->frases_empresa = implode($data->frases_empresa, "\n");
+        $data->frases_centre = isset($data->frases_centre) ? implode($data->frases_centre, "\n") : '';
+        $data->frases_empresa = isset($data->frases_empresa) ? implode($data->frases_empresa, "\n") : '';
 
         $attributes = array('cols' => 60, 'rows' => 20);
         $mform->addElement('textarea', 'frases_centre', get_string('tutor_centre', 'fct'), $attributes);
