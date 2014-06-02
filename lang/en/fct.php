@@ -284,6 +284,7 @@ $string['tutor_de_empresa'] = "Tutor/a d'empresa";
 $string['tutor_empresa'] = "Tutor/a de l'empresa";
 $string['tots'] = "Tots";
 $string['usuari_duplicat'] = 'Ja existeix un usuari amb aquest nom i cognoms';
+$string['validacio_enter'] = 'S\'ha de introduir un nombre enter';
 $string['valoracio'] = "Valoració i qualificació";
 $string['valoracio_actituds'] = "Valoració de les actituds";
 $string['valoracio_activitats'] = "Valoració de les activitats (LOGSE/LOE)";
