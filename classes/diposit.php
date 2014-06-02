@@ -39,7 +39,7 @@ class fct_diposit {
         $record->timemodified = $fct->timemodified;
         $record->objecte = '';
 
-        if (!$fct->id) {
+        if (!isset($fct->id) || !$fct->id) {
             $fct->id = $DB->insert_record('fct', $record);
         }
 
