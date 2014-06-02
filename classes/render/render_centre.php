@@ -33,7 +33,7 @@ class mod_fct_centre_renderer extends plugin_renderer_base {
 
         $output = '';
 
-        $output .= html_writer::start_div('dadescentre');
+        $output .= html_writer::start_div('databox');
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'datatitle'));
