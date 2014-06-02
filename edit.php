@@ -84,10 +84,12 @@ if ($qualificaciotype) {
 if ($valoracio) {
     $record->valoracio = $valoracio;
 }
+
 if ($id) {
-    $record->id = $id;
-    $class = new $class($record);
+    $class = new $class($id);
     $class->typequalificaciotype = $qualificaciotype;
+    $class->quadern = $quadern;
+    $class->valoracio = $valoracio;
 } else {
     $class = new $class($record);
 }
