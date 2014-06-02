@@ -152,6 +152,7 @@ $string['exempcio'] = 'Exempció';
 $string['exporta_pdf'] = 'Exporta en PDF';
 $string['fax'] = 'Fax';
 $string['fct'] = "FCT";
+$string['fct:addinstance'] = "Afegeix un FCT";
 $string['fctname'] = 'Quadern de pràctiques';
 $string['fctintro'] = 'Introducció';
 $string['fct:admin'] = "Administrador de l'FCT";
