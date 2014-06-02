@@ -38,12 +38,12 @@ class fct_quadern_dades_relatives_edit_form extends moodleform {
     $data = $this->_customdata['data'];
 
     $mform->addElement('text', 'hores_credit', get_string('hores_credit', 'fct'));
-    $mform->setType('hores_credit', PARAM_TEXT);
+    $mform->setType('hores_credit', PARAM_INT);
 
     $mform->addElement('select', 'exempcio', get_string('exempcio', 'fct'), $data->excempcions);
 
     $mform->addElement('text', 'hores_anteriors', get_string('hores_anteriors', 'fct'));
-    $mform->setType('hores_anteriors', PARAM_TEXT);
+    $mform->setType('hores_anteriors', PARAM_INT);
 
     $mform->addElement('hidden', 'id');
     $mform->setType('id', PARAM_INT);
