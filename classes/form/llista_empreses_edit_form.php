@@ -38,15 +38,19 @@ class fct_llista_empreses_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
+
         $formats = array('csv' => get_string('format_csv', 'fct'), 'excel' => get_string('format_excel', 'fct'));
 
         if (isset($data->cicles)) {
             foreach ($data->cicles as $cicle) {
                 $mform->addElement('checkbox', 'cicle_'.$cicle->id, '', $cicle->nom);
             }
+            $mform->addelement('select', 'format', get_string('format', 'fct'), $formats);
+            $this->add_action_buttons(false, get_string('download'));
+        } else {
+            $html = '<center> <strong>'. get_string('cap_cicle_formatiu', 'fct'). '</strong> </center>';
+            $mform->addElement('html', $html);
         }
-
-        $mform->addelement('select', 'format', get_string('format', 'fct'), $formats);
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
@@ -57,13 +61,15 @@ class fct_llista_empreses_edit_form extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
-        $this->add_action_buttons(false, get_string('download'));
-
         $this->set_data($data);
     }
 
     public function get_data() {
-        $data = parent::get_data(); if (!$data) { return false;}
+        $data = parent::get_data();
+
+        if (!$data) {
+            return false;
+        }
 
         $datakeys = array_keys((array)$data);
 
