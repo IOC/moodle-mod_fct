@@ -184,7 +184,7 @@ class fct_quadern extends fct_quadern_base {
         }
 
         $wherecondition = implode(' AND ', $select);
-        $sql = "SELECT q.* AS id"
+        $sql = "SELECT q.*"
              . ' FROM ' . $tables
              . ' WHERE ' . $wherecondition
              . ' ORDER by q.data_final DESC';
