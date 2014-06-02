@@ -133,6 +133,7 @@ $string['diumenge'] = 'Diumenge';
 $string['durada_total_practiques'] = "Durada total de les pràctiques: <strong>{\$a->dies} dies / {\$a->hores} hores </strong>";
 $string['dni'] = 'DNI';
 $string['dni_existent'] = 'Ja existeix un usuari amb aquest DNI';
+$string['dni_lletra_incorrecta'] = 'Lletra incorrecta.';
 $string['dni_no_valid'] = 'El DNI ha de tenir 8 dígits i la lletra';
 $string['edita'] = "Edita";
 $string['edita_activitat'] = "Edita l'activitat";

@@ -123,7 +123,7 @@ class fct_tutor extends fct_base {
         $correctletter = substr($validletters, $mod, 1);
 
         if ($correctletter != $letter) {
-            return array('dni' => "Letra incorrecta.");
+            return array('dni' => get_string('dni_lletra_incorrecta', 'fct'));
         }
         return true;
     }
