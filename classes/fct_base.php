@@ -268,6 +268,10 @@ abstract class fct_base {
         }
     }
 
+    public function no_delete_message() {
+        return '';
+    }
+
     public function get_edit_form($data = array()) {
         $editform = new $this->editform(null, $data);
         return $editform;

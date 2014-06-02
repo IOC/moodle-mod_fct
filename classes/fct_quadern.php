@@ -220,6 +220,7 @@ class fct_quadern extends fct_quadern_base {
             $DB->delete_records('fct_quadern', array('id' => $this->id));
 
             $transaction->allow_commit();
+            return true;
         } catch(Exception $e) {
             $transaction->rollback($e);
         }
@@ -228,7 +229,7 @@ class fct_quadern extends fct_quadern_base {
     public function get_object_data(){
 
         $objectdata = parent::get_object_data();
-        $objectdata->nom_empresa = $this->nom_empresa?$this->nom_empresa:'';
+        $objectdata->nom_empresa = $this->nom_empresa ? $this->nom_empresa : '';
 
         return $objectdata;
     }
