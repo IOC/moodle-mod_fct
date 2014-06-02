@@ -38,8 +38,13 @@ class fct_quadern_edit_form extends moodleform {
 
         $mform = $this->_form;
         $data = $this->_customdata['data'];
+        if (empty($data->cicles)) {
+            $html = '<center><strong>' . get_string('cicle_necessari_per_afegir_quaderns', 'fct') . '</strong></center>';
+            $mform->addElement('html', $html);
+            return;
+        }
 
-        if (!$data->es_alumne){
+        if (!$data->es_alumne) {
             $mform->addElement('select', 'alumne', get_string('alumne', 'mod_fct'), $data->alumnes);
         } else {
             $mform->addElement('hidden', 'alumne');
