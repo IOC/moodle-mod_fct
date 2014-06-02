@@ -80,6 +80,13 @@ class fct_dades_centre extends fct_base {
         parent::set_data($data);
     }
 
+    public function checkpermissions($type = 'view') {
+
+        if (!$this->usuari->es_administrador) {
+            print_error('nopermisions');
+        }
+    }
+
     public function prepare_form_data($data) {
     }
 }

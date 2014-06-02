@@ -73,7 +73,7 @@ class fct_quadern_dades extends fct_quadern_base {
         $output = $PAGE->get_renderer('mod_fct', 'centre');
         $fct = new fct_dades_centre((int)$this->fct);
 
-        $centre = $output->centre($fct->centre);
+        $centre = $output->centre($fct->centre, false);
 
         echo $centre;
     }

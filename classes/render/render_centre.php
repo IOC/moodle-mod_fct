@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class mod_fct_centre_renderer extends plugin_renderer_base {
 
-    public function centre($centre) {
+    public function centre($centre, $edit = true) {
         global $PAGE;
 
         $output = '';
@@ -68,11 +68,12 @@ class mod_fct_centre_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', isset($centre->email) ? $centre->email : '', array('class' => 'contentcentre'));
         $output .= html_writer::end_div();
 
-        $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
-        $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'dades_centre'));
-        $output .= html_writer::link($editlink, get_string('edit'));
+        if ($edit) {
+            $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
+            $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'dades_centre'));
+            $output .= html_writer::link($editlink, get_string('edit'));
+        }
 
         return $output;
-
     }
 }
