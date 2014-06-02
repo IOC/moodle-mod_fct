@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 class mod_fct_frases_renderer extends plugin_renderer_base {
 
     public function frases_table($frases) {
+        global $PAGE;
 
         $output = '';
         $output .= html_writer::tag('span', get_string('tutor_centre', 'fct'));
@@ -46,17 +47,18 @@ class mod_fct_frases_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('ul');
 
-       if (isset($frases['frases_empresa'])) {
+        if (isset($frases['frases_empresa'])) {
             foreach ($frases['frases_empresa'] as $key => $value) {
                 $output .= html_writer::tag('li', $value);
             }
         }
 
         $output .= html_writer::end_tag('ul');
+        $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
+
+        $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'frases_retroaccio'));
+        $output .= html_writer::link($editlink, get_string('edit'));
 
         return $output;
-
     }
-
-
 }

@@ -73,10 +73,6 @@ class fct_dades_centre extends fct_base {
         $centre = $output->centre($this->centre);
 
         echo $centre;
-
-        $cm = get_coursemodule_from_instance('fct', $this->id);
-        echo $OUTPUT->edit_button(new moodle_url('/mod/fct/edit.php', array('cmid' => $cm->id, 'id'=>$this->id, 'page' => 'dades_centre')));
-
     }
 
     public function set_data($data) {
@@ -84,6 +80,6 @@ class fct_dades_centre extends fct_base {
         parent::set_data($data);
     }
 
-    public function prepare_form_data($data) {}
-
+    public function prepare_form_data($data) {
+    }
 }

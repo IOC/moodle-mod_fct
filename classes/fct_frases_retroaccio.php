@@ -74,10 +74,6 @@ class fct_frases_retroaccio extends fct_base {
         $table = $output->frases_table($frases);
 
         echo $table;
-
-        $cm = get_coursemodule_from_instance('fct', $this->id);
-        echo $OUTPUT->edit_button(new moodle_url('/mod/fct/edit.php', array('cmid' => $cm->id, 'id'=>$this->id, 'page' => 'frases_retroaccio')));
-
     }
 
     public function set_data($data) {
@@ -98,6 +94,6 @@ class fct_frases_retroaccio extends fct_base {
         }
     }
 
-    public function prepare_form_data($data) {}
-
+    public function prepare_form_data($data) {
+    }
 }
