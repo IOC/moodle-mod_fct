@@ -23,67 +23,44 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once(dirname(__FILE__) . '/../../config.php');
+require_once('classes/fct_instance.php');
+
 function fct_add_instance($data) {
-    fct_require('diposit', 'domini', 'json');
     $fct = new stdClass;
     $fct->course = $data->course;
     $fct->name = $data->name;
     $fct->intro = $data->intro;
     $fct->timecreated = time();
     $fct->timemodified = time();
-    $fct->objecte = 'a';
-    $diposit = new fct_diposit();
-    $diposit->afegir_fct($fct);
+    $fct->objecte = '';
 
-    return $fct->id;
+    $fctinstance = new fct_instance($fct);
+    $fctinstance->add();
+    return $fctinstance->id;
 }
 
 function fct_update_instance($data) {
-    fct_require('diposit', 'domini', 'json');
+    global $DB;
 
-    $diposit = new fct_diposit();
-    $fct = $diposit->fct($data->instance);
-    $fct->name = stripslashes($data->name);
-    $fct->intro = stripslashes($data->intro);
-    $fct->timemodified = time();
-    $diposit->afegir_fct($fct);
+    $fctrecord = $DB->get_record('fct', array('id' => $data->instance));
+    $fctrecord->name = $data->name;
+    $fctrecord->intro = $data->intro;
+    $fctrecord->timemodified = time();
 
-    return true;
-}
-
-function fct_delete_instance($id) {
-    fct_require('diposit', 'domini', 'json');
-
-    $diposit = new fct_diposit();
-    $serveis = new fct_serveis($diposit);
-    $fct = $diposit->fct($id);
-    $serveis->suprimir_fct($fct);
+    $fctinstance = new fct_instance($fctrecord);
+    $fctinstance->add();
 
     return true;
 }
 
-function fct_string($identifier, $a=null) {
-    if (is_array($a)) {
-        $a = (object) $a;
-    }
-    return get_string($identifier, 'fct', $a);
-}
+function fct_delete_instance($id) {global $CFG;
 
-function fct_require() {
-    global $CFG;
-    foreach (func_get_args() as $fitxer) {
-        if (substr($fitxer, 0, 7) === 'pagines') {
-            require_once("{$CFG->dirroot}/mod/fct/{$fitxer}.php");
-        } else {
-            require_once("{$CFG->dirroot}/mod/fct/classes/{$fitxer}.php");
-        }
-    }
-}
+    global $DB;
 
-function fct_url($pagina, $params) {
-    $url = 'view.php?pagina=' . urlencode($pagina);
-    foreach ($params as $nom => $valor) {
-        $url .= "&$nom=" . urlencode($valor);
-    }
-    return $url;
+    $fctrecord = $DB->get_record('fct', array('id' => $id));
+    $fctinstance = new fct_instance($fctrecord);
+    $fctinstance->delete();
+
+    return true;
 }
