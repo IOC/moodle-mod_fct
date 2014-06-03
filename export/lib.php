@@ -22,20 +22,20 @@
  * @copyright  2014 Institut Obert de Catalunya
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-fct_require('diposit', 'serveis', 'json');
+require_once($CFG->dirroot . '/mod/fct/classes/fct_dades_centre.php');
+require_once($CFG->dirroot . '/mod/fct/classes/fct_activitat.php');
 
 class fct_export {
 
     private $format;
-    private $diposit;
-    private $seveis;
+    //private $diposit;
+    //private $seveis;
     private $baremvaloracio;
     private $baremqualificacio;
 
     public function __construct() {
-        $this->diposit = new fct_diposit();
-        $this->serveis = new fct_serveis($this->diposit);
+        //$this->diposit = new fct_diposit();
+        //$this->serveis = new fct_serveis($this->diposit);
 
         $this->baremvaloracio = array(
             0 => '-',
@@ -83,11 +83,18 @@ class fct_export {
 
         $doc = $this->template('quadern');
 
-        $quadern = $this->diposit->quadern($id);
-        $cicle = $this->diposit->cicle($quadern->cicle);
-        $fct = $this->diposit->fct($cicle->fct);
-        $activitats = $this->diposit->activitats($id);
-        $quinzenes = $this->diposit->quinzenes($id);
+        $quadern = new fct_quadern_base($id);
+        $cicle = new fct_cicle((int)$quadern->cicle);
+        $fct = new fct_dades_centre($quadern->fct);
+        $activitats = fct_quadern_activitat::get_records($id);
+        $quinzenes = fct_quadern_quinzena::get_records($id);
+        //print_object($quadern);die;
+
+        //$quadern = $this->diposit->quadern($id);
+        //$cicle = $this->diposit->cicle($quadern->cicle);
+        //$fct = $this->diposit->fct($cicle->fct);
+        //$activitats = $this->diposit->activitats($id);
+        //$quinzenes = $this->diposit->quinzenes($id);
         $filter = function ($a) {
             return $a->id;
         };
@@ -95,10 +102,15 @@ class fct_export {
         foreach ($quinzenes as $q) {
             $q->activitats = array_intersect($q->activitats, $idsactivitats);
         }
-        $horesrealitzades = $this->serveis->hores_realitzades_quadern($quadern);
-        $ultimquadern = $this->serveis->ultim_quadern($quadern->alumne, $quadern->cicle);
-        $resumhores = $this->serveis->resum_hores_fct($quadern);
-
+        //$horesrealitzades = $this->serveis->hores_realitzades_quadern($quadern);
+        //$ultimquadern = $this->serveis->ultim_quadern($quadern->alumne, $quadern->cicle);
+        //$resumhores = $this->serveis->resum_hores_fct($quadern);
+        $horesrealitzades = 0;
+        $ultimquadern = new stdClass;
+        $ultimquadern->id = 0;
+        $resumhores = new stdClass;
+        $resumhores->anteriors = 0;
+        $resumhores->pendents = 0;
         $doc = $this->subst($doc, (object) array(
             'quadern' => $quadern,
             'fct' => $fct,
@@ -106,11 +118,11 @@ class fct_export {
             'activitats' => $activitats,
             'quinzenes' => $quinzenes,
             'lloc_practiques' => (
-                trim($quadern->empresa->nom_lloc_practiques) or
-                trim($quadern->empresa->adreca_lloc_practiques) or
-                trim($quadern->empresa->poblacio_lloc_practiques) or
-                trim($quadern->empresa->codi_postal_lloc_practiques) or
-                trim($quadern->empresa->telefon_lloc_practiques)
+                trim($quadern->empresa->nom) or
+                trim($quadern->empresa->adreca) or
+                trim($quadern->empresa->poblacio) or
+                trim($quadern->empresa->codi_postal) or
+                trim($quadern->empresa->telefon)
             ),
             'hores_realitzades' => $horesrealitzades,
             'hores_practiques_pendents' => max(0, $quadern->hores_practiques - $horesrealitzades),
@@ -151,11 +163,14 @@ class fct_export {
     }
 
     private function filter($value, $type=null) {
+        global $DB;
+
         switch ($type) {
             case 'actitud':
                 return fct_string('actitud_' . ($value + 1));
             case 'activitat':
-                $activitat = $this->diposit->activitat($value);
+                //$activitat = $this->diposit->activitat($value);
+                $activitat = (object) array('descripcio' => 'PROVA');
                 return $activitat->descripcio;
             case 'count':
                 return count($value);
@@ -192,7 +207,7 @@ class fct_export {
             case 'string':
                 return $value ? fct_string($value) : '';
             case 'usuari':
-                $user = get_record('user', 'id', (int) $value);
+                $user = $DB->get_record('user', array('id' => (int) $value));
                 return $user ? $user->firstname . ' ' . $user->lastname : '';
             case 'valoracio':
                 return $this->baremvaloracio[$value];

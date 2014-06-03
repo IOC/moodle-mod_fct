@@ -72,7 +72,7 @@ class fct_quadern_main extends fct_quadern_base {
         exec("$CFG->filter_tex_pathlatex $args");
 
         if (!file_exists("$tmpdir/quadern.pdf")) {
-            $this->error('exportacio');
+            print_error('exportacio');
         }
 
         send_file("$tmpdir/quadern.pdf", 'quadern.pdf', 0, 0, false, true, 'application/pdf');

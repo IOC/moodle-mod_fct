@@ -84,6 +84,10 @@ $class = new $class($record);
 
 $class->checkpermissions();
 
+if ($action == 'export') {
+    $class->$action();
+}
+
 $searchparams = new stdClass;
 $searchparams->curs = $curs;
 $searchparams->cicle = $cicle;

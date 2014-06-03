@@ -64,3 +64,10 @@ function fct_delete_instance($id) {global $CFG;
 
     return true;
 }
+
+function fct_string($identifier, $a=null) {
+    if (is_array($a)) {
+        $a = (object) $a;
+    }
+    return get_string($identifier, 'fct', $a);
+}
