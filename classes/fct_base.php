@@ -69,7 +69,7 @@ abstract class fct_base {
     public function __construct($record = null) {
         global $USER;
 
-        if (is_int($record)) {
+        if (is_numeric($record)) {
             global $DB;
 
             $data = $DB->get_record(static::$table, array('id' => $record));
