@@ -170,3 +170,66 @@ _quaderns td a:hover, _seguiment td a:hover {
  .selectors_quaderns div label {
     margin-right: 5px;
 }
+
+/* Data */
+
+.databoxtitle {
+    font-weight: bold;
+    font-size: 1.2em;
+    border-bottom: 1px solid #aaa;
+    display: inline-block;
+    width: 100%;
+}
+
+.box.generalbox {
+    padding: 0 1em 1em 1em;
+    width: 80%;
+    border: none;
+}
+
+.datagroup {
+    margin: 0.5em 0;
+}
+
+.datagroup .datatitle {
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+    font-style: italic;
+}
+
+.datagroup .datacontent {
+    display: inline-block;
+    margin-left: 1em;
+    width: 60%;
+}
+
+/* CANVIAR LA CLASSE PER UNA PROPIA DEL FCT */
+
+.admintable.generaltable {
+    margin: 0 auto;
+    width: 40%;
+}
+
+.admintable.generaltable td.lastcol {
+    text-align: center;
+}
+
+.fcontainer {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.fitem {
+    padding: 1em 0;
+}
+
+.fitemtitle {
+    float: left;
+    width: 80%;
+}
+
+.felement.fstatic {
+    float: right;
+    width: 20%;
+}
