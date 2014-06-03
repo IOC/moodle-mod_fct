@@ -49,4 +49,34 @@ class fct_quadern_main extends fct_quadern_base {
     }
 
     public function prepare_form_data($data) {}
+
+    public function export() {
+        global $CFG, $USER;
+
+        require_once("$CFG->dirroot/mod/fct/export/lib.php");
+        require_once("$CFG->dirroot/lib/filelib.php");
+
+        $export = new fct_export();
+        $doc = $export->quadern_latex($this->id);
+
+        $tmpdir = "$CFG->dataroot/temp/fct/$USER->id";
+
+        remove_dir($tmpdir);
+        mkdir($tmpdir, $CFG->directorypermissions, true);
+        file_put_contents("$tmpdir/quadern.ltx", $doc);
+        copy("$CFG->dirroot/mod/fct/export/logo.pdf", "$tmpdir/logo.pdf");
+        chdir($tmpdir);
+
+        $args = '--interaction=nonstopmode --fmt=pdflatex quadern.ltx';
+        exec("$CFG->filter_tex_pathlatex $args");
+        exec("$CFG->filter_tex_pathlatex $args");
+
+        if (!file_exists("$tmpdir/quadern.pdf")) {
+            $this->error('exportacio');
+        }
+
+        send_file("$tmpdir/quadern.pdf", 'quadern.pdf', 0, 0, false, true, 'application/pdf');
+
+        remove_dir($tmpdir);
+    }
 }

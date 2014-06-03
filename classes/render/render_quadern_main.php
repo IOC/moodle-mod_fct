@@ -37,7 +37,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $user = $DB->get_record('user', array('id' => $quadern->alumne));
         $fullname = fullname($user);
-        $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->alumne, 'course' => $PAGE->course->id));
+        $userurl = new moodle_url('/user/view.php', array('id' => $quadern->alumne, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
         $output .= html_writer::start_div('datagroup');
@@ -52,7 +52,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $user = $DB->get_record('user', array('id' => $quadern->tutor_centre));
         $fullname = fullname($user);
-        $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->tutor_centre, 'course' => $PAGE->course->id));
+        $userurl = new moodle_url('/user/view.php', array('id' => $quadern->tutor_centre, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
         $output .= html_writer::start_div('datagroup');
@@ -62,7 +62,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $user = $DB->get_record('user', array('id' => $quadern->tutor_empresa));
         $fullname = fullname($user);
-        $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->tutor_empresa, 'course' => $PAGE->course->id));
+        $userurl = new moodle_url('/user/view.php', array('id' => $quadern->tutor_empresa, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
         $output .= html_writer::start_div('datagroup');
@@ -77,6 +77,9 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $output .= html_writer::end_div('databox');
 
+        $cm = get_coursemodule_from_instance('fct', $quadern->fct);
+        $exporturl = new moodle_url('/mod/fct/view.php', array('id' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_main', 'action' => 'export'));
+        $output .= html_writer::link($exporturl, "Exporta a PDF");
         echo $output;
 
     }
