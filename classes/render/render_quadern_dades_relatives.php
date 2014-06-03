@@ -35,6 +35,8 @@ class mod_fct_quadern_dades_relatives_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $output .= html_writer::start_div('databox');
+
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('hores_credit', 'fct').':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $quadern->hores_credit, array('class' => 'datacontent'));
@@ -62,6 +64,8 @@ class mod_fct_quadern_dades_relatives_renderer extends plugin_renderer_base {
 
         $link = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_dades_relatives'));
         $output .= html_writer::link($link, get_string('edit'));
+
+        $output .= html_writer::end_div();
 
         echo $output;
 

@@ -38,13 +38,15 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->alumne, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
-        $output .= html_writer::start_div('alumnequadern');
-        $output .= html_writer::tag('span', get_string('alumne', 'fct').':', array('class' => 'titlealumne'));
-        $output .= html_writer::tag('span', $userlink, array('class' => 'contentalumne'));
+        $output .= html_writer::start_div('databox');
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('alumne', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $userlink, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('empresaquadern');
-        $output .= html_writer::tag('span', get_string('empresa', 'fct').':', array('class' => 'titleempresa'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('empresa', 'fct').':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $quadern->nom_empresa, array('class' => 'contentempresa'));
         $output .= html_writer::end_div();
 
@@ -53,9 +55,9 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->tutor_centre, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
-        $output .= html_writer::start_div('tutorcentrequadern');
-        $output .= html_writer::tag('span', get_string('tutor_centre', 'fct').':', array('class' => 'titletutorcentre'));
-        $output .= html_writer::tag('span', $userlink, array('class' => 'contenttutorcentre'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('tutor_centre', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $userlink, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $user = $DB->get_record('user', array('id' => $quadern->tutor_empresa));
@@ -63,15 +65,17 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->tutor_empresa, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
 
-        $output .= html_writer::start_div('tutorempresaquadern');
-        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct').':', array('class' => 'titletutorempresa'));
-        $output .= html_writer::tag('span', $userlink, array('class' => 'contenttutorempresa'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $userlink, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::start_div('estatquadern');
-        $output .= html_writer::tag('span', get_string('estat', 'fct').':', array('class' => 'titleestat'));
-        $output .= html_writer::tag('span', $quadern->estat, array('class' => 'contentestat'));
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('estat', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quadern->estat, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
+
+        $output .= html_writer::end_div('databox');
 
         echo $output;
 

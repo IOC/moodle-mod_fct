@@ -32,9 +32,9 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
 
         $output = '';
 
-        $output .= $this->box_start();
+        $output .= html_writer::start_div('databox');
 
-        $output .= html_writer::tag('span', get_string('empresa', 'fct').':', array('class' => 'databoxtitle'));
+        $output .= html_writer::tag('span', get_string('empresa', 'fct'), array('class' => 'databoxtitle'));
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'datatitle'));
@@ -86,11 +86,11 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->sic, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= $this->box_end();
+        $output .= html_writer::end_div();
 
-        $output .= $this->box_start();
+        $output .= html_writer::start_div('databox');
 
-        $output .= html_writer::tag('span', get_string('responsable_conveni', 'fct').':', array('class' => 'databoxtitle'));
+        $output .= html_writer::tag('span', get_string('responsable_conveni', 'fct'), array('class' => 'databoxtitle'));
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'datatitle'));
@@ -112,11 +112,11 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->carrec_responsable, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= $this->box_end();
+        $output .= html_writer::end_div('databox');
 
-        $output .= $this->box_start();
+        $output .= html_writer::start_div('databox');
 
-        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct').':', array('class' => 'databoxtitle'));
+        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct'), array('class' => 'databoxtitle'));
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('nom', 'fct').':', array('class' => 'datatitle'));
@@ -138,9 +138,9 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->email_tutor, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= $this->box_end();
+        $output .= html_writer::end_div('databox');
 
-        $output .= $this->box_start();
+        $output .= html_writer::start_div('databox');
 
         $output .= html_writer::tag('span', get_string('lloc_practiques', 'fct').':', array('class' => 'databoxtitle'));
 
@@ -169,7 +169,7 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->telefon_lloc_practiques, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= $this->box_end();
+        $output .= html_writer::end_div('databox');
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
         $link = new moodle_url('./edit.php', array('cmid'=>$cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_empresa'));
