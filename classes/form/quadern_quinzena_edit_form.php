@@ -68,10 +68,13 @@ class fct_quadern_quinzena_edit_form extends moodleform {
 
         $mform->addElement('header', 'header_activitats', get_string('activitats_realitzades', 'fct'));
 
-        if (isset($data->activitatscicle)) {
+        if (isset($data->activitatscicle) && !empty($data->activitatscicle)) {
             foreach ($data->activitatscicle as $key => $value) {
                 $mform->addElement('checkbox', 'activity_'.$key, '', $value);
             }
+        } else {
+                $html = '<center><strong>' . get_string('cap_activitat', 'fct'). '</center></strong>';
+                $mform->addElement('html', $html);
         }
 
         $mform->addElement('header', 'header_valoracions', get_string('valoracions_observacions', 'fct'));
