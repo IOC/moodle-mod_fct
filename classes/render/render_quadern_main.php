@@ -33,12 +33,12 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $output .= html_writer::start_div('databox');
+
         $user = $DB->get_record('user', array('id' => $quadern->alumne));
         $fullname = fullname($user);
         $userurl = new moodle_url('/user/view.php', array('id'=>$quadern->alumne, 'course' => $PAGE->course->id));
         $userlink = html_writer::link($userurl, $fullname);
-
-        $output .= html_writer::start_div('databox');
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('alumne', 'fct').':', array('class' => 'datatitle'));
