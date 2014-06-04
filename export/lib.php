@@ -22,20 +22,20 @@
  * @copyright  2014 Institut Obert de Catalunya
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once($CFG->dirroot . '/mod/fct/classes/fct_dades_centre.php');
 require_once($CFG->dirroot . '/mod/fct/classes/fct_activitat.php');
+require_once($CFG->dirroot . '/mod/fct/classes/fct_quadern_valoracio_activitat.php');
 
 class fct_export {
 
     private $format;
-    //private $diposit;
-    //private $seveis;
     private $baremvaloracio;
     private $baremqualificacio;
+    private $quadern;
 
-    public function __construct() {
-        //$this->diposit = new fct_diposit();
-        //$this->serveis = new fct_serveis($this->diposit);
+    public function __construct($id) {
+        $this->quadern = new fct_quadern_base($id);
 
         $this->baremvaloracio = array(
             0 => '-',
@@ -53,23 +53,23 @@ class fct_export {
         );
     }
 
-    public function dades_generals_html($id) {
+    public function dades_generals_html() {
         $this->format = 'html';
 
         $doc = $this->template('dades_generals');
 
-        $quadern = $this->diposit->quadern($id);
-        $cicle = $this->diposit->cicle($quadern->cicle);
-        $fct = $this->diposit->fct($cicle->fct);
-        $horesrealitzades = $this->serveis->hores_realitzades_quadern($quadern);
-        $resumhores = $this->serveis->resumhores_fct($quadern);
+        $cicle = new fct_cicle($this->quadern->cicle);
+        $fct = new fct_dades_centre($this->quadern->fct);
+        $quinzenes = fct_quadern_quinzena::get_records($this->quadern->id);
+        $horesrealitzades = $this->hores_realitzades_quadern($quinzenes);
+        $resumhores = $this->resum_hores_fct();
 
         $doc = $this->subst($doc, (object) array(
-            'quadern' => $quadern,
+            'quadern' => $this->quadern,
             'fct' => $fct,
             'cicle' => $cicle,
             'hores_realitzades' => $horesrealitzades,
-            'hores_practiques_pendents' => max(0, $quadern->hores_practiques - $horesrealitzades),
+            'hores_practiques_pendents' => max(0, $this->quadern->hores_practiques - $horesrealitzades),
             'hores_realitzades_detall' => fct_string('hores_realitzades_detall', $resumhores),
             'hores_anteriors' => $resumhores->anteriors,
             'hores_pendents' => $resumhores->pendents,
@@ -78,61 +78,148 @@ class fct_export {
         return $doc;
     }
 
-    public function quadern_latex($id) {
+    public function quadern_latex() {
         $this->format = 'latex';
 
         $doc = $this->template('quadern');
 
-        $quadern = new fct_quadern_base($id);
-        $cicle = new fct_cicle((int)$quadern->cicle);
-        $fct = new fct_dades_centre($quadern->fct);
-        $activitats = fct_quadern_activitat::get_records($id);
-        $quinzenes = fct_quadern_quinzena::get_records($id);
-        //print_object($quadern);die;
+        $cicle = new fct_cicle($this->quadern->cicle);
+        $fct = new fct_dades_centre($this->quadern->fct);
+        $activitats = fct_quadern_activitat::get_records($this->quadern->id);
+        $quinzenes = fct_quadern_quinzena::get_records($this->quadern->id);
 
-        //$quadern = $this->diposit->quadern($id);
-        //$cicle = $this->diposit->cicle($quadern->cicle);
-        //$fct = $this->diposit->fct($cicle->fct);
-        //$activitats = $this->diposit->activitats($id);
-        //$quinzenes = $this->diposit->quinzenes($id);
         $filter = function ($a) {
             return $a->id;
         };
         $idsactivitats = array_map($filter, $activitats);
+
         foreach ($quinzenes as $q) {
             $q->activitats = array_intersect($q->activitats, $idsactivitats);
         }
-        //$horesrealitzades = $this->serveis->hores_realitzades_quadern($quadern);
-        //$ultimquadern = $this->serveis->ultim_quadern($quadern->alumne, $quadern->cicle);
-        //$resumhores = $this->serveis->resum_hores_fct($quadern);
-        $horesrealitzades = 0;
-        $ultimquadern = new stdClass;
-        $ultimquadern->id = 0;
-        $resumhores = new stdClass;
-        $resumhores->anteriors = 0;
-        $resumhores->pendents = 0;
+        $horesrealitzades = $this->hores_realitzades_quadern($quinzenes);
+        $ultimquadern = $this->ultim_quadern();
+        $resumhores = $this->resum_hores_fct();
         $doc = $this->subst($doc, (object) array(
-            'quadern' => $quadern,
+            'quadern' => $this->quadern,
             'fct' => $fct,
             'cicle' => $cicle,
             'activitats' => $activitats,
             'quinzenes' => $quinzenes,
             'lloc_practiques' => (
-                trim($quadern->empresa->nom) or
-                trim($quadern->empresa->adreca) or
-                trim($quadern->empresa->poblacio) or
-                trim($quadern->empresa->codi_postal) or
-                trim($quadern->empresa->telefon)
+                trim($this->quadern->empresa->nom) or
+                trim($this->quadern->empresa->adreca) or
+                trim($this->quadern->empresa->poblacio) or
+                trim($this->quadern->empresa->codi_postal) or
+                trim($this->quadern->empresa->telefon)
             ),
             'hores_realitzades' => $horesrealitzades,
-            'hores_practiques_pendents' => max(0, $quadern->hores_practiques - $horesrealitzades),
+            'hores_practiques_pendents' => max(0, $this->quadern->hores_practiques - $horesrealitzades),
             'hores_realitzades_detall' => fct_string('hores_realitzades_detall', $resumhores),
             'hores_anteriors' => $resumhores->anteriors,
             'hores_pendents' => $resumhores->pendents,
-            'ultim_quadern' => ($ultimquadern->id == $id),
+            'ultim_quadern' => ($ultimquadern->id == $this->quadern->id),
         ));
 
         return $doc;
+    }
+
+    private function get_sql_quaderns($orderby = '') {
+        $sql = "SELECT q.id AS id,"
+            . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
+            . " q.nom_empresa AS empresa,"
+            . " c.nom AS cicle_formatiu,"
+            . " CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,"
+            . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
+            . " q.estat AS estat,"
+            . " q.data_final AS data_final"
+            . " FROM {fct_quadern} q"
+            . " JOIN {fct_cicle} c ON q.cicle = c.id"
+            . " JOIN {user} ua ON q.alumne = ua.id"
+            . " LEFT JOIN {user} uc ON q.tutor_centre = uc.id"
+            . " LEFT JOIN {user} ue ON q.tutor_empresa = ue.id"
+            . " WHERE q.cicle = :cicle"
+            . " AND q.alumne = :alumne";
+
+        if (!empty($orderby)) {
+            $sql .= " ORDER BY " . $orderby;
+        }
+        return $sql;
+    }
+
+    private function ultim_quadern() {
+        global $DB;
+
+        $sql = $this->get_sql_quaderns('q.data_final');
+        $params = array(
+            'cicle' => $this->quadern->cicle,
+            'alumne' => $this->quadern->alumne,
+        );
+
+        $quaderns = array();
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $record) {
+            $quaderns[] = new fct_quadern_base($record->id);
+        }
+
+        return array_pop($quaderns);
+    }
+
+    private function resum_hores_fct() {
+        global $DB;
+
+        $horespractiques = 0;
+        $data = false;
+        $where = '';
+
+        foreach ($this->quadern->convenis as $conveni) {
+            if (!$data or $conveni->data_final > $data) {
+                $data = $conveni->data_final;
+            }
+        }
+
+        if ($data !== false) {
+            $where = " AND q.data_final <= :datafinal";
+        }
+
+        $sql = $this->get_sql_quaderns();
+        $params = array(
+            'cicle' => $this->quadern->cicle,
+            'alumne' => $this->quadern->alumne,
+        );
+
+        if ($data !== false) {
+            $sql .= $where;
+            $params['datafinal'] = $data;
+        }
+
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $record) {
+            $q = new fct_quadern_base($record->id);
+            if ($q->qualificacio->apte != 2) {
+                $quinzenes = fct_quadern_quinzena::get_records($q->id);
+                $horespractiques += $this->hores_realitzades_quadern($quinzenes);
+            }
+            unset($q);
+        }
+        $exempcio = ceil((float) $this->quadern->exempcio / 100 * $this->quadern->hores_credit);
+        $realitzades = $this->quadern->hores_anteriors + $exempcio + $horespractiques;
+        $pendents = max(0, $this->quadern->hores_credit - $realitzades);
+
+        return (object) array('credit' => $this->quadern->hores_credit,
+                              'anteriors' => $this->quadern->hores_anteriors,
+                              'exempcio' => $exempcio,
+                              'practiques' => $horespractiques,
+                              'realitzades' => $realitzades,
+                              'pendents' => $pendents,
+                        );
+    }
+
+    private function hores_realitzades_quadern($quinzenes) {
+        $hores = 0;
+        foreach ($quinzenes as $quinzena) {
+            $hores += $quinzena->hores;
+        }
+        return $hores;
     }
 
     private function escape($value) {
@@ -169,8 +256,7 @@ class fct_export {
             case 'actitud':
                 return fct_string('actitud_' . ($value + 1));
             case 'activitat':
-                //$activitat = $this->diposit->activitat($value);
-                $activitat = (object) array('descripcio' => 'PROVA');
+                $activitat = new fct_quadern_valoracio_activitat($value);
                 return $activitat->descripcio;
             case 'count':
                 return count($value);
@@ -269,7 +355,8 @@ class fct_export {
                 if ($value) {
                     $result = $export->subst($matches[3], $values);
                 }
-            } else if ($matches[1] == 'loop' and is_array($value)) {
+            } else if ($matches[1] == 'loop' and (is_array($value) or is_object($value))) {
+
                 foreach ($value as $key => $value) {
                     $value = array('key' => $key, 'value' => $value);
                     $result .= $export->subst($matches[3], (object) $value);
