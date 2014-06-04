@@ -31,7 +31,7 @@ require_once('fct_cicle.php');
 
 class fct_quadern_valoracio extends fct_quadern_base {
 
-    protected static $dataobject = 'valoracio_parcial';
+    protected static $dataobject = '';
     public $valoracio;
     public $editform = 'fct_quadern_valoracio_edit_form';
 
