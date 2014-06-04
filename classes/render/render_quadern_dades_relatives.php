@@ -43,22 +43,22 @@ class mod_fct_quadern_dades_relatives_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('exempcio', 'fct'). ':', array('class' => 'datatile'));
+        $output .= html_writer::tag('span', get_string('exempcio', 'fct'). ':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $quadern->exempcio, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('hores_anteriors', 'fct'). ':', array('class' => 'datatile'));
+        $output .= html_writer::tag('span', get_string('hores_anteriors', 'fct'). ':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $quadern->hores_anteriors, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('hores_realitzades', 'fct'). ':', array('class' => 'datatile'));
+        $output .= html_writer::tag('span', get_string('hores_realitzades', 'fct'). ':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', get_string('hores_realitzades_detall', 'fct', $resum), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('hores_pendents', 'fct'). ':', array('class' => 'datatile'));
+        $output .= html_writer::tag('span', get_string('hores_pendents', 'fct'). ':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $resum->pendents, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
