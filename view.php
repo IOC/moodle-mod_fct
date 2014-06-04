@@ -45,6 +45,8 @@ $estat = optional_param('searchestat', false, PARAM_RAW);
 $cerca = optional_param('cerca', false, PARAM_RAW);
 $qualificaciotype = optional_param('qualificaciotype', false, PARAM_RAW);
 
+$validactions = array('export', 'view');
+
 if (!$cm = get_coursemodule_from_id('fct', $id)) {
     print_error('Course Module ID was incorrect');
 }
@@ -53,6 +55,10 @@ if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
 }
 if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
     print_error('course module is incorrect');
+}
+
+if (!in_array($action, $validactions)) {
+    print_error('novalidaction');
 }
 
 global $USER, $DB;
