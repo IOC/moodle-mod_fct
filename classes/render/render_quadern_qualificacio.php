@@ -64,7 +64,7 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', get_string('data', 'fct').':', array('class' => 'datatitle'));
 
         if (isset($quadern->qualificacio->data)) {
-            $output .= html_writer::tag('span', userdate($quadern->qualificacio->data, get_string('strftimedate')), array('class' => 'datacontent'));
+            $output .= html_writer::tag('span', userdate($quadern->data, get_string('strftimedate')), array('class' => 'datacontent'));
         }
         $output .= html_writer::end_div();
 

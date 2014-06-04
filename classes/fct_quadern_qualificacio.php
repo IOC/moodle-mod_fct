@@ -101,7 +101,17 @@ class fct_quadern_qualificacio extends fct_quadern_base {
         if ($name == 'qualificaciotype') {
             return $this->qualificaciotype;
         }
-        return true;
+        $dataobjectkeys = static::$dataobjectkeys;
+        $dataobject = static::$dataobject;
+
+        if (!isset($this->$dataobject)) {
+            return false;
+        }
+
+        if (array_key_exists($name, array_flip($dataobjectkeys))) {
+             return $this->$dataobject->$name;
+        }
+        return false;
     }
 
     public function view() {
