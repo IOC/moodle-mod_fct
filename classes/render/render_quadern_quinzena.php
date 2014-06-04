@@ -41,7 +41,8 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
                              get_string('edit'));
         $table->data = $data;
         $table->id = 'quinzenes';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'quinzenes generaltable';
+        $table->colclasses = array('', '', '', '', 'edit');
 
         $output = html_writer::table($table);
         return $output;
@@ -61,7 +62,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $buttons = array();
 
-        $editlink = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'id' => $quinzena->id, 'quadern' => $quinzena->quadern, 'page' => 'quadern_quinzena'));
+        $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $quinzena->id, 'quadern' => $quinzena->quadern, 'page' => 'quadern_quinzena'));
         $editicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
         $deletelink = new moodle_url('./edit.php', array('id' => $quinzena->id, 'cmid' => $PAGE->cm->id, 'delete' => 1, 'page' => 'quadern_quinzena', 'quadern' => $quinzena->quadern));

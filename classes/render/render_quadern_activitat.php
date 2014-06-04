@@ -42,7 +42,8 @@ class mod_fct_quadern_activitat_renderer extends plugin_renderer_base {
         $table = new html_table();
         $table->head = array(get_string('descripcio', 'mod_fct'), get_string('edit'));
         $table->id = 'quaderns';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'quadernactivitat generaltable';
+        $table->colclasses = array('', 'edit');
         $table->data = $data;
 
         $output = html_writer::table($table);

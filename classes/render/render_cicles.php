@@ -39,7 +39,8 @@ class mod_fct_cicles_renderer extends plugin_renderer_base {
         $table->head = array(get_string('nom', 'mod_fct'), get_string('edit'));
         $table->data = $data;
         $table->id = 'cicles';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'cicles generaltable';
+        $table->colclasses= array('', 'edit');
 
         $output = html_writer::table($table);
         return $output;

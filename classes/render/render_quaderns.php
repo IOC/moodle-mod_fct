@@ -45,7 +45,8 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
                              get_string('edit'));
         $table->data = $data;
         $table->id = 'quaderns';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'quaderns generaltable';
+        $table->colclasses = array('', '', '', '', '', '', '', 'edit');
 
         $output = html_writer::table($table);
 
@@ -88,7 +89,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $usuari = new fct_usuari($cicle->fct, $USER->id);
 
         if (!$usuari->es_alumne) {
-            $editlink = new moodle_url('./edit.php', array('cmid'=>$cm->id, 'id' => $quadern->id));
+            $editlink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $quadern->id));
             $editicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
             $buttons[] = html_writer::link($editlink, $editicon);

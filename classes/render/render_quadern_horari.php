@@ -72,7 +72,8 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
         $table->head = array(get_string('dia', 'mod_fct'), get_string('de', 'mod_fct'), get_string('a', 'mod_fct'), get_string('edit'));
         $table->data = $data;
         $table->id = 'quadern_horari';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'horari generaltable';
+        $table->colclasses = array('', '', '', 'edit');
 
         $output .= html_writer::table($table);
 

@@ -86,7 +86,7 @@ class mod_fct_quadern_convenis_renderer extends plugin_renderer_base {
         $table->head = array(get_string('conveni', 'mod_fct'), get_string('data_inici', 'mod_fct'), get_string('data_final', 'mod_fct'));
         $table->data = $data;
         $table->id = 'cicles';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'convenis generaltable';
 
         $output .= html_writer::table($table);
 
