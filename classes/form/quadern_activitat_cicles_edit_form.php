@@ -68,7 +68,7 @@ class fct_quadern_activitat_cicles_edit_form extends moodleform {
     public function validation($data, $files) {
         $errors = array();
 
-        $class = new $this->class;
+        $class = $this->class;
         $errors = $class::validation($data);
 
         return $errors;
