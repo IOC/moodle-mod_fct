@@ -48,7 +48,8 @@ class fct_quadern_main extends fct_quadern_base {
 
     }
 
-    public function prepare_form_data($data) {}
+    public function prepare_form_data($data) {
+    }
 
     public function export() {
         global $CFG, $USER;
@@ -56,8 +57,8 @@ class fct_quadern_main extends fct_quadern_base {
         require_once("$CFG->dirroot/mod/fct/export/lib.php");
         require_once("$CFG->dirroot/lib/filelib.php");
 
-        $export = new fct_export();
-        $doc = $export->quadern_latex($this->id);
+        $export = new fct_export($this->id);
+        $doc = $export->quadern_latex();
 
         $tmpdir = "$CFG->dataroot/temp/fct/$USER->id";
 
