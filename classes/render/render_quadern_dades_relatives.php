@@ -63,7 +63,7 @@ class mod_fct_quadern_dades_relatives_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $link = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_dades_relatives'));
-        $output .= html_writer::link($link, get_string('edit'));
+        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
 
         $output .= html_writer::end_div();
 

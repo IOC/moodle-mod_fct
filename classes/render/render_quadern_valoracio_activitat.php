@@ -29,38 +29,26 @@ class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base 
 
     public function view($activitats) {
 
-       global $PAGE;
+        global $PAGE;
 
-       $output = '';
+        $output = '';
 
-       $barems = $this->barem_valoracio();
-        print_object($barems);
+        $barems = $this->barem_valoracio();
 
-        // $barem = $barems[0];
-        $output .= html_writer::start_tag('div', array('class' => 'fcontainer clearfix'));
-        //$valoraciotype = 'valoracio_'.$valoracio->valoracio;
-        //$valoracions = $valoracio->$valoraciotype;
+        $output .= html_writer::start_div('databox');
 
         foreach ($activitats as $activitat) {
 
-            /*if (isset($valoracions) && !empty($valoracions)) {
-                if (is_array($valoracions)) {
-                    $barem = $barems[$valoracions[$key]];
-                } else {
-                    $barem = $barems[$valoracions->$key];
-                }
-            }*/ print_object($activitat);
-
             $output .= html_writer::start_tag('div', array('class' => 'fitem'));
             $output .= html_writer::tag('div', $activitat->descripcio, array('class' => 'fitemtitle'));
-            $output .= html_writer::tag('div', $barems[$activitat->nota], array('class' => 'felement fstatic'));
+            $output .= html_writer::tag('div', $activitat->nota ? $barems[$activitat->nota] : $barems['0'], array('class' => 'felement fstatic'));
             $output .= html_writer::end_tag('div');
         }
 
+        $link = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'page' => 'quadern_valoracio_activitat', 'quadern' => $activitat->quadern));
+        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
 
-        $link = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id, 'page' => 'quadern_valoracio_activitat', 'quadern' => $activitat->quadern));
-        $output .= html_writer::link($link, get_string('edit'));
-        $output .= html_writer::end_tag('div');
+        $output .= html_writer::end_div('databox');
 
         echo $output;
 

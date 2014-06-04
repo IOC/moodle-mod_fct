@@ -56,6 +56,7 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', '', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $nota, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
@@ -80,7 +81,7 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
                                 'subpage' => 'quadern_qualificacio',
                                 'qualificaciotype' => $quadern->qualificaciotype));
 
-        $output .= html_writer::link($link, get_string('edit'));
+        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
 
         $output .= html_writer::end_div();
 

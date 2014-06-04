@@ -31,6 +31,8 @@ class mod_fct_quadern_convenis_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $output .= html_writer::start_div('databox');
+
         $output .= $this->convenis_table($quadern);
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
@@ -60,7 +62,9 @@ class mod_fct_quadern_convenis_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $horespendents, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $output .= html_writer::link($link, get_string('edit'));
+        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+
+        $output .= html_writer::end_div('databox');
 
         echo $output;
 
