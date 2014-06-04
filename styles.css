@@ -204,15 +204,28 @@ _quaderns td a:hover, _seguiment td a:hover {
     width: 60%;
 }
 
-/* CANVIAR LA CLASSE PER UNA PROPIA DEL FCT */
-
-.admintable.generaltable {
+.fct_actions {
     margin: 0 auto;
-    width: 40%;
+    text-align: center;
+    border-top: 1px solid #aaa;
+    width: 60%;
 }
 
-.admintable.generaltable td.lastcol {
+.fct_actions a {
+    display: inline-block;
+    margin: 1em;
+}
+
+.quaderns.generaltable {
+    width: 100%;
+}
+
+.quaderns.generaltable td.lastcol {
     text-align: center;
+}
+.convenis.generaltable {
+    margin: 0 auto;
+    width: 40%;
 }
 
 .fcontainer {
