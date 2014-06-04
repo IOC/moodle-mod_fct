@@ -31,7 +31,7 @@ require_once('fct_cicle.php');
 class fct_quadern_qualificacio extends fct_quadern_base {
 
 
-    public $qualificaciotype = 'parcial';
+    protected $qualificaciotype = 'parcial';
     protected static $dataobject = 'qualificacio';
 
     protected $editform = 'fct_quadern_qualificacio_edit_form';
@@ -88,6 +88,20 @@ class fct_quadern_qualificacio extends fct_quadern_base {
             parent::__construct($record);
         }
 
+    }
+
+    public function __set($name, $value) {
+        if ($name == 'qualificaciotype') {
+            self::$dataobject = $value == 'global' ? 'qualificacio_global' : 'qualificacio';
+            $this->$name = $value;
+        }
+    }
+
+    public function __get($name) {
+        if ($name == 'qualificaciotype') {
+            return $this->qualificaciotype;
+        }
+        return true;
     }
 
     public function view() {
