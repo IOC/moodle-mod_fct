@@ -36,6 +36,8 @@ class fct_quadern_valoracio_activitat extends fct_base {
     public $nota;
     public $objecte;
 
+    private $activitats = array();
+
 
     protected static $table = 'fct_activitat';
     protected $record_keys = array('id', 'quadern', 'objecte');
@@ -65,7 +67,7 @@ class fct_quadern_valoracio_activitat extends fct_base {
                               get_string('valoracio_activitats', 'fct'));
 
         $subtree[] = new tabobject('qualificacio_quadern',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'subpage'=> 'quadern_qualificacio')),
+                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_qualificacio')),
                               get_string('qualificacio_quadern', 'fct'));
 
         $row = $tab['row'];
@@ -104,12 +106,10 @@ class fct_quadern_valoracio_activitat extends fct_base {
         $activitats = array();
 
         foreach ($activitatsrecords as $activitat) {
-            $activitats[] = new fct_quadern_valoracio_activitat((int)$activitat->id);
+            $activitats[] = new fct_quadern_activitat((int)$activitat->id);
         }
 
         return $activitats;
-
-
     }
 
 
@@ -121,7 +121,7 @@ class fct_quadern_valoracio_activitat extends fct_base {
         }
 
         $activitats = $this->get_records($data->quadern);
-        $data->activitats =  $activitats;
+        $data->activitats = $activitats;
         foreach ($activitats as $activitat) {
             $notakey = 'nota_'.$activitat->id;
             $data->$notakey = $activitat->nota;
@@ -140,6 +140,23 @@ class fct_quadern_valoracio_activitat extends fct_base {
             $activitat->update();
         }
 
+    }
+
+    public function set_data($data) {
+        $activitats = self::get_records($data->quadern);
+
+        foreach ($activitats as $activitat) {
+            $notakey = 'nota_'.$activitat->id;
+            $activitat->nota = $data->$notakey;
+            $activitat->create_object();
+            $this->activitats[] = $activitat;
+        }
+    }
+
+    public function update() {
+        foreach ($this->activitats as $activitat) {
+            $activitat->update();
+        }
     }
 
     public static function validation($data) {
