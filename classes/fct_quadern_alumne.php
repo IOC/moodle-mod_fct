@@ -77,11 +77,11 @@ class fct_quadern_alumne extends fct_quadern_base {
 
     public function procedencies() {
         return array('' => '',
-             'batxillerat' => fct_string('batxillerat'),
-             'curs_acces' => fct_string('curs_acces'),
-             'cicles' => fct_string('cicles'),
-             'eso' => fct_string('eso'),
-             'ges' => fct_string('ges'));
+             'batxillerat' => get_string('batxillerat', 'fct'),
+             'curs_acces' => get_string('curs_acces', 'fct'),
+             'cicles' => get_string('cicles', 'fct'),
+             'eso' => get_string('eso', 'fct'),
+             'ges' => get_string('ges', 'fct'));
     }
 
 }
