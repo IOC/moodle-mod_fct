@@ -110,8 +110,10 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                               get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                foreach ($data->frases_centre as $frase) {
-                    $html[] = '<li>' . trim($frase) . '</li>';
+                if (isset($data->frases_empresa) && !empty($data->frases_centre)) {
+                    foreach ($data->frases_centre as $frase) {
+                        $html[] = '<li>' . trim($frase) . '</li>';
+                    }
                 }
             $html[] = '</ul>';
 
@@ -131,8 +133,10 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                                get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                foreach ($data->frases_empresa as $frase) {
-                    $html[] = '<li>' . trim($frase) . '</li>';
+                if (isset($data->frases_empresa) && !empty($data->frases_empresa)) {
+                    foreach ($data->frases_empresa as $frase) {
+                        $html[] = '<li>' . trim($frase) . '</li>';
+                    }
                 }
             $html[] = '</ul>';
 
@@ -168,7 +172,7 @@ class fct_quadern_quinzena_edit_form extends moodleform {
     public function opcions() {
         $opcions = array();
         for ($minuts = 0; $minuts < 60; $minuts += 15) {
-            $opcions[$minuts] = $minuts . ' ' . fct_string('minuts');
+            $opcions[$minuts] = $minuts . ' ' . get_string('minuts', 'fct');
         }
         return $opcions;
     }
