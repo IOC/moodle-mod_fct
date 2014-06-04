@@ -51,11 +51,11 @@ class fct_cicle extends fct_base{
         $activerow = $row['cicle'];
 
         $activerow->subtree[] = new tabobject('ciclelist', new moodle_url('/mod/fct/view.php',
-                                        array('id' => $id, 'page'=>'cicle')),
+                                        array('id' => $id, 'page' => 'cicle')),
                                             get_string('cicles', 'fct'));
 
         $activerow->subtree[] = new tabobject('afegir_cicle', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'page'=>'cicle')),
+                                            array('cmid' => $id, 'page' => 'cicle')),
                                             get_string('afegeix_cicle_formatiu', 'fct'));
 
         $row['cicle'] = $activerow;
@@ -84,19 +84,21 @@ class fct_cicle extends fct_base{
 
     }
 
-	public function view($id = false) {
-		global $PAGE;
+    public function view($id = false) {
+        global $PAGE;
 
-		$output = $PAGE->get_renderer('mod_fct', 'cicles');
-		if (!$id) {
+        $output = $PAGE->get_renderer('mod_fct', 'cicles');
+        if (!$id) {
 
-			$fctid = $this->fct;
-            $records = self::get_records($fctid);
-
-			$table = $output->cicles_table($records);
-			echo $table;
-		}
-	}
+            $fctid = $this->fct;
+            if ($records = self::get_records($fctid)) {
+                $table = $output->cicles_table($records);
+                echo $table;
+            } else {
+                echo $output->notification(get_string('cap_cicle_formatiu', 'fct'));
+            }
+        }
+    }
 
     public function delete() {
         global $DB;
