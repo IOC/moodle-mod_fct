@@ -51,7 +51,7 @@ class fct_quadern_main extends fct_quadern_base {
     public function prepare_form_data($data) {
     }
 
-    public function export() {
+    public function export_pdf() {
         global $CFG, $USER;
 
         require_once("$CFG->dirroot/mod/fct/export/lib.php");
@@ -79,5 +79,14 @@ class fct_quadern_main extends fct_quadern_base {
         send_file("$tmpdir/quadern.pdf", 'quadern.pdf', 0, 0, false, true, 'application/pdf');
 
         remove_dir($tmpdir);
+    }
+
+    public function export_html() {
+        global $CFG, $USER;
+
+        require_once("$CFG->dirroot/mod/fct/export/lib.php");
+
+        $export = new fct_export($this->id);
+        $doc = $export->dades_generals_html();
     }
 }

@@ -45,7 +45,7 @@ $estat = optional_param('searchestat', false, PARAM_RAW);
 $cerca = optional_param('cerca', false, PARAM_RAW);
 $qualificaciotype = optional_param('qualificaciotype', false, PARAM_RAW);
 
-$validactions = array('export', 'view');
+$validactions = array('export_pdf', 'export_html', 'view');
 
 if (!$cm = get_coursemodule_from_id('fct', $id)) {
     print_error('Course Module ID was incorrect');
@@ -90,7 +90,7 @@ $class = new $class($record);
 
 $class->checkpermissions();
 
-if ($action == 'export') {
+if ($action == 'export_pdf' or $action == 'export_html') {
     $class->$action();
 }
 

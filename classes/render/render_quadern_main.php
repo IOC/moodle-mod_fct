@@ -47,7 +47,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('empresa', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quadern->nom_empresa, array('class' => 'contentempresa'));
+        $output .= html_writer::tag('span', $quadern->nom_empresa, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $user = $DB->get_record('user', array('id' => $quadern->tutor_centre));
@@ -77,9 +77,25 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $output .= html_writer::end_div('databox');
 
+        $output .= html_writer::start_div('fct_actions');
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-        $exporturl = new moodle_url('/mod/fct/view.php', array('id' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_main', 'action' => 'export'));
+        $params = array(
+            'id' => $cm->id,
+            'quadern' => $quadern->id,
+            'page' => 'quadern_main',
+            'action' => 'export_pdf',
+        );
+        $exporturl = new moodle_url('/mod/fct/view.php', $params);
         $output .= html_writer::link($exporturl, "Exporta a PDF");
+        $params = array(
+            'id' => $cm->id,
+            'quadern' => $quadern->id,
+            'page' => 'quadern_main',
+            'action' => 'export_html',
+        );
+        $exporturl = new moodle_url('/mod/fct/view.php', $params);
+        $output .= html_writer::link($exporturl, "Exporta a HTML");
+        $output .= html_writer::end_div();
         echo $output;
 
     }
