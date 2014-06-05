@@ -57,7 +57,7 @@ abstract class fct_base {
 
      protected $objecte = '';
 
-     protected $usuari;
+     public $usuari;
      protected $fct;
 
       /**

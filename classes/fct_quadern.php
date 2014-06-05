@@ -358,10 +358,30 @@ class fct_quadern extends fct_quadern_base {
     }
 
     public function checkpermissions($type = 'view') {
-       if (!$this->usuari->es_administrador and !$this->usuari->es_alumne
-            and !$this->usuari->es_tutor_centre and !$this->usuari->es_tutor_empresa) {
-            print_error('permis_activitat');
-        }
-    }
 
+
+        switch ($type) {
+            case 'edit':
+                if (($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
+                    (!$this->usuari->es_tutor_centre && !$this->usuari->es_administrador)) {
+                    print_error('nopermisions');
+                }
+                break;
+
+            case 'delete' :
+                if (!$this->usuari->es_administrador) {
+                    print_error('nopermisions');
+                }
+                break;
+
+            case 'default' :
+
+                if (!$this->usuari->es_administrador and !$this->usuari->es_alumne
+                and !$this->usuari->es_tutor_centre and !$this->usuari->es_tutor_empresa) {
+                    print_error('permis_activitat');
+                }
+                break;
+        }
+
+    }
 }
