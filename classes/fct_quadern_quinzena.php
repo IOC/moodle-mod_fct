@@ -109,15 +109,15 @@ class fct_quadern_quinzena extends fct_base {
 
         if (!$id) {
 
+            $quadern = new fct_quadern_base((int)$this->quadern);
             if ($quinzenes = self::get_records($this->quadern)) {
                 $table = $output->quinzenes_table($quinzenes);
                 echo $table;
             } else {
                 echo $output->notification(get_string('cap_quinzena', 'fct'));
-                $quadern = new fct_quadern_base((int)$this->quadern);
-                if ($dataprevista = $this->data_prevista_valoracio_parcial($quadern)) {
-                    echo $output->notification(get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate'))));
-                }
+            }
+            if ($dataprevista = $this->data_prevista_valoracio_parcial($quadern)) {
+                echo $output->notification(get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate'))));
             }
         }
     }
