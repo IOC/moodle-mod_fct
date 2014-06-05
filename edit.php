@@ -87,7 +87,7 @@ if ($valoracio) {
 
 if ($id) {
     $class = new $class($id);
-    $class->typequalificaciotype = $qualificaciotype;
+    $class->qualificaciotype = $qualificaciotype;
     $class->quadern = $quadern;
     $class->valoracio = $valoracio;
 } else {
