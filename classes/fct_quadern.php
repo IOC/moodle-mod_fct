@@ -115,6 +115,7 @@ class fct_quadern extends fct_quadern_base {
             $record = new stdClass;
             $record->data_inici = mktime(0, 0, 0, (int) $date['mon'], (int) $date['mday'], $date['year']);
             $record->data_final = mktime(0, 0, 0, (int) $date['mon'], (int) $date['mday'], $date['year'] + 1);
+            $record->horari = array();
 
             $conveni = new fct_conveni($record);
             $uuid = $conveni->uuid();
