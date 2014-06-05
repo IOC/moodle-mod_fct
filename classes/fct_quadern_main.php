@@ -87,6 +87,7 @@ class fct_quadern_main extends fct_quadern_base {
         require_once("$CFG->dirroot/mod/fct/export/lib.php");
 
         $export = new fct_export($this->id);
-        $doc = $export->dades_generals_html();
+        echo $export->dades_generals_html();
+        die;
     }
 }
