@@ -80,6 +80,19 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $output .= html_writer::start_div('fct_actions');
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
         $params = array(
+            'cmid' => $cm->id,
+            'id' => $quadern->id
+        );
+        $editurl = new moodle_url('/mod/fct/edit.php', $params);
+        $output .= html_writer::link($editurl, get_string('edit'));
+        $params = array(
+            'cmid' => $cm->id,
+            'id' => $quadern->id,
+            'delete' => '1'
+        );
+        $editurl = new moodle_url('/mod/fct/edit.php', $params);
+        $output .= html_writer::link($editurl, get_string('delete'));
+        $params = array(
             'id' => $cm->id,
             'quadern' => $quadern->id,
             'page' => 'quadern_main',
