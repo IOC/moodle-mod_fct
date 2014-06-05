@@ -33,32 +33,33 @@ class fct_tutor_edit_form extends moodleform {
 
     public function definition() {
 
-    $mform = $this->_form;
-    $data = $this->_customdata['data'];
+        $mform = $this->_form;
+        $data = $this->_customdata['data'];
 
-    $mform->addElement('text', 'dni', get_string('dni', 'mod_fct'));
-    $mform->setType('dni', PARAM_TEXT);
+        $mform->addElement('text', 'dni', get_string('dni', 'mod_fct'));
+        $mform->setType('dni', PARAM_TEXT);
 
-    $mform->addElement('text', 'firstname', get_string('nom', 'fct'));
-    $mform->setType('firstname', PARAM_TEXT);
+        $mform->addElement('text', 'firstname', get_string('nom', 'fct'));
+        $mform->setType('firstname', PARAM_TEXT);
 
-    $mform->addElement('text', 'lastname', get_string('cognoms', 'fct'));
-    $mform->setType('lastname', PARAM_TEXT);
+        $mform->addElement('text', 'lastname', get_string('cognoms', 'fct'));
+        $mform->setType('lastname', PARAM_TEXT);
 
-    $mform->addElement('text', 'email', get_string('email', 'fct'));
-    $mform->setType('email', PARAM_EMAIL);
+        $mform->addElement('text', 'email', get_string('email', 'fct'));
+        $mform->setType('email', PARAM_EMAIL);
+        $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 
-    $mform->addElement('hidden', 'id');
-    $mform->setType('id', PARAM_INT);
-    $mform->addElement('hidden', 'cmid');
-    $mform->setType('cmid', PARAM_INT);
-    $mform->addElement('hidden', 'page');
-    $mform->setType('page', PARAM_TEXT);
-    $mform->addElement('hidden', 'fct');
-    $mform->setType('fct', PARAM_INT);
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
+        $mform->addElement('hidden', 'page');
+        $mform->setType('page', PARAM_TEXT);
+        $mform->addElement('hidden', 'fct');
+        $mform->setType('fct', PARAM_INT);
 
-    $this->add_action_buttons(false);
-    $this->set_data($data);
+        $this->add_action_buttons(false);
+        $this->set_data($data);
 
     }
 

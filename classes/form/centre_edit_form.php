@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/lib/formslib.php');
 
 class fct_centre_edit_form extends moodleform {
 
-        public function definition() {
+    public function definition() {
 
         $mform = $this->_form;
         $data = $this->_customdata['data'];
@@ -56,6 +56,7 @@ class fct_centre_edit_form extends moodleform {
 
         $mform->addElement('text', 'email', get_string('email', 'fct'));
         $mform->setType('email', PARAM_EMAIL);
+        $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
@@ -74,5 +75,5 @@ class fct_centre_edit_form extends moodleform {
         $this->set_data($data);
         $this->set_data($centredata);
 
-        }
+    }
 }

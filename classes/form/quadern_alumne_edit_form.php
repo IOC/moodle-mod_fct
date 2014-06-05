@@ -71,7 +71,8 @@ class fct_quadern_alumne_edit_form extends moodleform {
 
         $attributes = array('size' => 48);
         $mform->addElement('text', 'inss', get_string('inss', 'mod_fct'), $attributes);
-        $mform->setType('inss', PARAM_TEXT);
+        $mform->setType('inss', PARAM_EMAIL);
+        $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 
         $attributes = array('size' => 48);
         $mform->addElement('text', 'targeta_sanitaria', get_string('targeta_sanitaria', 'mod_fct'), $attributes);

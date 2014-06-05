@@ -54,7 +54,8 @@ class fct_quadern_empresa_edit_form extends moodleform {
         $mform->addElement('text', 'fax', get_string('fax', 'mod_fct'));
         $mform->setType('fax',  PARAM_TEXT);
         $mform->addElement('text', 'email', get_string('email', 'mod_fct'));
-        $mform->setType('email', PARAM_TEXT);
+        $mform->setType('email', PARAM_EMAIL);
+        $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
         $mform->addElement('text', 'nif', get_string('nif', 'mod_fct'));
         $mform->setType('nif', PARAM_TEXT);
         $mform->addElement('text', 'codi_agrupacio', get_string('codi_agrupacio', 'mod_fct'));
@@ -82,7 +83,8 @@ class fct_quadern_empresa_edit_form extends moodleform {
         $mform->addElement('text', 'dni_tutor', get_string('dni', 'mod_fct'));
         $mform->setType('dni_tutor', PARAM_TEXT);
         $mform->addElement('text', 'email_tutor', get_string('email', 'mod_fct'));
-        $mform->setType('email_tutor', PARAM_TEXT);
+        $mform->setType('email_tutor', PARAM_EMAIL);
+        $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 
         $mform->addElement('header', 'headerllocpractiques', get_string('lloc_practiques', 'mod_fct'));
 
@@ -96,7 +98,6 @@ class fct_quadern_empresa_edit_form extends moodleform {
         $mform->setType('codi_postal_lloc_practiques', PARAM_TEXT);
         $mform->addElement('text', 'telefon_lloc_practiques', get_string('telefon', 'mod_fct'));
         $mform->setType('telefon_lloc_practiques', PARAM_TEXT);
-
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
