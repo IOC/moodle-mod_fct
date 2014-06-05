@@ -75,6 +75,7 @@ class fct_export {
             'hores_pendents' => $resumhores->pendents,
         ));
 
+        $doc = $this->clean($doc);
         return $doc;
     }
 
@@ -120,6 +121,7 @@ class fct_export {
             'ultim_quadern' => ($ultimquadern->id == $this->quadern->id),
         ));
 
+        $doc = $this->clean($doc);
         return $doc;
     }
 
@@ -373,5 +375,12 @@ class fct_export {
         global $CFG;
         $ext = $this->format == 'latex' ? 'ltx' : 'html';
         return file_get_contents("$CFG->dirroot/mod/fct/export/{$name}.{$ext}");
+    }
+
+    private function clean($doc) {
+        $pattern = '/@@([a-z:-]+)(?:\|([a-z]+))?(?:@@)?/';
+        $doc = preg_replace($pattern, '', $doc);
+        $pattern = '/\\{\{ *(if|loop) +([a-z:-]+) *\}\}(.*?)\{\{ *end\1 +\2 *\}\}/s';
+        return preg_replace($pattern, '', $doc);
     }
 }
