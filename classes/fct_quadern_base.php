@@ -349,9 +349,9 @@ class fct_quadern_base extends fct_base {
     private function create_qualificacions() {
 
         $qualificacio = new stdClass;
-        $qualificacio->apte = '';
-        $qualificacio->nota = '';
-        $qualificacio->data = '';
+        $qualificacio->apte = 0;
+        $qualificacio->nota = 0;
+        $qualificacio->data = 0;
         $qualificacio->observacions = '';
 
         $this->qualificacio = $qualificacio;
