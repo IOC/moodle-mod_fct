@@ -82,14 +82,16 @@
 #activitats .fitemtitle,
 #valoracio_resultats .fitemtitle,
 .fitemtitle {
+    float: left;
     width: 70%;
-    text-align: left;
 }
 
  #valoracio_actituds .felement,
  #activitats .felement,
  #valoracio_resultats .felement,
  .felement {
+    float: left;
+    margin-left: 1em;
     width: 20%;
 }
 
@@ -172,6 +174,14 @@ _quaderns td a:hover, _seguiment td a:hover {
 }
 
 /* Data */
+.databox {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.databox .fitem {
+    padding: 1em 0;
+}
 
 .databoxtitle {
     font-weight: bold;
@@ -196,6 +206,7 @@ _quaderns td a:hover, _seguiment td a:hover {
     width: 30%;
     text-align: right;
     font-style: italic;
+    vertical-align: top;
 }
 
 .datagroup .datacontent {
@@ -205,7 +216,7 @@ _quaderns td a:hover, _seguiment td a:hover {
 }
 
 .fct_actions {
-    margin: 0 auto;
+    margin: 2em auto;
     text-align: center;
     border-top: 1px solid #aaa;
     width: 60%;
@@ -216,7 +227,14 @@ _quaderns td a:hover, _seguiment td a:hover {
     margin: 1em;
 }
 
-.quaderns.generaltable {
+.fct_actions.fct_clear {
+    margin: 3em auto;
+
+}
+
+/* Tables */
+.quaderns.generaltable,
+.quadernactivitat.generaltable {
     width: 100%;
 }
 
@@ -224,25 +242,22 @@ _quaderns td a:hover, _seguiment td a:hover {
     text-align: center;
 }
 .convenis.generaltable {
-    margin: 0 auto;
+    margin: 0 auto 1em auto;
     width: 40%;
 }
 
-.fcontainer {
+.horari.generaltable {
+    margin: 2em auto;
+    min-width: 30%;
+}
+
+.quinzenes.generaltable {
     margin: 0 auto;
-    width: 80%;
+    min-width: 40%;
 }
 
-.fitem {
-    padding: 1em 0;
-}
-
-.fitemtitle {
-    float: left;
-    width: 80%;
-}
-
-.felement.fstatic {
-    float: right;
-    width: 20%;
+.quinzenes.generaltable td.lastcol,
+.quadernactivitat.generaltable td.lastcol,
+.horari.generaltable td.lastcol {
+    text-align: center;
 }
