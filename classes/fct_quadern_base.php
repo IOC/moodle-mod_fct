@@ -23,14 +23,14 @@ class fct_quadern_base extends fct_base {
     public $empresa;
     public $dades_alumne;
     public $convenis;
-    public $hores_credit;
-    public $hores_practiques;
-    public $hores_anteriors;
-    public $exempcio;
-    public $prorrogues;
-    public $valoracio_parcial;
-    public $valoracio_final;
-    public $valoracio_resultats;
+    public $hores_credit = 0 ;
+    public $hores_practiques = 0;
+    public $hores_anteriors = 0;
+    public $exempcio = 0;
+    public $prorrogues = '';
+    public $valoracio_parcial = array();
+    public $valoracio_final = array();
+    public $valoracio_resultats = array();
     public $qualificacio;
     public $qualificacio_global;
 
@@ -126,6 +126,14 @@ class fct_quadern_base extends fct_base {
              return $this->$dataobject->$name;
         }
         return false;
+    }
+
+    public function insert($data) {
+        $this->create_empresa($data);
+        $this->create_alumne();
+        $this->create_qualificacions();
+
+        parent::insert($data);
     }
 
     public function set_data($data) {
@@ -288,5 +296,65 @@ class fct_quadern_base extends fct_base {
 
     public function ultim_conveni() {
         return isset($this->convenis) ? end($this->convenis) : false;
+    }
+
+    private function create_empresa($data) {
+        if (!$this->empresa) {
+            $empresa = new stdClass;
+            $empresa->nom = isset($data->nom_empresa) ? $data->nom_empresa : '';
+            $empresa->adreca = '';
+            $empresa->poblacio = '';
+            $empresa->codi_postal = '';
+            $empresa->telefon = '';
+            $empresa->fax = '';
+            $empresa->email = '';
+            $empresa->nif = '';
+            $empresa->codi_agrupacio = '';
+            $empresa->sic = '';
+            $empresa->nom_responsable = '';
+            $empresa->cognoms_responsable = '';
+            $empresa->dni_responsable = '';
+            $empresa->carrec_responsable = '';
+            $empresa->nom_tutor = '';
+            $empresa->cognoms_tutor = '';
+            $empresa->dni_tutor = '';
+            $empresa->email_tutor = '';
+            $empresa->nom_lloc_practiques = '';
+            $empresa->adreca_lloc_practiques = '';
+            $empresa->poblacio_lloc_practiques = '';
+            $empresa->codi_postal_lloc_practiques = '';
+            $empresa->telefon_lloc_practiques = '';
+
+            $this->empresa = $empresa;
+        }
+    }
+
+    private function create_alumne() {
+
+        $alumne = new stdClass;
+        $alumne->dni = '';
+        $alumne->data_naixement = '';
+        $alumne->adreca = '';
+        $alumne->poblacio = '';
+        $alumne->codi_postal = '';
+        $alumne->telefon = '';
+        $alumne->email = '';
+        $alumne->procedencia = '';
+        $alumne->inss = '';
+        $alumne->targeta_sanitaria = '';
+
+        $this->dades_alumne = $alumne;
+    }
+
+    private function create_qualificacions() {
+
+        $qualificacio = new stdClass;
+        $qualificacio->apte = '';
+        $qualificacio->nota = '';
+        $qualificacio->data = '';
+        $qualificacio->observacions = '';
+
+        $this->qualificacio = $qualificacio;
+        $this->qualificacio_global = $qualificacio;
     }
 }
