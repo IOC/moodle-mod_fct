@@ -52,7 +52,7 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
         $output .= html_writer::start_div('fct_actions');
         $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_horari'));
-        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+        $output .= html_writer::link($link, get_string('nova_franja', 'fct'), array('class' => 'datalink'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::end_div('databox');
