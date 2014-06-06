@@ -226,6 +226,11 @@ _quaderns td a:hover, _seguiment td a:hover {
 
 }
 
+.fct_resum_seguiment {
+    text-align: center;
+    width: 100%;
+}
+
 /* Tables */
 .quaderns.generaltable,
 .quadernactivitat.generaltable {
@@ -235,23 +240,27 @@ _quaderns td a:hover, _seguiment td a:hover {
 .quaderns.generaltable td.lastcol {
     text-align: center;
 }
+
 .convenis.generaltable {
     margin: 0 auto 1em auto;
     width: 40%;
 }
 
-.horari.generaltable {
+.horari.generaltable,
+.resumseguiment.generaltable {
     margin: 2em auto;
     min-width: 30%;
 }
 
-.quinzenes.generaltable {
+.quinzenes.generaltable,
+.cicles.generaltable {
     margin: 0 auto;
     min-width: 40%;
 }
 
 .quinzenes.generaltable td.lastcol,
 .quadernactivitat.generaltable td.lastcol,
-.horari.generaltable td.lastcol {
+.horari.generaltable td.lastcol,
+.cicles.generaltable td.lastcol {
     text-align: center;
 }

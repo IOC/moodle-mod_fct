@@ -29,19 +29,18 @@ class mod_fct_resum_seguiment_renderer extends plugin_renderer_base {
 
     public $resum;
 
-    public function view($resum, $total_hores, $total_dies) {
+    public function view($resum, $totalhores, $totaldies) {
 
         $this->resum = $resum;
 
-
-        foreach ($resum as $any => $resum_any) {
-            foreach ($resum_any as $trimestre => $resum_trimestre) {
+        foreach ($resum as $any => $resumany) {
+            foreach ($resumany as $trimestre => $resumtrimestre) {
                 echo $this->mostrar_resum_trimestre($any, $trimestre);
             }
         }
 
-        $duradatotal = get_string('durada_total_practiques', 'fct', array('dies' => $total_dies, 'hores' => $total_hores));
-        echo $duradatotal;
+        $text = get_string('durada_total_practiques', 'fct', array('dies' => $totaldies, 'hores' => $totalhores));
+        echo html_writer::tag('div', $text, array('class' => 'fct_resum_seguiment'));
     }
 
     public function mostrar_resum_trimestre($any, $trimestre) {

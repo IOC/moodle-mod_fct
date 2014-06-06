@@ -72,12 +72,13 @@ class mod_fct_centre_renderer extends plugin_renderer_base {
 
         if ($edit) {
             $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
+            $output .= html_writer::start_div('fct_actions');
             $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'dades_centre'));
             $output .= html_writer::link($editlink, get_string('edit'), array('class' => 'datalink'));
+            $output .= html_writer::end_div();
         }
 
         $output .= html_writer::end_div();
-
 
         return $output;
     }

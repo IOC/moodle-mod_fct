@@ -57,7 +57,9 @@ class mod_fct_frases_renderer extends plugin_renderer_base {
         $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
 
         $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'frases_retroaccio'));
+        $output .= html_writer::start_div('fct_actions');
         $output .= html_writer::link($editlink, get_string('edit'), array('class' => 'datalink'));
+        $output .= html_writer::end_div();
 
         return $output;
     }
