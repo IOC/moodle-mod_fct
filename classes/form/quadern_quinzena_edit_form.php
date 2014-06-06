@@ -110,7 +110,7 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                               get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                if (isset($data->frases_empresa) && !empty($data->frases_centre)) {
+                if (!empty($data->frases_centre)) {
                     foreach ($data->frases_centre as $frase) {
                         $html[] = '<li>' . trim($frase) . '</li>';
                     }
@@ -133,7 +133,7 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                                get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                if (isset($data->frases_empresa) && !empty($data->frases_empresa)) {
+                if (!empty($data->frases_empresa)) {
                     foreach ($data->frases_empresa as $frase) {
                         $html[] = '<li>' . trim($frase) . '</li>';
                     }

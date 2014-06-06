@@ -38,9 +38,11 @@ class mod_fct_resum_seguiment_renderer extends plugin_renderer_base {
                 echo $this->mostrar_resum_trimestre($any, $trimestre);
             }
         }
-
-        $text = get_string('durada_total_practiques', 'fct', array('dies' => $totaldies, 'hores' => $totalhores));
-        echo html_writer::tag('div', $text, array('class' => 'fct_resum_seguiment'));
+        $output = '';
+        $output .= html_writer::start_div('fct_resum_seguiment');
+        $output .= get_string('durada_total_practiques', 'fct', array('dies' => $totaldies, 'hores' => $totalhores));
+        $output .= html_writer::end_div();
+        echo $output;
     }
 
     public function mostrar_resum_trimestre($any, $trimestre) {
