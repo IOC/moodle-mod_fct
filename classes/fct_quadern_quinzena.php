@@ -121,7 +121,7 @@ class fct_quadern_quinzena extends fct_base {
                 echo $output->notification(get_string('cap_quinzena', 'fct'));
             }
             if ($dataprevista = $this->data_prevista_valoracio_parcial($quadern)) {
-                echo $output->notification(get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate'))));
+                echo $output->data_prevista($dataprevista);
             }
         }
     }

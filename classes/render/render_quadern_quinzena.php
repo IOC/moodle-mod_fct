@@ -62,10 +62,27 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $buttons = array();
 
-        $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $quinzena->id, 'quadern' => $quinzena->quadern, 'page' => 'quadern_quinzena'));
-        $editicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
-        $deletelink = new moodle_url('./edit.php', array('id' => $quinzena->id, 'cmid' => $PAGE->cm->id, 'delete' => 1, 'page' => 'quadern_quinzena', 'quadern' => $quinzena->quadern));
+        $params = array(
+            'cmid' => $PAGE->cm->id,
+            'id' => $quinzena->id,
+            'quadern' => $quinzena->quadern,
+            'page' => 'quadern_quinzena',
+        );
+        $editlink = new moodle_url('./edit.php', $params);
+        $params = array(
+            'src' => $OUTPUT->pix_url('t/edit'),
+            'alt' => get_string('edit'),
+            'class' => 'iconsmall',
+        );
+        $editicon = html_writer::empty_tag('img', $params);
+        $params = array(
+            'id' => $quinzena->id,
+            'cmid' => $PAGE->cm->id,
+            'delete' => 1,
+            'page' => 'quadern_quinzena',
+            'quadern' => $quinzena->quadern,
+        );
+        $deletelink = new moodle_url('./edit.php', $params);
         $deleteicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
 
@@ -88,6 +105,11 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         echo $output;
 
+    }
+
+    public function data_prevista($dataprevista) {
+        $text = get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate')));
+        return html_writer::tag('div', $text, array('class' => 'fct_data_prevista'));
     }
 
 }

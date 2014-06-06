@@ -226,7 +226,9 @@ _quaderns td a:hover, _seguiment td a:hover {
 
 }
 
-.fct_resum_seguiment {
+.fct_resum_seguiment,
+.fct_data_prevista {
+    margin-top: 1em;
     text-align: center;
     width: 100%;
 }
