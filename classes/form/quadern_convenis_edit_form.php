@@ -48,7 +48,7 @@ class fct_quadern_convenis_edit_form extends moodleform {
                 $mform->addElement('date_selector', $conveni->uuid.'_data_inici', get_string('data_inici', 'mod_fct'));
 
                 $mform->addElement('date_selector', $conveni->uuid.'_data_final', get_string('data_final', 'mod_fct'));
-
+                $mform->addElement('checkbox', $conveni->uuid.'_delete_conveni', get_string('delete'));
             }
         }
 

@@ -84,6 +84,7 @@ $string['batxillerat'] = 'Batxillerat';
 $string['cap_activitat'] = 'No hi ha cap activitat.';
 $string['cap_avis'] = 'No hi ha cap avís.';
 $string['cap_cicle_formatiu'] = 'No hi ha cap cicle formatiu.';
+$string['cap_conveni'] = 'No hi ha cap conveni';
 $string['cap_empresa'] = 'No hi ha cap empresa.';
 $string['cap_quadern'] = 'No hi ha cap quadern.';
 $string['cap_quinzena'] = 'No hi ha cap quinzena';

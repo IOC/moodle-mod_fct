@@ -87,9 +87,9 @@ class fct_quadern_conveni extends fct_quadern_base {
 
     public function set_data($data) {
 
-        if ($uuids = $this->get_uuids()) {
+        $convenis = $this->convenis;
 
-            $convenis = $this->convenis;
+        if ($uuids = $this->get_uuids()) {
 
             foreach ($uuids as $uuid) {
                 $pregmatchexp = '"'.'/^'.$uuid.'_/'.'"';
@@ -97,6 +97,13 @@ class fct_quadern_conveni extends fct_quadern_base {
                 $arrayfiltered = array_filter(array_flip((array)$data), create_function('$a', 'return preg_match('.$pregmatchexp.', $a);'));
 
                 $conveni = new stdClass;
+
+                $uuidelete = $uuid.'_delete_conveni';
+
+                if (isset($data->$uuidelete)) {
+                    unset($convenis->$uuid);
+                    continue;
+                }
 
                 foreach (array_flip($arrayfiltered) as $key => $value) {
                     $key = preg_replace('/^'.$uuid.'_/', '', $key);
@@ -122,7 +129,6 @@ class fct_quadern_conveni extends fct_quadern_base {
             $uuid = $conveni->uuid();
             $conveni->uuid = $uuid;
             $convenis->$uuid = $conveni;
-
 
         }
 
