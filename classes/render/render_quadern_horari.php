@@ -88,8 +88,12 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
         global $OUTPUT, $PAGE;
 
         $line[] = $horari->dia;
-        $line[] = str_replace('.', ':', $horari->hora_inici);
-        $line[] = str_replace('.', ':', $horari->hora_final);
+
+        $horainici = substr($horari->hora_inici, -2, 1) == '.' ?  $horari->hora_inici.'0' : $horari->hora_inici;
+        $horafinal = substr($horari->hora_final, -2, 1) == '.' ?  $horari->hora_final.'0' : $horari->hora_final;
+
+        $line[] = str_replace('.', ':', $horainici);
+        $line[] = str_replace('.', ':', $horafinal);
 
         $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
                                                          'quadern' => $quadern,
