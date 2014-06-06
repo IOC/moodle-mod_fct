@@ -39,7 +39,8 @@ class fct_quadern_activitat_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-        $mform->addElement('textarea', 'descripcio', get_string('activitat', 'mod_fct'));
+        $attributes = array('cols' => 50, 'rows' => 5);
+        $mform->addElement('textarea', 'descripcio', get_string('activitat', 'mod_fct'), $attributes);
         $mform->addRule('descripcio', null, 'required');
 
         $mform->addElement('hidden', 'quadern');
