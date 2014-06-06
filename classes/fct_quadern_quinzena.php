@@ -71,10 +71,14 @@ class fct_quadern_quinzena extends fct_base {
                                         array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena',)),
                                         get_string('afegeix_quinzena', 'fct'));
 
+        $subtree[] = new tabobject('resum_seguiment', new moodle_url('/mod/fct/view.php',
+                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'resum_seguiment',)),
+                                        get_string('resum_seguiment', 'fct'));
+
         $row = $tab['row'];
         $row['quadern_quinzena']->subtree = $subtree;
         $tab['row'] = $row;
-        $tab['currentab'] = $type == 'view'?'quinzenesllist':'afegeix_quinzena';
+        $tab['currentab'] = $type == 'view' ? 'quinzenesllist' : 'afegeix_quinzena';
         $tab['row'] = $row;
 
         return $tab;
@@ -176,7 +180,7 @@ class fct_quadern_quinzena extends fct_base {
         }
     }
 
-    public function delete(){
+    public function delete() {
         global $DB, $USER;
 
         if (!isset($this->id)) {
