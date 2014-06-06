@@ -61,7 +61,7 @@ class mod_fct_quadern_convenis_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $horesrealitzades, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $horespendents = $horesrealitzades - $quadern->hores_practiques;
+        $horespendents = $quadern->hores_practiques - $horesrealitzades;
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('hores_pendents', 'fct').':', array('class' => 'datatitle'));
