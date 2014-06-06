@@ -70,7 +70,11 @@ class fct_frases_retroaccio extends fct_base {
 
         $output = $PAGE->get_renderer('mod_fct', 'frases');
 
-        $frases = array('frases_centre' => $this->frases_centre, 'frases_empresa' => $this->frases_empresa);
+        $frases = array();
+        $this->frases_centre = array_filter($this->frases_centre);
+        $this->frases_empresa = array_filter($this->frases_empresa);
+        $frases['frases_centre'] = (!empty($this->frases_centre) ? $this->frases_centre : array());
+        $frases['frases_empresa'] = (!empty($this->frases_empresa) ? $this->frases_empresa : array());
         $table = $output->frases_table($frases);
 
         echo $table;

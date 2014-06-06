@@ -33,27 +33,24 @@ class mod_fct_frases_renderer extends plugin_renderer_base {
         $output = '';
         $output .= html_writer::tag('span', get_string('tutor_centre', 'fct'));
 
-        $output .= html_writer::start_tag('ul');
-
         if (isset($frases['frases_centre'])) {
+            $output .= html_writer::start_tag('ul');
             foreach ($frases['frases_centre'] as $key => $value) {
                 $output .= html_writer::tag('li', $value);
             }
+            $output .= html_writer::end_tag('ul');
         }
-
-        $output .= html_writer::end_tag('ul');
 
         $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct'));
 
-        $output .= html_writer::start_tag('ul');
-
         if (isset($frases['frases_empresa'])) {
+            $output .= html_writer::start_tag('ul');
             foreach ($frases['frases_empresa'] as $key => $value) {
                 $output .= html_writer::tag('li', $value);
             }
+            $output .= html_writer::end_tag('ul');
         }
 
-        $output .= html_writer::end_tag('ul');
         $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
 
         $editlink = new moodle_url('/mod/fct/edit.php', array('cmid' => $PAGE->cm->id, 'id' => $fct->instance, 'page' => 'frases_retroaccio'));
