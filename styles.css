@@ -38,16 +38,16 @@
 
 /* Pestanyes */
 
- .tabtree .tabrow0 {
+ .fct_tabs .tabtree .tabrow0 {
     margin: 0 auto;
     padding-bottom: 0;
 }
 
- .tabtree .tabrow1 {
+.fct_tabs .tabtree .tabrow1 {
     margin: 0;
 }
 
- .tabtree ul.tabrow1 li.active {
+.fct_tabs .tabtree ul.tabrow1 li.active {
     font-weight: bold;
 }
 
@@ -81,7 +81,7 @@
 #valoracio_actituds .fitemtitle,
 #activitats .fitemtitle,
 #valoracio_resultats .fitemtitle,
-.fitemtitle {
+.databox .fitemtitle {
     float: left;
     width: 70%;
 }
@@ -89,7 +89,7 @@
  #valoracio_actituds .felement,
  #activitats .felement,
  #valoracio_resultats .felement,
- .felement {
+ .databox .felement {
     float: left;
     margin-left: 1em;
     width: 20%;
@@ -160,16 +160,16 @@ _quaderns td a:hover, _seguiment td a:hover {
     text-decoration: none;
 }
 
- .selectors_quaderns {
+.selectors_quaderns {
     margin-bottom: 1em;
 }
 
- .selectors_quaderns div  {
+.selectors_quaderns div  {
     display: inline;
     margin-right: 20px;
 }
 
- .selectors_quaderns div label {
+.selectors_quaderns div label {
     margin-right: 5px;
 }
 
@@ -189,12 +189,6 @@ _quaderns td a:hover, _seguiment td a:hover {
     border-bottom: 1px solid #aaa;
     display: inline-block;
     width: 100%;
-}
-
-.box.generalbox {
-    padding: 0 1em 1em 1em;
-    width: 80%;
-    border: none;
 }
 
 .datagroup {
