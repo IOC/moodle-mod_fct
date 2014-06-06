@@ -38,6 +38,7 @@ require_once('classes/render/render_quadern_valoracio.php');
 require_once('classes/render/render_quadern_valoracio_activitat.php');
 require_once('classes/render/render_quadern_qualificacio.php');
 require_once('classes/render/render_quadern_activitat.php');
+require_once('classes/render/render_resum_seguiment.php');
 require_once('classes/render/render_avisos.php');
 
 class mod_fct_renderer extends plugin_renderer_base {
