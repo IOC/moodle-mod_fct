@@ -78,8 +78,9 @@ class fct_quadern_quinzena_edit_form extends moodleform {
         }
 
         $mform->addElement('header', 'header_valoracions', get_string('valoracions_observacions', 'fct'));
-        $mform->addElement('textarea' , 'valoracions', get_string('valoracions', 'mod_fct'));
-        $mform->addElement('textarea' , 'observacions_alumne', get_string('observacions', 'mod_fct'));
+        $attributes = array('cols' => 50, 'rows' => 10);
+        $mform->addElement('textarea' , 'valoracions', get_string('valoracions', 'mod_fct'), $attributes);
+        $mform->addElement('textarea' , 'observacions_alumne', get_string('observacions', 'mod_fct'), $attributes);
 
         if (!$data->usuari->es_alumne) {
             $mform->addElement('header', 'header_retroaccio', get_string('retroaccio', 'fct'));
