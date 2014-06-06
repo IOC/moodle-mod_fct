@@ -102,7 +102,7 @@ class fct_llista_empreses_edit_form extends moodleform {
                 $csv = array();
                 foreach ($files as $columnes) {
                     foreach ($columnes as $camp) {
-                    $csv[] = '"' . addslashes($camp) .'",';
+                    $csv[] = '"' . $camp .'",';
                     }
                     $csv[] = "\n";
                 }
