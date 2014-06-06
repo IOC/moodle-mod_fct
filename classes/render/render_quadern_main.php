@@ -72,7 +72,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('estat', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quadern->estat, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', $quadern::$estats[$quadern->estat], array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::end_div('databox');
