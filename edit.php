@@ -222,7 +222,7 @@ $output = $PAGE->get_renderer('mod_fct');
 
 $output->print_tabs($tab);
 
-echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
+echo $OUTPUT->box_start('boxaligncenter boxwidthwide');
 $editform->display();
 echo $OUTPUT->box_end();
 
