@@ -83,6 +83,7 @@ $string['barem_e'] = 'E. Negativa';
 $string['batxillerat'] = 'Batxillerat';
 $string['cap_activitat'] = 'No hi ha cap activitat.';
 $string['cap_avis'] = 'No hi ha cap avís.';
+$string['cap_conveni'] = 'No hi ha cap conveni';
 $string['cap_cicle_formatiu'] = 'No hi ha cap cicle formatiu.';
 $string['cap_empresa'] = 'No hi ha cap empresa.';
 $string['cap_quadern'] = 'No hi ha cap quadern.';

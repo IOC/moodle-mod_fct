@@ -33,7 +33,11 @@ class mod_fct_quadern_convenis_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('databox');
 
-        $output .= $this->convenis_table($quadern);
+        if (count((array)$quadern->convenis) > 0) {
+            $output .= $this->convenis_table($quadern);
+        } else {
+            echo $this->notification(get_string('cap_conveni', 'fct'));
+        }
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
         $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_conveni'));
