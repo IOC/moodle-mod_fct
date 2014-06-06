@@ -31,9 +31,10 @@ class mod_fct_frases_renderer extends plugin_renderer_base {
         global $PAGE;
 
         $output = '';
-        $output .= html_writer::tag('span', get_string('tutor_centre', 'fct'));
+        $output .= html_writer::start_div('fct_feedback');
+        $output .= html_writer::tag('div', get_string('tutor_centre', 'fct'));
 
-        if (isset($frases['frases_centre'])) {
+        if (isset($frases['frases_centre']) and !empty($frases['frases_centre'])) {
             $output .= html_writer::start_tag('ul');
             foreach ($frases['frases_centre'] as $key => $value) {
                 $output .= html_writer::tag('li', $value);
@@ -41,15 +42,16 @@ class mod_fct_frases_renderer extends plugin_renderer_base {
             $output .= html_writer::end_tag('ul');
         }
 
-        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct'));
+        $output .= html_writer::tag('div', get_string('tutor_empresa', 'fct'));
 
-        if (isset($frases['frases_empresa'])) {
+        if (isset($frases['frases_empresa']) and !empty($frases['frases_empresa'])) {
             $output .= html_writer::start_tag('ul');
             foreach ($frases['frases_empresa'] as $key => $value) {
                 $output .= html_writer::tag('li', $value);
             }
             $output .= html_writer::end_tag('ul');
         }
+        $output .= html_writer::end_div();
 
         $fct = get_coursemodule_from_id('fct', $PAGE->cm->id);
 

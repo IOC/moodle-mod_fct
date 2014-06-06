@@ -233,6 +233,11 @@ _quaderns td a:hover, _seguiment td a:hover {
     width: 100%;
 }
 
+.fct_feedback {
+    margin: 0 auto;
+    width: 80%;
+}
+
 /* Tables */
 .quaderns.generaltable,
 .quadernactivitat.generaltable {
