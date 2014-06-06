@@ -44,11 +44,12 @@ function fct_update_instance($data) {
     global $DB;
 
     $fctrecord = $DB->get_record('fct', array('id' => $data->instance));
-    $fctrecord->name = $data->name;
-    $fctrecord->intro = $data->intro;
-    $fctrecord->timemodified = time();
 
     $fctinstance = new fct_instance($fctrecord);
+    $fctinstance->name = $data->name;
+    $fctinstance->intro = $data->intro;
+    $fctinstance->timemodified = time();
+
     $fctinstance->add();
 
     return true;

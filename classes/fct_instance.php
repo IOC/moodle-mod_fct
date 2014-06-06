@@ -31,8 +31,11 @@ class fct_instance {
     public $intro;
     public $timecreated;
     public $timemodified;
-    public $objecte = '';
+    public $frases_centre = array();
+    public $frases_empresa = array();
+    public $centre;
     public $instance;
+    public $objecte = '';
 
     public function __construct($fctrecord) {
         foreach ((array)$fctrecord as $key => $value) {
@@ -40,6 +43,8 @@ class fct_instance {
                 $this->$key = $value;
             }
         }
+
+        $this->decode();
     }
 
     public function record() {
@@ -50,6 +55,8 @@ class fct_instance {
         $record->intro = $this->intro;
         $record->timecreated = $this->timecreated;
         $record->timemodified = $this->timemodified;
+        $record->frases_empresa = $this->frases_empresa;
+        $record->frases_centre = $this->frases_centre;
         $record->objecte = '';
 
         return $record;
@@ -62,9 +69,21 @@ class fct_instance {
         $record->intro = $this->intro;
         $record->timecreated = $this->timecreated;
         $record->timemodified = $this->timemodified;
+        $record->frases_empresa = $this->frases_empresa;
+        $record->frases_centre = $this->frases_centre;
+        $record->centre = $this->centre;
         $this->objecte = json_encode($record);
 
         return $this->objecte;
+    }
+
+    public function decode() {
+        if (isset($this->objecte)) {
+            $objectedata = json_decode($this->objecte);
+            foreach ((array)$objectedata as $key => $value) {
+                $this->$key = $value;
+            }
+        }
     }
 
     public function add() {
@@ -74,6 +93,7 @@ class fct_instance {
 
         if (!isset($this->id) || !$this->id) {
             if ($record->id = $DB->insert_record('fct', $record)) {
+                $this->create_centre();
                 $this->id = $record->id;
             }
         }
@@ -104,5 +124,17 @@ class fct_instance {
         }
         $DB->delete_records('fct', array('id' => $this->id));
         $this->fct = false;
+    }
+
+    public function create_centre() {
+        $this->centre = new stdClass;
+        $this->centre->nom = '';
+        $this->centre->adreca = '';
+        $this->centre->codi_postal = '';
+        $this->centre->poblacio = '';
+        $this->centre->telefon = '';
+        $this->centre->fax = '';
+        $this->centre->email = '';
+
     }
 }
