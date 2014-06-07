@@ -367,7 +367,8 @@ class fct_quadern extends fct_quadern_base {
                         print_error('nopermisions');
                     }
                 } else {
-                    if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre && !$this->usuari->es_tutor_empresa ) {
+                    if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre &&
+                        !$this->usuari->es_tutor_empresa && !$this->usuari->es_administrador) {
                             print_error('nopermisions');
                     }
                 }
