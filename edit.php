@@ -224,7 +224,12 @@ $output = $PAGE->get_renderer('mod_fct');
 
 $output->print_tabs($tab);
 
-echo $OUTPUT->box_start('boxaligncenter boxwidthwide');
+$fctclass = '';
+if ($page == 'quadern_valoracio_activitat' or ($page == 'quadern_valoracio' and $subpage != 'quadern_qualificacio')) {
+    $fctclass = ' fct_' . $page;
+}
+
+echo $OUTPUT->box_start('boxaligncenter boxwidthwide' . $fctclass);
 $editform->display();
 echo $OUTPUT->box_end();
 
