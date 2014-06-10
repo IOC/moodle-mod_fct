@@ -72,3 +72,35 @@ function fct_string($identifier, $a=null) {
     }
     return get_string($identifier, 'fct', $a);
 }
+
+function fct_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    if ($filearea !== 'inssimage' && $filearea !== 'targetaimage') {
+        return false;
+    }
+
+    require_login($course, true, $cm);
+
+    $itemid = array_shift($args); // The first item in the $args array.
+
+
+    $filename = array_pop($args); // The last item in the $args array.
+    if (!$args) {
+        $filepath = '/'; // $args is empty => the path is '/'
+    } else {
+        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+    }
+
+    // Retrieve the file from the Files API.
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'mod_fct', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false; // The file does not exist.
+    }
+
+    send_stored_file($file, 86400, 0, $forcedownload, $options);
+}

@@ -72,11 +72,19 @@ class fct_quadern_alumne_edit_form extends moodleform {
         $attributes = array('size' => 48);
         $mform->addElement('text', 'inss', get_string('inss', 'mod_fct'), $attributes);
         $mform->setType('inss', PARAM_EMAIL);
+        $maxbytes = 0;
+        $maxfiles = 1;
+        $subdirs = false;
+        $imageoptions = array('maxbytes' => $maxbytes, 'maxfiles' => $maxfiles, 'subdirs' => $subdirs, 'accepted_types' => array('web_image'));
+        $mform->addElement('filemanager', 'inssimage_filemanager', get_string('imatge_targeta', 'fct'), null, $imageoptions);
+
         $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
+
 
         $attributes = array('size' => 48);
         $mform->addElement('text', 'targeta_sanitaria', get_string('targeta_sanitaria', 'mod_fct'), $attributes);
         $mform->setType('targeta_sanitaria', PARAM_TEXT);
+        $mform->addElement('filemanager', 'targetaimage_filemanager', get_string('imatge_targeta', 'fct'), null, $imageoptions);
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
@@ -105,4 +113,5 @@ class fct_quadern_alumne_edit_form extends moodleform {
         $errors = $class::validation($data);
         return $errors;
     }
+
 }

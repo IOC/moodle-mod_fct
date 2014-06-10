@@ -69,9 +69,41 @@ class fct_quadern_alumne extends fct_quadern_base {
 
     }
 
+    public function set_data($data) {
+        parent::set_data($data);
+
+        $cm = get_coursemodule_from_instance('fct', $this->fct);
+        $context = context_module::instance($cm->id);
+
+
+        $maxfiles = 1;
+        $maxbytes = 0;
+        $attachmentoptions = array('maxfiles' => $maxfiles, 'maxbytes' => $maxbytes);
+        file_postupdate_standard_filemanager($data, 'inssimage', $attachmentoptions, $context, 'mod_fct', 'inssimage', $data->id);
+        file_postupdate_standard_filemanager($data, 'targetaimage', $attachmentoptions, $context, 'mod_fct', 'targetaimage', $data->id);
+
+
+    }
+
     public function prepare_form_data($data) {
+
+        if (!isset($this->fct)) {
+            print_error('nofct');
+        }
+        $cm = get_coursemodule_from_instance('fct', $this->fct);
+        $context = context_module::instance($cm->id);
+
+        $maxfiles = 1;
+        $maxbytes = 0;
+        $attachmentoptions = array('maxfiles' => $maxfiles, 'maxbytes' => $maxbytes);
+        if ($data->id) {
+            $data = file_prepare_standard_filemanager($data, 'inssimage', $attachmentoptions, $context, 'mod_fct', 'inssimage', $data->id);
+            $data = file_prepare_standard_filemanager($data, 'targetaimage', $attachmentoptions, $context, 'mod_fct', 'targetaimage', $data->id);
+        }
+
         $data->procedencies = $this->procedencies();
         $data = parent::prepare_form_data($data);
+
         return $data;
     }
 
