@@ -78,7 +78,7 @@ a.fct_tancat {
 
 /* Formularis */
 
- form a.boto {
+form a.boto {
     margin: 10px;
 }
 
@@ -143,6 +143,12 @@ form .frases_areatext li:hover {
     border: 1px solid #dddddd;
     text-align: center;
     width: 2em;
+}
+
+.fct_quadern_valoracio_activitat .fct_valoracio,
+.fct_quadern_valoracio .fct_valoracio {
+    display: inline-block;
+    width: 80%;
 }
 
 .fct_quadern_valoracio select,

@@ -39,10 +39,12 @@ class fct_quadern_valoracio_activitat_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-
+        $starttag = '<span class="fct_valoracio">';
+        $endtag = '</span>';
         foreach ($data->activitats as $activitat) {
             $linearray = array();
-            $linearray[] =& $mform->createElement('static', 'activity_'.$activitat->id, '',$activitat->descripcio);
+            $text = $starttag . $activitat->descripcio . $endtag;
+            $linearray[] =& $mform->createElement('static', 'activity_'.$activitat->id, '', $text);
             $linearray[] =& $mform->createElement('select', 'nota_'.$activitat->id, '', $data->barem);
             $mform->addGroup($linearray, 'line_'.$activitat->id, '', array(' '), false);
 
