@@ -70,7 +70,7 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quadern->observacions, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', nl2br($quadern->observacions), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
