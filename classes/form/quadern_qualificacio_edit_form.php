@@ -43,7 +43,7 @@ class fct_quadern_qualificacio_edit_form extends moodleform {
         $mform->addElement('select', 'apte', get_string('qualificacio', 'mod_fct'), $qualificacio->qualificacions());
         $mform->addElement('select', 'nota', '', $qualificacio->barem_valoracio());
         $mform->addElement('date_selector', 'data', get_string('data', 'mod_fct'));
-        $mform->addElement('textarea', 'observacions', get_string('observacions', 'mod_fct'));
+        $mform->addElement('textarea', 'observacions', get_string('observacions', 'mod_fct'), 'rows="4" cols="50" ');
         $mform->addElement('hidden', 'cmid');
 
         $mform->setType('cmid', PARAM_INT);
