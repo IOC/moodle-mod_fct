@@ -83,7 +83,8 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         if ($quadern->usuari->es_administrador || $quadern->usuari->es_tutor_empresa) {
             $params = array(
                 'cmid' => $cm->id,
-                'id' => $quadern->id
+                'id' => $quadern->id,
+                'returnpage' => 'quadern_main'
             );
             $editurl = new moodle_url('/mod/fct/edit.php', $params);
             $output .= html_writer::link($editurl, get_string('edit'));

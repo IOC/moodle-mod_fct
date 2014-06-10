@@ -33,18 +33,19 @@ require_login();
 
 $cmid = required_param('cmid', PARAM_INT);    // Course Module ID
 $id = optional_param('id', false, PARAM_INT);    // Object ID
-$page = optional_param('page', 'quadern', PARAM_RAW);
-$subpage = optional_param('subpage', false, PARAM_RAW);
+$page = optional_param('page', 'quadern', PARAM_ALPHAEXT);
+$subpage = optional_param('subpage', false, PARAM_ALPHAEXT);
 $delete = optional_param('delete', false, PARAM_BOOL);
 $deleteall = optional_param('deleteall', false, PARAM_BOOL);
 $confirm   = optional_param('confirm', 0, PARAM_BOOL);
 $quadern = optional_param('quadern', false, PARAM_INT);
-$valoracio = optional_param('valoracio', false, PARAM_RAW);
-$qualificaciotype = optional_param('qualificaciotype', 'parcial', PARAM_RAW);
+$valoracio = optional_param('valoracio', false, PARAM_ALPHAEXT);
+$qualificaciotype = optional_param('qualificaciotype', 'parcial', PARAM_ALPHAEXT);
 $uuid = optional_param('uuid', false, PARAM_RAW);
-$dia = optional_param('dia', false, PARAM_RAW);
+$dia = optional_param('dia', false, PARAM_ALPHAEXT);
 $hora_inici = optional_param('hora_inici', false, PARAM_RAW);
 $hora_final = optional_param('hora_final', false, PARAM_RAW);
+$returnpage = optional_param('returnpage', false, PARAM_ALPHAEXT);
 
 if (!$cm = get_coursemodule_from_id('fct', $cmid)) {
     print_error('Course Module ID was incorrect');
@@ -102,7 +103,7 @@ if (isset($class->returnurl)) {
     $returnurl = $class->returnurl;
 } else {
     $returnurl = new moodle_url('view.php', array('id' => $cmid,
-                                                'page' => $page,
+                                                'page' => $returnpage ? $returnpage : $page,
                                                 'subpage' => $subpage,
                                                 'quadern' => $quadern,
                                                 'valoracio' => $valoracio,
@@ -193,6 +194,7 @@ if ($quadern) {
 }
 
 $data->subpage = $subpage;
+$data->returnpage = $returnpage;
 
 $objectdata = $class->get_object_data();
 

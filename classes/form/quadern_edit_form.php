@@ -75,8 +75,12 @@ class fct_quadern_edit_form extends moodleform {
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
+        $mform->addElement('hidden', 'quadern');
+        $mform->setType('quadern', PARAM_INT);
         $mform->addElement('hidden', 'page');
         $mform->setType('page', PARAM_TEXT);
+        $mform->addElement('hidden', 'returnpage');
+        $mform->setType('returnpage', PARAM_TEXT);
         $mform->addElement('hidden', 'fct');
         $mform->setType('fct', PARAM_INT);
         $mform->addElement('hidden', 'id');
@@ -84,6 +88,10 @@ class fct_quadern_edit_form extends moodleform {
         $mform->addElement('hidden', 'objecte');
         $mform->setType('objecte', PARAM_TEXT);
         $mform->setDefault('objecte', '');
+
+        if (isset($data->id)) {
+            $data->quadern = $data->id;
+        }
 
         $this->add_action_buttons();
         $this->set_data($data);

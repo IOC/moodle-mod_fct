@@ -33,17 +33,17 @@ require_once('classes/fct_base.php');
 require_login();
 
 $id = required_param('id', PARAM_INT);    // Course Module ID
-$page = optional_param('page', 'quadern', PARAM_RAW);
+$page = optional_param('page', 'quadern', PARAM_ALPHANUMEXT);
 $index = optional_param('index', 0, PARAM_INT);
-$action = optional_param('action', 'view', PARAM_RAW);
-$quadern = optional_param('quadern', false, PARAM_RAW);
-$subpage = optional_param('subpage', false, PARAM_RAW);
-$valoracio = optional_param('valoracio', false, PARAM_RAW);
+$action = optional_param('action', 'view', PARAM_ALPHANUMEXT);
+$quadern = optional_param('quadern', false, PARAM_ALPHANUMEXT);
+$subpage = optional_param('subpage', false, PARAM_ALPHANUMEXT);
+$valoracio = optional_param('valoracio', false, PARAM_ALPHANUMEXT);
 $curs = optional_param('searchcurs', false, PARAM_INT);
 $cicle = optional_param('searchcicle', false, PARAM_INT);
-$estat = optional_param('searchestat', false, PARAM_RAW);
+$estat = optional_param('searchestat', false, PARAM_ALPHANUMEXT);
 $cerca = optional_param('cerca', false, PARAM_RAW);
-$qualificaciotype = optional_param('qualificaciotype', false, PARAM_RAW);
+$qualificaciotype = optional_param('qualificaciotype', false, PARAM_ALPHANUMEXT);
 
 $validactions = array('export_pdf', 'export_html', 'view');
 
