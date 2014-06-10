@@ -72,31 +72,32 @@ abstract class fct_base {
         if (is_numeric($record)) {
             global $DB;
 
-            $data = $DB->get_record(static::$table, array('id' => $record));
+            if ($data = $DB->get_record(static::$table, array('id' => $record))) {
 
-            foreach ($data as $key => $value) {
-                if (property_exists(get_class($this), $key)) {
-                    $this->$key = $value;
-                }
-            }
-
-            if (isset($data->objecte) && !empty($data->objecte)) {
-                $this->objecte = $data->objecte;
-                $objectdata = json_decode($data->objecte);
-            }
-            if (isset($objectdata)) {
-                foreach ($objectdata as $key => $value) {
-
+                foreach ($data as $key => $value) {
                     if (property_exists(get_class($this), $key)) {
                         $this->$key = $value;
                     }
+                }
 
-                    if (is_object($value)) {
-                        $valuearray = (array)$value;
+                if (isset($data->objecte) && !empty($data->objecte)) {
+                    $this->objecte = $data->objecte;
+                    $objectdata = json_decode($data->objecte);
+                }
+                if (isset($objectdata)) {
+                    foreach ($objectdata as $key => $value) {
 
-                        foreach ($valuearray as $key => $value) {
-                            if (property_exists(get_class($this), $key)) {
-                                $this->$key = $value;
+                        if (property_exists(get_class($this), $key)) {
+                            $this->$key = $value;
+                        }
+
+                        if (is_object($value)) {
+                            $valuearray = (array)$value;
+
+                            foreach ($valuearray as $key => $value) {
+                                if (property_exists(get_class($this), $key)) {
+                                    $this->$key = $value;
+                                }
                             }
                         }
                     }
