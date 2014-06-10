@@ -1,6 +1,6 @@
 /* General */
 
- {
+{
     padding: 0.5em;
 }
 
@@ -8,37 +8,41 @@
     display: none;
 }
 
- .contingut {
+.contingut {
     padding: 2.5em 1.5em 1.5em 1.5em;
     margin-left: 2px;
 }
 
- .contingut p {
+.contingut p {
     text-align: center;
 }
 
- .contingut h2 {
+.contingut h2 {
     font-size: 100%;
     font-weight: bold;
     text-align: center;
     margin: 0.5em;
 }
 
- a.estat_obert {
+a.estat_obert {
     color: green;
 }
 
- a.estat_tancat {
+a.estat_tancat {
     color: red;
 }
 
- a.estat_proposat {
+a.estat_proposat {
     color: orange;
+}
+
+.fct_image {
+    max-width: 60%;
 }
 
 /* Pestanyes */
 
- .fct_tabs .tabtree .tabrow0 {
+.fct_tabs .tabtree .tabrow0 {
     margin: 0 auto;
     padding-bottom: 0;
 }
@@ -53,22 +57,22 @@
 
 /* Taules */
 
- .contingut table {
+.contingut table {
     margin-left: auto;
     margin-right: auto;
 }
 
- .contingut th {
+.contingut th {
     text-align: left;
     padding: 0.1em 1em;
 }
 
- .contingut td {
+.contingut td {
     text-align: left;
     padding: 0.2em 1em;
 }
 
- .contingut td.accions {
+.contingut td.accions {
     width: 30px;
 }
 
@@ -86,31 +90,31 @@
     width: 70%;
 }
 
- #valoracio_actituds .felement,
- #activitats .felement,
- #valoracio_resultats .felement,
- .databox .felement {
+#valoracio_actituds .felement,
+#activitats .felement,
+#valoracio_resultats .felement,
+.databox .felement {
     float: left;
     margin-left: 1em;
     width: 20%;
 }
 
- #activitats_realitzades .fitemtitle,
- #activitats_cicle .fitemtitle,
- #llista_empreses .fitemtitle,
- #cicle_formatiu .fitemtitle {
+#activitats_realitzades .fitemtitle,
+#activitats_cicle .fitemtitle,
+#llista_empreses .fitemtitle,
+#cicle_formatiu .fitemtitle {
     width: 10%;
     text-align: left;
 }
 
- #activitats_realitzades .felement,
- #activitats_cicle .felement,
- #llista_empreses .felement,
- #cicle_formatiu .felement {
+#activitats_realitzades .felement,
+#activitats_cicle .felement,
+#llista_empreses .felement,
+#cicle_formatiu .felement {
     width: 80%;
 }
 
- form.fct_form_element_afegir_franja_horari {
+form.fct_form_element_afegir_franja_horari {
     width: 40%;
     margin-top: 2em;
 }
@@ -139,6 +143,16 @@ form .frases_areatext li:hover {
     border: 1px solid #dddddd;
     text-align: center;
     width: 2em;
+}
+
+.fct_quadern_valoracio select,
+.fct_quadern_valoracio_activitat select {
+    float: right;
+}
+
+.fct_quadern_valoracio .mform .fitem fieldset.felement,
+.fct_quadern_valoracio_activitat .mform .fitem fieldset.felement {
+    margin-left: 0;
 }
 
 /* Llista de quaderns */
