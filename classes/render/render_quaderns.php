@@ -64,7 +64,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $line = array();
 
         // Quadern detail link
-        $quadernlink = new moodle_url('./view.php', array('id'=>$cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_main'));
+        $quadernlink = new moodle_url('./view.php', array('id' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_main'));
 
         // Username
         $user = $DB->get_record('user', array('id' => $quadern->alumne));
@@ -81,7 +81,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $user = $DB->get_record('user', array('id' => $quadern->tutor_empresa));
         $fullname = fullname($user);
         $line['tutor_empresa'] = html_writer::link($quadernlink, format_string($fullname));
-        $line['estat'] = html_writer::link($quadernlink, fct_quadern::$estats[$quadern->estat]);
+        $line['estat'] = html_writer::link($quadernlink, fct_quadern::$estats[$quadern->estat], array('class' => 'fct_' . $quadern->estat));
         $line['data_final'] = html_writer::link($quadernlink, userdate($quadern->data_final, get_string('strftimedate')));
 
         $buttons = array();
@@ -103,14 +103,14 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         return $line;
     }
 
-    public function editlink($fctid, $userid){
+    public function editlink($fctid, $userid) {
         global $PAGE;
 
         $user = new fct_usuari($fctid, $userid);
         $output = '';
 
         if ($user->es_alumne || $user->es_tutor_empresa) {
-            $editlink = new moodle_url('./edit.php', array('cmid'=>$PAGE->cm->id));
+            $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id));
             $output = html_writer::link($editlink, get_string('proposa_quadern', 'fct'));
         }
 
