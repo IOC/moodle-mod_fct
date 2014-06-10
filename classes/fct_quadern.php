@@ -273,6 +273,12 @@ class fct_quadern extends fct_quadern_base {
         $cicles = fct_cicle::get_records($this->fct);
         $data->cicles = $this->prepare_form_select($cicles, 'id', 'nom', $data->cicle);
 
+        // Remove LOGSE cicles.
+        $filter = function($value) {
+            return !preg_match('/logse/i', $value);
+        };
+        $data->cicles = array_filter($data->cicles, $filter);
+
         $records = get_users_by_capability($context, 'mod/fct:tutor_centre');
 
         foreach ($records as $record) {
