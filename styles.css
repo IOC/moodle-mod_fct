@@ -24,20 +24,20 @@
     margin: 0.5em;
 }
 
-a.estat_obert {
-    color: green;
-}
-
-a.estat_tancat {
-    color: red;
-}
-
-a.estat_proposat {
-    color: orange;
-}
-
 .fct_image {
     max-width: 60%;
+}
+
+a.fct_obert {
+    color: #008000;
+}
+
+a.fct_proposat {
+    color: #ffa500;
+}
+
+a.fct_tancat {
+    color: #f00;
 }
 
 /* Pestanyes */
