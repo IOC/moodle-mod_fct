@@ -290,29 +290,33 @@ class fct_quadern_base extends fct_base {
 
         $subtree = array();
 
-        $subtree[] = new tabobject('quadern_centre', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades')),
-                                get_string('centre_docent', 'fct'));
+        $params = array(
+            'id' => $id,
+            'quadern' => $quadern,
+            'page' => 'quadern_dades',
+        );
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_centre', $url, get_string('centre_docent', 'fct'));
 
-        $subtree[] = new tabobject('quadern_alumne', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_alumne')),
-                                get_string('alumne', 'fct'));
+        $params['subpage'] = 'quadern_alumne';
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_alumne', $url, get_string('alumne', 'fct'));
 
-        $subtree[] = new tabobject('quadern_empresa', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_empresa')),
-                                get_string('empresa', 'fct'));
+        $params['subpage'] = 'quadern_empresa';
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_empresa', $url, get_string('empresa', 'fct'));
 
-        $subtree[] = new tabobject('quadern_conveni', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_conveni')),
-                                get_string('conveni', 'fct'));
+        $params['subpage'] = 'quadern_conveni';
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_conveni', $url, get_string('conveni', 'fct'));
 
-        $subtree[] = new tabobject('quadern_horari', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_horari')),
-                                get_string('horari_practiques', 'fct'));
+        $params['subpage'] = 'quadern_horari';
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_horari', $url, get_string('horari_practiques', 'fct'));
 
-        $subtree[] = new tabobject('quadern_dades_relatives', new moodle_url('/mod/fct/view.php',
-                                array('id' => $id, 'quadern' => $quadern, 'page' => 'quadern_dades', 'subpage' => 'quadern_dades_relatives')),
-                                get_string('dades_relatives', 'fct'));
+        $params['subpage'] = 'quadern_dades_relatives';
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_dades_relatives', $url, get_string('dades_relatives', 'fct'));
 
         return $subtree;
     }
