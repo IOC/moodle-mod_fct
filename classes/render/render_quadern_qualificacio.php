@@ -43,7 +43,7 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
             $apte = '';
         }
         if ($quadern->nota) {
-            $nota = $quadern->barem_valoracio()[(int)$quadern->nota];
+            $nota = $barems[$quadern->nota];
         } else {
             $nota = '';
         }

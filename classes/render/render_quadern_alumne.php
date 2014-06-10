@@ -101,8 +101,9 @@ class mod_fct_quadern_alumne_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->email, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        if (isset($quadern->procedencia)) {
-            $procedencia = $quadern->procedencies()[$quadern->procedencia];
+        if ($quadern->procedencia) {
+            $procedencies = $quadern->procedencies();
+            $procedencia = $procedencies[$quadern->procedencia];
         } else {
             $procedencia = '';
         }
