@@ -151,6 +151,7 @@ $string['estat_obert'] = 'Obert';
 $string['estat_proposat'] = 'Proposat';
 $string['estat_tancat'] = 'Tancat';
 $string['exempcio'] = 'Exempció';
+$string['exporta_html'] = 'Versió per a impressió';
 $string['exporta_pdf'] = 'Exporta en PDF';
 $string['fax'] = 'Fax';
 $string['fct'] = 'FCT';

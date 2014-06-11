@@ -90,7 +90,6 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
             $output .= html_writer::link($editurl, get_string('edit'));
         }
 
-
         if ($quadern->usuari->es_administrador) {
             $params = array(
                 'cmid' => $cm->id,
@@ -108,15 +107,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
             'action' => 'export_pdf',
         );
         $exporturl = new moodle_url('/mod/fct/view.php', $params);
-        $output .= html_writer::link($exporturl, "Exporta a PDF");
-        $params = array(
-            'id' => $cm->id,
-            'quadern' => $quadern->id,
-            'page' => 'quadern_main',
-            'action' => 'export_html',
-        );
-        $exporturl = new moodle_url('/mod/fct/view.php', $params);
-        $output .= html_writer::link($exporturl, "Exporta a HTML");
+        $output .= html_writer::link($exporturl, get_string('exporta_pdf', 'fct'));
         $output .= html_writer::end_div();
         echo $output;
 

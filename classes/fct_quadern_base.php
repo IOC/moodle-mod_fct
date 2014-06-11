@@ -318,6 +318,15 @@ class fct_quadern_base extends fct_base {
         $url = new moodle_url('/mod/fct/view.php', $params);
         $subtree[] = new tabobject('quadern_dades_relatives', $url, get_string('dades_relatives', 'fct'));
 
+        $params = array(
+            'id' => $id,
+            'quadern' => $quadern,
+            'page' => 'quadern_main',
+            'action' => 'export_html',
+        );
+        $url = new moodle_url('/mod/fct/view.php', $params);
+        $subtree[] = new tabobject('quadern_to_html', $url, get_string('exporta_html', 'fct'));
+
         return $subtree;
     }
 
