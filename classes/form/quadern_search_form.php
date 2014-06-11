@@ -51,4 +51,12 @@ class fct_quadern_search_form extends moodleform {
 
         $mform->disable_form_change_checker();
     }
+
+    public function set_data($data) {
+        $data->searchcurs = $data->curs;
+        $data->searchcicle = $data->cicle;
+        $data->searchestat = $data->estat;
+
+        parent::set_data($data);
+    }
 }

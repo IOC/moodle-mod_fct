@@ -39,9 +39,9 @@ $action = optional_param('action', 'view', PARAM_ALPHANUMEXT);
 $quadern = optional_param('quadern', false, PARAM_ALPHANUMEXT);
 $subpage = optional_param('subpage', false, PARAM_ALPHANUMEXT);
 $valoracio = optional_param('valoracio', false, PARAM_ALPHANUMEXT);
-$curs = optional_param('searchcurs', false, PARAM_INT);
-$cicle = optional_param('searchcicle', false, PARAM_INT);
-$estat = optional_param('searchestat', false, PARAM_ALPHANUMEXT);
+$searchcurs = optional_param('searchcurs', false, PARAM_INT);
+$searchcicle = optional_param('searchcicle', false, PARAM_INT);
+$searchestat = optional_param('searchestat', false, PARAM_ALPHANUMEXT);
 $cerca = optional_param('cerca', false, PARAM_RAW);
 $qualificaciotype = optional_param('qualificaciotype', false, PARAM_ALPHANUMEXT);
 
@@ -95,9 +95,9 @@ if ($action == 'export_pdf' or $action == 'export_html') {
 }
 
 $searchparams = new stdClass;
-$searchparams->curs = $curs;
-$searchparams->cicle = $cicle;
-$searchparams->estat = $estat;
+$searchparams->searchcurs = $searchcurs;
+$searchparams->searchcicle = $searchcicle;
+$searchparams->searchestat = $searchestat;
 $searchparams->cerca = $cerca;
 
 $url = new moodle_url('/mod/fct/view.php', array('id' => $id));

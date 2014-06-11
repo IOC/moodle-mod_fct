@@ -74,9 +74,9 @@ class fct_quadern extends fct_quadern_base {
                     $searchdata->cursos = $this->valors_curs();
                     $searchdata->cicles = $this->valors_cicles();
                     $searchdata->estats = $this->valors_estat();
-                    $searchdata->curs = $searchparams->curs;
-                    $searchdata->cicle = $searchparams->cicle;
-                    $searchdata->estat = $searchparams->estat;
+                    $searchdata->curs = $searchparams->searchcurs;
+                    $searchdata->cicle = $searchparams->searchcicle;
+                    $searchdata->estat = $searchparams->searchestat;
                     $searchdata->cerca = $searchparams->cerca;
 
                     if ($searchform = $this->search_form(array('searchdata' => $searchdata))) {
@@ -88,13 +88,16 @@ class fct_quadern extends fct_quadern_base {
 
                 $urlparams = array();
                 $urlparams['id'] = $PAGE->cm->id;
-                $urlparams['curs'] = $searchparams->curs;
+                $urlparams['searchcurs'] = $searchparams->searchcurs;
+                $urlparams['searchestat'] = $searchparams->searchestat;
+                $urlparams['cerca'] = $searchparams->cerca;
+                $urlparams['searchcicle'] = $searchparams->searchcicle;
 
-                $baseurl = new moodle_url('/mod/fct/view.php', array('id'=>$PAGE->cm->id, 'curs' => $searchparams->curs));
+                $baseurl = new moodle_url('/mod/fct/view.php', $urlparams);
 
                 echo $OUTPUT->paging_bar($quaderns['totalrecords'], $index, PAGENUM, $baseurl, 'index');
 
-                $table = $output->quaderns_table($quaderns['records']);
+                $table = $output->quaderns_table($quaderns['records'], $urlparams);
                 echo $table;
                 echo $OUTPUT->paging_bar($quaderns['totalrecords'], $index, PAGENUM, $baseurl, 'index');
             } else {
@@ -165,7 +168,7 @@ class fct_quadern extends fct_quadern_base {
 
         if (isset($searchparams->curs) && $searchparams->curs) {
             $mindatafinal = mktime(0, 0, 0, 9, 1, $searchparams->curs);
-            $maxdatafinal = mktime(0, 0, 0, 9, 1, $searchparams->curs+1);
+            $maxdatafinal = mktime(0, 0, 0, 9, 1, $searchparams->curs + 1);
 
             $select[] = "q.data_final >= $mindatafinal";
             $select[] = "q.data_final <= $maxdatafinal";
@@ -188,13 +191,13 @@ class fct_quadern extends fct_quadern_base {
         $sql = "SELECT q.*"
              . ' FROM ' . $tables
              . ' WHERE ' . $wherecondition
-             . ' ORDER by q.data_final DESC';
+             . ' ORDER by ua.firstname DESC';
 
         $countsql = "SELECT count(1)"
                   . ' FROM ' . $tables
                   . ' WHERE ' . $wherecondition;
 
-        if (!$records = $DB->get_records_sql($sql, null,  $index, PAGENUM)) {
+        if (!$records = $DB->get_records_sql($sql, null,  $index*PAGENUM, PAGENUM)) {
             return false;
         }
         $totalrecords = $DB->count_records_sql($countsql);
