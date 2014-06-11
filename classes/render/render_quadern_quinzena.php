@@ -132,6 +132,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $output = '';
 
+        $output .= html_writer::start_div('databox');
         $output .= html_writer::tag('span', get_string('quinzena', 'fct'), array('class' => 'databoxtitle'));
 
         $output .= html_writer::start_div('datagroup');
@@ -143,7 +144,6 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', get_string('periode', 'fct').':', array('class' => 'datatitle'));
         $output .= html_writer::tag('span', $quinzena->nom_periode($quinzena->periode), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
-
 
         $dies = implode(',', $quinzena->dies);
         $output .= html_writer::start_div('datagroup');
@@ -165,14 +165,12 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', get_string('activitats_realitzades', 'fct'), array('class' => 'databoxtitle'));
 
         if ($activitats = $quinzena->activitats) {
-            $output .= html_writer::start_div('datalist');
-            $output .= html_writer::start_tag('ul');
+            $output .= html_writer::start_tag('ul', array('class' => 'datalist'));
             foreach ($activitats as $activitat) {
                 $quadernactivitat = new fct_quadern_activitat($activitat);
                 $output .= html_writer::tag('li', $quadernactivitat->descripcio);
             }
             $output .= html_writer::end_tag('ul');
-            $output .= html_writer::end_div();
         } else {
             $output .= $this->notification(get_string('cap_activitat', 'fct'));
         }
@@ -208,6 +206,8 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $returnurl = new moodle_url('./view.php', $params);
         $output .= html_writer::link($returnurl, get_string('return', 'fct'));
         $output .= html_writer::end_div();
+
+        $output .= html_writer::end_div(); //Databoxdiv
 
         return $output;
     }

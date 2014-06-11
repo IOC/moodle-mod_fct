@@ -203,6 +203,10 @@ _quaderns td a:hover, _seguiment td a:hover {
     padding: 1em 0;
 }
 
+.databox .datalist {
+    list-style:none;
+}
+
 .databoxtitle {
     font-weight: bold;
     font-size: 1.2em;
