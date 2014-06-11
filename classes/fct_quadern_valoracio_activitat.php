@@ -26,6 +26,7 @@ require_once('form/quadern_valoracio_activitat_edit_form.php');
 require_once('fct_base.php');
 require_once('fct_cicle.php');
 require_once('fct_quadern_activitat.php');
+require_once('fct_quadern.php');
 
 class fct_quadern_valoracio_activitat extends fct_base {
 
@@ -89,7 +90,7 @@ class fct_quadern_valoracio_activitat extends fct_base {
         }
 
         if ($records = self::get_records($this->quadern)) {
-            $output->view($records);
+            $output->view($records, $this->quadern);
             return;
         }
         echo $output->notification(get_string('cap_activitat', 'fct'));
@@ -161,6 +162,20 @@ class fct_quadern_valoracio_activitat extends fct_base {
 
     public static function validation($data) {
 
+    }
+
+    public function checkpermissions($type = 'view') {
+        if ($type === 'edit' || $type === 'editlink') {
+            $quadern = new fct_quadern($this->quadern);
+            if ($quadern->usuari->es_administrador or
+                ($quadern->estat == 'obert' and ($quadern->usuari->es_tutor_centre or $quadern->usuari->es_tutor_empresa))) {
+                    return true;
+            } else if ($type === 'editlink') {
+                return false;
+            } else {
+                print_error('nopermisions');
+            }
+        }
     }
 
     public function barem_valoracio() {

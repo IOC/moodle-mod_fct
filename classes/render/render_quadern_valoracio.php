@@ -56,7 +56,9 @@ class mod_fct_quadern_valoracio_renderer extends plugin_renderer_base {
         $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $valoracio->id, 'page' => 'quadern_valoracio', 'valoracio' => $valoracio->valoracio));
         $output .= html_writer::tag('div', '', array('class' => 'clearer'));
         $output .= html_writer::start_div('fct_actions fct_clear');
-        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+        if ($valoracio->checkpermissions('editlink')) {
+            $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+        }
         $output .= html_writer::end_div();
 
         $output .= html_writer::end_tag('div');

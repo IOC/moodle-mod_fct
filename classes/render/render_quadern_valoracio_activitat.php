@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base {
 
-    public function view($activitats) {
+    public function view($activitats, $quadern) {
 
         global $PAGE;
 
@@ -48,9 +48,12 @@ class mod_fct_quadern_valoracio_activitat_renderer extends plugin_renderer_base 
         $link = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'page' => 'quadern_valoracio_activitat', 'quadern' => $activitat->quadern));
         $output .= html_writer::tag('div', '', array('class' => 'clearer'));
         $output .= html_writer::start_div('fct_actions fct_clear');
-        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
-        $output .= html_writer::end_div();
 
+        $valoracioactivitat = new fct_quadern_valoracio_activitat($quadern);
+        if ($valoracioactivitat->checkpermissions('editlink')) {
+            $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+        }
+        $output .= html_writer::end_div();
         $output .= html_writer::end_div('databox');
 
         echo $output;
