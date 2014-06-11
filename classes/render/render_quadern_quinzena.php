@@ -75,7 +75,6 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         );
         $viewicon = html_writer::empty_tag('img', $params);
 
-
         $params = array(
             'cmid' => $PAGE->cm->id,
             'id' => $quinzena->id,
@@ -200,14 +199,26 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('fct_actions');
-        $params = array('id' => $PAGE->cm->id,
-                        'quadern' => $quinzena->quadern,
-                        'page' => 'quadern_quinzena');
+        $params = array(
+            'cmid' => $PAGE->cm->id,
+            'id' => $quinzena->id,
+            'quadern' => $quinzena->quadern,
+            'page' => 'quadern_quinzena',
+        );
+        $returnurl = new moodle_url('./edit.php', $params);
+        $output .= html_writer::link($returnurl, get_string('edit'));
+
+        $params = array(
+            'id' => $PAGE->cm->id,
+            'quadern' => $quinzena->quadern,
+            'page' => 'quadern_quinzena',
+        );
         $returnurl = new moodle_url('./view.php', $params);
         $output .= html_writer::link($returnurl, get_string('return', 'fct'));
+
         $output .= html_writer::end_div();
 
-        $output .= html_writer::end_div(); //Databoxdiv
+        $output .= html_writer::end_div(); // Databoxdiv.
 
         return $output;
     }
