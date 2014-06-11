@@ -191,13 +191,14 @@ class fct_quadern extends fct_quadern_base {
         $sql = "SELECT q.*"
              . ' FROM ' . $tables
              . ' WHERE ' . $wherecondition
-             . ' ORDER by ua.firstname DESC';
+             . ' ORDER by q.data_final DESC';
+
 
         $countsql = "SELECT count(1)"
                   . ' FROM ' . $tables
                   . ' WHERE ' . $wherecondition;
 
-        if (!$records = $DB->get_records_sql($sql, null,  $index*PAGENUM, PAGENUM)) {
+        if (!$records = $DB->get_records_sql($sql, null,  $index * PAGENUM, PAGENUM)) {
             return false;
         }
         $totalrecords = $DB->count_records_sql($countsql);
