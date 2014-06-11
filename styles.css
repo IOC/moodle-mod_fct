@@ -204,7 +204,8 @@ _quaderns td a:hover, _seguiment td a:hover {
 }
 
 .databox .datalist {
-    list-style:none;
+    list-style: none;
+    margin-left: 25%;
 }
 
 .databoxtitle {
