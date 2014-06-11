@@ -260,6 +260,7 @@ $string['resultat_aprenentatge_3.7'] = '3.7. Interpreta i expressa la informaci�
 $string['resultat_aprenentatge_3.8'] = '3.8. Detecta anomalies o desviacions en l’àmbit de l’activitat assignada, n’identifica les causes i proposa possibles solucions.';
 $string['resum_seguiment'] = 'Resum de la temporalització';
 $string['retroaccio'] = 'Retroacció';
+$string['return'] = 'Return';
 $string['seguiment_quinzenal'] = 'Seguiment quinzenal';
 $string['segur_suprimir_activitat'] = 'Segur que voleu suprimir aquesta activitat?';
 $string['segur_suprimir_activitats'] = 'Segur que voleu suprimir totes les activitats?';

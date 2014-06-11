@@ -44,6 +44,7 @@ $searchcicle = optional_param('searchcicle', false, PARAM_INT);
 $searchestat = optional_param('searchestat', false, PARAM_ALPHANUMEXT);
 $cerca = optional_param('cerca', false, PARAM_RAW);
 $qualificaciotype = optional_param('qualificaciotype', false, PARAM_ALPHANUMEXT);
+$itemid = optional_param('itemid', 0, PARAM_INT);
 
 $validactions = array('export_pdf', 'export_html', 'view');
 
@@ -128,7 +129,7 @@ $output = $PAGE->get_renderer('mod_fct');
 $output->print_tabs($tab);
 
 if ($action == 'view') {
-    $class->view(false, $index, $searchparams);
+    $class->view($itemid, $index, $searchparams);
 } else {
     $class->$action();
 }

@@ -112,7 +112,6 @@ class fct_quadern_quinzena extends fct_base {
         $output = $PAGE->get_renderer('mod_fct', 'quinzena');
 
         if (!$id) {
-
             $quadern = new fct_quadern_base((int)$this->quadern);
             if ($quinzenes = self::get_records($this->quadern)) {
                 $table = $output->quinzenes_table($quinzenes);
@@ -123,6 +122,9 @@ class fct_quadern_quinzena extends fct_base {
             if ($dataprevista = $this->data_prevista_valoracio_parcial($quadern)) {
                 echo $output->data_prevista($dataprevista);
             }
+        } else {
+            $quinzena = new fct_quadern_quinzena($id);
+            echo $output->quinzena_detail($quinzena);
         }
     }
 

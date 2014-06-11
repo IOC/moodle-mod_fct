@@ -63,6 +63,20 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $buttons = array();
 
         $params = array(
+            'id' => $PAGE->cm->id,
+            'quadern' => $quinzena->quadern,
+            'page' => 'quadern_quinzena',
+            'itemid' => $quinzena->id);
+        $viewlink = new moodle_url('./view.php', $params);
+        $params = array(
+            'src' => $OUTPUT->pix_url('t/preview'),
+            'alt' => get_string('preview'),
+            'class' => 'iconsmall',
+        );
+        $viewicon = html_writer::empty_tag('img', $params);
+
+
+        $params = array(
             'cmid' => $PAGE->cm->id,
             'id' => $quinzena->id,
             'quadern' => $quinzena->quadern,
@@ -86,6 +100,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $deleteicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
 
+        $buttons[] = html_writer::link($viewlink, $viewicon);
         $buttons[] = html_writer::link($editlink, $editicon);
         $buttons[] = html_writer::link($deletelink, $deleteicon);
         $line[] = implode(' ', $buttons);
@@ -110,6 +125,91 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
     public function data_prevista($dataprevista) {
         $text = get_string('data_prevista_valoracio_parcial', 'fct', userdate($dataprevista, get_string('strftimedate')));
         return html_writer::tag('div', $text, array('class' => 'fct_data_prevista'));
+    }
+
+    public function quinzena_detail($quinzena) {
+        global $PAGE;
+
+        $output = '';
+
+        $output .= html_writer::tag('span', get_string('quinzena', 'fct'), array('class' => 'databoxtitle'));
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('any', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->any, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('periode', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->nom_periode($quinzena->periode), array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+
+        $dies = implode(',', $quinzena->dies);
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('dies', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $dies, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('hores', 'fct').':', array('class' => 'datatitle'));
+
+        $hores = floor($quinzena->hores);
+        $minuts = round($quinzena->hores * 60);
+        $minuts = $minuts % 60;
+        $stringhores = $hores. ' ' . get_string('hores_i', 'fct'). ' ' . $minuts . ' ' . get_string('minuts', 'fct');
+
+        $output .= html_writer::tag('span', $stringhores, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::tag('span', get_string('activitats_realitzades', 'fct'), array('class' => 'databoxtitle'));
+
+        if ($activitats = $quinzena->activitats) {
+            $output .= html_writer::start_div('datalist');
+            $output .= html_writer::start_tag('ul');
+            foreach ($activitats as $activitat) {
+                $quadernactivitat = new fct_quadern_activitat($activitat);
+                $output .= html_writer::tag('li', $quadernactivitat->descripcio);
+            }
+            $output .= html_writer::end_tag('ul');
+            $output .= html_writer::end_div();
+        } else {
+            $output .= $this->notification(get_string('cap_activitat', 'fct'));
+        }
+
+        $output .= html_writer::tag('span', get_string('valoracions_observacions', 'fct'), array('class' => 'databoxtitle'));
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('valoracions', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->valoracions, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->observacions, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::tag('span', get_string('retroaccio', 'fct'), array('class' => 'databoxtitle'));
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('tutor_centre', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->observacions_centre, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quinzena->observacions_empresa, array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
+        $output .= html_writer::start_div('fct_actions');
+        $params = array('id' => $PAGE->cm->id,
+                        'quadern' => $quinzena->quadern,
+                        'page' => 'quadern_quinzena');
+        $returnurl = new moodle_url('./view.php', $params);
+        $output .= html_writer::link($returnurl, get_string('return', 'fct'));
+        $output .= html_writer::end_div();
+
+        return $output;
     }
 
 }
