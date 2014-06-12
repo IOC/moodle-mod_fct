@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
+require_once('fct_quadern.php');
 
 class fct_resum_seguiment extends fct_base {
 
@@ -106,6 +106,21 @@ class fct_resum_seguiment extends fct_base {
             }
         }
         $this->resum = $resum;
+    }
+
+    public function checkpermissions($type = 'view') {
+
+        if (!isset($this->quadern)) {
+            print_error('noquadern');
+        }
+
+        $quadern = new fct_quadern($this->quadern);
+
+        if ($quadern->estat == 'proposat' && !$this->usuari->es_administrador) {
+            print_error('nopermisions');
+        }
+
+        return true;
     }
 
 

@@ -331,13 +331,25 @@ class fct_quadern_quinzena extends fct_base {
         if (!isset($this->quadern)) {
             print_error('noquadern');
         }
+
         $quadern = new fct_quadern_base((int)$this->quadern);
 
-        if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
-           ($this->usuari->es_tutor_centre && ($this->usuari->id != $quadern->tutor_centre)) ||
-           ($this->usuari->es_tutor_empresa && ($this->usuari->id != $quadern->tutor_empresa))) {
+        if ($type === 'edit' || $type === 'editlink') {
+            if (($quadern->estat == 'tancat' || $quadern->estat == 'proposat') && !$this->usuari->es_administrador) {
+                if ($type === 'editlink') {
+                    return false;
+                }
                 print_error('nopermisions');
+            }
+        } else {
+            if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
+               ($this->usuari->es_tutor_centre && ($this->usuari->id != $quadern->tutor_centre)) ||
+               ($this->usuari->es_tutor_empresa && ($this->usuari->id != $quadern->tutor_empresa))) {
+                    print_error('nopermisions');
+            }
         }
+
+        return true;
     }
 
     public static function maxim_hores_quinzena($quadernid, $any, $periode, $dies) {

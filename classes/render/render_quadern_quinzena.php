@@ -82,26 +82,32 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
             'page' => 'quadern_quinzena',
         );
         $editlink = new moodle_url('./edit.php', $params);
-        $params = array(
-            'src' => $OUTPUT->pix_url('t/edit'),
-            'alt' => get_string('edit'),
-            'class' => 'iconsmall',
-        );
-        $editicon = html_writer::empty_tag('img', $params);
-        $params = array(
-            'id' => $quinzena->id,
-            'cmid' => $PAGE->cm->id,
-            'delete' => 1,
-            'page' => 'quadern_quinzena',
-            'quadern' => $quinzena->quadern,
-        );
-        $deletelink = new moodle_url('./edit.php', $params);
-        $deleteicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
-
         $buttons[] = html_writer::link($viewlink, $viewicon);
-        $buttons[] = html_writer::link($editlink, $editicon);
-        $buttons[] = html_writer::link($deletelink, $deleteicon);
+
+
+        if ($quinzena->checkpermissions('editlink')) {
+
+            $params = array(
+                'src' => $OUTPUT->pix_url('t/edit'),
+                'alt' => get_string('edit'),
+                'class' => 'iconsmall',
+            );
+            $editicon = html_writer::empty_tag('img', $params);
+            $params = array(
+                'id' => $quinzena->id,
+                'cmid' => $PAGE->cm->id,
+                'delete' => 1,
+                'page' => 'quadern_quinzena',
+                'quadern' => $quinzena->quadern,
+            );
+            $deletelink = new moodle_url('./edit.php', $params);
+            $deleteicon = html_writer::empty_tag('img',
+                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+
+            $buttons[] = html_writer::link($editlink, $editicon);
+            $buttons[] = html_writer::link($deletelink, $deleteicon);
+        }
+
         $line[] = implode(' ', $buttons);
         return $line;
     }
@@ -199,22 +205,29 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('fct_actions');
-        $params = array(
-            'cmid' => $PAGE->cm->id,
-            'id' => $quinzena->id,
-            'quadern' => $quinzena->quadern,
-            'page' => 'quadern_quinzena',
-        );
-        $returnurl = new moodle_url('./edit.php', $params);
-        $output .= html_writer::link($returnurl, get_string('edit'));
 
         $params = array(
             'id' => $PAGE->cm->id,
             'quadern' => $quinzena->quadern,
             'page' => 'quadern_quinzena',
-        );
+            );
         $returnurl = new moodle_url('./view.php', $params);
         $output .= html_writer::link($returnurl, get_string('return', 'fct'));
+
+        if ($quinzena->checkpermissions('editlink')) {
+            $params = array(
+                'cmid' => $PAGE->cm->id,
+                'id' => $quinzena->id,
+                'quadern' => $quinzena->quadern,
+                'page' => 'quadern_quinzena'
+                );
+            $editurl = new moodle_url('./edit.php', $params);
+            $output .= html_writer::link($editurl, get_string('edit'));
+
+            $params['delete'] = 1;
+            $deleteurl = new moodle_url('./edit.php', $params);
+            $output .= html_writer::link($deleteurl, get_string('delete'));
+        }
 
         $output .= html_writer::end_div();
 
