@@ -253,11 +253,35 @@ class fct_quadern_base extends fct_base {
 
     public function checkpermissions($type = 'view') {
 
+        if ($type == 'edit' || $type == 'editlink') {
+            if (($this->estat == 'tancat' && !$this->usuari->es_administrador) || $this->usuari->es_tutor_empresa) {
+                if ($type == 'editlink') {
+                    return false;
+                } else {
+                    print_error('nopermisions');
+                }
+            } else {
+                return true;
+            }
+        }
+
+        if ($type == 'export_html' || $type == 'export_htmltab') {
+            if ($this->usuari->es_tutor_empresa) {
+                if ($type == 'export_htmltab') {
+                    return false;
+                } else {
+                    print_error('nopermisions');
+                }
+            }
+        }
+
         if (($this->usuari->es_alumne && ($this->usuari->id != $this->alumne)) ||
            ($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
            ($this->usuari->es_tutor_empresa && ($this->usuari->id != $this->tutor_empresa))) {
                 print_error('nopermisions');
         }
+
+        return true;
     }
 
     public function conveni_data($data) {
@@ -318,14 +342,16 @@ class fct_quadern_base extends fct_base {
         $url = new moodle_url('/mod/fct/view.php', $params);
         $subtree[] = new tabobject('quadern_dades_relatives', $url, get_string('dades_relatives', 'fct'));
 
-        $params = array(
-            'id' => $id,
-            'quadern' => $quadern,
-            'page' => 'quadern_main',
-            'action' => 'export_html',
-        );
-        $url = new moodle_url('/mod/fct/view.php', $params);
-        $subtree[] = new tabobject('quadern_to_html', $url, get_string('exporta_html', 'fct'));
+        if ($this->checkpermissions('export_htmltab')) {
+            $params = array(
+                'id' => $id,
+                'quadern' => $quadern,
+                'page' => 'quadern_main',
+                'action' => 'export_html',
+            );
+            $url = new moodle_url('/mod/fct/view.php', $params);
+            $subtree[] = new tabobject('quadern_to_html', $url, get_string('exporta_html', 'fct'));
+        }
 
         return $subtree;
     }

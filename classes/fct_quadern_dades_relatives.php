@@ -28,7 +28,7 @@ require_once('fct_base.php');
 require_once('fct_cicle.php');
 require_once('fct_resum_hores.php');
 
-class fct_quadern_dades_relatives extends fct_quadern_base{
+class fct_quadern_dades_relatives extends fct_quadern_base {
 
     protected $editform = 'fct_quadern_dades_relatives_edit_form';
 

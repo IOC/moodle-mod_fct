@@ -169,11 +169,18 @@ class mod_fct_quadern_empresa_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->telefon_lloc_practiques, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-        $output .= html_writer::start_div('fct_actions');
-        $link = new moodle_url('./edit.php', array('cmid'=>$cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_empresa'));
-        $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
-        $output .= html_writer::end_div();
+
+        if ($quadern->checkpermissions('editlink')) {
+            $cm = get_coursemodule_from_instance('fct', $quadern->fct);
+            $output .= html_writer::start_div('fct_actions');
+            $params = array('cmid' => $cm->id,
+                            'quadern' => $quadern->id,
+                            'page' => 'quadern_dades',
+                            'subpage' => 'quadern_empresa');
+            $link = new moodle_url('./edit.php', $params);
+            $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+            $output .= html_writer::end_div();
+        }
 
         $output .= html_writer::end_div('databox');
 

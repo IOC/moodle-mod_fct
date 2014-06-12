@@ -26,6 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once('classes/fct_quadern_conveni.php');
+
 class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
 
     public function view($quadern) {
@@ -44,16 +46,18 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
                 $output .= html_writer::end_div();
 
                 if (isset($conveni->horari)) {
-                    $output .= $this->horari_table($conveni, $quadern->id);
+                    $output .= $this->horari_table($conveni, $quadern);
                 }
             }
         }
 
-        $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-        $output .= html_writer::start_div('fct_actions');
-        $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_horari'));
-        $output .= html_writer::link($link, get_string('nova_franja', 'fct'), array('class' => 'datalink'));
-        $output .= html_writer::end_div();
+        if ($quadern->checkpermissions('editlink')) {
+            $cm = get_coursemodule_from_instance('fct', $quadern->fct);
+            $output .= html_writer::start_div('fct_actions');
+            $link = new moodle_url('./edit.php', array('cmid' => $cm->id, 'quadern' => $quadern->id, 'page' => 'quadern_dades', 'subpage' => 'quadern_horari'));
+            $output .= html_writer::link($link, get_string('nova_franja', 'fct'), array('class' => 'datalink'));
+            $output .= html_writer::end_div();
+        }
 
         $output .= html_writer::end_div('databox');
 
@@ -71,8 +75,16 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
             $data[] = $this->make_horari_line($value, $conveni->uuid, $quadern);
         }
 
+        $heads = array(get_string('dia', 'mod_fct'),
+                             get_string('de', 'mod_fct'),
+                             get_string('a', 'mod_fct'));
+
+        if ($quadern->checkpermissions('editlink')) {
+            $heads[] = get_string('edit');
+        }
+
         $table = new html_table();
-        $table->head = array(get_string('dia', 'mod_fct'), get_string('de', 'mod_fct'), get_string('a', 'mod_fct'), get_string('edit'));
+        $table->head = $heads;
         $table->data = $data;
         $table->id = 'quadern_horari';
         $table->attributes['class'] = 'horari generaltable';
@@ -95,19 +107,21 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
         $line[] = str_replace('.', ':', $horainici);
         $line[] = str_replace('.', ':', $horafinal);
 
-        $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
-                                                         'quadern' => $quadern,
-                                                         'uuid' => $uuid,
-                                                         'dia' => $horari->dia,
-                                                         'hora_inici' => $horari->hora_inici,
-                                                         'hora_final' => $horari->hora_final,
-                                                         'page' => 'quadern_horari',
-                                                         'delete' => 1));
-        $deleteicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
-        $button = html_writer::link($deletelink, $deleteicon);
+        if ($quadern->checkpermissions('editlink')) {
+            $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
+                                                             'quadern' => $quadern->id,
+                                                             'uuid' => $uuid,
+                                                             'dia' => $horari->dia,
+                                                             'hora_inici' => $horari->hora_inici,
+                                                             'hora_final' => $horari->hora_final,
+                                                             'page' => 'quadern_horari',
+                                                             'delete' => 1));
+            $deleteicon = html_writer::empty_tag('img',
+                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+            $button = html_writer::link($deletelink, $deleteicon);
 
-        $line[] = $button;
+            $line[] = $button;
+        }
 
 
         return $line;

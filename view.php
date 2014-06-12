@@ -89,7 +89,7 @@ if ($qualificaciotype) {
 
 $class = new $class($record);
 
-$class->checkpermissions();
+$class->checkpermissions($action);
 
 if ($action == 'export_pdf' or $action == 'export_html') {
     $class->$action();
