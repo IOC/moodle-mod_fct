@@ -200,10 +200,14 @@ class fct_quadern extends fct_quadern_base {
 
         if (!$records = $DB->get_records_sql($sql, null,  $index * PAGENUM, PAGENUM)) {
             return false;
+        } else {
+            foreach ($records as $record) {
+                $quaderns[] = new fct_quadern($record->id);
+            }
         }
         $totalrecords = $DB->count_records_sql($countsql);
 
-        return array('records' => $records, 'totalrecords' => $totalrecords);
+        return array('records' => $quaderns, 'totalrecords' => $totalrecords);
     }
 
     public function delete_message() {
@@ -272,6 +276,9 @@ class fct_quadern extends fct_quadern_base {
 
             $data->tutors_empresa = $this->prepare_form_select($tutorsempresa, 'id', 'fullname');
             $data->estats = self::$estats;
+            if ($this->usuari->es_tutor_centre) {
+                unset($data->estats[TANCAT]);
+            }
         }
 
         $cicles = fct_cicle::get_records($this->fct);
@@ -370,6 +377,7 @@ class fct_quadern extends fct_quadern_base {
     public function checkpermissions($type = 'view') {
 
         switch ($type) {
+
             case 'edit':
                 if (isset($this->id)) {
                     if (($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
@@ -378,10 +386,25 @@ class fct_quadern extends fct_quadern_base {
                     }
                 } else {
                     if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre &&
-                        !$this->usuari->es_tutor_empresa && !$this->usuari->es_administrador) {
+                        !$this->usuari->es_administrador) {
                             print_error('nopermisions');
                     }
                 }
+                break;
+
+            case 'editlink':
+                if (isset($this->id)) {
+                    if (($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
+                        (!$this->usuari->es_tutor_centre && !$this->usuari->es_administrador)) {
+                        return false;
+                    }
+                } else {
+                    if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre &&
+                        !$this->usuari->es_tutor_empresa && !$this->usuari->es_administrador) {
+                        return false;
+                    }
+                }
+                return true;
                 break;
 
             case 'delete' :

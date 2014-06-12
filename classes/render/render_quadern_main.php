@@ -80,7 +80,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $output .= html_writer::start_div('fct_actions');
 
         $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-        if ($quadern->usuari->es_administrador || $quadern->usuari->es_tutor_empresa) {
+        if ($quadern->usuari->es_administrador || $quadern->usuari->es_tutor_centre) {
             $params = array(
                 'cmid' => $cm->id,
                 'id' => $quadern->id,

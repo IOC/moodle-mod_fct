@@ -32,17 +32,22 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $data = array();
 
         if ($quaderns) {
-            foreach ($quaderns as $cicle) {
-                $data[] = $this->make_table_line($cicle);
+            foreach ($quaderns as $quadern) {
+                $data[] = $this->make_table_line($quadern);
             }
         }
 
         $table = new html_table();
-        $table->head = array(get_string('alumne', 'mod_fct'), get_string('empresa', 'mod_fct'),
+        $heads = array(get_string('alumne', 'mod_fct'), get_string('empresa', 'mod_fct'),
                              get_string('cicle', 'mod_fct'), get_string('tutor_centre', 'mod_fct'),
                              get_string('tutor_empresa', 'mod_fct'), get_string('estat', 'mod_fct'),
-                             get_string('data_final', 'mod_fct'),
-                             get_string('edit'));
+                             get_string('data_final', 'mod_fct'));
+
+        if (isset($quadern) && $quadern->checkpermissions('editlink')) {
+            $heads[] = get_string('edit');
+        }
+
+        $table->head = $heads;
         $table->data = $data;
         $table->id = 'quaderns';
         $table->attributes['class'] = 'quaderns generaltable';
@@ -88,7 +93,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
 
         $usuari = new fct_usuari($cicle->fct, $USER->id);
 
-        if (!$usuari->es_alumne) {
+        if ($quadern->checkpermissions('editlink')) {
             $editlink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $quadern->id));
             $editicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
@@ -97,9 +102,9 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
             $deleteicon = html_writer::empty_tag('img',
                 array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
             $buttons[] = html_writer::link($deletelink, $deleteicon);
+            $line[] = implode(' ', $buttons);
         }
 
-        $line[] = implode(' ', $buttons);
         return $line;
     }
 
