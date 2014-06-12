@@ -67,9 +67,11 @@ class fct_quadern_quinzena extends fct_base {
                                         array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena')),
                                         get_string('quinzenes', 'fct'));
 
-        $subtree[] = new tabobject('afegeix_quinzena', new moodle_url('/mod/fct/edit.php',
-                                        array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena',)),
-                                        get_string('afegeix_quinzena', 'fct'));
+        if (self::checkpermissions('editlink')) {
+            $subtree[] = new tabobject('afegeix_quinzena', new moodle_url('/mod/fct/edit.php',
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena',)),
+                                            get_string('afegeix_quinzena', 'fct'));
+        }
 
         $subtree[] = new tabobject('resum_seguiment', new moodle_url('/mod/fct/view.php',
                                         array('id' => $id, 'quadern' => $this->quadern, 'page' => 'resum_seguiment',)),
