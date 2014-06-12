@@ -73,9 +73,8 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', nl2br($quadern->observacions), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
-        $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-
         if ($quadern->checkpermissions('editlink')) {
+            $cm = get_coursemodule_from_instance('fct', $quadern->fct);
             $link = new moodle_url('./edit.php', array('cmid' => $cm->id,
                                     'quadern' => $quadern->id,
                                     'page' => 'quadern_valoracio',
@@ -84,8 +83,8 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
 
             $output .= html_writer::start_div('fct_actions');
             $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+            $output .= html_writer::end_div();
         }
-        $output .= html_writer::end_div();
 
         $output .= html_writer::end_div();
 
