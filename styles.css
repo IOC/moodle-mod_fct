@@ -269,10 +269,6 @@ _quaderns td a:hover, _seguiment td a:hover {
     width: 100%;
 }
 
-.quaderns.generaltable td.lastcol {
-    text-align: center;
-}
-
 .convenis.generaltable {
     margin: 0 auto 1em auto;
     width: 40%;
@@ -290,9 +286,10 @@ _quaderns td a:hover, _seguiment td a:hover {
     min-width: 40%;
 }
 
-.quinzenes.generaltable td.lastcol,
-.quadernactivitat.generaltable td.lastcol,
-.horari.generaltable td.lastcol,
-.cicles.generaltable td.lastcol {
+.quaderns.generaltable td.lastcol.edit,
+.quinzenes.generaltable td.lastcol.edit,
+.quadernactivitat.generaltable td.lastcol.edit,
+.horari.generaltable td.lastcol.edit,
+.cicles.generaltable td.lastcol.edit {
     text-align: center;
 }
