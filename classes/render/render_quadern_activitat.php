@@ -40,7 +40,11 @@ class mod_fct_quadern_activitat_renderer extends plugin_renderer_base {
         }
 
         $table = new html_table();
-        $table->head = array(get_string('descripcio', 'mod_fct'), get_string('edit'));
+        $heads = array(get_string('descripcio', 'mod_fct'));
+        if (isset($activitat) && $activitat->checkpermissions('editlink')) {
+            $heads[] = get_string('edit');
+        }
+        $table->head = $heads;
         $table->id = 'quaderns';
         $table->attributes['class'] = 'quadernactivitat generaltable';
         $table->colclasses = array('', 'edit');
@@ -59,22 +63,24 @@ class mod_fct_quadern_activitat_renderer extends plugin_renderer_base {
 
         $line[] = $activitat->descripcio;
 
-        $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $activitat->id, 'page' => 'quadern_activitat', 'quadern' => $activitat->quadern));
-        $editicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
+        if ($activitat->checkpermissions('editlink')) {
+            $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $activitat->id, 'page' => 'quadern_activitat', 'quadern' => $activitat->quadern));
+            $editicon = html_writer::empty_tag('img',
+                array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
 
-        $buttons[] = html_writer::link($editlink, $editicon);
+            $buttons[] = html_writer::link($editlink, $editicon);
 
-        $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
-                                                         'id' => $activitat->id,
-                                                         'page' => 'quadern_activitat',
-                                                         'quadern' => $activitat->quadern,
-                                                         'delete' => 1));
-        $deleteicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
-        $buttons[] = html_writer::link($deletelink, $deleteicon);
+            $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id,
+                                                             'id' => $activitat->id,
+                                                             'page' => 'quadern_activitat',
+                                                             'quadern' => $activitat->quadern,
+                                                             'delete' => 1));
+            $deleteicon = html_writer::empty_tag('img',
+                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+            $buttons[] = html_writer::link($deletelink, $deleteicon);
 
-        $line[] = implode(' ', $buttons);
+            $line[] = implode(' ', $buttons);
+        }
 
         return $line;
 

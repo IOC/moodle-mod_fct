@@ -155,11 +155,22 @@ class fct_quadern_activitat extends fct_base {
 
         $quadern = new fct_quadern_base((int)$this->quadern);
 
-        if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
-           ($this->usuari->es_tutor_centre && ($this->usuari->id != $quadern->tutor_centre)) ||
-           ($this->usuari->es_tutor_empresa && ($this->usuari->id != $quadern->tutor_empresa))) {
-                print_error('nopermisions');
+        if ($type == 'edit' || $type = 'editlink') {
+            if (($this->usuari->es_alumne) || ($quadern->estat == 'tancat' && !$this->usuari->es_administrador)) {
+                if ($type == 'editlink') {
+                    return false;
+                } else {
+                    print_error('nopermisions');
+                }
+            }
+        } else {
+            if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
+               ($this->usuari->es_tutor_centre && ($this->usuari->id != $quadern->tutor_centre)) ||
+               ($this->usuari->es_tutor_empresa && ($this->usuari->id != $quadern->tutor_empresa))) {
+                    print_error('nopermisions');
+            }
         }
+        return true;
     }
 
     private function permis_editar() {
