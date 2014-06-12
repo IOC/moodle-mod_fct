@@ -56,6 +56,7 @@ class fct_quadern_base extends fct_base {
     public $valoracio_resultats = array();
     public $qualificacio;
     public $qualificacio_global;
+    public $data_final;
 
     public $inssimage;
 
