@@ -417,6 +417,13 @@ class fct_quadern extends fct_quadern_base {
                 return true;
                 break;
 
+            case 'deletelink' :
+                if (!$this->usuari->es_administrador) {
+                    return false;
+                }
+                return true;
+                break;
+
             case 'delete' :
                 if (!$this->usuari->es_administrador) {
                     print_error('nopermisions');

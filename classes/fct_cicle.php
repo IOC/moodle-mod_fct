@@ -54,13 +54,15 @@ class fct_cicle extends fct_base{
                                         array('id' => $id, 'page' => 'cicle')),
                                             get_string('cicles', 'fct'));
 
-        $activerow->subtree[] = new tabobject('afegir_cicle', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'page' => 'cicle')),
-                                            get_string('afegeix_cicle_formatiu', 'fct'));
+        if ($this->usuari->es_administrador) {
+            $activerow->subtree[] = new tabobject('afegir_cicle', new moodle_url('/mod/fct/edit.php',
+                                                array('cmid' => $id, 'page' => 'cicle')),
+                                                get_string('afegeix_cicle_formatiu', 'fct'));
+        }
 
         $row['cicle'] = $activerow;
 
-        if ($type == 'edit') {
+        if ($type == 'edit' && !$this->id) {
             $tab['currentab'] = 'afegir_cicle';
         } else {
             $tab['currentab'] = 'ciclelist';
@@ -140,11 +142,26 @@ class fct_cicle extends fct_base{
     }
 
     public function checkpermissions($type = 'view') {
-        if (!$this->usuari->es_administrador) {
+
+        if (!$this->usuari->es_administrador && !$this->usuari->es_tutor_centre) {
             print_error('nopermisions');
+        }
+
+        if ($type == 'edit') {
+            if (!$this->id && !$this->usuari->es_administrador) {
+                    print_error('nopermissions');
+            }
+        }
+
+        if ($type == 'delete') {
+            if (!$this->usuari->es_administrador) {
+                    print_error('nopermissions');
+            }
         }
     }
 
-    public function prepare_form_data($data) {}
+    public function prepare_form_data($data) {
+
+    }
 
 }

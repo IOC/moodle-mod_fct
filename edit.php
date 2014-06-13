@@ -134,6 +134,7 @@ if ($quadern) {
 
 if ($delete &&  ($id || $uuid || $deleteall)) {
     $PAGE->url->param('delete', 1);
+    $class->checkpermissions('delete');
 
     if ($confirm and confirm_sesskey()) {
         if ($uuid) {

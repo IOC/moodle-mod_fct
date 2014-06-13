@@ -298,11 +298,15 @@ abstract class fct_base {
 
         }
 
-        if ($this->usuari->es_administrador) {
+        if ($this->usuari->es_administrador || $this->usuari->es_tutor_centre) {
 
             $row_admin['cicle'] = new tabobject('cicles',
                                         new moodle_url('view.php', array('id' => $id, 'page' => 'cicle')),
                                         get_string('cicles_formatius', 'fct'));
+            $row = array_merge($row, $row_admin);
+        }
+
+        if ($this->usuari->es_administrador) {
 
             $row_admin['dades_centre'] = new tabobject('dades_centre',
                                             new moodle_url('view.php', array('id' => $id, 'page' => 'dades_centre')),
