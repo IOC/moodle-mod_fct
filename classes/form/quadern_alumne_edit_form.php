@@ -44,8 +44,7 @@ class fct_quadern_alumne_edit_form extends moodleform {
 
         // data_naixement
         $attributes = array('size' => 48);
-        $mform->addElement('text', 'data_naixement', get_string('data_naixement', 'mod_fct'), $attributes);
-        $mform->setType('data_naixement', PARAM_TEXT);
+        $mform->addElement('date_selector', 'data_naixement', get_string('data_naixement', 'mod_fct'), $attributes);
 
         $attributes = array('size' => 48);
         $mform->addElement('text', 'adreca', get_string('adreca', 'mod_fct'), $attributes);
