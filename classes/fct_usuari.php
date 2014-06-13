@@ -29,10 +29,10 @@ class fct_usuari {
     public $nom;
     public $cognoms;
     public $email;
-    public $es_administrador;
-    public $es_alumne;
-    public $es_tutor_centre;
-    public $es_tutor_empresa;
+    public $es_administrador = false;
+    public $es_alumne = false;
+    public $es_tutor_centre = false;
+    public $es_tutor_empresa = false;
 
     public function __construct($fctid, $userid) {
 
@@ -56,7 +56,17 @@ class fct_usuari {
                 "mod/fct:tutor_centre", $context, $userid, false);
             $this->es_tutor_empresa = has_capability(
                 "mod/fct:tutor_empresa", $context, $userid, false);
+
         }
+
+        if (!$this->validrol()) {
+            print_error('nopermissions');
+        }
+
+    }
+
+    private function validrol() {
+        return $this->es_administrador || $this->es_tutor_empresa || $this->es_tutor_centre || $this->es_alumne;
     }
 
 }
