@@ -42,12 +42,12 @@ foreach ($quadernstemp as $quaderntemp) {
 
     if (isset($quaderntemp->tutor_centre) && !empty($quaderntemp->tutor_centre)) {
         $recordtutor_centre = $DB->get_record('user', array('username' => $quaderntemp->tutor_centre));
-        $quadern->tutor_centre = $recordtutor_centre->id;
+        $quadern->tutor_centre = ($recordtutor_centre ? $recordtutor_centre->id : '');
     }
 
     if (isset($quaderntemp->tutor_empresa) && !empty($quaderntemp->tutor_empresa)) {
         $recordtutor_empresa = $DB->get_record('user', array('username' => $quaderntemp->tutor_empresa));
-        $quadern->tutor_empresa = $recordtutor_empresa->id;
+        $quadern->tutor_empresa = ($recordtutor_empresa ? $recordtutor_empresa->id : '');
     }
 
     $quadern->create_object();
@@ -56,7 +56,6 @@ foreach ($quadernstemp as $quaderntemp) {
     if ($quadernscount % 10 == 0) {
         echo "Se han actualizado " .  $quadernscount . " quaderns de " . count($quadernstemp) . "\n";
     }
- }
+}
 
  echo "Se han actualizado" .  $quadernscount . "quaderns";
-
