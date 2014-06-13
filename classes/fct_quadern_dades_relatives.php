@@ -80,4 +80,21 @@ class fct_quadern_dades_relatives extends fct_quadern_base {
     public function prepare_form_data($data) {
         $data->excempcions = array('0' => '-', '25' => '25', '50' => '50');
     }
+
+    public function checkpermissions($type = 'view') {
+        if (parent::checkpermissions($type)) {
+            if ($type == 'edit' || $type = 'editlink') {
+                if ($this->usuari->es_alumne) {
+                    if ($type == 'editlink') {
+                        return false;
+                    } else {
+                        print_error('nopermissions');
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
 }

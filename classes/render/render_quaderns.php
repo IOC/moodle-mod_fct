@@ -114,7 +114,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $user = new fct_usuari($fctid, $userid);
         $output = '';
 
-        if ($user->es_alumne || $user->es_tutor_empresa) {
+        if ($user->es_alumne) {
             $editlink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id));
             $output = html_writer::link($editlink, get_string('proposa_quadern', 'fct'));
         }

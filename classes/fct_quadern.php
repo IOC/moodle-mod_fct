@@ -396,11 +396,11 @@ class fct_quadern extends fct_quadern_base {
                         print_error('nopermisions');
                     }
                 } else {
-                    if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre &&
-                        !$this->usuari->es_administrador) {
+                    if ($this->usuari->es_tutor_empresa) {
                             print_error('nopermisions');
                     }
                 }
+                return true;
                 break;
 
             case 'editlink':
@@ -410,8 +410,7 @@ class fct_quadern extends fct_quadern_base {
                         return false;
                     }
                 } else {
-                    if (!$this->usuari->es_alumne  && !$this->usuari->es_tutor_centre &&
-                        !$this->usuari->es_tutor_empresa && !$this->usuari->es_administrador) {
+                    if ($this->usuari->es_tutor_empresa) {
                         return false;
                     }
                 }
@@ -422,6 +421,7 @@ class fct_quadern extends fct_quadern_base {
                 if (!$this->usuari->es_administrador) {
                     print_error('nopermisions');
                 }
+                return true;
                 break;
 
             case 'default' :
@@ -430,6 +430,7 @@ class fct_quadern extends fct_quadern_base {
                 and !$this->usuari->es_tutor_centre and !$this->usuari->es_tutor_empresa) {
                     print_error('permis_activitat');
                 }
+                return true;
                 break;
         }
 
