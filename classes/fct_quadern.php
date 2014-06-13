@@ -146,17 +146,27 @@ class fct_quadern extends fct_quadern_base {
         $select = array();
         $select[] = "c.fct = $fctid";
 
-        if ($usuari->es_alumne) {
-            $select[] = "ua.id = $usuari->id";
+        $selectuser = array();
+
+        if (!$usuari->es_administrador) {
+
+            if ($usuari->es_alumne) {
+                $selectuser[] = "ua.id = $usuari->id";
+            }
+
+            if ($usuari->es_tutor_empresa) {
+                $selectuser[] = "ue.id = $usuari->id";
+            }
+
+            if ($usuari->es_tutor_centre) {
+                $selectuser[] = "uc.id = $usuari->id";
+            }
+
+            if (count($selectuser) > 0) {
+                $select[] = '(' . implode(' OR ', $selectuser) . ')';
+            }
         }
 
-        if ($usuari->es_tutor_empresa) {
-            $select[] = "ue.id = $usuari->id";
-        }
-
-        if ($usuari->es_tutor_centre) {
-            $select[] = "uc.id = $usuari->id";
-        }
 
         if (isset($searchparams->cicle) && $searchparams->cicle) {
             $select[] = "cicle = $searchparams->cicle";
@@ -188,6 +198,7 @@ class fct_quadern extends fct_quadern_base {
         }
 
         $wherecondition = implode(' AND ', $select);
+
         $sql = "SELECT q.*"
              . ' FROM ' . $tables
              . ' WHERE ' . $wherecondition
