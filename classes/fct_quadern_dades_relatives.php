@@ -88,7 +88,7 @@ class fct_quadern_dades_relatives extends fct_quadern_base {
                     if ($type == 'editlink') {
                         return false;
                     } else {
-                        print_error('nopermissions');
+                        print_error('nopermissions', 'fct');
                     }
                 }
             }

@@ -393,11 +393,11 @@ class fct_quadern extends fct_quadern_base {
                 if (isset($this->id)) {
                     if (($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
                         (!$this->usuari->es_tutor_centre && !$this->usuari->es_administrador)) {
-                        print_error('nopermisions');
+                        print_error('nopermissions', 'fct');
                     }
                 } else {
                     if ($this->usuari->es_tutor_empresa) {
-                            print_error('nopermisions');
+                            print_error('nopermissions', 'fct');
                     }
                 }
                 return true;
@@ -426,7 +426,7 @@ class fct_quadern extends fct_quadern_base {
 
             case 'delete' :
                 if (!$this->usuari->es_administrador) {
-                    print_error('nopermisions');
+                    print_error('nopermissions', 'fct');
                 }
                 return true;
                 break;

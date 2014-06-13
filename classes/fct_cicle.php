@@ -144,18 +144,18 @@ class fct_cicle extends fct_base{
     public function checkpermissions($type = 'view') {
 
         if (!$this->usuari->es_administrador && !$this->usuari->es_tutor_centre) {
-            print_error('nopermisions');
+            print_error('nopermissions', 'fct');
         }
 
         if ($type == 'edit') {
             if (!$this->id && !$this->usuari->es_administrador) {
-                    print_error('nopermissions');
+                    print_error('nopermissions', 'fct');
             }
         }
 
         if ($type == 'delete' || $type == 'deletelink') {
             if (!$this->usuari->es_administrador && $type == 'delete') {
-                    print_error('nopermissions');
+                    print_error('nopermissions', 'fct');
             } else if (!$this->usuari->es_administrador && $type == 'deletelink') {
                 return false;
             }

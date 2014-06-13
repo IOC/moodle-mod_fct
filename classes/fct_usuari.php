@@ -60,7 +60,7 @@ class fct_usuari {
         }
 
         if (!$this->validrol()) {
-            print_error('nopermissions');
+            print_error('nopermissions', 'fct');
         }
 
     }

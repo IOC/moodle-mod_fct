@@ -131,12 +131,11 @@ class fct_tutor extends fct_base {
     public function checkpermissions($type = 'view') {
 
         if (!$this->usuari->es_administrador) {
-            print_error('nopermisions');
+            print_error('nopermissions', 'fct');
         }
     }
 
     public function prepare_form_data($data) {
     }
-
 
 }

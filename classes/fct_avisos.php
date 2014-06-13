@@ -175,7 +175,7 @@ class fct_avisos extends fct_base{
         }
 
         if (!$this->usuari->es_tutor_centre) {
-                print_error('nopermisions');
+            print_error('nopermissions', 'fct');
         }
     }
 

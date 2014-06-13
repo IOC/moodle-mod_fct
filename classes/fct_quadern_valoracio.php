@@ -163,7 +163,7 @@ class fct_quadern_valoracio extends fct_quadern_base {
             } else if ($type === 'editlink') {
                 return false;
             } else {
-                print_error('nopermisions');
+                print_error('nopermissions', 'fct');
             }
         } else {
             parent::checkpermissions($type);

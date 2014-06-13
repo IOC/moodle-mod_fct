@@ -117,7 +117,7 @@ class fct_resum_seguiment extends fct_base {
         $quadern = new fct_quadern($this->quadern);
 
         if ($quadern->estat == 'proposat' && !$this->usuari->es_administrador) {
-            print_error('nopermisions');
+            print_error('nopermissions', 'fct');
         }
 
         return true;
@@ -125,7 +125,7 @@ class fct_resum_seguiment extends fct_base {
 
 
 
-    public  function prepare_form_data($data) {
+    public function prepare_form_data($data) {
     }
 
 

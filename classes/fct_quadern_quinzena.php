@@ -341,13 +341,13 @@ class fct_quadern_quinzena extends fct_base {
                 if ($type === 'editlink') {
                     return false;
                 }
-                print_error('nopermisions');
+                print_error('nopermissions', 'fct');
             }
         } else {
             if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
                ($this->usuari->es_tutor_centre && ($this->usuari->id != $quadern->tutor_centre)) ||
                ($this->usuari->es_tutor_empresa && ($this->usuari->id != $quadern->tutor_empresa))) {
-                    print_error('nopermisions');
+                    print_error('nopermissions', 'fct');
             }
         }
 
