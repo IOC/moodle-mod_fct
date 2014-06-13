@@ -92,7 +92,7 @@ class fct_quadern_quinzena extends fct_base {
 
         parent::__construct($record);
 
-        if (is_int($record) && !isset($this->fct)) {
+        if (empty($this->fct)) {
             if ($cicle = $DB->get_record('fct_quadern', array('id' => $this->quadern), 'cicle')) {
                 if ($fctrecord = $DB->get_record('fct_cicle', array('id' => $cicle->cicle), 'fct')) {
                     $this->fct = $fctrecord->fct;
@@ -338,6 +338,11 @@ class fct_quadern_quinzena extends fct_base {
 
         if ($type === 'edit' || $type === 'editlink') {
             if (($quadern->estat == 'tancat' || $quadern->estat == 'proposat') && !$this->usuari->es_administrador) {
+                if ($type === 'editlink') {
+                    return false;
+                }
+                print_error('nopermissions', 'fct');
+            } else if ($quadern->estat == 'obert' && $this->usuari->es_tutor_empresa) {
                 if ($type === 'editlink') {
                     return false;
                 }
