@@ -44,11 +44,13 @@ class fct_quadern_horari_edit_form extends moodleform {
         $mform->addElement('select', 'dies', get_string('dies', 'mod_fct'), $data->dies);
 
         $horesfrom[] =& $mform->createElement('select', 'hourfrom', get_string('hores', 'mod_fct'), $this->hours());
+        $horesfrom[] =& $mform->createElement('static', 'fct_separator_start', '', ':');
         $horesfrom[] =& $mform->createElement('select', 'minutfrom', get_string('minuts', 'mod_fct'), $this->minuts());
 
         $mform->addGroup($horesfrom, 'horesfrom', get_string('de', 'mod_fct'), array(''), false);
 
         $horesto[] =& $mform->createElement('select', 'hourto', get_string('hores', 'mod_fct'), $this->hours());
+        $horesto[] =& $mform->createElement('static', 'fct_separator_end', '', ':');
         $horesto[] =& $mform->createElement('select', 'minutto', get_string('hores', 'mod_fct'), $this->minuts());
 
         $mform->addGroup($horesto, 'horesfrom', get_string('a', 'mod_fct'), array(''), false);

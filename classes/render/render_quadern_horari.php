@@ -101,8 +101,8 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
 
         $line[] = $horari->dia;
 
-        $horainici = substr($horari->hora_inici, -2, 1) == '.' ?  $horari->hora_inici.'0' : $horari->hora_inici;
-        $horafinal = substr($horari->hora_final, -2, 1) == '.' ?  $horari->hora_final.'0' : $horari->hora_final;
+        $horainici = strpos($horari->hora_inici, '.') === false ?  $horari->hora_inici . '.00' : $horari->hora_inici;
+        $horafinal = strpos($horari->hora_final, '.') === false ?  $horari->hora_final . '.00' : $horari->hora_final;
 
         $line[] = str_replace('.', ':', $horainici);
         $line[] = str_replace('.', ':', $horafinal);
