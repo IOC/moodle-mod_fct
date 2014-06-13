@@ -91,6 +91,7 @@ if ($id) {
     $class->qualificaciotype = $qualificaciotype;
     $class->quadern = $quadern;
     $class->valoracio = $valoracio;
+    $class->fct = isset($class->fct) ? $class->fct : $fct->id;
 } else {
     $class = new $class($record);
 }

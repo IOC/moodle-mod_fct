@@ -46,9 +46,8 @@ class fct_avisos extends fct_base{
 
     public function tabs($id, $type = 'view') {
 
-        $row = parent::tabs_general($id);
+        $tab = parent::tabs_general($id);
 
-        $tab['row'] = $row;
         $tab['currentab'] = 'avisos';
         $tab['inactivetabs'] = array();
 
@@ -62,14 +61,17 @@ class fct_avisos extends fct_base{
 
             $output = $PAGE->get_renderer('mod_fct', 'avisos');
 
-            $avisos = self::get_records($this->fct, $USER->id, false, null);
+            if ($avisos = self::get_records($this->fct, $USER->id, false, $index)) {
 
-            $baseurl = new moodle_url('/mod/fct/view.php', array('id'=>$PAGE->cm->id, 'page'=>'avisos'));
+                $baseurl = new moodle_url('/mod/fct/view.php', array('id' => $PAGE->cm->id, 'page' => 'avisos'));
 
-            echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
-            $table = $output->avisos_table($avisos['records']);
-            echo $table;
-            echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+                $table = $output->avisos_table($avisos['records']);
+                echo $table;
+                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+            } else {
+                echo $OUTPUT->notification(get_string('cap_avis', 'fct'));
+            }
 
         }
     }
@@ -87,20 +89,24 @@ class fct_avisos extends fct_base{
         $sql = "SELECT a.id, a.objecte" . $where;
         $countsql = "SELECT count(1)"  . $where;
 
-        $records = $DB->get_records_sql($sql, null,  $index, PAGENUM);
-        $totalrecords = $DB->count_records_sql($countsql);
+        if ($records = $DB->get_records_sql($sql, null,  $index * PAGENUM, PAGENUM)) {
+            $totalrecords = $DB->count_records_sql($countsql);
 
-        $avisos = array();
-        foreach ($records as $record) {
-            $avisos[] = new fct_avisos($record);
+            $avisos = array();
+            foreach ($records as $record) {
+                $avisos[] = new fct_avisos($record);
+            }
+            return array('records' => $avisos, 'totalrecords' => $totalrecords);
+        } else {
+            return false;
         }
-        return array('records' => $avisos, 'totalrecords' => $totalrecords);
     }
 
     public function delete() {
         global $DB;
 
         $DB->delete_records('fct_avis', array('id' => $this->id));
+        return true;
 
     }
 
@@ -158,16 +164,22 @@ class fct_avisos extends fct_base{
     }
 
     public function checkpermissions($type = 'view') {
+        global $USER;
 
-        if (!isset($this->fct)) {
-            print_error('nofct');
+        if (!$this->usuari) {
+            if (!isset($this->fct)) {
+                print_error('nofct');
+            }
+
+            $this->usuari = new fct_usuari($this->fct, $USER->id);
         }
 
-        if (!$this->usuari->es_tutor_centre){
+        if (!$this->usuari->es_tutor_centre) {
                 print_error('nopermisions');
         }
     }
 
-    public function prepare_form_data($data){}
+    public function prepare_form_data($data) {
+    }
 
 }
