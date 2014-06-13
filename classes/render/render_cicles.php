@@ -31,7 +31,8 @@ class mod_fct_cicles_renderer extends plugin_renderer_base {
         $data = array();
 
         if ($cicles) {
-            foreach ($cicles as $cicle) {
+            foreach ($cicles as $record) {
+                $cicle = new fct_cicle($record->id);
                 $data[] = $this->make_table_line($cicle);
             }
         }
@@ -58,11 +59,14 @@ class mod_fct_cicles_renderer extends plugin_renderer_base {
         $editlink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $cicle->id, 'page' => 'cicle'));
         $editicon = html_writer::empty_tag('img',
             array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
-        $deletelink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $cicle->id, 'delete' => 1, 'page' => 'cicle'));
-        $deleteicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
         $buttons[] = html_writer::link($editlink, $editicon);
-        $buttons[] = html_writer::link($deletelink, $deleteicon);
+        if ($cicle->checkpermissions('deletelink')) {
+            $deletelink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $cicle->id, 'delete' => 1, 'page' => 'cicle'));
+            $deleteicon = html_writer::empty_tag('img',
+                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+            $buttons[] = html_writer::link($deletelink, $deleteicon);
+
+        }
         $line[] = implode(' ', $buttons);
         return $line;
     }

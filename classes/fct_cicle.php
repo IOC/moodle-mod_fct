@@ -153,11 +153,15 @@ class fct_cicle extends fct_base{
             }
         }
 
-        if ($type == 'delete') {
-            if (!$this->usuari->es_administrador) {
+        if ($type == 'delete' || $type == 'deletelink') {
+            if (!$this->usuari->es_administrador && $type == 'delete') {
                     print_error('nopermissions');
+            } else if (!$this->usuari->es_administrador && $type == 'deletelink') {
+                return false;
             }
         }
+
+        return true;
     }
 
     public function prepare_form_data($data) {
