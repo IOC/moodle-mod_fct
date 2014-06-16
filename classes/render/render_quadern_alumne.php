@@ -77,7 +77,12 @@ class mod_fct_quadern_alumne_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('data_naixement', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', userdate($quadern->data_naixement, get_string('strftimedate')), array('class' => 'datacontent'));
+        if ($quadern->data_naixement) {
+            $date = userdate($quadern->data_naixement, get_string('strftimedate'));
+        } else {
+            $date = '';
+        }
+        $output .= html_writer::tag('span', $date, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
