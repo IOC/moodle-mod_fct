@@ -45,6 +45,23 @@ class fct_quadern_valoracio_activitat extends fct_base {
     protected $objecte_keys = array('id', 'quadern', 'descripcio', 'nota');
     protected $editform = 'fct_quadern_valoracio_activitat_edit_form';
 
+    public function __construct($record = null) {
+        global $DB;
+
+        parent::__construct($record);
+
+        if (empty($this->fct) and is_numeric($record)) {
+            $this->quadern = $record;
+            if ($cicle = $DB->get_record('fct_quadern', array('id' => $this->quadern), 'cicle')) {
+                if ($fctrecord = $DB->get_record('fct_cicle', array('id' => $cicle->cicle), 'fct')) {
+                    $this->fct = $fctrecord->fct;
+                } else {
+                    print_error('nofct');
+                }
+            }
+        }
+    }
+
     public function tabs($id, $type = 'view') {
 
         $tab = parent::tabs_quadern($id, $this->quadern);
