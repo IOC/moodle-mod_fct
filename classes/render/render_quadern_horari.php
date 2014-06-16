@@ -45,8 +45,10 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
                 $output .= html_writer::tag('span', $conveni->codi, array('class' => 'datacontent'));
                 $output .= html_writer::end_div();
 
-                if (isset($conveni->horari)) {
+                if (!empty($conveni->horari)) {
                     $output .= $this->horari_table($conveni, $quadern);
+                } else {
+                    $output .= html_writer::tag('div', get_string('horari_no_definit', 'fct'), array('class' => 'notifyproblem'));
                 }
             }
         }
@@ -101,8 +103,8 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
 
         $line[] = $horari->dia;
 
-        $horainici = strpos($horari->hora_inici, '.') === false ?  $horari->hora_inici . '.00' : $horari->hora_inici;
-        $horafinal = strpos($horari->hora_final, '.') === false ?  $horari->hora_final . '.00' : $horari->hora_final;
+        $horainici = strpos($horari->hora_inici, '.') === false ? $horari->hora_inici . '.00' : $horari->hora_inici;
+        $horafinal = strpos($horari->hora_final, '.') === false ? $horari->hora_final . '.00' : $horari->hora_final;
 
         $line[] = str_replace('.', ':', $horainici);
         $line[] = str_replace('.', ':', $horafinal);
@@ -122,7 +124,6 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
 
             $line[] = $button;
         }
-
 
         return $line;
 
