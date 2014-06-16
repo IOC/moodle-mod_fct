@@ -273,6 +273,8 @@ class fct_quadern_base extends fct_base {
                 } else {
                     print_error('nopermissions', 'fct');
                 }
+            } else {
+                return true;
             }
         }
 
@@ -343,7 +345,7 @@ class fct_quadern_base extends fct_base {
         $url = new moodle_url('/mod/fct/view.php', $params);
         $subtree[] = new tabobject('quadern_dades_relatives', $url, get_string('dades_relatives', 'fct'));
 
-        if ($this->checkpermissions('export_htmltab')) {
+        if (self::checkpermissions('export_htmltab')) {
             $params = array(
                 'id' => $id,
                 'quadern' => $quadern,
