@@ -33,7 +33,7 @@ class fct_resum_seguiment extends fct_base {
     public $total_hores = 0;
     public $total_dies = 0;
 
-    static $table = 'fct_quinzena';
+    protected static $table = 'fct_quinzena';
 
     public function tabs($id, $type = 'view') {
 
@@ -42,17 +42,16 @@ class fct_resum_seguiment extends fct_base {
         $subtree = array();
 
         $subtree[] = new tabobject('quinzenesllist', new moodle_url('/mod/fct/view.php',
-                                        array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena')),
+                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                         get_string('quinzenes', 'fct'));
-        $quinzena = new fct_quadern_quinzena($this->quadern);
-        if ($quinzena->checkpermissions('editlink')) {
+        if (self::checkpermissions('addquinzena')) {
             $subtree[] = new tabobject('afegeix_quinzena', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena',)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                             get_string('afegeix_quinzena', 'fct'));
         }
 
         $subtree[] = new tabobject('resum_seguiment', new moodle_url('/mod/fct/view.php',
-                                        array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'resum_seguiment',)),
+                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'resum_seguiment')),
                                         get_string('resum_seguiment', 'fct'));
 
         $row = $tab['row'];
@@ -117,6 +116,13 @@ class fct_resum_seguiment extends fct_base {
         }
 
         $quadern = new fct_quadern($this->quadern);
+
+        if ($type == 'addquinzena') {
+            if ($quadern->estat != 'obert') {
+                return false;
+            }
+            return ($this->usuari->es_alumne || $this->usuari->es_tutor_centre);
+        }
 
         if ($quadern->estat == 'proposat' && !$this->usuari->es_administrador) {
             print_error('nopermissions', 'fct');
