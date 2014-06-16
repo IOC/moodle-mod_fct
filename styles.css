@@ -264,6 +264,7 @@ _quaderns td a:hover, _seguiment td a:hover {
 }
 
 /* Tables */
+.avisos.generaltable,
 .quaderns.generaltable,
 .quadernactivitat.generaltable {
     width: 100%;
@@ -286,6 +287,7 @@ _quaderns td a:hover, _seguiment td a:hover {
     min-width: 40%;
 }
 
+.avisos.generaltable td.lastcol.edit,
 .quaderns.generaltable td.lastcol.edit,
 .quinzenes.generaltable td.lastcol.edit,
 .quadernactivitat.generaltable td.lastcol.edit,

@@ -45,7 +45,8 @@ class mod_fct_avisos_renderer extends plugin_renderer_base {
                              get_string('edit'));
         $table->data = $data;
         $table->id = 'avisos';
-        $table->attributes['class'] = 'admintable generaltable';
+        $table->attributes['class'] = 'avisos admintable generaltable';
+        $table->colclasses = array('', '', '', 'edit');
 
         $output = html_writer::table($table);
         return $output;
@@ -56,7 +57,7 @@ class mod_fct_avisos_renderer extends plugin_renderer_base {
         global $DB, $PAGE, $OUTPUT;
 
         if (!$fct = $DB->get_record('fct', array('id' => $PAGE->cm->instance))) {
-           print_error('course module is incorrect');
+            print_error('course module is incorrect');
         }
 
         $line = array();
