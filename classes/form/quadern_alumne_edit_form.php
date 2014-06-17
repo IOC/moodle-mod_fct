@@ -38,7 +38,7 @@ class fct_quadern_alumne_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-        $attributes = array('size' => 8);
+        $attributes = array('size' => 16);
         $mform->addElement('text', 'dni', get_string('dni', 'mod_fct'), $attributes);
         $mform->setType('dni', PARAM_TEXT);
 
@@ -72,7 +72,12 @@ class fct_quadern_alumne_edit_form extends moodleform {
         $maxbytes = 0;
         $maxfiles = 1;
         $subdirs = false;
-        $imageoptions = array('maxbytes' => $maxbytes, 'maxfiles' => $maxfiles, 'subdirs' => $subdirs, 'accepted_types' => array('web_image'));
+        $imageoptions = array(
+            'maxbytes' => $maxbytes,
+            'maxfiles' => $maxfiles,
+            'subdirs' => $subdirs,
+            'accepted_types' => array('web_image'),
+        );
         $mform->addElement('text', 'targeta_sanitaria', get_string('targeta_sanitaria', 'mod_fct'), $attributes);
         $mform->setType('targeta_sanitaria', PARAM_TEXT);
         $mform->addElement('filemanager', 'targetaimage_filemanager', get_string('imatge_targeta', 'fct'), null, $imageoptions);

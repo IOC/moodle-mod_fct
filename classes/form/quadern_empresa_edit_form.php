@@ -43,65 +43,80 @@ class fct_quadern_empresa_edit_form extends moodleform {
         $mform->addElement('header', 'headerempresa', get_string('empresa', 'mod_fct'));
 
         if ($empresa->checkpermissions('edit_company_name')) {
-            $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'));
+            $attributes = array('size' => 32);
+            $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'), $attributes);
             $mform->setType('nom', PARAM_TEXT);
         } else {
             $mform->addElement('static', 'nom', get_string('nom', 'mod_fct'));
         }
-        $mform->addElement('text', 'adreca', get_string('adreca', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'adreca', get_string('adreca', 'mod_fct'), $attributes);
         $mform->setType('adreca', PARAM_TEXT);
-        $mform->addElement('text', 'poblacio', get_string('poblacio', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'poblacio', get_string('poblacio', 'mod_fct'), $attributes);
         $mform->setType('poblacio', PARAM_TEXT);
-        $mform->addElement('text', 'codi_postal', get_string('codi_postal', 'mod_fct'));
+        $attributes = array('size' => 8);
+        $mform->addElement('text', 'codi_postal', get_string('codi_postal', 'mod_fct'), $attributes);
         $mform->setType('codi_postal', PARAM_TEXT);
-        $mform->addElement('text', 'telefon', get_string('telefon', 'mod_fct'));
+        $attributes = array('size' => 12);
+        $mform->addElement('text', 'telefon', get_string('telefon', 'mod_fct'), $attributes);
         $mform->setType('telefon',  PARAM_TEXT);
-        $mform->addElement('text', 'fax', get_string('fax', 'mod_fct'));
+        $attributes = array('size' => 12);
+        $mform->addElement('text', 'fax', get_string('fax', 'mod_fct'), $attributes);
         $mform->setType('fax',  PARAM_TEXT);
-        $mform->addElement('text', 'email', get_string('email', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'email', get_string('email', 'mod_fct'), $attributes);
         $mform->setType('email', PARAM_EMAIL);
         $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
-        $mform->addElement('text', 'nif', get_string('nif', 'mod_fct'));
+        $attributes = array('size' => 16);
+        $mform->addElement('text', 'nif', get_string('nif', 'mod_fct'), $attributes);
         $mform->setType('nif', PARAM_TEXT);
-        $mform->addElement('text', 'codi_agrupacio', get_string('codi_agrupacio', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'codi_agrupacio', get_string('codi_agrupacio', 'mod_fct'), $attributes);
         $mform->setType('codi_agrupacio', PARAM_TEXT);
-        $mform->addElement('text', 'sic', get_string('sic', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'sic', get_string('sic', 'mod_fct'), $attributes);
         $mform->setType('sic', PARAM_TEXT);
 
         $mform->addElement('header', 'headerresponsableconveni', get_string('responsable_conveni', 'mod_fct'));
 
-        $mform->addElement('text', 'nom_responsable', get_string('nom', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'nom_responsable', get_string('nom', 'mod_fct'), $attributes);
         $mform->setType('nom_responsable', PARAM_TEXT);
-        $mform->addElement('text', 'cognoms_responsable', get_string('cognoms', 'mod_fct'));
+        $mform->addElement('text', 'cognoms_responsable', get_string('cognoms', 'mod_fct'), $attributes);
         $mform->setType('cognoms_responsable', PARAM_TEXT);
-        $mform->addElement('text', 'dni_responsable', get_string('dni', 'mod_fct'));
+        $attributes = array('size' => 16);
+        $mform->addElement('text', 'dni_responsable', get_string('dni', 'mod_fct'), $attributes);
+        $attributes = array('size' => 32);
         $mform->setType('dni_responsable', PARAM_TEXT);
-        $mform->addElement('text', 'carrec_responsable', get_string('carrec', 'mod_fct'));
+        $mform->addElement('text', 'carrec_responsable', get_string('carrec', 'mod_fct'), $attributes);
         $mform->setType('carrec_responsable', PARAM_TEXT);
 
         $mform->addElement('header', 'headertutorempresa', get_string('tutor_empresa', 'mod_fct'));
 
-        $mform->addElement('text', 'nom_tutor', get_string('nom', 'mod_fct'));
+        $mform->addElement('text', 'nom_tutor', get_string('nom', 'mod_fct'), $attributes);
         $mform->setType('nom_tutor', PARAM_TEXT);
-        $mform->addElement('text', 'cognoms_tutor', get_string('cognoms', 'mod_fct'));
+        $mform->addElement('text', 'cognoms_tutor', get_string('cognoms', 'mod_fct'), $attributes);
         $mform->setType('cognoms_tutor', PARAM_TEXT);
-        $mform->addElement('text', 'dni_tutor', get_string('dni', 'mod_fct'));
+        $attributes = array('size' => 16);
+        $mform->addElement('text', 'dni_tutor', get_string('dni', 'mod_fct'), $attributes);
         $mform->setType('dni_tutor', PARAM_TEXT);
-        $mform->addElement('text', 'email_tutor', get_string('email', 'mod_fct'));
+        $attributes = array('size' => 32);
+        $mform->addElement('text', 'email_tutor', get_string('email', 'mod_fct'), $attributes);
         $mform->setType('email_tutor', PARAM_EMAIL);
         $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 
         $mform->addElement('header', 'headerllocpractiques', get_string('lloc_practiques', 'mod_fct'));
 
-        $mform->addElement('text', 'nom_lloc_practiques', get_string('nom', 'mod_fct'));
+        $mform->addElement('text', 'nom_lloc_practiques', get_string('nom', 'mod_fct'), $attributes);
         $mform->setType('nom_lloc_practiques', PARAM_TEXT);
-        $mform->addElement('text', 'adreca_lloc_practiques', get_string('adreca', 'mod_fct'));
+        $mform->addElement('text', 'adreca_lloc_practiques', get_string('adreca', 'mod_fct'), $attributes);
         $mform->setType('adreca_lloc_practiques', PARAM_TEXT);
-        $mform->addElement('text', 'poblacio_lloc_practiques', get_string('poblacio', 'mod_fct'));
+        $mform->addElement('text', 'poblacio_lloc_practiques', get_string('poblacio', 'mod_fct'), $attributes);
         $mform->setType('poblacio_lloc_practiques', PARAM_TEXT);
-        $mform->addElement('text', 'codi_postal_lloc_practiques', get_string('codi_postal', 'mod_fct'));
+        $mform->addElement('text', 'codi_postal_lloc_practiques', get_string('codi_postal', 'mod_fct'), $attributes);
         $mform->setType('codi_postal_lloc_practiques', PARAM_TEXT);
-        $mform->addElement('text', 'telefon_lloc_practiques', get_string('telefon', 'mod_fct'));
+        $mform->addElement('text', 'telefon_lloc_practiques', get_string('telefon', 'mod_fct'), $attributes);
         $mform->setType('telefon_lloc_practiques', PARAM_TEXT);
 
         $mform->addElement('hidden', 'cmid');
