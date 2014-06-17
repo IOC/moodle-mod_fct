@@ -68,24 +68,40 @@ class fct_quadern_valoracio_activitat extends fct_base {
 
         $subtree = array();
 
+        $params = array(
+            'id' => $id,
+            'quadern' => $this->quadern,
+            'page' => 'quadern_valoracio',
+            'valoracio' => 'parcial',
+        );
+
         $subtree[] = new tabobject('valoracio_parcial_actituds',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'valoracio' => 'parcial')),
+                              new moodle_url('view.php', $params),
                               get_string('valoracio_parcial_actituds', 'fct'));
 
+        $params['valoracio'] = 'final';
         $subtree[] = new tabobject('valoracio_final_actituds',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'valoracio' => 'final')),
+                              new moodle_url('view.php', $params),
                               get_string('valoracio_final_actituds', 'fct'));
 
+        $params['valoracio'] = 'resultats';
         $subtree[] = new tabobject('valoracio_resultats',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'valoracio' => 'resultats')),
+                              new moodle_url('view.php', $params),
                               get_string('valoracio_resultats', 'fct'));
 
+        $params = array(
+            'id' => $id,
+            'quadern' => $this->quadern,
+            'page' => 'quadern_valoracio',
+            'subpage' => 'quadern_valoracio_activitat',
+        );
         $subtree[] = new tabobject('valoracio_activitats',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_valoracio_activitat')),
+                              new moodle_url('view.php', $params),
                               get_string('valoracio_activitats', 'fct'));
 
+        $params['subpage'] = 'quadern_qualificacio';
         $subtree[] = new tabobject('qualificacio_quadern',
-                              new moodle_url('view.php', array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_valoracio', 'subpage' => 'quadern_qualificacio')),
+                              new moodle_url('view.php', $params),
                               get_string('qualificacio_quadern', 'fct'));
 
         $row = $tab['row'];

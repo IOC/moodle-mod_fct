@@ -153,8 +153,8 @@ class fct_serveis {
         }
 
         $cicle = $this->diposit->cicle($quadern->cicle);
-        //$fct = $this->diposit->fct($cicle->fct);
-        //$this->moodle->delete_dir($fct->course, "quadern-{$quadern->id}");
+        // $fct = $this->diposit->fct($cicle->fct);
+        // $this->moodle->delete_dir($fct->course, "quadern-{$quadern->id}");
 
         $this->diposit->suprimir_quadern($quadern);
     }

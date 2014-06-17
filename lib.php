@@ -87,7 +87,6 @@ function fct_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
 
     $itemid = array_shift($args); // The first item in the $args array.
 
-
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
         $filepath = '/'; // $args is empty => the path is '/'

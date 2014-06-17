@@ -38,7 +38,6 @@ class fct_llista_empreses_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
-
         $formats = array('csv' => get_string('format_csv', 'fct'), 'excel' => get_string('format_excel', 'fct'));
 
         if (isset($data->cicles)) {
@@ -81,7 +80,6 @@ class fct_llista_empreses_edit_form extends moodleform {
                     create_function('$string', 'return substr($string,6,6);'),
                     $arrayfiltered);
 
-
         $files = fct_llista_empreses::create_file_data($ciclesid);
 
         switch ($data->format) {
@@ -102,7 +100,7 @@ class fct_llista_empreses_edit_form extends moodleform {
                 $csv = array();
                 foreach ($files as $columnes) {
                     foreach ($columnes as $camp) {
-                    $csv[] = '"' . $camp .'",';
+                        $csv[] = '"' . $camp .'",';
                     }
                     $csv[] = "\n";
                 }

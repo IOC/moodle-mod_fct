@@ -84,7 +84,6 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $editlink = new moodle_url('./edit.php', $params);
         $buttons[] = html_writer::link($viewlink, $viewicon);
 
-
         if ($quinzena->checkpermissions('editlink')) {
 
             $params = array(

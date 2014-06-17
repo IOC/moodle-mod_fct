@@ -75,7 +75,7 @@ class fct_quadern_dades_relatives extends fct_quadern_base {
                                        $hores_practiques);
 
         return $resum;
-     }
+    }
 
     public function prepare_form_data($data) {
         $data->excempcions = array('0' => '-', '25' => '25', '50' => '50');

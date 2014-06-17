@@ -54,7 +54,19 @@ class fct_quadern_quinzena extends fct_base {
 
     protected static $table = 'fct_quinzena';
     protected $record_keys = array('id', 'quadern', 'any_', 'periode', 'objecte');
-    protected $objecte_keys = array('id', 'quadern', 'any', 'periode', 'hores', 'dies', 'activitats', 'valoracions', 'observacions_alumne', 'observacions_centre', 'observacions_empresa');
+    protected $objecte_keys = array(
+        'id',
+        'quadern',
+        'any',
+        'periode',
+        'hores',
+        'dies',
+        'activitats',
+        'valoracions',
+        'observacions_alumne',
+        'observacions_centre',
+        'observacions_empresa',
+    );
     protected $editform = 'fct_quadern_quinzena_edit_form';
 
     public function tabs($id, $type = 'view') {
@@ -64,17 +76,17 @@ class fct_quadern_quinzena extends fct_base {
         $subtree = array();
 
         $subtree[] = new tabobject('quinzenesllist', new moodle_url('/mod/fct/view.php',
-                                        array('id' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena')),
+                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                         get_string('quinzenes', 'fct'));
 
         if (self::checkpermissions('editlink')) {
             $subtree[] = new tabobject('afegeix_quinzena', new moodle_url('/mod/fct/edit.php',
-                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page'=> 'quadern_quinzena',)),
+                                            array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                             get_string('afegeix_quinzena', 'fct'));
         }
 
         $subtree[] = new tabobject('resum_seguiment', new moodle_url('/mod/fct/view.php',
-                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'resum_seguiment',)),
+                                        array('id' => $id, 'quadern' => $this->quadern, 'page' => 'resum_seguiment')),
                                         get_string('resum_seguiment', 'fct'));
 
         $row = $tab['row'];
@@ -280,13 +292,12 @@ class fct_quadern_quinzena extends fct_base {
             $this->resum = $resum;
 
             foreach ($this->resum as $any => $resum_any) {
+                foreach ($resum_any as $trimestre => $resum_trimestre) {
+                    $lines = array();
+                    $lines[] = $this->mostrar_resum_trimestre($any, $trimestre);
 
-                    foreach ($resum_any as $trimestre => $resum_trimestre) {
-                        $lines = array();
-                        $lines[] = $this->mostrar_resum_trimestre($any, $trimestre);
-
-                        //$output->resum_table($trimestre, $lines);
-                    }
+                    // $output->resum_table($trimestre, $lines);
+                }
 
             }
         }
@@ -298,12 +309,10 @@ class fct_quadern_quinzena extends fct_base {
         for ($mes = $trimestre * 3; $mes < $trimestre * 3 + 3; $mes++) {
             if (isset($this->resum[$any][$trimestre][$mes])) {
                 $record = $this->resum[$any][$trimestre][$mes];
-                //$taula->add_data(array(self::nom_mes($mes), $record->dies, $record->hores));
+                // $taula->add_data(array(self::nom_mes($mes), $record->dies, $record->hores));
                 $dies += $record->dies;
                 $hores += $record->hores;
                 return array($mes, $record->dies, $record->hores);
-            } else {
-               // $taula->add_data(array(self::nom_mes($mes), 0, 0));
             }
         }
     }
@@ -325,7 +334,7 @@ class fct_quadern_quinzena extends fct_base {
     }
 
     protected function nom_mes($mes) {
-        $time = mktime(0, 0, 0, $mes+1, 1, 2000);
+        $time = mktime(0, 0, 0, $mes + 1, 1, 2000);
         return strftime('%B', $time);
     }
 

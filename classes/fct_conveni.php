@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once ('fct_franja_horari.php');
+require_once('fct_franja_horari.php');
 
 class fct_conveni {
     public $uuid;
@@ -41,7 +41,7 @@ class fct_conveni {
             $this->codi = $data->codi;
         }
         if (isset($data->data_inici)) {
-            $this->data_inici =  $data->data_inici;
+            $this->data_inici = $data->data_inici;
         }
         if (isset($data->data_final)) {
             $this->data_final = $data->data_final;

@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/lib/formslib.php');
 
 class fct_tutor_edit_form extends moodleform {
 
-    private $class ='fct_tutor';
+    private $class = 'fct_tutor';
 
     public function definition() {
 

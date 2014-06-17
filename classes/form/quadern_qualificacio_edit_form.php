@@ -63,7 +63,6 @@ class fct_quadern_qualificacio_edit_form extends moodleform {
         $mform->addElement('hidden', 'qualificaciotype');
         $mform->setType('qualificaciotype', PARAM_TEXT);
 
-
         $this->add_action_buttons();
         $this->set_data($data);
 

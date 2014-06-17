@@ -131,8 +131,8 @@ class fct_avisos extends fct_base{
             case 'quinzena_tutor':
                 $quinzena = new fct_quadern_quinzena((int)$this->quinzena);
                 return get_string('avis_' . $this->tipus, 'fct', $quinzena->nom_periode($quinzena->periode) . " {$quinzena->any}");
-        default:
-            return get_string('avis_' . $this->tipus, 'fct');
+            default:
+                return get_string('avis_' . $this->tipus, 'fct');
         }
     }
 

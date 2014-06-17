@@ -41,15 +41,14 @@ class fct_quadern_quinzena_edit_form extends moodleform {
 
         $mform->addElement('header', 'header_quinzena', get_string('nova_quinzena', 'fct'));
 
+        $mform->addElement('select', 'any', get_string('any', 'fct'), $data->anyselect);
 
-        $mform->addElement('select','any', get_string('any', 'fct'), $data->anyselect);
-
-        $mform->addElement('select','periode', get_string('periode', 'fct'), $data->periodeselect);
+        $mform->addElement('select', 'periode', get_string('periode', 'fct'), $data->periodeselect);
 
         $mform->addElement('text', 'dies', get_string('dies', 'fct'). ':');
         $mform->setType('dies', PARAM_TEXT);
         $mform->addRule('dies', get_string('nombres_separats_comes', 'mod_fct'),
-                               'regex',"/^\s*([0-9]+(\s*,\s*[0-9]+)*)?\s*$/",
+                               'regex', "/^\s*([0-9]+(\s*,\s*[0-9]+)*)?\s*$/",
                                'client');
 
         $elements = array();
@@ -64,7 +63,6 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                                 ' ' . get_string('hores_i', 'mod_fct') . ' ');
 
         $mform->setType('grouphores[hores]', PARAM_INT);
-
 
         $mform->addElement('header', 'header_activitats', get_string('activitats_realitzades', 'fct'));
 
@@ -85,7 +83,6 @@ class fct_quadern_quinzena_edit_form extends moodleform {
         if (!$data->usuari->es_alumne) {
             $mform->addElement('header', 'header_retroaccio', get_string('retroaccio', 'fct'));
 
-
             $params = new stdClass;
             if (!isset($params->cols)) {
                 $params->cols = 50;
@@ -94,7 +91,7 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                 $params->rows = 4;
             }
 
-            $mform->addElement('textarea', 'observacions_centre', get_string('tutor_centre' ,'fct'),
+            $mform->addElement('textarea', 'observacions_centre', get_string('tutor_centre', 'fct'),
                                       array('cols' => $params->cols,
                                             'rows' => $params->rows));
 
@@ -111,16 +108,16 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                               get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                if (!empty($data->frases_centre)) {
-                    foreach ($data->frases_centre as $frase) {
-                        $html[] = '<li>' . trim($frase) . '</li>';
-                    }
+            if (!empty($data->frases_centre)) {
+                foreach ($data->frases_centre as $frase) {
+                    $html[] = '<li>' . trim($frase) . '</li>';
                 }
+            }
             $html[] = '</ul>';
 
             $mform->addElement('static', '', '', implode('', $html));
 
-            $mform->addElement('textarea', 'observacions_empresa', get_string('tutor_empresa' ,'fct'),
+            $mform->addElement('textarea', 'observacions_empresa', get_string('tutor_empresa', 'fct'),
                                       array('cols' => $params->cols,
                                             'rows' => $params->rows));
 
@@ -134,16 +131,15 @@ class fct_quadern_quinzena_edit_form extends moodleform {
                               $iconminusurl, '" /> ',
                                get_string('frases_retroaccio', 'mod_fct'),
                               '</h4>', '<ul class="amagat">');
-                if (!empty($data->frases_empresa)) {
-                    foreach ($data->frases_empresa as $frase) {
-                        $html[] = '<li>' . trim($frase) . '</li>';
-                    }
+            if (!empty($data->frases_empresa)) {
+                foreach ($data->frases_empresa as $frase) {
+                    $html[] = '<li>' . trim($frase) . '</li>';
                 }
+            }
             $html[] = '</ul>';
 
             $mform->addElement('static', '', '', implode('', $html));
         }
-
 
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);

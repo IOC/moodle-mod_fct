@@ -49,7 +49,7 @@ class fct_quadern_dades extends fct_quadern_base {
         }
         if (isset($record->quadern)) {
             parent::__construct((int)$record->quadern);
-        } else{
+        } else {
             parent::__construct($record);
         }
     }
@@ -78,5 +78,6 @@ class fct_quadern_dades extends fct_quadern_base {
         echo $centre;
     }
 
-    public function prepare_form_data($data) {}
+    public function prepare_form_data($data) {
+    }
 }

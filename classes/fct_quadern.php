@@ -52,7 +52,7 @@ class fct_quadern extends fct_quadern_base {
 
             $row['quaderns'] = $activerow;
             $tab['row'] = $row;
-            $tab['currentab'] = $type == 'edit'?'afegeix_quadern':'quadernlist';
+            $tab['currentab'] = $type == 'edit' ? 'afegeix_quadern' : 'quadernlist';
         }
         return $tab;
     }
@@ -65,24 +65,24 @@ class fct_quadern extends fct_quadern_base {
             $output = $PAGE->get_renderer('mod_fct', 'quaderns');
 
             $searchdata = false;
-                if (!$this->usuari->es_alumne) {
+            if (!$this->usuari->es_alumne) {
 
-                    $cursos = $this->valors_curs();
+                $cursos = $this->valors_curs();
 
-                    $searchdata = new stdClass;
-                    $searchdata->id = $PAGE->cm->id;
-                    $searchdata->cursos = $this->valors_curs();
-                    $searchdata->cicles = $this->valors_cicles();
-                    $searchdata->estats = $this->valors_estat();
-                    $searchdata->curs = $searchparams->searchcurs;
-                    $searchdata->cicle = $searchparams->searchcicle;
-                    $searchdata->estat = $searchparams->searchestat;
-                    $searchdata->cerca = $searchparams->cerca;
+                $searchdata = new stdClass;
+                $searchdata->id = $PAGE->cm->id;
+                $searchdata->cursos = $this->valors_curs();
+                $searchdata->cicles = $this->valors_cicles();
+                $searchdata->estats = $this->valors_estat();
+                $searchdata->curs = $searchparams->searchcurs;
+                $searchdata->cicle = $searchparams->searchcicle;
+                $searchdata->estat = $searchparams->searchestat;
+                $searchdata->cerca = $searchparams->cerca;
 
-                    if ($searchform = $this->search_form(array('searchdata' => $searchdata))) {
-                        $searchform->display();
-                    }
+                if ($searchform = $this->search_form(array('searchdata' => $searchdata))) {
+                    $searchform->display();
                 }
+            }
 
             if ($quaderns = self::get_records($this->fct, $this->usuari, $searchdata, $index)) {
 
@@ -167,7 +167,6 @@ class fct_quadern extends fct_quadern_base {
             }
         }
 
-
         if (isset($searchparams->cicle) && $searchparams->cicle) {
             $select[] = "cicle = $searchparams->cicle";
         }
@@ -203,7 +202,6 @@ class fct_quadern extends fct_quadern_base {
              . ' FROM ' . $tables
              . ' WHERE ' . $wherecondition
              . ' ORDER by q.data_final DESC';
-
 
         $countsql = "SELECT count(1)"
                   . ' FROM ' . $tables
@@ -241,12 +239,12 @@ class fct_quadern extends fct_quadern_base {
 
             $transaction->allow_commit();
             return true;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollback($e);
         }
     }
 
-    public function get_object_data(){
+    public function get_object_data() {
 
         $objectdata = parent::get_object_data();
         $objectdata->nom_empresa = $this->nom_empresa ? $this->nom_empresa : '';
@@ -341,7 +339,7 @@ class fct_quadern extends fct_quadern_base {
         $any_min = ($min['mon'] >= 9 ? $min['year'] : $min['year'] - 1);
         $any_max = ($max['mon'] >= 9 ? $max['year'] : $max['year'] - 1);
 
-        for ($curs = $any_max; $curs >= $any_min;  $curs--) {
+        for ($curs = $any_max; $curs >= $any_min; $curs--) {
             $cursos[$curs] = $curs . '-' . ($curs + 1);
         }
         return $cursos;

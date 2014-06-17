@@ -113,7 +113,7 @@ $PAGE->set_heading(format_string($fct->name));
 if ($quadern) {
     if ($alumne = $DB->get_record('user', array('id' => $class->alumne))) {
         $PAGE->navbar->add(fullname($alumne));
-  }
+    }
 }
 
 $PAGE->set_pagelayout('standard');

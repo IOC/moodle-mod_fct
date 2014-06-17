@@ -129,7 +129,7 @@ class fct_activitat extends fct_base{
 
     }
 
-    public static function validation($data) {}
-
+    public static function validation($data) {
+    }
 
 }

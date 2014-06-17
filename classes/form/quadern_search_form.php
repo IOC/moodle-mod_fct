@@ -43,7 +43,6 @@ class fct_quadern_search_form extends moodleform {
 
         $mform->addGroup($elements, 'searchfields', '', array(''), false);
 
-
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 

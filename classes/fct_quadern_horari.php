@@ -87,9 +87,9 @@ class fct_quadern_horari extends fct_quadern_base {
             print_error('notvaliduuid');
         }
         if (isset($conveni->horari)) {
-            foreach ($conveni->horari as $key=>$value) {
+            foreach ($conveni->horari as $key => $value) {
                 $horari = $value;
-                if ($horari->dia == $params->dia && $horari->hora_inici == $params->hora_inici && $horari->hora_final == $params->hora_final){
+                if ($horari->dia == $params->dia && $horari->hora_inici == $params->hora_inici && $horari->hora_final == $params->hora_final) {
                     unset($this->convenis->$uuid->horari[$key]);
                 }
             }
@@ -138,7 +138,6 @@ class fct_quadern_horari extends fct_quadern_base {
         $data->convenis->$conveni->horari[] = array('dia' => $this->dies[$data->dies],
                                                   'hora_inici' => $hora_inici,
                                                   'hora_final' => $hora_final);
-
 
         self::$dataobjectkeys = $this->get_uuids();
 

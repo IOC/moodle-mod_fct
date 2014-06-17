@@ -33,16 +33,18 @@ class fct_quadern_alumne extends fct_quadern_base {
 
     protected $editform = 'fct_quadern_alumne_edit_form';
 
-    protected static $dataobjectkeys = array('dni',
-                                        'data_naixement',
-                                        'adreca',
-                                        'poblacio',
-                                        'codi_postal',
-                                        'telefon',
-                                        'email',
-                                        'procedencia',
-                                        'inss',
-                                        'targeta_sanitaria');
+    protected static $dataobjectkeys = array(
+        'dni',
+        'data_naixement',
+        'adreca',
+        'poblacio',
+        'codi_postal',
+        'telefon',
+        'email',
+        'procedencia',
+        'inss',
+        'targeta_sanitaria',
+    );
 
     public function tabs($id, $type = 'view') {
 
@@ -66,7 +68,6 @@ class fct_quadern_alumne extends fct_quadern_base {
         $output->view($this);
 
         return true;
-
     }
 
     public function set_data($data) {
@@ -75,14 +76,11 @@ class fct_quadern_alumne extends fct_quadern_base {
         $cm = get_coursemodule_from_instance('fct', $this->fct);
         $context = context_module::instance($cm->id);
 
-
         $maxfiles = 1;
         $maxbytes = 0;
         $attachmentoptions = array('maxfiles' => $maxfiles, 'maxbytes' => $maxbytes);
         file_postupdate_standard_filemanager($data, 'inssimage', $attachmentoptions, $context, 'mod_fct', 'inssimage', $data->id);
         file_postupdate_standard_filemanager($data, 'targetaimage', $attachmentoptions, $context, 'mod_fct', 'targetaimage', $data->id);
-
-
     }
 
     public function prepare_form_data($data) {

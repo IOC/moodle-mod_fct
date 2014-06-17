@@ -34,34 +34,34 @@ class fct_quadern_dades_relatives_edit_form extends moodleform {
 
     public function definition() {
 
-    $mform = $this->_form;
-    $data = $this->_customdata['data'];
+        $mform = $this->_form;
+        $data = $this->_customdata['data'];
 
-    $mform->addElement('text', 'hores_credit', get_string('hores_credit', 'fct'));
-    $mform->setType('hores_credit', PARAM_INT);
-    $mform->addRule('hores_credit', get_string('validacio_enter', 'fct'), 'numeric', null, 'client');
+        $mform->addElement('text', 'hores_credit', get_string('hores_credit', 'fct'));
+        $mform->setType('hores_credit', PARAM_INT);
+        $mform->addRule('hores_credit', get_string('validacio_enter', 'fct'), 'numeric', null, 'client');
 
-    $mform->addElement('select', 'exempcio', get_string('exempcio', 'fct'), $data->excempcions);
+        $mform->addElement('select', 'exempcio', get_string('exempcio', 'fct'), $data->excempcions);
 
-    $mform->addElement('text', 'hores_anteriors', get_string('hores_anteriors', 'fct'));
-    $mform->setType('hores_anteriors', PARAM_INT);
-    $mform->addRule('hores_anteriors', get_string('validacio_enter', 'fct'), 'numeric', null, 'client');
+        $mform->addElement('text', 'hores_anteriors', get_string('hores_anteriors', 'fct'));
+        $mform->setType('hores_anteriors', PARAM_INT);
+        $mform->addRule('hores_anteriors', get_string('validacio_enter', 'fct'), 'numeric', null, 'client');
 
-    $mform->addElement('hidden', 'id');
-    $mform->setType('id', PARAM_INT);
-    $mform->addElement('hidden', 'cmid');
-    $mform->setType('cmid', PARAM_INT);
-    $mform->addElement('hidden', 'quadern');
-    $mform->setType('quadern', PARAM_INT);
-    $mform->addElement('hidden', 'page');
-    $mform->setType('page', PARAM_TEXT);
-    $mform->addElement('hidden', 'subpage');
-    $mform->setType('subpage', PARAM_TEXT);
-    $mform->addElement('hidden', 'fct');
-    $mform->setType('fct', PARAM_INT);
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        $mform->addElement('hidden', 'cmid');
+        $mform->setType('cmid', PARAM_INT);
+        $mform->addElement('hidden', 'quadern');
+        $mform->setType('quadern', PARAM_INT);
+        $mform->addElement('hidden', 'page');
+        $mform->setType('page', PARAM_TEXT);
+        $mform->addElement('hidden', 'subpage');
+        $mform->setType('subpage', PARAM_TEXT);
+        $mform->addElement('hidden', 'fct');
+        $mform->setType('fct', PARAM_INT);
 
-    $this->add_action_buttons();
-    $this->set_data($data);
+        $this->add_action_buttons();
+        $this->set_data($data);
     }
 
     public function validation($data, $files) {

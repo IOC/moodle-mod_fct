@@ -126,7 +126,7 @@ class fct_llista_empreses extends fct_base {
         return $files;
     }
 
-    public static function send_xls($files){
+    public static function send_xls($files) {
         $workbook = new MoodleExcelWorkbook('-');
         $workbook->send(get_string('llista_empreses', 'fct') . '.xls');
         $worksheet = array();
