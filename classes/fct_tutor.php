@@ -33,7 +33,21 @@ class fct_tutor extends fct_base {
     public $id;
 
     protected static $table = 'user';
-    protected $record_keys = array('username', 'firstname', 'lastname', 'email', 'auth', 'confirmed', 'emailstop', 'lang', 'mnethostid', 'secret', 'timemodified');
+    protected $record_keys = array(
+        'username',
+        'firstname',
+        'lastname',
+        'email',
+        'auth',
+        'confirmed',
+        'emailstop',
+        'lang',
+        'mnethostid',
+        'secret',
+        'timemodified',
+        'city',
+        'country',
+    );
     protected $propierties_keys = array('id');
     public $returnurl;
 
@@ -64,10 +78,8 @@ class fct_tutor extends fct_base {
         $data->mnethostid = $CFG->mnet_localhost_id;
         $data->secret = random_string(15);
         $data->timemodified = time();
-        /** TODO
-        $data->poblation = '-';
-        $data->contruy = 'Spain';
-        **/
+        $data->city = '-';
+        $data->country = 'ES';
     }
 
     private function prepare_data_before_update($data) {
