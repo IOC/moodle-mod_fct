@@ -38,11 +38,15 @@ class fct_quadern_alumne_edit_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata['data'];
 
+        $user = $DB->get_record('user', array('id' => $data->alumne));
+        $fullname = fullname($user);
+        $mform->addElement('static', 'fct_nom_alumne', get_string('name'), $fullname);
+
         $attributes = array('size' => 16);
         $mform->addElement('text', 'dni', get_string('dni', 'mod_fct'), $attributes);
         $mform->setType('dni', PARAM_TEXT);
 
-        // data_naixement
+        // Field data_naixement.
         $attributes = array('size' => 48);
         $mform->addElement('date_selector', 'data_naixement', get_string('data_naixement', 'mod_fct'), $attributes);
 
