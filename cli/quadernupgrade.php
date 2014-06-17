@@ -27,8 +27,6 @@ require_once($CFG->libdir.'/clilib.php');
 require_once($CFG->dirroot . '/mod/fct/lib.php');
 require_once($CFG->dirroot . '/mod/fct/classes/fct_quadern_base.php');
 
-global $DB;
-
 $quadernstemp = $DB->get_records('fct_quadern_temp', array());
 $quadernscount = 0;
 

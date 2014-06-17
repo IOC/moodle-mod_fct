@@ -57,8 +57,6 @@ if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
     print_error('course module is incorrect');
 }
 
-global $USER;
-
 if ($subpage) {
     $class = 'fct_'.$subpage;
 } else {

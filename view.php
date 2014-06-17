@@ -61,8 +61,6 @@ if (!in_array($action, $validactions)) {
     print_error('novalidaction');
 }
 
-global $USER, $DB;
-
 if ($subpage) {
     $class = 'fct_'.$subpage;
 } else {
