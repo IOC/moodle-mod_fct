@@ -90,7 +90,8 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
             $output .= html_writer::link($editurl, get_string('edit'));
         }
 
-        if ($quadern->usuari->es_administrador) {
+        if ($quadern->usuari->es_administrador ||
+            ($quadern->usuari->es_tutor_empresa && $quadern->estat == 'proposat')) {
             $params = array(
                 'cmid' => $cm->id,
                 'id' => $quadern->id,

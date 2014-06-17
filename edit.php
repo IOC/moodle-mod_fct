@@ -94,7 +94,12 @@ if ($id) {
     $class = new $class($record);
 }
 
-$class->checkpermissions('edit');
+if ($delete) {
+    $class->checkpermissions('delete');
+} else {
+    $class->checkpermissions('edit');
+}
+
 
 $context = context_module::instance($cm->id);
 $url = new moodle_url('/mod/fct/edit.php', array('id' => $cmid, 'id' => $id, 'page' => $page, 'subpage' => $subpage, 'quadern' => $quadern));

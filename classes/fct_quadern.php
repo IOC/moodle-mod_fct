@@ -220,7 +220,11 @@ class fct_quadern extends fct_quadern_base {
     }
 
     public function delete_message() {
-        return get_string('segur_suprimir_quadern', 'fct', $this->empresa);
+        global $DB;
+
+        $user = $DB->get_record('user', array('id' => $this->alumne));
+        $fullname = fullname($user);
+        return get_string('segur_suprimir_quadern', 'fct', $fullname . ' (' . $this->nom_empresa . ')');
     }
 
     public function delete() {
@@ -423,6 +427,10 @@ class fct_quadern extends fct_quadern_base {
                 break;
 
             case 'delete' :
+                if ($this->usuari->es_tutor_empresa and $this->estat == 'proposat'
+                    and $this->usuari->id == $this->tutor_empresa) {
+                    return true;
+                }
                 if (!$this->usuari->es_administrador) {
                     print_error('nopermissions', 'fct');
                 }
