@@ -38,11 +38,16 @@ class fct_quadern_empresa_edit_form extends moodleform {
 
         $mform = $this->_form;
         $data = $this->_customdata['data'];
+        $empresa = new fct_quadern_empresa($data->id);
 
         $mform->addElement('header', 'headerempresa', get_string('empresa', 'mod_fct'));
 
-        $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'));
-        $mform->setType('nom', PARAM_TEXT);
+        if ($empresa->checkpermissions('edit_company_name')) {
+            $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'));
+            $mform->setType('nom', PARAM_TEXT);
+        } else {
+            $mform->addElement('static', 'nom', get_string('nom', 'mod_fct'));
+        }
         $mform->addElement('text', 'adreca', get_string('adreca', 'mod_fct'));
         $mform->setType('adreca', PARAM_TEXT);
         $mform->addElement('text', 'poblacio', get_string('poblacio', 'mod_fct'));

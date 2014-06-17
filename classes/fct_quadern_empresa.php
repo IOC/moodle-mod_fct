@@ -72,6 +72,13 @@ class fct_quadern_empresa extends fct_quadern_base {
         return $tab;
     }
 
+    public function set_data($data) {
+        if (!$this->checkpermissions('edit_company_name')) {
+            $data->nom = $this->nom_empresa;
+        }
+        parent::set_data($data);
+    }
+
     public function view() {
         global $PAGE;
 
