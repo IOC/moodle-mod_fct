@@ -23,11 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define("PAGENUM", "10");
+define('PAGENUM', 10);
 
 require_once('../../config.php');
 require_once('lib.php');
-require_once($CFG->dirroot . '/mod/fct/lib.php');
 require_once('classes/fct_base.php');
 
 require_login();
