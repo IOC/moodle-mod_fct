@@ -256,7 +256,8 @@ class fct_quadern_base extends fct_base {
 
         if ($type == 'edit' || $type == 'editlink' || $type == 'edit_company_name') {
             if ($type == 'edit_company_name') {
-                return ($this->usuari->es_tutor_centre && ($this->estat == 'proposat' || $this->estat == 'obert'));
+                return ($this->usuari->es_administrador ||
+                    ($this->usuari->es_tutor_centre && ($this->estat == 'proposat' || $this->estat == 'obert')));
             } else if (($this->estat == 'tancat' && !$this->usuari->es_administrador) || $this->usuari->es_tutor_empresa) {
                 if ($type == 'editlink') {
                     return false;

@@ -76,6 +76,7 @@ class fct_quadern_empresa extends fct_quadern_base {
         if (!$this->checkpermissions('edit_company_name')) {
             $data->nom = $this->nom_empresa;
         }
+        $this->nom_empresa = $data->nom;
         parent::set_data($data);
     }
 
