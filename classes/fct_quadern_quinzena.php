@@ -351,11 +351,6 @@ class fct_quadern_quinzena extends fct_base {
                     return false;
                 }
                 print_error('nopermissions', 'fct');
-            } else if ($quadern->estat == 'obert' && $this->usuari->es_tutor_empresa) {
-                if ($type === 'editlink') {
-                    return false;
-                }
-                print_error('nopermissions', 'fct');
             }
         } else {
             if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
