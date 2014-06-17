@@ -118,10 +118,10 @@ class fct_resum_seguiment extends fct_base {
         $quadern = new fct_quadern($this->quadern);
 
         if ($type == 'addquinzena') {
-            if ($quadern->estat != 'obert') {
+            if ($quadern->estat != 'obert' && !$this->usuari->es_administrador) {
                 return false;
             }
-            return ($this->usuari->es_alumne || $this->usuari->es_tutor_centre);
+            return true;
         }
 
         if ($quadern->estat == 'proposat' && !$this->usuari->es_administrador) {
