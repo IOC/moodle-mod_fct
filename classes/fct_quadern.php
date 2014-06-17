@@ -295,7 +295,7 @@ class fct_quadern extends fct_quadern_base {
 
         // Remove LOGSE cicles.
         $filter = function($value) {
-            return !preg_match('/logse/i', $value);
+            return !preg_match('/(?<!\()logse(?!\))/i', $value);
         };
         $data->cicles = array_filter($data->cicles, $filter);
 
