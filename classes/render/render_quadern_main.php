@@ -91,7 +91,7 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         }
 
         if ($quadern->usuari->es_administrador ||
-            ($quadern->usuari->es_tutor_empresa && $quadern->estat == 'proposat')) {
+            ($quadern->usuari->es_tutor_centre && $quadern->estat == 'proposat')) {
             $params = array(
                 'cmid' => $cm->id,
                 'id' => $quadern->id,

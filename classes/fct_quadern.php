@@ -427,8 +427,8 @@ class fct_quadern extends fct_quadern_base {
                 break;
 
             case 'delete' :
-                if ($this->usuari->es_tutor_empresa and $this->estat == 'proposat'
-                    and $this->usuari->id == $this->tutor_empresa) {
+                if ($this->usuari->es_tutor_centre and $this->estat == 'proposat'
+                    and $this->usuari->id == $this->tutor_centre) {
                     return true;
                 }
                 if (!$this->usuari->es_administrador) {
