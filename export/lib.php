@@ -92,7 +92,12 @@ class fct_export {
         $filter = function ($a) {
             return $a->id;
         };
-        $idsactivitats = array_map($filter, $activitats);
+
+        $idsactivitats = array();
+
+        if ($activitats) {
+            $idsactivitats = array_map($filter, $activitats);
+        }
 
         foreach ($quinzenes as $q) {
             $q->activitats = array_intersect($q->activitats, $idsactivitats);
@@ -224,7 +229,7 @@ class fct_export {
         return $hores;
     }
 
-    private function escape($value) {
+    public function escape($value) {
         switch ($this->format) {
             case 'latex':
                 $map = array(
@@ -251,7 +256,7 @@ class fct_export {
         }
     }
 
-    private function filter($value, $type=null) {
+    public function filter($value, $type=null) {
         global $DB;
 
         switch ($type) {
@@ -304,7 +309,7 @@ class fct_export {
         }
     }
 
-    private function get_value($values, $name) {
+    public function get_value($values, $name) {
         $value = $values;
         foreach (explode(':', $name) as $key) {
             $key = str_replace('-', '_', $key);
@@ -316,7 +321,7 @@ class fct_export {
         return $value;
     }
 
-    private function subst($doc, $values) {
+    public function subst($doc, $values) {
         $doc = $this->subst_strings($doc);
         $doc = $this->subst_blocks($doc, $values);
         return $this->subst_vars($doc, $values);
