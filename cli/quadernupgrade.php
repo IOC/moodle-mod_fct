@@ -34,17 +34,17 @@ foreach ($quadernstemp as $quaderntemp) {
     $quadern = new fct_quadern_base((int)$quaderntemp->id);
 
     if (isset($quaderntemp->alumne)) {
-        $recordalumne = $DB->get_record('user', array('username' => $quaderntemp->alumne));
+        $recordalumne = $DB->get_record('user', array('username' => $quaderntemp->alumne, 'mnethostid' => 1));
         $quadern->alumne = $recordalumne->id;
     }
 
     if (isset($quaderntemp->tutor_centre) && !empty($quaderntemp->tutor_centre)) {
-        $recordtutor_centre = $DB->get_record('user', array('username' => $quaderntemp->tutor_centre));
+        $recordtutor_centre = $DB->get_record('user', array('username' => $quaderntemp->tutor_centre, 'mnethostid' => 1));
         $quadern->tutor_centre = ($recordtutor_centre ? $recordtutor_centre->id : '');
     }
 
     if (isset($quaderntemp->tutor_empresa) && !empty($quaderntemp->tutor_empresa)) {
-        $recordtutor_empresa = $DB->get_record('user', array('username' => $quaderntemp->tutor_empresa));
+        $recordtutor_empresa = $DB->get_record('user', array('username' => $quaderntemp->tutor_empresa, 'mnethostid' => 1));
         $quadern->tutor_empresa = ($recordtutor_empresa ? $recordtutor_empresa->id : '');
     }
 
@@ -52,8 +52,8 @@ foreach ($quadernstemp as $quaderntemp) {
     $quadern->update();
     $quadernscount++;
     if ($quadernscount % 10 == 0) {
-        echo "Se han actualizado " .  $quadernscount . " quaderns de " . count($quadernstemp) . "\n";
+        echo "S'han actualizat " .  $quadernscount . " quaderns de " . count($quadernstemp) . "\n";
     }
 }
 
- echo "Se han actualizado" .  $quadernscount . "quaderns";
+ echo "S'han actualizat " .  $quadernscount . " quaderns";
