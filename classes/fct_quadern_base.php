@@ -269,6 +269,13 @@ class fct_quadern_base extends fct_base {
             }
         }
 
+        if ($type == 'image') {
+            return ($this->usuari->es_administrador ||
+               ($this->usuari->es_alumne && ($this->usuari->id == $this->alumne)) ||
+               ($this->usuari->es_tutor_centre && ($this->usuari->id == $this->tutor_centre)) ||
+               ($this->usuari->es_tutor_empresa && ($this->usuari->id == $this->tutor_empresa)));
+        }
+
         if (($this->usuari->es_alumne && ($this->usuari->id != $this->alumne)) ||
            ($this->usuari->es_tutor_centre && ($this->usuari->id != $this->tutor_centre)) ||
            ($this->usuari->es_tutor_empresa && ($this->usuari->id != $this->tutor_empresa))) {

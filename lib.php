@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once('classes/fct_instance.php');
+require_once('classes/fct_quadern_base.php');
 
 function fct_add_instance($data) {
     $fct = new stdClass;
@@ -86,6 +87,12 @@ function fct_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     require_login($course, true, $cm);
 
     $itemid = array_shift($args); // The first item in the $args array.
+
+    $quadern = new fct_quadern_base($itemid);
+
+    if (!$quadern->checkpermissions('image')) {
+        return false;
+    }
 
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
