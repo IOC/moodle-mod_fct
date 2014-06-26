@@ -289,7 +289,7 @@ class fct_quadern extends fct_quadern_base {
 
             $data->tutors_empresa = $this->prepare_form_select($tutorsempresa, 'id', 'fullname');
             $data->estats = self::$estats;
-            if ($this->usuari->es_tutor_centre) {
+            if (!$this->usuari->es_administrador && $this->usuari->es_tutor_centre) {
                 unset($data->estats[TANCAT]);
             }
         }
