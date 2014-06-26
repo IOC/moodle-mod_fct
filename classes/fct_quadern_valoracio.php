@@ -156,6 +156,10 @@ class fct_quadern_valoracio extends fct_quadern_base {
     }
 
     public function checkpermissions($type = 'view') {
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         if ($type === 'edit' || $type === 'editlink') {
             if ($this->usuari->es_administrador or
                 ($this->estat == 'obert' and ($this->usuari->es_tutor_centre or $this->usuari->es_tutor_empresa))) {

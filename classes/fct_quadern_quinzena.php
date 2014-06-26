@@ -339,6 +339,10 @@ class fct_quadern_quinzena extends fct_base {
     }
 
     public function checkpermissions($type = 'view') {
+
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
         if (!isset($this->quadern)) {
             print_error('noquadern');
         }

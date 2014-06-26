@@ -153,6 +153,10 @@ class fct_quadern_activitat extends fct_base {
             print_error('noquadern');
         }
 
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         $quadern = new fct_quadern_base((int)$this->quadern);
 
         if ($type == 'edit' || $type = 'editlink') {

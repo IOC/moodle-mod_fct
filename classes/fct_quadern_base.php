@@ -254,6 +254,10 @@ class fct_quadern_base extends fct_base {
 
     public function checkpermissions($type = 'view') {
 
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         if ($type == 'edit' || $type == 'editlink' || $type == 'edit_company_name') {
             if ($type == 'edit_company_name') {
                 return ($this->usuari->es_administrador ||

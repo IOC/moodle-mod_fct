@@ -82,6 +82,11 @@ class fct_quadern_dades_relatives extends fct_quadern_base {
     }
 
     public function checkpermissions($type = 'view') {
+
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         if (parent::checkpermissions($type)) {
             if ($type == 'edit' || $type = 'editlink') {
                 if ($this->usuari->es_alumne) {

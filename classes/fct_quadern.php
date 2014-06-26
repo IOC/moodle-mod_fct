@@ -389,6 +389,10 @@ class fct_quadern extends fct_quadern_base {
 
     public function checkpermissions($type = 'view') {
 
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         switch ($type) {
 
             case 'edit':

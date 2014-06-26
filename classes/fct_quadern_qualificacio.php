@@ -128,6 +128,10 @@ class fct_quadern_qualificacio extends fct_quadern_base {
     }
 
     public function checkpermissions($type = 'view') {
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         if ($type === 'edit' || $type == 'editlink') {
             if ($this->usuari->es_tutor_empresa and $this->estat == 'obert' and $this->qualificaciotype == 'global') {
                 return false;

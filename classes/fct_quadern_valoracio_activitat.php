@@ -198,6 +198,10 @@ class fct_quadern_valoracio_activitat extends fct_base {
     }
 
     public function checkpermissions($type = 'view') {
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         if ($type === 'edit' || $type === 'editlink') {
             $quadern = new fct_quadern($this->quadern);
             if ($quadern->usuari->es_administrador or
