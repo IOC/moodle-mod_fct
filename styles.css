@@ -134,6 +134,10 @@ form .frases_areatext li:hover {
     text-decoration: underline;
 }
 
+form .fct_search_elem {
+    margin-right: 2em;
+}
+
 #calendari_dies {
     font-size: 0.8em;
     margin: 5px 0;

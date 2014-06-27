@@ -35,10 +35,14 @@ class fct_quadern_search_form extends moodleform {
         $mform = $this->_form;
         $searchdata = $this->_customdata['searchdata'];
 
-        $elements[] =& $mform->createElement('select', 'searchcurs', get_string('curs', 'mod_fct'), $searchdata->cursos);
-        $elements[] =& $mform->createElement('select', 'searchcicle', get_string('cicle', 'mod_fct'), $searchdata->cicles);
-        $elements[] =& $mform->createElement('select', 'searchestat', get_string('estat', 'mod_fct'), $searchdata->estats);
-        $elements[] =& $mform->createElement('text', 'cerca', get_string('cerca', 'mod_fct'));
+        $elements[] =& $mform->createElement('static', '', '', get_string('curs', 'mod_fct').': ');
+        $elements[] =& $mform->createElement('select', 'searchcurs', get_string('curs', 'mod_fct'), $searchdata->cursos, array('class' => 'fct_search_elem'));
+        $elements[] =& $mform->createElement('static', '', ' ', get_string('cicle', 'mod_fct').': ');
+        $elements[] =& $mform->createElement('select', 'searchcicle', get_string('cicle', 'mod_fct'), $searchdata->cicles, array('class' => 'fct_search_elem'));
+        $elements[] =& $mform->createElement('static', '', ' ', get_string('estat', 'mod_fct').': ');
+        $elements[] =& $mform->createElement('select', 'searchestat', get_string('estat', 'mod_fct'), $searchdata->estats, array('class' => 'fct_search_elem'));
+        $elements[] =& $mform->createElement('static', '', ' ', get_string('cerca', 'mod_fct').': ');
+        $elements[] =& $mform->createElement('text', 'cerca', get_string('cerca', 'mod_fct'), array('class' => 'fct_search_elem'));
         $mform->setType('cerca', PARAM_TEXT);
 
         $mform->addGroup($elements, 'searchfields', '', array(''), false);
