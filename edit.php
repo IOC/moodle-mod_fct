@@ -29,8 +29,6 @@ require_once('lib.php');
 require_once($CFG->dirroot . '/mod/fct/lib.php');
 require_once('classes/fct_base.php');
 
-require_login();
-
 $cmid = required_param('cmid', PARAM_INT);    // Course Module ID
 $id = optional_param('id', false, PARAM_INT);    // Object ID
 $page = optional_param('page', 'quadern', PARAM_ALPHAEXT);
@@ -53,6 +51,9 @@ if (!$cm = get_coursemodule_from_id('fct', $cmid)) {
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('course is misconfigured');
 }
+
+require_course_login($course, false, $cm);
+
 if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
     print_error('course module is incorrect');
 }

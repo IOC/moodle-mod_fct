@@ -29,8 +29,6 @@ require_once('../../config.php');
 require_once('lib.php');
 require_once('classes/fct_base.php');
 
-require_login();
-
 $id = required_param('id', PARAM_INT);    // Course Module ID
 $page = optional_param('page', 'quadern', PARAM_ALPHANUMEXT);
 $index = optional_param('index', 0, PARAM_INT);
@@ -53,6 +51,9 @@ if (!$cm = get_coursemodule_from_id('fct', $id)) {
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('course is misconfigured');
 }
+
+require_course_login($course, false, $cm);
+
 if (!$fct = $DB->get_record('fct', array('id' => $cm->instance))) {
     print_error('course module is incorrect');
 }
@@ -101,9 +102,9 @@ $searchparams->cerca = $cerca;
 $url = new moodle_url('/mod/fct/view.php', array('id' => $id));
 $context = context_module::instance($cm->id);
 
+$PAGE->set_url($url);
 $PAGE->set_cm($cm, $course, $fct);
 $PAGE->set_context($context);
-$PAGE->set_url($url);
 $PAGE->set_title(format_string($fct->name));
 $PAGE->set_heading(format_string($fct->name));
 
