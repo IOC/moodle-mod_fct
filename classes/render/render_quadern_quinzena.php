@@ -32,7 +32,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         $data = array();
 
         foreach ($quinzenes as $quinzena) {
-                $data[] = $this->make_table_line($quinzena);
+            $data[] = $this->make_table_line($quinzena);
         }
 
         $table = new html_table();
@@ -55,25 +55,20 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $line = array();
 
-        $line['any'] = $quinzena->any;
-        $line['periode'] = format_string($quinzena->nom_periode($quinzena->periode));
-        $line['dies'] = count($quinzena->dies);
-        $line['hores'] = $quinzena->hores;
-
-        $buttons = array();
-
         $params = array(
             'id' => $PAGE->cm->id,
             'quadern' => $quinzena->quadern,
             'page' => 'quadern_quinzena',
-            'itemid' => $quinzena->id);
-        $viewlink = new moodle_url('./view.php', $params);
-        $params = array(
-            'src' => $OUTPUT->pix_url('t/preview'),
-            'alt' => get_string('preview'),
-            'class' => 'iconsmall',
+            'itemid' => $quinzena->id,
         );
-        $viewicon = html_writer::empty_tag('img', $params);
+        $viewlink = new moodle_url('./view.php', $params);
+
+        $line['any'] = html_writer::link($viewlink, $quinzena->any);
+        $line['periode'] = html_writer::link($viewlink, format_string($quinzena->nom_periode($quinzena->periode)));
+        $line['dies'] = html_writer::link($viewlink, count($quinzena->dies));
+        $line['hores'] = html_writer::link($viewlink, $quinzena->hores);
+
+        $buttons = array();
 
         $params = array(
             'cmid' => $PAGE->cm->id,
@@ -82,7 +77,6 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
             'page' => 'quadern_quinzena',
         );
         $editlink = new moodle_url('./edit.php', $params);
-        $buttons[] = html_writer::link($viewlink, $viewicon);
 
         if ($quinzena->checkpermissions('editlink')) {
 

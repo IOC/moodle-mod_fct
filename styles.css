@@ -171,7 +171,9 @@ _quaderns td, _seguiment td {
     padding: 0;
 }
 
-#quaderns tr:hover, _seguiment tr:hover {
+#quaderns tr:hover,
+_seguiment tr:hover,
+#quinzenes tr:hover {
     background: #dddddd;
 }
 
