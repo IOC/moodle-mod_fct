@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2014051601;            // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2014062700;            // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2013051400;            // Moodle 2.5
 $module->component = 'mod_fct';     // Full name of the plugin (used for diagnostics)
 $module->cron      = 0;                     // Period for cron to check this module (secs)
