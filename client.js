@@ -155,7 +155,7 @@ $('.quadern_quinzena_edit_form').ready(function() {
 });
 
 $('.quadern_search_form').ready(function() {
-    $('#id_searchcurs, #id_searchcicle, #id_searchestat').on('change',function() {
+    $('#id_searchcurs, #id_searchcicle, #id_searchestat, #id_cerca').on('change',function() {
         $(this).closest("form").submit();
     });
 });
