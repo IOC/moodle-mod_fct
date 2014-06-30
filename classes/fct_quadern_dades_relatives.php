@@ -69,9 +69,9 @@ class fct_quadern_dades_relatives extends fct_quadern_base {
             }
         }
 
-        $resum = new fct_resum_hores_fct($quadern->hores_credit,
-                                       $quadern->hores_anteriors,
-                                       $quadern->exempcio,
+        $resum = new fct_resum_hores_fct($this->hores_credit,
+                                       $this->hores_anteriors,
+                                       $this->exempcio,
                                        $hores_practiques);
 
         return $resum;
