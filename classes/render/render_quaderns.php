@@ -87,7 +87,7 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         $fullname = fullname($user);
         $line['tutor_empresa'] = html_writer::link($quadernlink, format_string($fullname));
         $line['estat'] = html_writer::link($quadernlink, fct_quadern::$estats[$quadern->estat], array('class' => 'fct_' . $quadern->estat));
-        $line['data_final'] = html_writer::link($quadernlink, userdate($quadern->data_final, get_string('strftimedate')));
+        $line['data_final'] = html_writer::link($quadernlink, userdate($quadern->data_final(), get_string('strftimedate')));
 
         $buttons = array();
 
