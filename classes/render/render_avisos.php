@@ -63,13 +63,22 @@ class mod_fct_avisos_renderer extends plugin_renderer_base {
         $line = array();
 
         $line[] = userdate($avis->data, get_string('strftimedatetimeshort'));
-        $line[] = $avis->titol_avis();
+        $linkto = $this->url_avis($avis, $fct);
+        $line[] = html_writer::link($linkto, $avis->titol_avis());
 
         $quadern = $avis->quadern();
 
         $user = $DB->get_record('user', array('id' => $quadern->alumne));
         $fullname = fullname($user);
-        $line[] = $fullname. ' ' . $quadern->nom_empresa;
+
+        $params = array(
+            'id' => $PAGE->cm->id,
+            'quadern' => $avis->quadern,
+            'page' => 'quadern_main',
+        );
+        $linkto = new moodle_url('./view.php', $params);
+
+        $line[] = html_writer::link($linkto, $fullname . ' ' . $quadern->nom_empresa);
 
         $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $avis->id, 'page' => 'avisos', 'fct' => $fct->id, 'delete' => 1));
         $deleteicon = html_writer::empty_tag('img',
@@ -79,6 +88,72 @@ class mod_fct_avisos_renderer extends plugin_renderer_base {
         $line[] = $deletebutton;
 
         return $line;
+    }
+
+    private function url_avis($avis, $fct) {
+        global $PAGE;
+
+        $params = array(
+            'id' => $PAGE->cm->id,
+            'quadern' => $avis->quadern,
+        );
+
+        switch ($avis->tipus) {
+            case 'dades_alumne':
+                $params['page'] = 'quadern_dades';
+                $params['subpage'] = 'quadern_alumne';
+                break;
+            case 'dades_conveni':
+                $params['page'] = 'quadern_dades';
+                $params['subpage'] = 'quadern_conveni';
+                break;
+            case 'dades_empresa':
+                $params['page'] = 'quadern_dades';
+                $params['subpage'] = 'quadern_empresa';
+                break;
+            case 'dades_horari':
+                $params['page'] = 'quadern_dades';
+                $params['subpage'] = 'quadern_horari';
+                break;
+            case 'dades_relatives':
+                $params['page'] = 'quadern_dades';
+                $params['subpage'] = 'quadern_dades_relatives';
+                break;
+            case 'pla_activitats':
+                $params['page'] = 'quadern_activitat';
+                break;
+            case 'qualificacio_quadern':
+                $params['page'] = 'quadern_valoracio';
+                $params['subpage'] = 'quadern_qualificacio';
+                break;
+            case 'quinzena_afegida':
+            case 'quinzena_alumne':
+            case 'quinzena_empresa':
+            case 'quinzena_tutor':
+                $params['page'] = 'quadern_quinzena';
+                $params['itemid'] = $avis->quinzena;
+                break;
+            case 'quinzena_suprimida':
+                $params['page'] = 'quadern_quinzena';
+                break;
+            case 'valoracio_actituds_final':
+                $params['page'] = 'quadern_valoracio';
+                $params['valoracio'] = 'final';
+                break;
+            case 'valoracio_actituds_parcial':
+                $params['page'] = 'quadern_valoracio';
+                $params['valoracio'] = 'parcial';
+                break;
+            case 'valoracio_activitats':
+                $params['page'] = 'quadern_valoracio';
+                $params['subpage'] = 'quadern_valoracio_activitat';
+                break;
+            case 'valoracio_resultats':
+                $params['page'] = 'quadern_valoracio';
+                $params['valoracio'] = 'resultats';
+                break;
+        }
+        return new moodle_url('./view.php', $params);
     }
 
 }
