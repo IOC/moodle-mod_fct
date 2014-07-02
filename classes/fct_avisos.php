@@ -174,7 +174,7 @@ class fct_avisos extends fct_base{
             $this->usuari = new fct_usuari($this->fct, $USER->id);
         }
 
-        if (!$this->usuari->es_tutor_centre) {
+        if (!$this->usuari->es_administrador && !$this->usuari->es_tutor_centre) {
             print_error('nopermissions', 'fct');
         }
     }

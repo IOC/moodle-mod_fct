@@ -290,7 +290,7 @@ abstract class fct_base {
                                      new moodle_url('view.php', array('id' => $id, 'page' => 'quadern')),
                                      get_string('quaderns', 'mod_fct'));
 
-        if ($this->usuari->es_tutor_centre) {
+        if ($this->usuari->es_administrador || $this->usuari->es_tutor_centre) {
 
             $row['aviso'] = new tabobject('avisos',
                                          new moodle_url('view.php', array('id' => $id, 'page' => 'avisos')),
