@@ -132,8 +132,8 @@ class fct_quadern_horari extends fct_quadern_base {
 
         $data->convenis = $this->convenis;
 
-        $hora_inici = $data->hourfrom . '.' . $data->minutfrom;
-        $hora_final = $data->hourto . '.' . $data->minutto;
+        $hora_inici = ((float) $data->hourfrom + (float) $data->minutfrom / 60);
+        $hora_final = ((float) $data->hourto + (float) $data->minutto / 60);
 
         $data->convenis->$conveni->horari[] = array('dia' => $this->dies[$data->dies],
                                                   'hora_inici' => $hora_inici,
