@@ -287,7 +287,7 @@ class fct_quadern extends fct_quadern_base {
                 $tutorempresa->fullname = fullname($tutorempresa);
             }
 
-            $data->tutors_empresa = $this->prepare_form_select($tutorsempresa, 'id', 'fullname');
+            $data->tutors_empresa = array('' => '-') + $this->prepare_form_select($tutorsempresa, 'id', 'fullname');
             $data->estats = self::$estats;
             if (!$this->usuari->es_administrador && $this->usuari->es_tutor_centre) {
                 unset($data->estats[TANCAT]);
@@ -309,8 +309,7 @@ class fct_quadern extends fct_quadern_base {
             $record->fullname = fullname($record);
         }
 
-        $data->tutors_centre = $this->prepare_form_select($records, 'id', 'fullname');
-
+        $data->tutors_centre = array('' => '-') + $this->prepare_form_select($records, 'id', 'fullname');
     }
 
     protected function prepare_form_select($objects, $selectkey, $selectvalue) {
