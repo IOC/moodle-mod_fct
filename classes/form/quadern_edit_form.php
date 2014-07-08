@@ -56,9 +56,7 @@ class fct_quadern_edit_form extends moodleform {
         $mform->addRule('nom_empresa', null, 'required');
         $mform->setType('nom_empresa', PARAM_TEXT);
 
-        if (!$data->es_alumne) {
-            $mform->addElement('select', 'cicle', get_string('cicle', 'mod_fct'), $data->cicles);
-        }
+        $mform->addElement('select', 'cicle', get_string('cicle', 'mod_fct'), $data->cicles);
 
         $mform->addElement('select', 'tutor_centre', get_string('tutor_centre', 'mod_fct'), $data->tutors_centre);
 
