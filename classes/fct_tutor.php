@@ -90,7 +90,7 @@ class fct_tutor extends fct_base {
 
         $cm = get_coursemodule_from_id('fct', $data->cmid);
         $roleid = $DB->get_field('role', 'id', array('shortname' => 'tutorempresa'));
-        $context = get_context_instance(CONTEXT_COURSE, $cm->course);
+        $context = context_course::instance($cm->course);
         $plugin = enrol_get_plugin('manual');
         $conditions = array('enrol' => 'manual', 'courseid' => $cm->course);
         $enrol = $DB->get_record('enrol', $conditions, '*', MUST_EXIST);

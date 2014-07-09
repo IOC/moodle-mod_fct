@@ -46,7 +46,7 @@ class fct_usuari {
         $this->email = $record->email;
 
         if ($cm = get_coursemodule_from_instance('fct', $fctid)) {
-            $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+            $context = context_module::instance($cm->id);
 
             $this->es_administrador = (has_capability("mod/fct:admin", $context, $userid, false)
                 or has_capability("moodle/site:config", $context, $userid));

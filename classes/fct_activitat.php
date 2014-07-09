@@ -81,7 +81,7 @@ class fct_activitat extends fct_base{
             print_error('nofct');
         } else {
             $cm = get_coursemodule_from_instance('fct', $this->fct);
-            $context = get_context_instance(CONTEXT_COURSE, $cm->course);
+            $context = context_course::instance($cm->course);
 
             $alumnes = get_role_users(5, $context);
             foreach ($alumnes as $alumne) {
@@ -101,7 +101,7 @@ class fct_activitat extends fct_base{
 
             $data->tutor_empresa = $this->prepare_form_select($tutorsempresa, 'id', 'fullname', $data->tutor_empresa);
 
-            $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+            $context = context_module::instance($cm->id);
             $records = get_users_by_capability($context, 'mod/fct:tutor_centre');
             foreach ($records as $record) {
                 $record->fullname = fullname($record);
