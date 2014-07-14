@@ -154,6 +154,10 @@ class fct_quadern_activitat_cicles extends fct_base {
             print_error('noquadern');
         }
 
+        if ($this->usuari->es_administrador) {
+            return true;
+        }
+
         $quadern = new fct_quadern_base((int)$this->quadern);
 
         if (($this->usuari->es_alumne && ($this->usuari->id != $quadern->alumne)) ||
@@ -165,6 +169,5 @@ class fct_quadern_activitat_cicles extends fct_base {
 
     public static function validation($data) {
     }
-
 
 }
