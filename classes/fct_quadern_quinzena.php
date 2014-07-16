@@ -79,7 +79,7 @@ class fct_quadern_quinzena extends fct_base {
                                         array('id' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                         get_string('quinzenes', 'fct'));
 
-        if (self::checkpermissions('editlink')) {
+        if (self::checkpermissions('addlink')) {
             $subtree[] = new tabobject('afegeix_quinzena', new moodle_url('/mod/fct/edit.php',
                                             array('cmid' => $id, 'quadern' => $this->quadern, 'page' => 'quadern_quinzena')),
                                             get_string('afegeix_quinzena', 'fct'));
@@ -349,9 +349,23 @@ class fct_quadern_quinzena extends fct_base {
 
         $quadern = new fct_quadern_base((int)$this->quadern);
 
-        if ($type === 'edit' || $type === 'editlink') {
-            if (($quadern->estat == 'tancat' || $quadern->estat == 'proposat') && !$this->usuari->es_administrador) {
+        if ($type === 'add' || $type === 'addlink') {
+            if ($quadern->estat == 'tancat' || $quadern->estat == 'proposat' || $this->usuari->es_tutor_empresa) {
+                if ($type === 'addlink') {
+                    return false;
+                }
+                print_error('nopermissions', 'fct');
+            }
+        } else if ($type === 'edit' || $type === 'editlink') {
+            if ($quadern->estat == 'tancat' || $quadern->estat == 'proposat') {
                 if ($type === 'editlink') {
+                    return false;
+                }
+                print_error('nopermissions', 'fct');
+            }
+        } else if ($type === 'delete' || $type === 'deletelink') {
+            if ($quadern->estat == 'tancat' || $quadern->estat == 'proposat' || $this->usuari->es_tutor_empresa) {
+                if ($type === 'deletelink') {
                     return false;
                 }
                 print_error('nopermissions', 'fct');

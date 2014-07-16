@@ -97,6 +97,8 @@ if ($id) {
 
 if ($delete) {
     $class->checkpermissions('delete');
+} else if ($page == 'quadern_quinzena' and !$id) {
+      $class->checkpermissions('add');
 } else {
     $class->checkpermissions('edit');
 }
