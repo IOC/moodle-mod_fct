@@ -288,6 +288,7 @@ class fct_quadern extends fct_quadern_base {
             }
 
             $data->tutors_empresa = array('' => '-') + $this->prepare_form_select($tutorsempresa, 'id', 'fullname');
+            core_collator::asort($data->tutors_empresa);
             $data->estats = self::$estats;
             if (!$this->usuari->es_administrador && $this->usuari->es_tutor_centre) {
                 unset($data->estats[TANCAT]);
@@ -310,6 +311,7 @@ class fct_quadern extends fct_quadern_base {
         }
 
         $data->tutors_centre = array('' => '-') + $this->prepare_form_select($records, 'id', 'fullname');
+        core_collator::asort($data->tutors_centre);
     }
 
     protected function prepare_form_select($objects, $selectkey, $selectvalue) {
