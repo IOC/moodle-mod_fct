@@ -114,9 +114,9 @@ class fct_quadern_quinzena extends fct_base {
             }
         }
 
-        if (!isset($this->usuari)) {
-                $userid = $USER->id;
-                $this->usuari = new fct_usuari($this->fct, $userid);
+        if (!isset($this->usuari) and $this->fct) {
+            $userid = $USER->id;
+            $this->usuari = new fct_usuari($this->fct, $userid);
         }
     }
 
