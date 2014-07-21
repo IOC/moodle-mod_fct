@@ -180,24 +180,24 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('valoracions', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quinzena->valoracions, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', nl2br($quinzena->valoracions), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quinzena->observacions_alumne, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', nl2br($quinzena->observacions_alumne), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::tag('span', get_string('retroaccio', 'fct'), array('class' => 'databoxtitle'));
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('tutor_centre', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quinzena->observacions_centre, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', nl2br($quinzena->observacions_centre), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('tutor_empresa', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quinzena->observacions_empresa, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', nl2br($quinzena->observacions_empresa), array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::start_div('fct_actions');
