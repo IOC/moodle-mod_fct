@@ -185,7 +185,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('datagroup');
         $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $quinzena->observacions, array('class' => 'datacontent'));
+        $output .= html_writer::tag('span', $quinzena->observacions_alumne, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
         $output .= html_writer::tag('span', get_string('retroaccio', 'fct'), array('class' => 'databoxtitle'));
