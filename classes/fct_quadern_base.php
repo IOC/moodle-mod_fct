@@ -363,6 +363,14 @@ class fct_quadern_base extends fct_base {
         return isset($this->convenis) ? end($this->convenis) : false;
     }
 
+    public function nom_cicle() {
+        global $DB;
+        if ($cicle = $DB->get_field('fct_cicle', 'nom', array('id' => $this->cicle))) {
+            return $cicle;
+        }
+        return '';
+    }
+
     private function create_empresa($data) {
         if (!$this->empresa) {
             $empresa = new stdClass;

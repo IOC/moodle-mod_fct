@@ -50,6 +50,11 @@ class mod_fct_quadern_main_renderer extends plugin_renderer_base {
         $output .= html_writer::tag('span', $quadern->nom_empresa, array('class' => 'datacontent'));
         $output .= html_writer::end_div();
 
+        $output .= html_writer::start_div('datagroup');
+        $output .= html_writer::tag('span', get_string('cicle', 'fct').':', array('class' => 'datatitle'));
+        $output .= html_writer::tag('span', $quadern->nom_cicle(), array('class' => 'datacontent'));
+        $output .= html_writer::end_div();
+
         $user = $DB->get_record('user', array('id' => $quadern->tutor_centre));
         $fullname = fullname($user);
         $userurl = new moodle_url('/user/view.php', array('id' => $quadern->tutor_centre, 'course' => $PAGE->course->id));
