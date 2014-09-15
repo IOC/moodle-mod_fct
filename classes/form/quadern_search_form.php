@@ -33,6 +33,7 @@ class fct_quadern_search_form extends moodleform {
     public function definition() {
 
         $mform = $this->_form;
+        $mform->updateAttributes(array('autocomplete' => 'on'));
         $searchdata = $this->_customdata['searchdata'];
 
         $elements[] =& $mform->createElement('static', '', '', get_string('curs', 'mod_fct').': ');
