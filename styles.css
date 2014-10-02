@@ -222,6 +222,11 @@ _quaderns td a:hover, _seguiment td a:hover {
     width: 100%;
 }
 
+.fct_message {
+    width: 100%;
+    text-align: center;
+}
+
 .datagroup {
     margin: 0.5em 0;
 }

@@ -135,9 +135,8 @@ class fct_quadern_qualificacio extends fct_quadern_base {
         if ($type === 'edit' || $type == 'editlink') {
             if ($this->usuari->es_tutor_empresa and $this->estat == 'obert' and $this->qualificaciotype == 'global') {
                 return false;
-            } else if ($this->usuari->es_administrador or
-                ($this->estat == 'obert' and ($this->usuari->es_tutor_centre or $this->usuari->es_tutor_empresa))) {
-                    return true;
+            } else if ($this->estat == 'obert' and ($this->usuari->es_tutor_centre or $this->usuari->es_tutor_empresa)) {
+                return true;
             } else if ($type === 'editlink') {
                 return false;
             } else {

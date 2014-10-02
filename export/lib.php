@@ -26,6 +26,7 @@
 require_once($CFG->dirroot . '/mod/fct/classes/fct_dades_centre.php');
 require_once($CFG->dirroot . '/mod/fct/classes/fct_activitat.php');
 require_once($CFG->dirroot . '/mod/fct/classes/fct_quadern_valoracio_activitat.php');
+require_once($CFG->dirroot . '/mod/fct/locallib.php');
 
 class fct_export {
 
@@ -103,7 +104,7 @@ class fct_export {
             $q->activitats = array_intersect($q->activitats, $idsactivitats);
         }
         $horesrealitzades = $this->hores_realitzades_quadern($quinzenes);
-        $ultimquadern = $this->ultim_quadern();
+        $ultimquadern = fct_ultim_quadern($this->quadern->alumne, $this->quadern->cicle);
         $resumhores = $this->resum_hores_fct();
         $doc = $this->subst($doc, (object) array(
             'quadern' => $this->quadern,
@@ -130,47 +131,6 @@ class fct_export {
         return $doc;
     }
 
-    private function get_sql_quaderns($orderby = '') {
-        $sql = "SELECT q.id AS id,"
-            . " CONCAT(ua.firstname, ' ', ua.lastname) AS alumne,"
-            . " q.nom_empresa AS empresa,"
-            . " c.nom AS cicle_formatiu,"
-            . " CONCAT(uc.firstname, ' ', uc.lastname) AS tutor_centre,"
-            . " CONCAT(ue.firstname, ' ', ue.lastname) AS tutor_empresa,"
-            . " q.estat AS estat,"
-            . " q.data_final AS data_final"
-            . " FROM {fct_quadern} q"
-            . " JOIN {fct_cicle} c ON q.cicle = c.id"
-            . " JOIN {user} ua ON q.alumne = ua.id"
-            . " LEFT JOIN {user} uc ON q.tutor_centre = uc.id"
-            . " LEFT JOIN {user} ue ON q.tutor_empresa = ue.id"
-            . " WHERE q.cicle = :cicle"
-            . " AND q.alumne = :alumne";
-
-        if (!empty($orderby)) {
-            $sql .= " ORDER BY " . $orderby;
-        }
-        return $sql;
-    }
-
-    private function ultim_quadern() {
-        global $DB;
-
-        $sql = $this->get_sql_quaderns('q.data_final');
-        $params = array(
-            'cicle' => $this->quadern->cicle,
-            'alumne' => $this->quadern->alumne,
-        );
-
-        $quaderns = array();
-        $records = $DB->get_records_sql($sql, $params);
-        foreach ($records as $record) {
-            $quaderns[] = new fct_quadern_base($record->id);
-        }
-
-        return array_pop($quaderns);
-    }
-
     private function resum_hores_fct() {
         global $DB;
 
@@ -188,7 +148,7 @@ class fct_export {
             $where = " AND q.data_final <= :datafinal";
         }
 
-        $sql = $this->get_sql_quaderns();
+        $sql = fct_get_sql_quaderns();
         $params = array(
             'cicle' => $this->quadern->cicle,
             'alumne' => $this->quadern->alumne,

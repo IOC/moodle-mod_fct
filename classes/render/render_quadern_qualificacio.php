@@ -50,39 +50,62 @@ class mod_fct_quadern_qualificacio_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_div('databox');
 
-        $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('qualificacio', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $apte, array('class' => 'datacontent'));
-        $output .= html_writer::end_div();
-
-        $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', '', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', $nota, array('class' => 'datacontent'));
-        $output .= html_writer::end_div();
-
-        $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('data', 'fct').':', array('class' => 'datatitle'));
-
-        if ($quadern->qualificacio->data) {
-            $output .= html_writer::tag('span', userdate($quadern->data, get_string('strftimedate')), array('class' => 'datacontent'));
+        $lastquadern = array();
+        if ($quadern->qualificaciotype == 'global') {
+            $lastquadern = fct_ultim_quadern($quadern->alumne, $quadern->cicle);
         }
-        $output .= html_writer::end_div();
+        if (empty($lastquadern)) {
+            $lastquadern = (object) array ('id' => $quadern->id);
+        }
 
-        $output .= html_writer::start_div('datagroup');
-        $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
-        $output .= html_writer::tag('span', nl2br($quadern->observacions), array('class' => 'datacontent'));
-        $output .= html_writer::end_div();
+        if ($lastquadern->id == $quadern->id) {
+            $output .= html_writer::start_div('datagroup');
+            $output .= html_writer::tag('span', get_string('qualificacio', 'fct').':', array('class' => 'datatitle'));
+            $output .= html_writer::tag('span', $apte, array('class' => 'datacontent'));
+            $output .= html_writer::end_div();
 
-        if ($quadern->checkpermissions('editlink')) {
-            $cm = get_coursemodule_from_instance('fct', $quadern->fct);
-            $link = new moodle_url('./edit.php', array('cmid' => $cm->id,
-                                    'quadern' => $quadern->id,
-                                    'page' => 'quadern_valoracio',
-                                    'subpage' => 'quadern_qualificacio',
-                                    'qualificaciotype' => $quadern->qualificaciotype));
+            $output .= html_writer::start_div('datagroup');
+            $output .= html_writer::tag('span', '', array('class' => 'datatitle'));
+            $output .= html_writer::tag('span', $nota, array('class' => 'datacontent'));
+            $output .= html_writer::end_div();
 
-            $output .= html_writer::start_div('fct_actions');
-            $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+            $output .= html_writer::start_div('datagroup');
+            $output .= html_writer::tag('span', get_string('data', 'fct').':', array('class' => 'datatitle'));
+
+            if ($quadern->qualificacio->data) {
+                $output .= html_writer::tag('span', userdate($quadern->data, get_string('strftimedate')), array('class' => 'datacontent'));
+            }
+            $output .= html_writer::end_div();
+
+            $output .= html_writer::start_div();
+            $output .= html_writer::tag('span', get_string('observacions', 'fct').':', array('class' => 'datatitle'));
+            $output .= html_writer::tag('span', nl2br($quadern->observacions), array('class' => 'datacontent'));
+            $output .= html_writer::end_div();
+
+            if ($quadern->checkpermissions('editlink')) {
+                $cm = get_coursemodule_from_instance('fct', $quadern->fct);
+                $link = new moodle_url('./edit.php', array('cmid' => $cm->id,
+                                        'quadern' => $quadern->id,
+                                        'page' => 'quadern_valoracio',
+                                        'subpage' => 'quadern_qualificacio',
+                                        'qualificaciotype' => $quadern->qualificaciotype));
+
+                $output .= html_writer::start_div('fct_actions');
+                $output .= html_writer::link($link, get_string('edit'), array('class' => 'datalink'));
+                $output .= html_writer::end_div();
+            }
+
+        } else {
+            $params = array(
+                'id' => $this->page->cm->id,
+                'quadern' => $lastquadern->id,
+                'page' => 'quadern_qualificacio',
+                'qualificaciotype' => 'global',
+            );
+            $output .= html_writer::start_div('fct_message');
+            $url = new moodle_url('./view.php', $params);
+            $output .= html_writer::tag('span', get_string('qualificacio_global_es_troba', 'fct'));
+            $output .= html_writer::link($url, get_string('qualificacio_global_a_ultim_quadern', 'fct'), array('class' => 'datalink'));
             $output .= html_writer::end_div();
         }
 

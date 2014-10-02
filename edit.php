@@ -27,6 +27,7 @@
 require_once('../../config.php');
 require_once('lib.php');
 require_once($CFG->dirroot . '/mod/fct/lib.php');
+require_once($CFG->dirroot . '/mod/fct/locallib.php');
 require_once('classes/fct_base.php');
 
 $cmid = required_param('cmid', PARAM_INT);    // Course Module ID
@@ -101,6 +102,21 @@ if ($delete) {
       $class->checkpermissions('add');
 } else {
     $class->checkpermissions('edit');
+}
+
+if ($page == 'quadern_valoracio' and $subpage == 'quadern_qualificacio' and $qualificaciotype == 'global') {
+    if ($lastquadern = fct_ultim_quadern($class->alumne, $class->cicle)) {
+        if ($class->id != $lastquadern->id) {
+            $params = array(
+                'id' => $cm->id,
+                'quadern' => $class->id,
+                'page' => 'quadern_qualificacio',
+                'qualificaciotype' => 'global',
+            );
+            $url = new moodle_url('/mod/fct/view.php', $params);
+            redirect($url);
+        }
+    }
 }
 
 
