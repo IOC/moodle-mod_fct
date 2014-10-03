@@ -65,10 +65,10 @@ class fct_avisos extends fct_base{
 
                 $baseurl = new moodle_url('/mod/fct/view.php', array('id' => $PAGE->cm->id, 'page' => 'avisos'));
 
-                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUMAVIS, $baseurl, 'index');
                 $table = $output->avisos_table($avisos['records']);
                 echo $table;
-                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUM, $baseurl, 'index');
+                echo $OUTPUT->paging_bar($avisos['totalrecords'], $index, PAGENUMAVIS, $baseurl, 'index');
             } else {
                 echo $OUTPUT->notification(get_string('cap_avis', 'fct'));
             }
@@ -89,7 +89,7 @@ class fct_avisos extends fct_base{
         $sql = "SELECT a.id, a.objecte" . $where;
         $countsql = "SELECT count(1)"  . $where;
 
-        if ($records = $DB->get_records_sql($sql, null,  $index * PAGENUM, PAGENUM)) {
+        if ($records = $DB->get_records_sql($sql, null,  $index * PAGENUMAVIS, PAGENUMAVIS)) {
             $totalrecords = $DB->count_records_sql($countsql);
 
             $avisos = array();
@@ -107,12 +107,12 @@ class fct_avisos extends fct_base{
 
         $DB->delete_records('fct_avis', array('id' => $this->id));
         return true;
-
     }
 
     public function delete_message() {
         return get_string('segur_suprimir_avisos', 'fct');
     }
+
     public function quadern() {
         if (!isset($this->quadern)) {
             print_error('noquadern');

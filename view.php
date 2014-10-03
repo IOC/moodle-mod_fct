@@ -24,6 +24,7 @@
  */
 
 define('PAGENUM', 10);
+define('PAGENUMAVIS', 20);
 
 require_once('../../config.php');
 require_once('lib.php');
