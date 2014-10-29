@@ -37,15 +37,19 @@ class fct_tutor_edit_form extends moodleform {
         $data = $this->_customdata['data'];
 
         $mform->addElement('text', 'dni', get_string('dni', 'mod_fct'));
+        $mform->addRule('dni', null, 'required');
         $mform->setType('dni', PARAM_TEXT);
 
         $mform->addElement('text', 'firstname', get_string('nom', 'fct'));
+        $mform->addRule('firstname', null, 'required');
         $mform->setType('firstname', PARAM_TEXT);
 
         $mform->addElement('text', 'lastname', get_string('cognoms', 'fct'));
+        $mform->addRule('lastname', null, 'required');
         $mform->setType('lastname', PARAM_TEXT);
 
         $mform->addElement('text', 'email', get_string('email', 'fct'));
+        $mform->addRule('email', null, 'required');
         $mform->setType('email', PARAM_EMAIL);
         $mform->addRule('email', get_string('validacio_email', 'fct'), 'email', null, 'client');
 

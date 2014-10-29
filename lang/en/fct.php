@@ -192,6 +192,7 @@ $string['minuts'] = 'minuts';
 $string['mode_manteniment'] = 'No es pot utilitzar temporalment el Quadern d\'FCT perquè s\'estan realitzant tasques de manteniment.';
 $string['modulename'] = 'FCT';
 $string['modulenameplural'] = 'FCT';
+$string['nie_no_valid'] = 'El NIE ha de tenir una lletra (X,Y,Z), 8 dígits i la lletra';
 $string['nif'] = 'NIF';
 $string['noapte'] = 'No apte/a';
 $string['nom'] = 'Nom';

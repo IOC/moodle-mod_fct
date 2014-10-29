@@ -114,4 +114,11 @@ class fct_quadern_alumne extends fct_quadern_base {
              'ges' => get_string('ges', 'fct'));
     }
 
+    public static function validation($data) {
+
+        $errors = parent::comprovar_dni($data, false);
+
+        return $errors;
+    }
+
 }

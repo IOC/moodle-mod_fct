@@ -109,35 +109,9 @@ class fct_tutor extends fct_base {
 
     public static function validation($data) {
 
-        $errors = self::comprovar_dni($data);
+        $errors = parent::comprovar_dni($data);
 
         return $errors;
-    }
-
-    private static function comprovar_dni($data) {
-        global $CFG, $DB;
-
-        $dni = strtolower(trim($data['dni']));
-
-        if (!preg_match('/^[0-9]{8}[a-z]$/', $dni)) {
-            return array('dni' => fct_string('dni_no_valid'));
-        }
-        if ($DB->record_exists('user', array('username' => $dni, 'deleted' => 0,
-                          'mnethostid' => $CFG->mnet_localhost_id))) {
-            return array('dni' => fct_string('dni_existent'));
-        }
-
-        $letter = substr($dni, -1, 1);
-        $number = substr($dni, 0, 8);
-
-        $mod = $number % 23;
-        $validletters = strtolower("TRWAGMYFPDXBNJZSQVHLCKE");
-        $correctletter = substr($validletters, $mod, 1);
-
-        if ($correctletter != $letter) {
-            return array('dni' => get_string('dni_lletra_incorrecta', 'fct'));
-        }
-        return true;
     }
 
     public function checkpermissions($type = 'view') {
