@@ -46,6 +46,7 @@ class fct_quadern_empresa_edit_form extends moodleform {
             $attributes = array('size' => 32);
             $mform->addElement('text', 'nom', get_string('nom', 'mod_fct'), $attributes);
             $mform->setType('nom', PARAM_TEXT);
+            $mform->addRule('nom', get_string('maximumchars', '', 64), 'maxlength', 64, 'client');
         } else {
             $mform->addElement('static', 'nom', get_string('nom', 'mod_fct'));
         }
