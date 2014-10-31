@@ -109,7 +109,7 @@ class fct_tutor extends fct_base {
 
     public static function validation($data) {
 
-        $errors = parent::comprovar_dni($data);
+        $errors = parent::comprovar_dni($data['dni'], 'dni', true);
 
         return $errors;
     }

@@ -91,4 +91,20 @@ class fct_quadern_empresa extends fct_quadern_base {
         return true;
 
     }
+
+    public static function validation($data) {
+
+        $error1 = parent::comprovar_dni($data['dni_responsable'], 'dni_responsable');
+        $error2 = parent::comprovar_dni($data['dni_tutor'], 'dni_tutor');
+
+        if (!is_array($error1)) {
+            $error1 = array();
+        }
+        if (!is_array($error2)) {
+            $error2 = array();
+        }
+
+        $error = array_merge($error1, $error2);
+        return empty($error) ? true : $error;
+    }
 }
