@@ -384,7 +384,7 @@ abstract class fct_base {
 
     abstract public function prepare_form_data($data);
 
-    protected static function comprovar_dni($document, $inputname, $required = false) {
+    protected static function comprovar_dni($document, $inputname, $required = false, $newuser = false) {
         global $CFG, $DB;
 
         $dni = strtolower(trim($document));
@@ -409,9 +409,9 @@ abstract class fct_base {
             }
         }
 
-        if ($DB->record_exists('user', array('username' => $dni, 'deleted' => 0,
-                          'mnethostid' => $CFG->mnet_localhost_id))) {
-            return array($inputname => fct_string('dni_existent'));
+        if ($newuser and $DB->record_exists('user', array('username' => $dni, 'deleted' => 0,
+                            'mnethostid' => $CFG->mnet_localhost_id))) {
+              return array($inputname => fct_string('dni_existent'));
         }
 
         $mod = $number % 23;
