@@ -44,24 +44,45 @@ class fct_quadern_edit_form extends moodleform {
             return;
         }
 
-        if (!$data->es_alumne) {
-            $mform->addElement('select', 'alumne', get_string('alumne', 'mod_fct'), $data->alumnes);
+        if ($data->es_tutor_centre) {
+            // User
+            $alumne = (isset($data->alumnes[$data->alumne])) ? $data->alumnes[$data->alumne] : '';
+            $mform->addElement('static', null, get_string('alumne', 'mod_fct'), $alumne);
+
+            // Nom empresa
+            $mform->addElement('static', null, get_string('empresa', 'mod_fct'), $data->nom_empresa);
+
+            // Cicle
+            $cicle = (isset($data->cicles[$data->cicle])) ? $data->cicles[$data->cicle] : '';
+            $mform->addElement('static', null, get_string('cicle', 'mod_fct'), $cicle);
+
+            // Tutor centre
+            $tutorcentre = (isset($data->tutors_centre[$data->tutor_centre])) ? $data->tutors_centre[$data->tutor_centre] : '';
+            $mform->addElement('static', null, get_string('tutor_centre', 'mod_fct'), $tutorcentre);
+
+            // Tutor empresa
+            $tutorempresa = (isset($data->tutors_empresa[$data->tutor_empresa])) ? $data->tutors_empresa[$data->tutor_empresa] : '';
+            $mform->addElement('static', null, get_string('tutor_empresa', 'mod_fct'), $tutorempresa);
         } else {
-            $mform->addElement('hidden', 'alumne');
-            $mform->setType('alumne', PARAM_INT);
-        }
+            if (!$data->es_alumne) {
+                $mform->addElement('select', 'alumne', get_string('alumne', 'mod_fct'), $data->alumnes);
+            } else {
+                $mform->addElement('hidden', 'alumne');
+                $mform->setType('alumne', PARAM_INT);
+            }
 
-        $attributes = array('size' => 48);
-        $mform->addElement('text', 'nom_empresa', get_string('empresa', 'mod_fct'), $attributes);
-        $mform->addRule('nom_empresa', null, 'required');
-        $mform->setType('nom_empresa', PARAM_TEXT);
+            $attributes = array('size' => 48);
+            $mform->addElement('text', 'nom_empresa', get_string('empresa', 'mod_fct'), $attributes);
+            $mform->addRule('nom_empresa', null, 'required');
+            $mform->setType('nom_empresa', PARAM_TEXT);
 
-        $mform->addElement('select', 'cicle', get_string('cicle', 'mod_fct'), $data->cicles);
+            $mform->addElement('select', 'cicle', get_string('cicle', 'mod_fct'), $data->cicles);
 
-        $mform->addElement('select', 'tutor_centre', get_string('tutor_centre', 'mod_fct'), $data->tutors_centre);
+            $mform->addElement('select', 'tutor_centre', get_string('tutor_centre', 'mod_fct'), $data->tutors_centre);
 
-        if (!$data->es_alumne) {
-            $mform->addElement('select', 'tutor_empresa', get_string('tutor_empresa', 'mod_fct'), $data->tutors_empresa);
+            if (!$data->es_alumne) {
+                $mform->addElement('select', 'tutor_empresa', get_string('tutor_empresa', 'mod_fct'), $data->tutors_empresa);
+            }
         }
 
         if (!$data->es_alumne) {
