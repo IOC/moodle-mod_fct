@@ -267,6 +267,7 @@ class fct_quadern extends fct_quadern_base {
         $usuari = new fct_usuari($this->fct, $USER->id);
         $data->es_alumne = $usuari->es_alumne;
         $data->es_tutor_centre = $usuari->es_tutor_centre;
+        $data->es_administrador = $usuari->es_administrador;
 
         $cm = get_coursemodule_from_instance('fct', $this->fct);
         $context = context_course::instance($cm->course);
