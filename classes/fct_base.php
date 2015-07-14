@@ -324,6 +324,10 @@ abstract class fct_base {
                                   new moodle_url('edit.php', array('cmid' => $id, 'page' => 'tutor')),
                                   get_string('afegeix_tutor_empresa', 'fct'));
 
+            $row_admin['tancar_quaderns'] = new tabobject('tancar_quaderns',
+                                  new moodle_url('edit.php', array('cmid' => $id, 'page' => 'tancar_quaderns')),
+                                  get_string('tancar_quaderns', 'fct'));
+
             $row = array_merge($row, $row_admin);
         }
 
