@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define('PAGENUM', 10);
+define('PAGENUM', 20);
 define('PAGENUMAVIS', 20);
 
 require_once('../../config.php');
