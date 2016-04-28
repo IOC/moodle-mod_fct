@@ -40,7 +40,7 @@ class mod_fct_mod_form extends moodleform_mod {
         $mform->setDefault('name', 'Quadern de pràctiques');
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
-        $this->add_intro_editor(true, get_string('fctintro', 'fct'));
+        $this->standard_intro_elements(get_string('fctintro', 'fct'));
 
         $this->standard_coursemodule_elements(false);
 
