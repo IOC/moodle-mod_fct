@@ -115,7 +115,7 @@ class mod_fct_quadern_horari_renderer extends plugin_renderer_base {
                                                              'page' => 'quadern_horari',
                                                              'delete' => 1));
             $deleteicon = html_writer::empty_tag('img',
-                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+                array('src' => $OUTPUT->image_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
             $button = html_writer::link($deletelink, $deleteicon);
 
             $line[] = $button;

@@ -82,7 +82,7 @@ class mod_fct_avisos_renderer extends plugin_renderer_base {
 
         $deletelink = new moodle_url('./edit.php', array('cmid' => $PAGE->cm->id, 'id' => $avis->id, 'page' => 'avisos', 'fct' => $fct->id, 'delete' => 1));
         $deleteicon = html_writer::empty_tag('img',
-                    array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+                    array('src' => $OUTPUT->image_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
         $deletebutton = html_writer::link($deletelink, $deleteicon);
 
         $line[] = $deletebutton;

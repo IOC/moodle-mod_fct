@@ -81,7 +81,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         if ($quinzena->checkpermissions('editlink')) {
 
             $params = array(
-                'src' => $OUTPUT->pix_url('t/edit'),
+                'src' => $OUTPUT->image_url('t/edit'),
                 'alt' => get_string('edit'),
                 'class' => 'iconsmall',
             );
@@ -99,7 +99,7 @@ class mod_fct_quinzena_renderer extends plugin_renderer_base {
         if ($quinzena->checkpermissions('deletelink')) {
             $deletelink = new moodle_url('./edit.php', $params);
             $deleteicon = html_writer::empty_tag('img',
-                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+                array('src' => $OUTPUT->image_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
 
             $buttons[] = html_writer::link($deletelink, $deleteicon);
         }

@@ -58,12 +58,12 @@ class mod_fct_cicles_renderer extends plugin_renderer_base {
         $buttons = array();
         $editlink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $cicle->id, 'page' => 'cicle'));
         $editicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
+            array('src' => $OUTPUT->image_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
         $buttons[] = html_writer::link($editlink, $editicon);
         if ($cicle->checkpermissions('deletelink')) {
             $deletelink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $cicle->id, 'delete' => 1, 'page' => 'cicle'));
             $deleteicon = html_writer::empty_tag('img',
-                array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+                array('src' => $OUTPUT->image_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
             $buttons[] = html_writer::link($deletelink, $deleteicon);
 
         }

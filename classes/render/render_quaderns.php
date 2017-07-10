@@ -96,12 +96,12 @@ class mod_fct_quaderns_renderer extends plugin_renderer_base {
         if ($quadern->checkpermissions('editlink')) {
             $editlink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $quadern->id));
             $editicon = html_writer::empty_tag('img',
-            array('src' => $OUTPUT->pix_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
+            array('src' => $OUTPUT->image_url('t/edit'), 'alt' => get_string('edit'), 'class' => 'iconsmall'));
             $buttons[] = html_writer::link($editlink, $editicon);
             if ($quadern->checkpermissions('deletelink')) {
                 $deletelink = new moodle_url('./edit.php', array('cmid' => $cm->id, 'id' => $quadern->id, 'delete' => 1));
                 $deleteicon = html_writer::empty_tag('img',
-                    array('src' => $OUTPUT->pix_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
+                    array('src' => $OUTPUT->image_url('t/delete'), 'alt' => get_string('delete'), 'class' => 'iconsmall'));
                 $buttons[] = html_writer::link($deletelink, $deleteicon);
             }
             $line[] = implode(' ', $buttons);

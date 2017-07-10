@@ -97,8 +97,8 @@ class fct_quadern_quinzena_edit_form extends moodleform {
 
             $mform->setType('observacions_centre', PARAM_TEXT);
 
-            $iconminusurl = $OUTPUT->pix_url('t/switch_minus');
-            $iconplusurl = $OUTPUT->pix_url('t/switch_plus');
+            $iconminusurl = $OUTPUT->image_url('t/switch_minus');
+            $iconplusurl = $OUTPUT->image_url('t/switch_plus');
 
             $html = array('<div id="id_', 'observacions_centre', '_frases"',
                               ' class="frases_areatext amagat">', '<h4>',
